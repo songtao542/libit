@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="progress_color">#FFFFD600</color>
+    <color name="state_button_gradient_start_color">#FF2D3547</color>
+    <color name="state_button_gradient_end_color">#902D3547</color>
+</resources>

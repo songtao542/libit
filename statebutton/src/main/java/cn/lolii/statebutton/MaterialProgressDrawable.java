@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.view.animation.*;
@@ -16,7 +17,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess", "JavaDoc"})
 public class MaterialProgressDrawable extends Drawable implements Animatable {
     private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
     private static final Interpolator END_CURVE_INTERPOLATOR = new EndCurveInterpolator();
@@ -62,6 +63,7 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
      * The duration of a single progress spin in milliseconds.
      */
     private static final int ROUNDED_RECTANGLE_ANIMATION_DURATION = 1000 * 80 / 40;
+//    private static final int ROUNDED_RECTANGLE_ANIMATION_DURATION = 20000;
     /**
      * The number of points in the progress "star".
      */
@@ -474,7 +476,11 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
         private float mStartingRotation;
         private boolean mShowArrow;
         private Path mArrow;
-        private Path mClipArc;
+        private Path mPath;
+        private Path mRemainingPath;
+        private Path mRoundRectPath;
+        private float mRoundRectPathLength;
+        private PathMeasure mProgressMeasure;
         private float mArrowScale;
         private double mRingInnerRadius;
         private Path mArrowCopy;
@@ -529,6 +535,7 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
                 return;
             }
 
+            mPaint.setStrokeJoin(Paint.Join.ROUND);
             final float startAngle = (mStartTrim + mRotation) * 360;
             final float endAngle = (mEndTrim + mRotation) * 360;
             float sweepAngle = endAngle - startAngle;
@@ -541,11 +548,40 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
                 final float cx = bounds.exactCenterX();
                 final float cy = bounds.exactCenterY();
                 final float maxR = Math.max(c.getWidth(), c.getHeight());
-                calculateSectorClip(mClipArc, cx, cy, maxR, startAngle + mRotationExtra, sweepAngle);
                 final float minR = diameter / 2;
-                c.clipRect(0, 0, c.getWidth(), c.getHeight());
-                c.clipPath(mClipArc);
-                c.drawRoundRect(arcBounds, minR, minR, mPaint);
+                /**
+                 * 方案一，使用 clip path 裁剪画布
+                 calculateSectorClip(mClipArc, cx, cy, maxR, startAngle + mRotationExtra, sweepAngle);
+                 c.clipRect(0, 0, c.getWidth(), c.getHeight());
+                 c.clipPath(mClipArc);
+                 c.drawRoundRect(arcBounds, minR, minR, mPaint);
+                 */
+
+                if (mRoundRectPath.isEmpty()) {
+                    mRoundRectPath.addRoundRect(arcBounds, minR, minR, Path.Direction.CW);
+                    mProgressMeasure.setPath(mRoundRectPath, false);
+                    mRoundRectPathLength = mProgressMeasure.getLength();
+                }
+
+                float angle = startAngle + mRotationExtra;
+                while (angle >= 360) {
+                    angle -= 360;
+                }
+                float startD = angle / 360 * mRoundRectPathLength;
+                float stopD = startD + sweepAngle / 360 * mRoundRectPathLength;
+
+                mPath.reset();
+                //mClipArc.lineTo(0, 0);
+                mProgressMeasure.getSegment(startD, stopD, mPath, true);
+                c.drawPath(mPath, mPaint);
+                float remainingAngle = angle + sweepAngle - 360;
+                if (remainingAngle > 0) {
+                    startD = 0;
+                    stopD = remainingAngle / 360 * mRoundRectPathLength;
+                    mRemainingPath.reset();
+                    mProgressMeasure.getSegment(startD, stopD, mRemainingPath, true);
+                    c.drawPath(mRemainingPath, mPaint);
+                }
             } else {
                 c.drawArc(arcBounds, startAngle, sweepAngle, false, mPaint);
             }
@@ -610,6 +646,73 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
             path.addArc(rectF, startAngle, sweepAngle);
         }
 
+        private float[] calculateXY(RectF rect, float angle) {
+            float cx = rect.centerX(); //圆角矩形中心点 X 坐标
+            float cy = rect.centerY(); //圆角矩形中心点 Y 坐标
+            double rx = rect.width() / 2;
+            double ry = rect.height() / 2;
+            double cc = (rect.width() - rect.height()) / 2d; //矩形中心点到两边的圆形中心点的距离，此处是 width > height 的情况下
+            float[] result = new float[2];
+            double radian = angle / 180 * Math.PI;
+
+            double ra = Math.atan(ry / (rx - ry)) * 180 / Math.PI; //点刚好落在圆弧上时与水平方向的夹角
+
+            if ((angle == 0)) { //右下方区域
+                result[0] = rect.right;
+                result[1] = cy;
+            } else if ((angle > 0 && angle < ra)) { //右下方圆弧区域
+                double d1 = cc * Math.cos(radian);
+                double f = cc * Math.sin(radian);
+                double d2 = Math.sqrt(ry * ry - f * f);
+                double d = d1 + d2;
+                result[0] = cx + (float) (d * Math.cos(radian));
+                result[1] = cy + (float) (d * Math.sin(radian));
+            } else if (angle >= ra && angle < 90) { //右下方
+                result[0] = (float) (ry / Math.tan(radian)) + cx;
+                result[1] = rect.bottom;
+            } else if (angle == 90) {
+                result[0] = cx;
+                result[1] = rect.bottom;
+            } else if (angle > 90 && angle <= (180 - ra)) { //左下方
+                result[0] = cx - (float) (ry * Math.tan(radian - Math.PI / 2));
+                result[1] = rect.bottom;
+            } else if (angle > (180 - ra) && angle < 180) {  //左下方圆弧区域
+                double d1 = cc * Math.cos(Math.PI - radian);
+                double f = cc * Math.sin(Math.PI - radian);
+                double d2 = Math.sqrt(ry * ry - f * f);
+                double d = d1 + d2;
+                result[0] = cx - (float) (d * Math.cos(Math.PI - radian));
+                result[1] = cy + (float) (d * Math.sin(Math.PI - radian));
+            } else if (angle == 180) {
+                result[0] = rect.left;
+                result[1] = cy;
+            } else if (angle > 180 && angle < (180 + ra)) { //左上方圆弧区域
+                double d1 = cc * Math.cos(radian - Math.PI);
+                double f = cc * Math.sin(radian - Math.PI);
+                double d2 = Math.sqrt(ry * ry - f * f);
+                double d = d1 + d2;
+                result[0] = cx - (float) (d * Math.cos(radian - Math.PI));
+                result[1] = cy - (float) (d * Math.sin(radian - Math.PI));
+            } else if (angle >= (180 + ra) && angle < 270) { //左上方
+                result[0] = cx - (float) (ry * Math.tan(Math.PI * 3 / 2 - radian));
+                result[1] = rect.top;
+            } else if (angle == 270) {
+                result[0] = cx;
+                result[1] = rect.top;
+            } else if (angle > 270 && angle <= (360 - ra)) { //右上方
+                result[0] = cx + (float) (ry * Math.tan(radian - Math.PI * 3 / 2));
+                result[1] = rect.top;
+            } else { //右上方圆弧区域
+                double d1 = cc * Math.cos(2 * Math.PI - radian);
+                double f = cc * Math.sin(2 * Math.PI - radian);
+                double d2 = Math.sqrt(ry * ry - f * f);
+                double d = d1 + d2;
+                result[0] = cx + (float) (d * Math.cos(2 * Math.PI - radian));
+                result[1] = cy - (float) (d * Math.sin(2 * Math.PI - radian));
+            }
+            return result;
+        }
+
         /**
          * Set the colors the progress spinner alternates between.
          *
@@ -632,7 +735,10 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
         public void setShape(Shape shape) {
             mShape = shape;
             if (mShape == Shape.ROUNDED_RECTANGLE) {
-                mClipArc = new Path();
+                mPath = new Path();
+                mRoundRectPath = new Path();
+                mRemainingPath = new Path();
+                mProgressMeasure = new PathMeasure(mRoundRectPath, false);
             }
         }
 

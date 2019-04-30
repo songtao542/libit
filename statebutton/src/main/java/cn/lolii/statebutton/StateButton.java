@@ -2,13 +2,18 @@ package cn.lolii.statebutton;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.*;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import androidx.annotation.AttrRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
 
 
 @SuppressWarnings("unused")

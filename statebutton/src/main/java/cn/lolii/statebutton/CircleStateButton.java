@@ -5,13 +5,15 @@ import android.graphics.BlurMaskFilter;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
-import android.support.annotation.AttrRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.AttrRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
+
 import cn.lolii.statebutton.MaterialProgressDrawable.Shape;
 
 @SuppressWarnings("unused")

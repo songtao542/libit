@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <cn.lolii.test.gesture.TestDragLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <cn.lolii.test.gesture.TestButton
+            android:id="@+id/text1"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="?attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ff4444"
+                android:text="drag text1" />
+
+        </cn.lolii.test.gesture.TestButton>
+
+
+        <cn.lolii.test.gesture.TestButton
+            android:id="@+id/text2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="?attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ffff44"
+                android:text="drag text2" />
+        </cn.lolii.test.gesture.TestButton>
+
+
+        <cn.lolii.test.gesture.TestButton
+            android:id="@+id/text3"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="?attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ff2ff4"
+                android:text="drag text3" />
+        </cn.lolii.test.gesture.TestButton>
+    </cn.lolii.test.gesture.TestDragLayout>
+
+</LinearLayout>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cn.lolii.test.gesture.TestSwipeActivity">
+
+    <cn.lolii.test.gesture.CustomViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="#ff6324ff"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </cn.lolii.test.gesture.CustomViewPager>
+
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#ff444444"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewPager" />
+
+    <cn.lolii.test.gesture.TestDragLayout
+        android:id="@+id/testLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider">
+
+        <cn.lolii.test.gesture.TestButton
+            android:id="@+id/text11"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="?attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ff4444"
+                android:text="drag text11" />
+
+        </cn.lolii.test.gesture.TestButton>
+
+
+        <cn.lolii.test.gesture.TestButton
+            android:id="@+id/text22"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="?attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ffff44"
+                android:text="drag text22" />
+        </cn.lolii.test.gesture.TestButton>
+
+        <cn.lolii.test.gesture.TestButton
+            android:id="@+id/text33"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="?attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ff8844"
+                android:text="drag text33" />
+        </cn.lolii.test.gesture.TestButton>
+
+    </cn.lolii.test.gesture.TestDragLayout>
+
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#ff444444"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewPager" />
+
+    <cn.lolii.test.gesture.TestSwipeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@id/testLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider">
+
+        <cn.lolii.test.gesture.TestButton
+            android:id="@+id/text111"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="?attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ff8844"
+                android:text="swipe text111" />
+        </cn.lolii.test.gesture.TestButton>
+
+        <cn.lolii.test.gesture.TestButton
+            android:id="@+id/text112"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="?attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ff5699"
+                android:text="swipe text112" />
+        </cn.lolii.test.gesture.TestButton>
+
+        <cn.lolii.test.gesture.TestButton
+            android:id="@+id/text113"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="?attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ff5699"
+                android:text="swipe text113" />
+        </cn.lolii.test.gesture.TestButton>
+    </cn.lolii.test.gesture.TestSwipeLayout>
+
+</LinearLayout>

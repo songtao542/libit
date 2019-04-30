@@ -5,13 +5,14 @@ import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.view.animation.*;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

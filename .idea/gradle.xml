@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/gesture" />
             <option value="$PROJECT_DIR$/shimmer" />
             <option value="$PROJECT_DIR$/statebutton" />
+            <option value="$PROJECT_DIR$/util" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

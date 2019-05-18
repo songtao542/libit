@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="ShimmerLayout">
+    <attr name="shimmer_clipToChildren" format="boolean"/>
+    <attr name="shimmer_colored" format="boolean"/>
+    <attr name="shimmer_baseColor" format="color"/>
+    <attr name="shimmer_highlightColor" format="color"/>
+    <attr name="shimmer_baseAlpha" format="float"/>
+    <attr name="shimmer_highlightAlpha" format="float"/>
+    <attr name="shimmer_autoStart" format="boolean"/>
+    <attr name="shimmer_duration" format="integer"/>
+    <attr name="shimmer_repeatCount" format="integer"/>
+    <attr name="shimmer_repeatDelay" format="integer"/>
+    <attr name="shimmer_repeatMode" format="enum">
+      <enum name="restart" value="1"/>
+      <enum name="reverse" value="2"/>
+    </attr>
+    <attr name="shimmer_direction" format="enum">
+      <enum name="lr" value="0"/>
+      <enum name="tb" value="1"/>
+      <enum name="rl" value="2"/>
+      <enum name="bt" value="3"/>
+    </attr>
+    <attr name="shimmer_dropOff" format="float"/>
+    <attr name="shimmer_fixedWidth" format="dimension"/>
+    <attr name="shimmer_fixedHeight" format="dimension"/>
+    <attr name="shimmer_intensity" format="float"/>
+    <attr name="shimmer_widthRatio" format="float"/>
+    <attr name="shimmer_heightRatio" format="float"/>
+    <attr name="shimmer_shape" format="enum">
+      <enum name="linear" value="0"/>
+      <enum name="radial" value="1"/>
+    </attr>
+    <attr name="shimmer_angle" format="float"/>
+  </declare-styleable>
+</resources>

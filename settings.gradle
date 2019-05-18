@@ -1,1 +1,1 @@
-include ':app', ':statebutton', ':gesture'
+include ':app', ':statebutton', ':gesture', ':shimmer'

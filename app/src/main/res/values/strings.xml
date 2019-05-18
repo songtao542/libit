@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">StateButton</string>
+    <string name="shimmer">Shimmer</string>
+    <string name="text_test">既有格局，又有布局；既有大气，更有静气。精谨细腻，笔笔有章法，这样一幅“工笔画”，怎能不让人期待？</string>
 </resources>

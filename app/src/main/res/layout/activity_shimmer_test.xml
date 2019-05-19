@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ffffff00"
+    android:background="#ff000000"
     android:orientation="vertical"
     android:padding="20dp">
 
@@ -14,9 +14,7 @@
         android:layout_gravity="center_horizontal"
         app:shimmer_angle="45"
         app:shimmer_autoStart="true"
-        app:shimmer_baseColor="@android:color/holo_blue_light"
-        app:shimmer_direction="rl"
-        app:shimmer_highlightColor="@android:color/holo_red_light">
+        app:shimmer_direction="rl">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -42,7 +40,7 @@
                 android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:text="@string/text_test"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>

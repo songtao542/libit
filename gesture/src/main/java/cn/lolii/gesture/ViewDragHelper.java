@@ -148,6 +148,10 @@ public class ViewDragHelper {
 
     private final ViewGroup mParentView;
 
+    private boolean isTranslationMode = false;
+    private boolean isXDirectionSensitive = false;
+    private boolean isYDirectionSensitive = false;
+
     /**
      * A Callback is used as a communication channel with the ViewDragHelper back to the
      * parent view using it. <code>on*</code>methods are invoked on siginficant events and several
@@ -253,7 +257,7 @@ public class ViewDragHelper {
          * @see #EDGE_RIGHT
          * @see #EDGE_BOTTOM
          */
-        public void onEdgeDragStarted(int edgeFlags, int pointerId) {
+        public void onEdgeDragStarted(int edgeFlags, int pointerId, int x, int y) {
         }
 
         /**
@@ -264,6 +268,10 @@ public class ViewDragHelper {
          */
         public int getOrderedChildIndex(int index) {
             return index;
+        }
+
+        public View getChildAt(int x, int y) {
+            return null;
         }
 
         /**
@@ -316,7 +324,7 @@ public class ViewDragHelper {
          * @param dx    Proposed change in position for left
          * @return The new clamped position for left
          */
-        public int clampViewPositionHorizontal(@NonNull View child, int left, int dx) {
+        public int clampViewPositionHorizontal(@NonNull View child, int left, int dx, boolean tryIntercept) {
             return 0;
         }
 
@@ -330,7 +338,7 @@ public class ViewDragHelper {
          * @param dy    Proposed change in position for top
          * @return The new clamped position for top
          */
-        public int clampViewPositionVertical(@NonNull View child, int top, int dy) {
+        public int clampViewPositionVertical(@NonNull View child, int top, int dy, boolean tryIntercept) {
             return 0;
         }
 
@@ -419,6 +427,15 @@ public class ViewDragHelper {
         mScroller = new OverScroller(context, sInterpolator);
     }
 
+    public void setTranslationMode(boolean isTranslationMode) {
+        this.isTranslationMode = isTranslationMode;
+    }
+
+    public void setDirectionSensitive(boolean isXDirectionSensitive, boolean isYDirectionSensitive) {
+        this.isXDirectionSensitive = isXDirectionSensitive;
+        this.isYDirectionSensitive = isYDirectionSensitive;
+    }
+
     /**
      * Set the minimum velocity that will be detected as having a magnitude greater than zero
      * in pixels per second. Callback methods accepting a velocity will be clamped appropriately.
@@ -453,7 +470,7 @@ public class ViewDragHelper {
     /**
      * Enable edge tracking for the selected edges of the parent view.
      * The callback's {@link Callback#onEdgeTouched(int, int)} and
-     * {@link Callback#onEdgeDragStarted(int, int)} methods will only be invoked
+     * {@link Callback#onEdgeDragStarted(int, int, int, int)} methods will only be invoked
      * for edges for which edge tracking has been enabled.
      *
      * @param edgeFlags Combination of edge flags describing the edges to watch
@@ -700,20 +717,22 @@ public class ViewDragHelper {
      * @return true if animation should continue through {@link #continueSettling(boolean)} calls
      */
     private boolean forceSettleCapturedViewAt(int finalLeft, int finalTop, int xvel, int yvel) {
-        final int startLeft = mCapturedView.getLeft();
-        final int startTop = mCapturedView.getTop();
-        final int dx = finalLeft - startLeft;
-        final int dy = finalTop - startTop;
+        float startLeft = isTranslationMode ? mCapturedView.getTranslationX() : mCapturedView.getLeft();
+        float startTop = isTranslationMode ? mCapturedView.getTranslationY() : mCapturedView.getTop();
+
+        final int dx = (int) (finalLeft - startLeft);
+        final int dy = (int) (finalTop - startTop);
 
         if (dx == 0 && dy == 0) {
             // Nothing to do. Send callbacks, be done.
+            mCallback.onSettlingComplete(mCapturedView, finalLeft, finalTop);
             mScroller.abortAnimation();
             setDragState(STATE_IDLE);
             return false;
         }
 
         final int duration = computeSettleDuration(mCapturedView, dx, dy, xvel, yvel);
-        mScroller.startScroll(startLeft, startTop, dx, dy, duration);
+        mScroller.startScroll((int) startLeft, (int) startTop, dx, dy, duration);
 
         setDragState(STATE_SETTLING);
         return true;
@@ -818,7 +837,10 @@ public class ViewDragHelper {
                     + "Callback#onViewReleased");
         }
 
-        mScroller.fling(mCapturedView.getLeft(), mCapturedView.getTop(),
+        float left = isTranslationMode ? mCapturedView.getTranslationX() : mCapturedView.getLeft();
+        float top = isTranslationMode ? mCapturedView.getTranslationY() : mCapturedView.getTop();
+
+        mScroller.fling((int) left, (int) top,
                 (int) mVelocityTracker.getXVelocity(mActivePointerId),
                 (int) mVelocityTracker.getYVelocity(mActivePointerId),
                 minLeft, maxLeft, minTop, maxTop);
@@ -843,14 +865,22 @@ public class ViewDragHelper {
             boolean keepGoing = mScroller.computeScrollOffset();
             final int x = mScroller.getCurrX();
             final int y = mScroller.getCurrY();
-            final int dx = x - capturedView.getLeft();
-            final int dy = y - capturedView.getTop();
+            final int dx = isTranslationMode ? (int) (x - capturedView.getTranslationX()) : x - capturedView.getLeft();
+            final int dy = isTranslationMode ? (int) (x - capturedView.getTranslationY()) : y - capturedView.getTop();
 
             if (dx != 0) {
-                ViewCompat.offsetLeftAndRight(capturedView, dx);
+                if (isTranslationMode) {
+                    capturedView.setTranslationX(x);
+                } else {
+                    ViewCompat.offsetLeftAndRight(capturedView, dx);
+                }
             }
             if (dy != 0) {
-                ViewCompat.offsetTopAndBottom(capturedView, dy);
+                if (isTranslationMode) {
+                    capturedView.setTranslationY(y);
+                } else {
+                    ViewCompat.offsetTopAndBottom(capturedView, dy);
+                }
             }
 
             if (dx != 0 || dy != 0) {
@@ -862,6 +892,7 @@ public class ViewDragHelper {
                 // but the user sure doesn't.
                 mScroller.abortAnimation();
                 keepGoing = false;
+                mCallback.onSettlingComplete(capturedView, x, y);
             }
 
             if (!keepGoing) {
@@ -870,20 +901,20 @@ public class ViewDragHelper {
                 } else {
                     setDragState(STATE_IDLE);
                 }
-                mCallback.onSettlingComplete(capturedView, x, y);
             }
         }
         return (mDragState == STATE_SETTLING);
     }
 
     /**
-     * Like all callback events this must happen on the UI thread, but release
+     * Like all callback events this must happen on the UI mBackThread, but release
      * involves some extra semantics. During a release (mReleaseInProgress)
      * is the only time it is valid to call {@link #settleCapturedViewAt(int, int)}
      * or {@link #flingCapturedView(int, int, int, int)}.
      */
     private void dispatchViewReleased(float xvel, float yvel) {
         mReleaseInProgress = true;
+        //Log.d("ViewDragHelper", "dispatchViewReleased mCapturedView=" + mCapturedView);
         mCallback.onViewReleased(mCapturedView, xvel, yvel);
         mReleaseInProgress = false;
 
@@ -1074,6 +1105,9 @@ public class ViewDragHelper {
             // Reset things for a new event stream, just in case we didn't get
             // the whole previous stream.
             cancel();
+            if (mDragState == STATE_DRAGGING) {
+                mDragState = STATE_IDLE;
+            }
         }
 
         if (mVelocityTracker == null) {
@@ -1142,33 +1176,41 @@ public class ViewDragHelper {
                     final float dy = y - mInitialMotionY[pointerId];
 
                     final View toCapture = findTopChildUnder((int) x, (int) y);
+                    //Log.d("ViewDragHelper", "toCapture====>" + toCapture);
                     final boolean pastSlop = toCapture != null && checkTouchSlop(toCapture, dx, dy);
+                    //Log.d("ViewDragHelper", "pastSlop=====>" + pastSlop);
                     if (pastSlop) {
                         // check the callback's
                         // getView[Horizontal|Vertical]DragRange methods to know
                         // if you can move at all along an axis, then see if it
                         // would clamp to the same value. If you can't move at
                         // all in every dimension with a nonzero range, bail.
-                        final int oldLeft = toCapture.getLeft();
-                        final int targetLeft = oldLeft + (int) dx;
-                        final int newLeft = mCallback.clampViewPositionHorizontal(toCapture, targetLeft, (int) dx);
-                        final int oldTop = toCapture.getTop();
-                        final int targetTop = oldTop + (int) dy;
-                        final int newTop = mCallback.clampViewPositionVertical(toCapture, targetTop, (int) dy);
+                        final int oldLeft = isTranslationMode ? (int) toCapture.getTranslationX() : toCapture.getLeft();
+                        int targetLeft = oldLeft + (int) dx;
+                        final int newLeft = mCallback.clampViewPositionHorizontal(toCapture, targetLeft, (int) dx, true);
+
+                        final int oldTop = isTranslationMode ? (int) toCapture.getTranslationY() : toCapture.getTop();
+                        int targetTop = oldTop + (int) dy;
+                        final int newTop = mCallback.clampViewPositionVertical(toCapture, targetTop, (int) dy, true);
+
                         final int hDragRange = mCallback.getViewHorizontalDragRange(toCapture);
                         final int vDragRange = mCallback.getViewVerticalDragRange(toCapture);
+                        //Log.d("ViewDragHelper", "hDragRange=====>" + vDragRange + " newLeft=" + newLeft + " oldLeft=" + oldLeft);
+                        //Log.d("ViewDragHelper", "vDragRange=====>" + vDragRange + " newTop=" + newTop + " oldTop=" + oldTop);
                         if ((hDragRange == 0 || (hDragRange > 0 && newLeft == oldLeft))
                                 && (vDragRange == 0 || (vDragRange > 0 && newTop == oldTop))) {
                             break;
                         }
                     }
-                    reportNewEdgeDrags(dx, dy, pointerId);
+                    reportNewEdgeDrags((int) x, (int) y, dx, dy, pointerId);
+                    //Log.d("ViewDragHelper", "mDragState=====>" + mDragState);
                     if (mDragState == STATE_DRAGGING) {
                         // Callback might have started an edge drag
                         break;
                     }
 
                     if (pastSlop && tryCaptureViewForDrag(toCapture, pointerId)) {
+                        //Log.d("ViewDragHelper", "tryCaptureViewForDrag=====>true" + "  mDragState=" + mDragState);
                         break;
                     }
                 }
@@ -1256,7 +1298,7 @@ public class ViewDragHelper {
                     // We're still tracking a captured view. If the same view is under this
                     // point, we'll swap to controlling it with this pointer instead.
                     // (This will still work if we're "catching" a settling view.)
-
+                    //Log.d("ViewDragHelper", "tryCaptureViewForDrag from processTouchEvent DOWN");
                     tryCaptureViewForDrag(mCapturedView, pointerId);
                 }
                 break;
@@ -1273,7 +1315,10 @@ public class ViewDragHelper {
                     final int idx = (int) (x - mLastMotionX[mActivePointerId]);
                     final int idy = (int) (y - mLastMotionY[mActivePointerId]);
 
-                    dragTo(mCapturedView.getLeft() + idx, mCapturedView.getTop() + idy, idx, idy);
+
+                    final int left = isTranslationMode ? (int) (mCapturedView.getTranslationX() + idx) : mCapturedView.getLeft() + idx;
+                    final int top = isTranslationMode ? (int) (mCapturedView.getTranslationY() + idy) : mCapturedView.getTop() + idy;
+                    dragTo(left, top, idx, idy);
 
                     saveLastMotion(ev);
                 } else {
@@ -1290,7 +1335,7 @@ public class ViewDragHelper {
                         final float dx = x - mInitialMotionX[pointerId];
                         final float dy = y - mInitialMotionY[pointerId];
 
-                        reportNewEdgeDrags(dx, dy, pointerId);
+                        reportNewEdgeDrags((int) x, (int) y, dx, dy, pointerId);
                         if (mDragState == STATE_DRAGGING) {
                             // Callback might have started an edge drag.
                             break;
@@ -1339,6 +1384,7 @@ public class ViewDragHelper {
             }
 
             case MotionEvent.ACTION_UP: {
+                //Log.d("ViewDragHelper", "processTouchEvent ACTION_UP mDragState=" + mDragState);
                 if (mDragState == STATE_DRAGGING) {
                     releaseViewForPointerUp();
                 }
@@ -1347,6 +1393,7 @@ public class ViewDragHelper {
             }
 
             case MotionEvent.ACTION_CANCEL: {
+                //Log.d("ViewDragHelper", "processTouchEvent ACTION_CANCEL mDragState=" + mDragState);
                 if (mDragState == STATE_DRAGGING) {
                     dispatchViewReleased(0, 0);
                 }
@@ -1356,7 +1403,7 @@ public class ViewDragHelper {
         }
     }
 
-    private void reportNewEdgeDrags(float dx, float dy, int pointerId) {
+    private void reportNewEdgeDrags(int x, int y, float dx, float dy, int pointerId) {
         int dragsStarted = 0;
         if (checkNewEdgeDrag(dx, dy, pointerId, EDGE_LEFT)) {
             dragsStarted |= EDGE_LEFT;
@@ -1373,7 +1420,7 @@ public class ViewDragHelper {
 
         if (dragsStarted != 0) {
             mEdgeDragsInProgress[pointerId] |= dragsStarted;
-            mCallback.onEdgeDragStarted(dragsStarted, pointerId);
+            mCallback.onEdgeDragStarted(dragsStarted, pointerId, x, y);
         }
     }
 
@@ -1408,8 +1455,12 @@ public class ViewDragHelper {
         if (child == null) {
             return false;
         }
-        final boolean checkHorizontal = mCallback.getViewHorizontalDragRange(child) > 0;
-        final boolean checkVertical = mCallback.getViewVerticalDragRange(child) > 0;
+        final int hRange = mCallback.getViewHorizontalDragRange(child);
+        final int vRange = mCallback.getViewVerticalDragRange(child);
+        final boolean checkHorizontal = hRange > 0;
+        final boolean checkVertical = vRange > 0;
+
+        //Log.d("ViewDragHelper", "checkTouchSlop dx=" + dx + " dy=" + dy + "  mTouchSlop=" + mTouchSlop + "  checkVertical=" + checkVertical + " checkHorizontal=" + checkHorizontal);
 
         if (checkHorizontal && checkVertical) {
             return dx * dx + dy * dy > mTouchSlop * mTouchSlop;
@@ -1528,22 +1579,31 @@ public class ViewDragHelper {
     private void dragTo(int left, int top, int dx, int dy) {
         int clampedX = left;
         int clampedY = top;
-        final int oldLeft = mCapturedView.getLeft();
-        final int oldTop = mCapturedView.getTop();
+        final float oldLeft = isTranslationMode ? mCapturedView.getTranslationX() : mCapturedView.getLeft();
+        final float oldTop = isTranslationMode ? mCapturedView.getTranslationY() : mCapturedView.getTop();
         if (dx != 0) {
-            clampedX = mCallback.clampViewPositionHorizontal(mCapturedView, left, dx);
-            ViewCompat.offsetLeftAndRight(mCapturedView, clampedX - oldLeft);
+            clampedX = mCallback.clampViewPositionHorizontal(mCapturedView, left, dx, false);
+            //Log.d("ViewDragHelper", "dragTo clampedX=" + clampedX);
+            if (isTranslationMode) {
+                mCapturedView.setTranslationX(clampedX);
+            } else {
+                ViewCompat.offsetLeftAndRight(mCapturedView, (int) (clampedX - oldLeft));
+            }
         }
         if (dy != 0) {
-            clampedY = mCallback.clampViewPositionVertical(mCapturedView, top, dy);
-            ViewCompat.offsetTopAndBottom(mCapturedView, clampedY - oldTop);
+            clampedY = mCallback.clampViewPositionVertical(mCapturedView, top, dy, false);
+            //Log.d("ViewDragHelper", "dragTo clampedY=" + clampedY);
+            if (isTranslationMode) {
+                mCapturedView.setTranslationY(clampedY);
+            } else {
+                ViewCompat.offsetTopAndBottom(mCapturedView, (int) (clampedY - oldTop));
+            }
         }
 
         if (dx != 0 || dy != 0) {
-            final int clampedDx = clampedX - oldLeft;
-            final int clampedDy = clampedY - oldTop;
-            mCallback.onViewPositionChanged(mCapturedView, clampedX, clampedY,
-                    clampedDx, clampedDy);
+            float clampedDx = clampedX - oldLeft;
+            float clampedDy = clampedY - oldTop;
+            mCallback.onViewPositionChanged(mCapturedView, clampedX, clampedY, (int) clampedDx, (int) clampedDy);
         }
     }
 
@@ -1589,6 +1649,10 @@ public class ViewDragHelper {
      */
     @Nullable
     public View findTopChildUnder(int x, int y) {
+        View view = mCallback.getChildAt(x, y);
+        if (view != null) {
+            return view;
+        }
         final int childCount = mParentView.getChildCount();
         for (int i = childCount - 1; i >= 0; i--) {
             final View child = mParentView.getChildAt(mCallback.getOrderedChildIndex(i));

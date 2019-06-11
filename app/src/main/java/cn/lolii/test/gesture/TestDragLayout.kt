@@ -29,11 +29,23 @@ class TestDragLayout : LinearLayout {
             return true
         }
 
-        override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int {
+        override fun clampViewPositionHorizontal(
+            child: View,
+            left: Int,
+            dx: Int,
+            tryIntercept: Boolean,
+            pointerId: Int
+        ): Int {
             return MathUtils.clamp(left, -child.width, child.width)
         }
 
-        override fun clampViewPositionVertical(child: View, top: Int, dy: Int): Int {
+        override fun clampViewPositionVertical(
+            child: View,
+            top: Int,
+            dy: Int,
+            tryIntercept: Boolean,
+            pointerId: Int
+        ): Int {
             return child.top
         }
 
@@ -82,7 +94,7 @@ class TestDragLayout : LinearLayout {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(
-            context, attrs, defStyleAttr, defStyleRes
+        context, attrs, defStyleAttr, defStyleRes
     ) {
         init(context)
     }
@@ -118,9 +130,9 @@ class TestDragLayout : LinearLayout {
     private fun getAppearingAnimation(): Animator {
         val mSet = AnimatorSet()
         mSet.playTogether(
-                ObjectAnimator.ofFloat(null, "scaleX", 1.0f, 0f),
-                ObjectAnimator.ofFloat(null, "scaleY", 1.0f, 0f),
-                ObjectAnimator.ofFloat(null, "alpha", 1.0f, 0.0f)
+            ObjectAnimator.ofFloat(null, "scaleX", 1.0f, 0f),
+            ObjectAnimator.ofFloat(null, "scaleY", 1.0f, 0f),
+            ObjectAnimator.ofFloat(null, "alpha", 1.0f, 0.0f)
         )
         return mSet
     }

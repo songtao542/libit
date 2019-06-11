@@ -16,7 +16,23 @@ import android.view.Surface
 /**
  * 解决在Android4.4上 java.lang.VerifyError 错误，拆分成3个类 FlashlightApi23，FlashlightApi21，FlashlightDefault
  */
-class FlashLightUtil(context: Context) : Flashlight {
+class FlashLightUtil private constructor(context: Context) : Flashlight {
+
+    companion object {
+        private var instance: FlashLightUtil? = null
+        @JvmStatic
+        fun getInstance(context: Context): FlashLightUtil {
+            if (instance == null) {
+                synchronized(FlashLightUtil::class.java) {
+                    if (instance == null) {
+                        instance = FlashLightUtil(context.applicationContext)
+                    }
+                }
+            }
+            return instance!!
+        }
+    }
+
     private var mFlashlight: Flashlight
 
     init {
@@ -42,7 +58,12 @@ class FlashlightApi23(private val context: Context) : Flashlight {
     private var isTorchOpen = false
     private var mCameraId = ""
 
+    private var mProxy: Flashlight? = null
+
     override fun isFlashlightOn(): Boolean {
+        mProxy?.let {
+            return it.isFlashlightOn()
+        }
         return isTorchOpen
     }
 
@@ -62,9 +83,25 @@ class FlashlightApi23(private val context: Context) : Flashlight {
                 isTorchOpen = true
                 callback?.invoke(true)
             }
-        } catch (e: CameraAccessException) {
+        } catch (e: Exception) {
             e.printStackTrace()
+            //360手机虽然系统是M及以上，但是CameraManager.setTorchMode 会报 Bad argument passed to camera service 错误
+            //但是可以使用 API21 的方式正常打开
+            tryApi21(callback)
         }
+    }
+
+    private fun tryApi21(callback: ((on: Boolean) -> Unit)?) {
+        try {
+            if (mProxy == null) {
+                mProxy = FlashlightApi21(context)
+            }
+            mProxy?.toggleFlashlight(callback)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            callback?.invoke(false)
+        }
+
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -80,7 +117,7 @@ class FlashlightApi23(private val context: Context) : Flashlight {
     }
 }
 
-
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 class FlashlightApi21(private val context: Context) : Flashlight {
 
     @Volatile
@@ -106,7 +143,6 @@ class FlashlightApi21(private val context: Context) : Flashlight {
         return isTorchOpen
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun release() {
         mCameraCaptureSession?.close()
         mCameraDevice?.close()

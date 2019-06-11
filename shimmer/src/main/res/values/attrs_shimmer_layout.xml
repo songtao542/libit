@@ -3,6 +3,7 @@
   <declare-styleable name="ShimmerLayout">
     <attr name="shimmer_clipToChildren" format="boolean"/>
     <attr name="shimmer_colored" format="boolean"/>
+    <attr name="shimmer_alphaHighlight" format="boolean"/>
     <attr name="shimmer_baseColor" format="color"/>
     <attr name="shimmer_highlightColor" format="color"/>
     <attr name="shimmer_baseAlpha" format="float"/>

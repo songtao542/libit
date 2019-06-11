@@ -7,6 +7,9 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 
+/**
+ * The shimmer_baseColor and shimmer_highlightColor only worked when shimmer_alphaHighlight=false
+ */
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class ShimmerLayout : FrameLayout {
     constructor(context: Context) : super(context) {
@@ -68,6 +71,9 @@ class ShimmerLayout : FrameLayout {
     private var fixedHeight = 0
     private var widthRatio = 1f
     private var heightRatio = 1f
+
+    private var shaderWidth = 0f
+    private var shaderHeight = 0f
 
     private val mUpdateListener = ValueAnimator.AnimatorUpdateListener { invalidate() }
 
@@ -241,6 +247,9 @@ class ShimmerLayout : FrameLayout {
             if (a.hasValue(R.styleable.ShimmerLayout_shimmer_highlightAlpha)) {
                 setHighlightAlpha(a.getFloat(R.styleable.ShimmerLayout_shimmer_highlightAlpha, 1f))
             }
+            if (a.hasValue(R.styleable.ShimmerLayout_shimmer_alphaHighlight)) {
+                alphaShimmer = a.getBoolean(R.styleable.ShimmerLayout_shimmer_alphaHighlight, true)
+            }
             if (a.hasValue(R.styleable.ShimmerLayout_shimmer_baseColor)) {
                 setBaseColor(a.getColor(R.styleable.ShimmerLayout_shimmer_baseColor, baseColor))
             }
@@ -312,9 +321,6 @@ class ShimmerLayout : FrameLayout {
             setLayerType(View.LAYER_TYPE_NONE, null)
         }
 
-        updateColors()
-        updatePositions()
-
         mShimmerPaint.xfermode =
             PorterDuffXfermode(if (alphaShimmer) PorterDuff.Mode.DST_IN else PorterDuff.Mode.SRC_IN)
 
@@ -371,30 +377,33 @@ class ShimmerLayout : FrameLayout {
                 it.duration = animationDuration + repeatDelay
                 it.addUpdateListener(mUpdateListener)
                 if (started) {
-                    mValueAnimator!!.start()
+                    it.start()
                 }
             }
     }
 
     private fun updateShader() {
-        var width = mDrawRect.width()
-        var height = mDrawRect.height()
+        val width = mDrawRect.width()
+        val height = mDrawRect.height()
 
         if (width == 0 && height == 0) return
 
-        width = if (fixedWidth > 0) fixedWidth else Math.round(widthRatio * width)
-        height = if (fixedHeight > 0) fixedHeight else Math.round(heightRatio * height)
+        updateColors()
+        updatePositions()
+
+        shaderWidth = if (fixedWidth > 0) fixedWidth.toFloat() else Math.round(widthRatio * width).toFloat()
+        shaderHeight = if (fixedHeight > 0) fixedHeight.toFloat() else Math.round(heightRatio * height).toFloat()
 
         val shader: Shader = if (shape == LINEAR) {
             val vertical = direction == TOP_TO_BOTTOM || direction == BOTTOM_TO_TOP
-            val endX = if (vertical) 0 else width
-            val endY = if (vertical) height else 0
-            LinearGradient(0f, 0f, endX.toFloat(), endY.toFloat(), colors, positions, Shader.TileMode.CLAMP)
+            val endX = if (vertical) 0f else shaderWidth
+            val endY = if (vertical) shaderHeight else 0f
+            LinearGradient(0f, 0f, endX, endY, colors, positions, Shader.TileMode.CLAMP)
         } else {
             RadialGradient(
-                width / 2f,
-                height / 2f,
-                (Math.max(width, height) / Math.sqrt(2.0)).toFloat(),
+                shaderWidth / 2f,
+                shaderHeight / 2f,
+                (Math.max(shaderWidth, shaderHeight) / Math.sqrt(2.0)).toFloat(),
                 colors,
                 positions,
                 Shader.TileMode.CLAMP
@@ -422,7 +431,19 @@ class ShimmerLayout : FrameLayout {
         }
         mValueAnimator?.let {
             if (!it.isStarted) {
+                it.removeAllUpdateListeners()
+                it.addUpdateListener(mUpdateListener)
                 it.start()
+            }
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        mValueAnimator?.let {
+            if (it.isStarted) {
+                it.cancel()
+                it.removeAllUpdateListeners()
             }
         }
     }
@@ -445,23 +466,28 @@ class ShimmerLayout : FrameLayout {
         val animatedValue = mValueAnimator?.animatedFraction ?: 0f
         when (direction) {
             LEFT_TO_RIGHT -> {
-                dx = offset(-translateWidth, translateWidth, animatedValue)
+                //dx = offset(-translateWidth, translateWidth, animatedValue)
+                dx = offset(-shaderWidth, translateWidth, animatedValue)
                 dy = 0f
             }
             RIGHT_TO_LEFT -> {
-                dx = offset(translateWidth, -translateWidth, animatedValue)
+                //dx = offset(translateWidth, -translateWidth, animatedValue)
+                dx = offset(translateWidth, -shaderWidth, animatedValue)
                 dy = 0f
             }
             TOP_TO_BOTTOM -> {
                 dx = 0f
-                dy = offset(-translateHeight, translateHeight, animatedValue)
+                //dy = offset(-translateHeight, translateHeight, animatedValue)
+                dy = offset(-shaderHeight, translateHeight, animatedValue)
             }
             BOTTOM_TO_TOP -> {
                 dx = 0f
-                dy = offset(translateHeight, -translateHeight, animatedValue)
+                //dy = offset(translateHeight, -translateHeight, animatedValue)
+                dy = offset(translateHeight, -shaderHeight, animatedValue)
             }
             else -> {
-                dx = offset(-translateWidth, translateWidth, animatedValue)
+                //dx = offset(-translateWidth, translateWidth, animatedValue)
+                dx = offset(-shaderWidth, translateWidth, animatedValue)
                 dy = 0f
             }
         }
@@ -470,7 +496,6 @@ class ShimmerLayout : FrameLayout {
         mShaderMatrix.setRotate(angle, mDrawRect.width() / 2f, mDrawRect.height() / 2f)
         mShaderMatrix.postTranslate(dx, dy)
         mShimmerPaint.shader.setLocalMatrix(mShaderMatrix)
-
         canvas.drawRect(mDrawRect, mShimmerPaint)
     }
 

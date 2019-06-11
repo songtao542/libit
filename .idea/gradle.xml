@@ -9,7 +9,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/app_api14" />
             <option value="$PROJECT_DIR$/gesture" />
+            <option value="$PROJECT_DIR$/screencapture" />
             <option value="$PROJECT_DIR$/shimmer" />
             <option value="$PROJECT_DIR$/statebutton" />
             <option value="$PROJECT_DIR$/util" />

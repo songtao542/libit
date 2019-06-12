@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="cn.lolii.test14">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -16,14 +17,21 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <data
+                    android:host="test14"
+                    android:scheme="lolii"
+                    tools:ignore="AppLinkUrlError" />
             </intent-filter>
         </activity>
 
         <activity-alias
             android:name=".FakeMainActivity"
-            android:targetActivity=".MainActivity"></activity-alias>
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
 
         <receiver android:name=".SecretCodeReceiver">
             <intent-filter>

@@ -8,10 +8,10 @@ import android.content.Intent
 class SecretCodeReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         context?.let {
-            val intent = Intent()
+            val intent = Intent(it,MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            val componentName = ComponentName(context.packageName, MainActivity.ALIAS)
-            intent.component = componentName
+            //val componentName = ComponentName(context.packageName, MainActivity.ALIAS)
+            //intent.component = componentName
             it.startActivity(intent)
         }
     }

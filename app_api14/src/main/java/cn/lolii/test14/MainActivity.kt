@@ -1,5 +1,6 @@
 package cn.lolii.test14
 
+import android.annotation.TargetApi
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -42,22 +43,30 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         hide.setOnClickListener {
-            val componentName = ComponentName(this, MainActivity::class.java)
-            packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP)
+            val componentName = ComponentName(this, ALIAS)
+            packageManager.setComponentEnabledSetting(componentName,
+                    //PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER,
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    PackageManager.DONT_KILL_APP)
         }
 
         show.setOnClickListener {
-            val componentName = ComponentName(this, MainActivity::class.java)
-            packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP)
+            val componentName = ComponentName(this, ALIAS)
+            packageManager.setComponentEnabledSetting(componentName,
+                    //PackageManager.COMPONENT_ENABLED_STATE_DEFAULT,
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP)
         }
 
-        addFloat()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            addFloat()
+        }
 
         handler = Handler(callback)
         handler?.sendEmptyMessageDelayed(1, 1000)
-
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun addFloat() {
         try {
             val windowManager = applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager

@@ -69,7 +69,7 @@ class ScreenCaptureUtil private constructor(context: Context) : ScreenCapture {
 class ScreenCaptureApi21(private val context: Context) : ScreenCapture {
 
     private var mMediaProjectionManager =
-        context.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+            context.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
     private var mMediaProjection: MediaProjection? = null
     private var mVirtualDisplay: VirtualDisplay? = null
     private var mScreenDensity: Int = 0
@@ -115,9 +115,9 @@ class ScreenCaptureApi21(private val context: Context) : ScreenCapture {
     }
 
     class SaveTask(
-        context: Context,
-        private val imageReader: ImageReader,
-        private val callback: ScreenCapture.Callback? = null
+            context: Context,
+            private val imageReader: ImageReader,
+            private val callback: ScreenCapture.Callback? = null
     ) : AsyncTask<Any, Void, String>() {
 
         private val mContext = WeakReference<Context>(context.applicationContext)
@@ -188,10 +188,10 @@ class ScreenCaptureApi21(private val context: Context) : ScreenCapture {
             mHandler.postDelayed({
                 try {
                     mVirtualDisplay = mediaProjection.createVirtualDisplay(
-                        "ScreenCapture",
-                        imageReader.width, imageReader.height, mScreenDensity,
-                        DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-                        imageReader.surface, mCallback, mHandler
+                            "ScreenCapture",
+                            imageReader.width, imageReader.height, mScreenDensity,
+                            DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
+                            imageReader.surface, mCallback, mHandler
                     )
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -225,8 +225,8 @@ class ScreenCaptureApi21(private val context: Context) : ScreenCapture {
     override fun requestPermission(activity: Activity) {
         // This initiates a prompt dialog for the user to confirm screen projection.
         activity.startActivityForResult(
-            mMediaProjectionManager.createScreenCaptureIntent(),
-            100
+                mMediaProjectionManager.createScreenCaptureIntent(),
+                100
         )
     }
 
@@ -374,7 +374,7 @@ fun saveBitmap(context: Context?, bitmap: Bitmap, recycle: Boolean = false): Str
  * 保存截图后，将图片路径添加到图库中
  */
 class ImageScannerConnectionClient(context: Context, private val path: String) :
-    MediaScannerConnection.MediaScannerConnectionClient {
+        MediaScannerConnection.MediaScannerConnectionClient {
 
     private val connection: MediaScannerConnection = MediaScannerConnection(context.applicationContext, this)
 
@@ -442,15 +442,18 @@ class RequestMediaProjectionPermissionActivity : Activity(), ActivityCompat.OnRe
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        val size = permissions.size
+        val size = grantResults.size
+        var granted = true
         for (i in 0 until size) {
-            if (permissions[i] == android.Manifest.permission.WRITE_EXTERNAL_STORAGE) {
-                val granted = grantResults[i] == PackageManager.PERMISSION_GRANTED
-                if (granted) {
-                    ScreenCaptureUtil.getInstance(this).requestPermission(this)
-                    break
-                }
+            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                granted = false
+                break
             }
+        }
+        if (granted) {
+            ScreenCaptureUtil.getInstance(this).requestPermission(this)
+        } else {
+            finish()
         }
     }
 

@@ -91,10 +91,12 @@ class ScreenRecordApi21(private val context: Context) : ScreenRecord {
     }
 
     private var mOnInfoListener = MediaRecorder.OnInfoListener { mr, what, extra ->
+        Log.d("ScreenRecord", "MediaRecorder.OnInfoListener what=$what extra=$extra")
         stopRecord()
     }
 
     private var mOnErrorListener = MediaRecorder.OnErrorListener { mr, what, extra ->
+        Log.d("ScreenRecord", "MediaRecorder.OnErrorListener what=$what extra=$extra")
         stopRecord()
     }
 
@@ -108,7 +110,7 @@ class ScreenRecordApi21(private val context: Context) : ScreenRecord {
     private fun ensureMediaRecorder(): MediaRecorder? {
         val savePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
         val timeMillis = System.currentTimeMillis()
-        val fileName = "screenrecord_${DateFormat.format("yyyyMMddkkmmss", timeMillis)}_${timeMillis % 10000}.mp4"
+        val fileName = "screenrecord_${DateFormat.format("yyyyMMddkkmmss", timeMillis)}.mp4"
         mOutputFilePath = "$savePath${File.separator}$fileName"
         Log.d("ScreenRecord", "OutFilePath=$mOutputFilePath  MediaRecorder=$mMediaRecorder")
         if (mMediaRecorder == null) {
@@ -154,6 +156,7 @@ class ScreenRecordApi21(private val context: Context) : ScreenRecord {
     }
 
     @MainThread
+    @Synchronized
     override fun startRecord(callback: ScreenRecord.Callback?) {
         Log.d("ScreenRecord", "start record, recording=$mRecording")
         if (mRecording) return
@@ -193,6 +196,11 @@ class ScreenRecordApi21(private val context: Context) : ScreenRecord {
             )
             mediaRecorder.start()
             mHandler.postDelayed(mStopRecorder, MAX_DURATION)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(Intent(context, ScreenRecordService::class.java))
+            } else {
+                context.startService(Intent(context, ScreenRecordService::class.java))
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             abort()
@@ -206,12 +214,13 @@ class ScreenRecordApi21(private val context: Context) : ScreenRecord {
         mRecordCallback = null
     }
 
+    @Synchronized
     override fun stopRecord() {
         Log.d("ScreenRecord", "stop record, recording=$mRecording")
         if (!mRecording) return
+        mRecording = false
         mRecordCallback?.onEndRecord(mOutputFilePath)
         mHandler.removeCallbacksAndMessages(null)
-        mRecording = false
         mVirtualDisplay?.release()
         mMediaProjection?.stop()
         mVirtualDisplay = null

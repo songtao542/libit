@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_title">屏幕录制</string>
+    <string name="notification_text">点击停止</string>
+    <string name="notification_channel">屏幕录制</string>
+</resources>

@@ -12,6 +12,8 @@
                 android:theme="@style/RequestScreenRecordPermissionTheme"
                 android:excludeFromRecents="true"
                 android:launchMode="singleTask"/>
+
+        <service android:name=".ScreenRecordService"/>
     </application>
 
 </manifest>

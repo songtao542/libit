@@ -1,16 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="cn.lolii.screencapture">
+          package="cn.lolii.screenrecord">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <application>
         <activity
-                android:name="cn.lolii.screencapture.RequestMediaProjectionPermissionActivity"
+                android:name="cn.lolii.screenrecord.RequestMediaProjectionPermissionActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
-                android:theme="@style/RequestScreenCapturePermissionTheme"
+                android:theme="@style/RequestScreenRecordPermissionTheme"
                 android:excludeFromRecents="true"
                 android:launchMode="singleTask"/>
     </application>
 
 </manifest>
+

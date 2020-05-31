@@ -1,0 +1,9 @@
+<resources>
+    <string name="on_going_upload">正在上传...</string>
+    <string name="query_location">搜索</string>
+    <string name="confirm">确定</string>
+    <string name="cannot_get_location">无法获取位置</string>
+    <string name="location_picker_title">选择地点</string>
+    <string name="search_result_templete">搜索“%1$s”</string>
+    <string name="search_result">搜索结果</string>
+</resources>

@@ -1,0 +1,18 @@
+<resources>
+
+    <dimen name="textsize_largest">20sp</dimen>
+    <dimen name="textsize_larger">18sp</dimen>
+    <dimen name="textsize_large">16sp</dimen>
+    <dimen name="textsize_normal">14sp</dimen>
+    <dimen name="textsize_small">12sp</dimen>
+    <dimen name="textsize_smaller">11sp</dimen>
+    <dimen name="textsize_smallest">10sp</dimen>
+
+    <dimen name="location_picker_search_height">46dp</dimen>
+    <dimen name="location_picker_search_radius">4dp</dimen>
+    <dimen name="location_picker_my_location_btn_radius">2dp</dimen>
+    <dimen name="progress_dialog_size">120dp</dimen>
+    <dimen name="progress_dialog_bar_size">50dp</dimen>
+
+    <dimen name="actionbar_padding_start">20dp</dimen>
+</resources>

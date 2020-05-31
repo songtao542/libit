@@ -8,8 +8,8 @@ import android.view.*
 import android.view.animation.CycleInterpolator
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.lolii.location.extension.checkAndRequestPermission
 import cn.lolii.location.extension.checkAppPermission
@@ -36,7 +36,7 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
         }
     }
 
-    private lateinit var viewModel: LocationViewModel
+    private val viewModel: LocationViewModel by viewModels()
 
     private lateinit var mapProxy: MapProxy
 
@@ -56,7 +56,6 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(LocationViewModel::class.java)
         enableOptionsMenu(toolbar, false, R.menu.location_picker)
         toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
         toolbar.setOnMenuItemClickListener(this)

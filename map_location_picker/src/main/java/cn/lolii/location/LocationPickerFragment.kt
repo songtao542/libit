@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import cn.lolii.location.extension.checkAndRequestPermission
 import cn.lolii.location.extension.checkAppPermission
 import cn.lolii.location.model.PoiAddress
@@ -18,7 +18,6 @@ import com.amap.api.maps2d.model.LatLng
 import com.amap.api.maps2d.model.MyLocationStyle
 import kotlinx.android.synthetic.main.app_toolbar.*
 import kotlinx.android.synthetic.main.fragment_location_picker.*
-import javax.inject.Inject
 
 /**
  *
@@ -31,10 +30,9 @@ class LocationPickerFragment : BaseFragment() {
         }
     }
 
-    private lateinit var viewModel: LocationViewModel
+    private val viewModel: LocationViewModel by viewModels()
 
-    @Inject
-    lateinit var poiSearcher: PoiSearcher
+    private var poiSearcher: PoiSearcher? = null
 
     private var myLocation: Location? = null
 
@@ -46,9 +44,12 @@ class LocationPickerFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(LocationViewModel::class.java)
+        if (activity == null) return
+
         toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
         titleTextView.setText(R.string.location_picker_title)
+
+        activity?.let { poiSearcher = PoiSearcher(it) }
 
         mapView.onCreate(savedInstanceState)
         if (!checkPermission()) {
@@ -95,14 +96,14 @@ class LocationPickerFragment : BaseFragment() {
     private fun search(keyword: String) {
         if (myLocation != null) {
             myLocation?.let {
-                poiSearcher.search(it, keyword).observe(viewLifecycleOwner, Observer { result ->
+                poiSearcher?.search(it, keyword)?.observe(viewLifecycleOwner, Observer { result ->
                     showPoiSearchResult(keyword, result)
                 })
             }
         } else {
             viewModel.getMyLocation { location ->
                 myLocation = location
-                poiSearcher.search(location, keyword).observe(viewLifecycleOwner, Observer { result ->
+                poiSearcher?.search(location, keyword)?.observe(viewLifecycleOwner, Observer { result ->
                     showPoiSearchResult(keyword, result)
                 })
             }

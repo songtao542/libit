@@ -8,9 +8,6 @@ import javax.inject.Inject
 
 abstract class BaseFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
     private var progressDialog: ProgressDialog? = null
 
     fun enableOptionsMenu(toolbar: Toolbar?, showTitle: Boolean = true, menu: Int = 0) {

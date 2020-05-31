@@ -1,6 +1,6 @@
 package cn.lolii.location
 
-import android.app.Application
+import android.content.Context
 import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,11 +16,11 @@ import com.amap.api.services.poisearch.PoiResult
 import com.amap.api.services.poisearch.PoiSearch
 import javax.inject.Inject
 
-class PoiSearcher @Inject constructor(private val application: Application) {
+class PoiSearcher @Inject constructor(private val context: Context) {
     fun reverseGeocode(location: Location): LiveData<PoiAddress> {
         val result = MutableLiveData<PoiAddress>()
         if (location.latitude != null && location.longitude != null) {
-            val geocoderSearch = GeocodeSearch(application)
+            val geocoderSearch = GeocodeSearch(context)
             geocoderSearch.setOnGeocodeSearchListener(object : GeocodeSearch.OnGeocodeSearchListener {
                 override fun onRegeocodeSearched(regeocodeResult: RegeocodeResult?, p1: Int) {
                     result.postValue(regeocodeResult?.regeocodeAddress?.toPoiAddress())
@@ -43,7 +43,7 @@ class PoiSearcher @Inject constructor(private val application: Application) {
     fun search(location: Location, keyword: String): LiveData<List<PoiAddress>> {
         val result = MutableLiveData<List<PoiAddress>>()
         val poiSearchQuery = PoiSearch.Query(keyword, "")
-        val poiSearch = PoiSearch(application, poiSearchQuery)
+        val poiSearch = PoiSearch(context, poiSearchQuery)
         poiSearch.setOnPoiSearchListener(object : PoiSearch.OnPoiSearchListener {
             override fun onPoiSearched(pageResult: PoiResult?, errorCode: Int) {
                 pageResult?.let {

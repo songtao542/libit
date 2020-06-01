@@ -30,7 +30,11 @@ class LocationPickerFragment : BaseFragment() {
         }
     }
 
-    private val viewModel: LocationViewModel by viewModels()
+    private val viewModel: LocationViewModel? by lazy {
+        context?.let {
+            return@lazy LocationViewModel(it.applicationContext)
+        }
+    }
 
     private var poiSearcher: PoiSearcher? = null
 
@@ -82,7 +86,7 @@ class LocationPickerFragment : BaseFragment() {
             }
         }
 
-        viewModel.location.observe(viewLifecycleOwner, Observer {
+        viewModel?.location?.observe(viewLifecycleOwner, Observer {
             myLocation = it
             setMyLocation(it, 18f)
         })
@@ -101,7 +105,7 @@ class LocationPickerFragment : BaseFragment() {
                 })
             }
         } else {
-            viewModel.getMyLocation { location ->
+            viewModel?.getMyLocation { location ->
                 myLocation = location
                 poiSearcher?.search(location, keyword)?.observe(viewLifecycleOwner, Observer { result ->
                     showPoiSearchResult(keyword, result)
@@ -127,7 +131,7 @@ class LocationPickerFragment : BaseFragment() {
     }
 
     private fun getMyLocation() {
-        viewModel.getMyLocation()
+        viewModel?.getMyLocation()
     }
 
     @Suppress("SENSELESS_COMPARISON")

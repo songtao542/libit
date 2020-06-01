@@ -10,6 +10,8 @@ import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.lolii.location.extension.checkAndRequestPermission
 import cn.lolii.location.extension.checkAppPermission
@@ -36,7 +38,11 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
         }
     }
 
-    private val viewModel: LocationViewModel by viewModels()
+    private val viewModel: LocationViewModel? by lazy {
+        context?.let {
+            return@lazy LocationViewModel(it.applicationContext)
+        }
+    }
 
     private lateinit var mapProxy: MapProxy
 
@@ -120,7 +126,7 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
             }
         }
 
-        viewModel.location.observe(viewLifecycleOwner, Observer {
+        viewModel?.location?.observe(viewLifecycleOwner, Observer {
             setMyLocation(Position(it), 16f)
         })
 
@@ -182,7 +188,7 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
                 fillAdapter(address = address, pois = result)
             })
         } else {
-            viewModel.getMyLocation { location ->
+            viewModel?.getMyLocation { location ->
                 if (location is AMapLocation) {
                     fillAdapter(address = location.toPoiAddress(), pois = pois)
                 }

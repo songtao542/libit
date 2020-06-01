@@ -1,37 +1,32 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="TextAppearance" />
-
-    <style name="TextAppearance.Toolbar" parent="TextAppearance.Widget.AppCompat.Toolbar.Title" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:actionMenuTextColor">?attr/colorPrimary</item>
         <item name="actionMenuTextColor">?attr/colorPrimary</item>
     </style>
 
-    <style name="AppTheme.ToolbarNoNavigation" parent="Widget.AppCompat.Toolbar">
-        <item name="android:theme">@style/AppTheme.PopupOverlay</item>
-        <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
+    <style name="NoNavigationToolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:theme">@style/PopupOverlay</item>
+        <item name="popupTheme">@style/PopupOverlay</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="android:background">@android:color/white</item>
-        <item name="titleTextAppearance">@style/TextAppearance.Tab</item>
+        <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
         <item name="contentInsetLeft">@dimen/actionbar_padding_start</item>
         <item name="contentInsetStart">@dimen/actionbar_padding_start</item>
         <item name="titleTextColor">?attr/colorPrimary</item>
         <item name="navigationIcon">@null</item>
     </style>
 
-    <style name="AppTheme.Toolbar" parent="AppTheme.ToolbarNoNavigation">
-        <item name="navigationIcon">?attr/navigationIcon</item>
+    <style name="Toolbar" parent="NoNavigationToolbar">
+        <item name="navigationIcon">@drawable/ic_cancel</item>
     </style>
 
-    <style name="TextAppearance.Tab" parent="TextAppearance.Toolbar">
+    <style name="ToolbarTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">18sp</item>
     </style>
-
 
 </resources>

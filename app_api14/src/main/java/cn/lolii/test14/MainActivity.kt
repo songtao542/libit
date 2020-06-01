@@ -68,6 +68,9 @@ class MainActivity : AppCompatActivity() {
         toTestRecord.setOnClickListener {
             startActivity(Intent(this, TestMediaRecorder::class.java))
         }
+        toPicker.setOnClickListener {
+            startActivity(Intent(this, TestMapLocationPicker::class.java))
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

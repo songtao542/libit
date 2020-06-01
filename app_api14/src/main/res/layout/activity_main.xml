@@ -38,4 +38,11 @@
         android:layout_marginTop="20dp"
         android:text="To Test Record" />
 
+    <Button
+        android:id="@+id/toPicker"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="To Location Picker" />
+
 </LinearLayout>

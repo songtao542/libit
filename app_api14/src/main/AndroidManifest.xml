@@ -15,9 +15,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".TestMapLocationPicker"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <data
                     android:host="test14"
                     android:scheme="lolii"
@@ -25,26 +29,27 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".TestMediaRecorder" />
-
         <activity-alias
             android:name=".FakeMainActivity"
             android:targetActivity=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
 
+        <activity android:name=".TestMediaRecorder" />
+
         <receiver android:name=".SecretCodeReceiver">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SECRET_CODE" />
+
                 <data
                     android:host="1212"
                     android:scheme="android_secret_code" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

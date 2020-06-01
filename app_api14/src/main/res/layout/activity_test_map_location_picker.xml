@@ -16,4 +16,12 @@
         android:layout_marginTop="20dp"
         android:text="Pick" />
 
+    <Button
+        android:id="@+id/pick1"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:text="Pick1" />
+
 </FrameLayout>

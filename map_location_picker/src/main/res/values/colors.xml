@@ -2,13 +2,13 @@
 <resources>
 
     <color name="dark_gray">#888888</color>
-    <color name="black">#000000</color>
     <color name="underline">#999999</color>
     <color name="gray_underline">#e5e5e7</color>
-    <color name="white">#ffffff</color>
     <color name="darker">#444444</color>
-
-    <color name="location_picker_search_bg">#ddffffff</color>
-    <color name="location_picker_my_location">#eeffffff</color>
-    <color name="location_picker_my_location_pressed">#eedddddd</color>
+    <color name="confirm_text_color">#2196F3</color>
+    <color name="confirm_text_pressed_color">#1976D2</color>
+    <color name="lp_toolbar_bg_color">#99ffffff</color>
+    <color name="lp_search_bg_color">#88dddddd</color>
+    <color name="lp_my_location_btn_color">#eeffffff</color>
+    <color name="lp_my_location_btn_pressed_color">#eedddddd</color>
 </resources>

@@ -8,12 +8,13 @@
     <dimen name="textsize_smaller">11sp</dimen>
     <dimen name="textsize_smallest">10sp</dimen>
 
-    <dimen name="location_picker_search_height">46dp</dimen>
-    <dimen name="location_picker_search_radius">4dp</dimen>
-    <dimen name="location_picker_my_location_btn_radius">50dp</dimen>
+    <dimen name="lp_search_height">32dp</dimen>
+    <dimen name="lp_search_radius">32dp</dimen>
+    <dimen name="lp_my_location_btn_size">46dp</dimen>
+    <dimen name="lp_my_location_btn_radius">46dp</dimen>
     <dimen name="progress_dialog_size">120dp</dimen>
     <dimen name="progress_dialog_bar_size">50dp</dimen>
 
-    <dimen name="actionbar_padding_start">20dp</dimen>
+    <dimen name="actionbar_padding_start">0dp</dimen>
     <dimen name="underline">1px</dimen>
 </resources>

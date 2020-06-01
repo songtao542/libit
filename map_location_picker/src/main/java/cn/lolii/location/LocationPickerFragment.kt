@@ -3,10 +3,13 @@ package cn.lolii.location
 import android.Manifest
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import cn.lolii.location.extension.checkAndRequestPermission
@@ -16,13 +19,13 @@ import cn.lolii.map_location_picker.R
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.LatLng
 import com.amap.api.maps2d.model.MyLocationStyle
-import kotlinx.android.synthetic.main.app_toolbar.*
+import kotlinx.android.synthetic.main.picker_toolbar.*
 import kotlinx.android.synthetic.main.fragment_location_picker.*
 
 /**
  *
  */
-class LocationPickerFragment : BaseFragment() {
+class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemClickListener, Toolbar.OnMenuItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +52,9 @@ class LocationPickerFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity == null) return
-
+        enableOptionsMenu(toolbar, false, R.menu.location_picker)
         toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
-        titleTextView.setText(R.string.location_picker_title)
+        toolbar.setOnMenuItemClickListener(this)
 
         activity?.let { poiSearcher = PoiSearcher(it) }
 
@@ -60,14 +63,14 @@ class LocationPickerFragment : BaseFragment() {
             checkAndRequestPermission(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
         }
 
-        val myLocationStyle = MyLocationStyle() //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
+        // 连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        val myLocationStyle = MyLocationStyle()
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE)
         myLocationStyle.showMyLocation(true)
 
-
         mapView.map.setMyLocationStyle(myLocationStyle)
         mapView.map.isMyLocationEnabled = true
-
 
         mapProxy = MapLocationFactory.create(requireContext(), mapView = mapView)
 
@@ -96,6 +99,17 @@ class LocationPickerFragment : BaseFragment() {
         }
     }
 
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.confirm -> {
+                searchBox.text?.toString()?.let {
+                    search(it)
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     private fun search(keyword: String) {
         if (myLocation != null) {
@@ -126,8 +140,14 @@ class LocationPickerFragment : BaseFragment() {
             LocationBottomSheetDialog.newInstance(Bundle().apply {
                 putParcelableArrayList(Constants.Extra.LIST, list)
                 putString(Constants.Extra.TITLE, title)
-            }).show(childFragmentManager, "poi_result")
+            }).apply {
+                setOnItemClickListener(this@LocationPickerFragment)
+            }.show(childFragmentManager, "poi_result")
         }
+    }
+
+    override fun onItemClick(view: View, position: Int, address: PoiAddress) {
+        Log.d("LocationPickerFragment", "position: $position  address: $address")
     }
 
     private fun getMyLocation() {
@@ -180,4 +200,6 @@ class LocationPickerFragment : BaseFragment() {
             this.arguments = arguments
         }
     }
+
+
 }

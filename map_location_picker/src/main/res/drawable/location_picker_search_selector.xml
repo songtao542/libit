@@ -3,25 +3,25 @@
 
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <corners android:radius="@dimen/location_picker_search_radius" />
-            <stroke android:width="1dp" android:color="@color/location_picker_search_bg" />
-            <solid android:color="@color/location_picker_search_bg" />
+            <corners android:radius="@dimen/lp_search_radius" />
+            <stroke android:width="0dp" android:color="@color/lp_search_bg_color" />
+            <solid android:color="@color/lp_search_bg_color" />
         </shape>
     </item>
 
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <corners android:radius="@dimen/location_picker_search_radius" />
-            <stroke android:width="1dp" android:color="@color/location_picker_search_bg" />
-            <solid android:color="@color/location_picker_search_bg" />
+            <corners android:radius="@dimen/lp_search_radius" />
+            <stroke android:width="0dp" android:color="@color/lp_search_bg_color" />
+            <solid android:color="@color/lp_search_bg_color" />
         </shape>
     </item>
 
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="@dimen/location_picker_search_radius" />
-            <stroke android:width="1dp" android:color="@color/location_picker_search_bg" />
-            <solid android:color="@color/location_picker_search_bg" />
+            <corners android:radius="@dimen/lp_search_radius" />
+            <stroke android:width="0dp" android:color="@color/lp_search_bg_color" />
+            <solid android:color="@color/lp_search_bg_color" />
         </shape>
     </item>
 

@@ -20,12 +20,18 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
     private var poiResult: List<PoiAddress>? = null
     private var title: String? = null
 
+    private var onItemClickListener: OnItemClickListener? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             poiResult = it.getParcelableArrayList(Constants.Extra.LIST)
             title = it.getString(Constants.Extra.TITLE, null)
         }
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.onItemClickListener = listener
     }
 
 
@@ -37,27 +43,45 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
         super.onActivityCreated(savedInstanceState)
         isCancelable = false
         list.layoutManager = LinearLayoutManager(requireContext())
-        list.adapter = object : RecyclerView.Adapter<ViewHolder>() {
-            override fun getItemCount(): Int = poiResult?.size ?: 0
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-                return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_location_sheet_item, parent, false))
-            }
-
-            override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-                holder.setData(poiResult!![position])
-            }
+        poiResult?.let {
+            list.adapter = SheetAdapter(it, onItemClickListener)
         }
-
         close.setOnClickListener {
             dismiss()
         }
     }
 
+    class SheetAdapter(private val poiResult: List<PoiAddress>,
+                       private var onItemClickListener: OnItemClickListener? = null) : RecyclerView.Adapter<SheetAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        fun setData(address: PoiAddress) {
-            view.title.text = address.title
-            view.address.text = address.formatAddress
+        private var currentChecked: PoiAddress? = null
+        private var currentCheckedPosition: Int = -1
+
+        override fun getItemCount(): Int = poiResult.size
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_location_sheet_item, parent, false))
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.setData(position, poiResult[position])
+        }
+
+        inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+            fun setData(position: Int, address: PoiAddress) {
+                view.title.text = address.title
+                view.address.text = address.formatAddress
+                view.checked.isChecked = address == currentChecked
+                view.setOnClickListener {
+                    currentChecked = address
+                    if (currentCheckedPosition != -1) {
+                        notifyItemChanged(currentCheckedPosition)
+                    }
+                    currentCheckedPosition = position
+                    view.checked.isChecked = true
+                    onItemClickListener?.onItemClick(view, position, address)
+                }
+            }
         }
     }
 
@@ -83,11 +107,14 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
         }
     }
 
-
     companion object {
         @JvmStatic
         fun newInstance(arguments: Bundle? = null) = LocationBottomSheetDialog().apply {
             this.arguments = arguments
         }
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(view: View, position: Int, address: PoiAddress)
     }
 }

@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
         const val ALIAS = "cn.lolii.test14.FakeMainActivity"
     }
 
+    private var floatButtons: LinearLayout? = null
+
     private val callback = Handler.Callback {
         handler?.sendEmptyMessageDelayed(1, 1000)
         Log.d("TTTT", "MainActivity=${this@MainActivity}")
@@ -59,7 +61,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            addFloat()
+            //addFloat()
+        }
+
+        testScreenRecorder.setOnClickListener {
+            if (floatButtons == null) {
+                addFloat()
+            } else {
+                removeFloat()
+            }
         }
 
         handler = Handler(callback)
@@ -73,86 +83,93 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun removeFloat() {
+        floatButtons?.let {
+            val windowManager = applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            windowManager.removeViewImmediate(it)
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun addFloat() {
         try {
             val windowManager = applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
-            val btns = LinearLayout(applicationContext)
-            btns.orientation = LinearLayout.VERTICAL
+            floatButtons = LinearLayout(applicationContext).apply {
+                this.orientation = LinearLayout.VERTICAL
 
-            val dp60 =
-                    TypedValue.applyDimension(
-                            TypedValue.COMPLEX_UNIT_DIP,
-                            60f,
-                            application.resources.displayMetrics
-                    ).toInt()
+                val dp60 =
+                        TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                60f,
+                                application.resources.displayMetrics
+                        ).toInt()
 
 
-            val capture = ImageButton(applicationContext)
-            capture.setImageResource(R.mipmap.screen_capture)
+                val capture = ImageButton(applicationContext)
+                capture.setImageResource(R.mipmap.screen_capture)
 
-            val callback = object : ScreenCapture.Callback {
+                val callback = object : ScreenCapture.Callback {
 
-                override fun onStartCapture() {
-                    Log.d("TTTT", "onStartCapture")
-                    btns.visibility = View.INVISIBLE
+                    override fun onStartCapture() {
+                        Log.d("TTTT", "onStartCapture")
+                        this@apply.visibility = View.INVISIBLE
+                    }
+
+                    override fun onEndCapture(path: String?) {
+                        Log.d("TTTT", "onEndCapture path=$path")
+                        this@apply.visibility = View.VISIBLE
+                    }
                 }
 
-                override fun onEndCapture(path: String?) {
-                    Log.d("TTTT", "onEndCapture path=$path")
-                    btns.visibility = View.VISIBLE
+                capture.setOnClickListener {
+                    Log.d("TTTT", "capture")
+                    ScreenCaptureUtil.getInstance(this@MainActivity).startCapture(callback)
                 }
-            }
+                capture.layoutParams = LinearLayout.LayoutParams(dp60, dp60)
+                this.addView(capture)
 
-            capture.setOnClickListener {
-                Log.d("TTTT", "capture")
-                ScreenCaptureUtil.getInstance(this).startCapture(callback)
-            }
-            capture.layoutParams = LinearLayout.LayoutParams(dp60, dp60)
-            btns.addView(capture)
-
-            val record = ImageButton(applicationContext)
-            record.setImageResource(R.mipmap.screen_record)
-            record.setOnClickListener {
-                Log.d("TTTT", "record")
-                if (ScreenRecordUtil.getInstance(this).isRecording()) {
-                    ScreenRecordUtil.getInstance(this).stopRecord()
-                } else {
-                    ScreenRecordUtil.getInstance(this).startRecord()
+                val record = ImageButton(applicationContext)
+                record.setImageResource(R.mipmap.screen_record)
+                record.setOnClickListener {
+                    Log.d("TTTT", "record")
+                    if (ScreenRecordUtil.getInstance(this@MainActivity).isRecording()) {
+                        ScreenRecordUtil.getInstance(this@MainActivity).stopRecord()
+                    } else {
+                        ScreenRecordUtil.getInstance(this@MainActivity).startRecord()
+                    }
                 }
+                record.layoutParams = LinearLayout.LayoutParams(dp60, dp60)
+                this.addView(record)
+
+                val lp = WindowManager.LayoutParams()
+
+                lp.type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                /*WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY*/
+                    2038 - 1
+                else WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+
+                lp.width = dp60
+                lp.height = dp60 * 2
+
+                lp.gravity = Gravity.RIGHT or Gravity.TOP
+                lp.x = 0
+                lp.y = dp60 * 2
+
+                lp.format = PixelFormat.RGBA_8888
+                lp.flags =
+                        (WindowManager.LayoutParams.FLAG_FULLSCREEN
+                                or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                                or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                                or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                                or WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
+                                or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                                or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                                or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                                )
+
+                windowManager.addView(this, lp)
             }
-            record.layoutParams = LinearLayout.LayoutParams(dp60, dp60)
-            btns.addView(record)
-
-
-            val lp = WindowManager.LayoutParams()
-
-            lp.type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            /*WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY*/
-                2038 - 1
-            else WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
-
-            lp.width = dp60
-            lp.height = dp60 * 2
-
-            lp.gravity = Gravity.RIGHT or Gravity.TOP
-            lp.x = 0
-            lp.y = dp60 * 2
-
-            lp.format = PixelFormat.RGBA_8888
-            lp.flags =
-                    (WindowManager.LayoutParams.FLAG_FULLSCREEN
-                            or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                            or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                            or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-                            or WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
-                            or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                            or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                            or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-                            )
-
-            windowManager.addView(btns, lp)
         } catch (e: Exception) {
             e.printStackTrace()
             Log.d("TTTT", "error:", e)

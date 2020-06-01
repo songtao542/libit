@@ -8,10 +8,7 @@ import android.view.*
 import android.view.animation.CycleInterpolator
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.lolii.location.extension.checkAndRequestPermission
 import cn.lolii.location.extension.checkAppPermission
@@ -24,8 +21,8 @@ import cn.lolii.map_location_picker.R
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps2d.model.LatLng
 import com.amap.api.maps2d.model.MyLocationStyle
-import kotlinx.android.synthetic.main.app_toolbar.*
-import kotlinx.android.synthetic.main.fragment_location_picker1.*
+import kotlinx.android.synthetic.main.picker_toolbar.*
+import kotlinx.android.synthetic.main.fragment_location_nested_picker.*
 
 /**
  *
@@ -57,7 +54,7 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_location_picker1, container, false)
+        return inflater.inflate(R.layout.fragment_location_nested_picker, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -65,7 +62,7 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
         enableOptionsMenu(toolbar, false, R.menu.location_picker)
         toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
         toolbar.setOnMenuItemClickListener(this)
-        titleTextView.setText(R.string.location_picker_title)
+        //titleTextView.setText(R.string.location_picker_title)
 
         mapProxy = MapLocationFactory.create(requireContext(), mapView = mapView)
 

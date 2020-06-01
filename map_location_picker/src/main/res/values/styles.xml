@@ -6,26 +6,27 @@
         <item name="actionMenuTextColor">?attr/colorPrimary</item>
     </style>
 
-    <style name="NoNavigationToolbar" parent="Widget.AppCompat.Toolbar">
+    <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="navigationIcon">@drawable/ic_cancel</item>
         <item name="android:theme">@style/PopupOverlay</item>
         <item name="popupTheme">@style/PopupOverlay</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@color/lp_toolbar_bg_color</item>
         <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
-        <item name="contentInsetLeft">@dimen/actionbar_padding_start</item>
-        <item name="contentInsetStart">@dimen/actionbar_padding_start</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="contentInsetLeft">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentPadding">0dp</item>
+        <item name="titleMargin">0dp</item>
         <item name="titleTextColor">?attr/colorPrimary</item>
-        <item name="navigationIcon">@null</item>
-    </style>
-
-    <style name="Toolbar" parent="NoNavigationToolbar">
-        <item name="navigationIcon">@drawable/ic_cancel</item>
     </style>
 
     <style name="ToolbarTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">18sp</item>
     </style>
 

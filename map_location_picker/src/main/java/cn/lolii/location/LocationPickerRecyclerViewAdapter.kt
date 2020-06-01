@@ -86,7 +86,9 @@ class LocationPickerRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.View
     inner class AddressViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun setData(address: PoiAddress) {
             view.selectAddress.text = address.address
-            view.checkedAddress.visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
+            val visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
+            view.checkedAddress.visibility = visibility
+            view.checkedAddress.isChecked = visibility == View.VISIBLE
             view.setOnClickListener {
                 setSelected(address)
                 _onItemClickListener?.invoke(address)
@@ -98,7 +100,9 @@ class LocationPickerRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.View
         fun setData(address: PoiAddress) {
             view.title.text = address.title
             view.address.text = address.formatAddress
-            view.checked.visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
+            val visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
+            view.checked.visibility = visibility
+            view.checked.isChecked = visibility == View.VISIBLE
             view.setOnClickListener {
                 setSelected(address)
                 _onItemClickListener?.invoke(address)

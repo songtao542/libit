@@ -14,9 +14,8 @@ import com.amap.api.services.geocoder.RegeocodeQuery
 import com.amap.api.services.geocoder.RegeocodeResult
 import com.amap.api.services.poisearch.PoiResult
 import com.amap.api.services.poisearch.PoiSearch
-import javax.inject.Inject
 
-class PoiSearcher @Inject constructor(private val context: Context) {
+class PoiSearcher constructor(private val context: Context) {
     fun reverseGeocode(location: Location): LiveData<PoiAddress> {
         val result = MutableLiveData<PoiAddress>()
         if (location.latitude != null && location.longitude != null) {

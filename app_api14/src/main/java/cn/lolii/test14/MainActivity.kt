@@ -64,6 +64,10 @@ class MainActivity : AppCompatActivity() {
 
         handler = Handler(callback)
         handler?.sendEmptyMessageDelayed(1, 1000)
+
+        toTestRecord.setOnClickListener {
+            startActivity(Intent(this, TestMediaRecorder::class.java))
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

@@ -22,9 +22,8 @@ import com.amap.api.services.core.PoiItem
 import com.amap.api.services.geocoder.*
 import com.amap.api.services.poisearch.PoiResult
 import com.amap.api.services.poisearch.PoiSearch
-import javax.inject.Inject
 
-class AMapProxy @Inject constructor(val context: Context) : MapProxy {
+class AMapProxy constructor(val context: Context) : MapProxy {
 
     private val markers = HashMap<Marker, com.amap.api.maps2d.model.Marker>()
 

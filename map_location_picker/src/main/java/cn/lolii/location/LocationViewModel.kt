@@ -16,9 +16,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
 
-class LocationViewModel @Inject constructor(private var context: Context) : ViewModel() {
+class LocationViewModel constructor(private var context: Context) : ViewModel() {
 
     private val disposeBag: CompositeDisposable = CompositeDisposable()
 
@@ -37,9 +36,9 @@ class LocationViewModel @Inject constructor(private var context: Context) : View
 
     private var locating = false
 
-    val error: MutableLiveData<String> by lazy { SingleLiveData() }
+    val error: MutableLiveData<String> by lazy { SingleLiveData<String>() }
 
-    val success: MutableLiveData<String> by lazy { SingleLiveData() }
+    val success: MutableLiveData<String> by lazy { SingleLiveData<String>() }
 
     fun getMyLocation(handler: ((Location) -> Unit)? = null) {
         if (locating) {

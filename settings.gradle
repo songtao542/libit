@@ -1,2 +1,1 @@
-include ':app', ':statebutton', ':gesture', ':shimmer', ':util', ':screencapture', ':app_api14', ':screenrecord'
-include ':map_location_picker'
+include ':app', ':statebutton', ':gesture', ':shimmer', ':util', ':screencapture', ':app_api14', ':screenrecord', ':map_location_picker'

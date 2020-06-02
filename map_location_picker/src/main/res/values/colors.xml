@@ -5,9 +5,9 @@
     <color name="underline">#999999</color>
     <color name="gray_underline">#e5e5e7</color>
     <color name="darker">#444444</color>
-    <color name="confirm_text_color">#2196F3</color>
-    <color name="confirm_text_pressed_color">#1976D2</color>
-    <color name="lp_toolbar_bg_color">#99ffffff</color>
+    <color name="menu_text_color">#2196F3</color>
+    <color name="menu_text_pressed_color">#1976D2</color>
+    <color name="lp_toolbar_bg_color">#aeffffff</color>
     <color name="lp_search_bg_color">#88dddddd</color>
     <color name="lp_my_location_btn_color">#eeffffff</color>
     <color name="lp_my_location_btn_pressed_color">#eedddddd</color>

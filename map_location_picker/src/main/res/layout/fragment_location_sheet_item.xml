@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:background="@drawable/selectable_item_background"
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal">
@@ -36,11 +36,6 @@
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/textsize_small" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/gray_underline" />
-
     </LinearLayout>
 
     <RadioButton
@@ -52,7 +47,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginEnd="12dp"
         android:layout_marginRight="12dp"
-        android:checked="false"
+        android:checked="true"
         android:clickable="false" />
 
 </LinearLayout>

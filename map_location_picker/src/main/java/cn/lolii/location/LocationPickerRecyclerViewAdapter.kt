@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.fragment_location_sheet_item_address.view.
 
 class LocationPickerRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var _onItemClickListener: ((item: PoiAddress) -> Unit)? = null
+    private var onItemClickListener: ((item: PoiAddress) -> Unit)? = null
 
     var data: List<PoiAddress>? = null
         set(value) {
@@ -23,9 +23,8 @@ class LocationPickerRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.View
             }
         }
 
-
     fun setOnItemClickListener(onItemClickListener: ((item: PoiAddress) -> Unit)?) {
-        this._onItemClickListener = onItemClickListener
+        this.onItemClickListener = onItemClickListener
     }
 
     private var lastSelected: PoiAddress? = null
@@ -83,29 +82,45 @@ class LocationPickerRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    inner class AddressViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+    inner class AddressViewHolder(private val view: View) : RecyclerView.ViewHolder(view),
+            View.OnClickListener {
+
+        private var address: PoiAddress? = null
+
         fun setData(address: PoiAddress) {
+            this.address = address
             view.selectAddress.text = address.address
-            val visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
-            view.checkedAddress.visibility = visibility
-            view.checkedAddress.isChecked = visibility == View.VISIBLE
-            view.setOnClickListener {
-                setSelected(address)
-                _onItemClickListener?.invoke(address)
+            view.checkedAddress.visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
+            view.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            address?.let {
+                setSelected(it)
+                onItemClickListener?.invoke(it)
+                return@let
             }
         }
     }
 
-    inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view),
+            View.OnClickListener {
+
+        private var address: PoiAddress? = null
+
         fun setData(address: PoiAddress) {
+            this.address = address
             view.title.text = address.title
             view.address.text = address.formatAddress
-            val visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
-            view.checked.visibility = visibility
-            view.checked.isChecked = visibility == View.VISIBLE
-            view.setOnClickListener {
-                setSelected(address)
-                _onItemClickListener?.invoke(address)
+            view.checked.visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
+            view.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            address?.let {
+                setSelected(it)
+                onItemClickListener?.invoke(it)
+                return@let
             }
         }
     }

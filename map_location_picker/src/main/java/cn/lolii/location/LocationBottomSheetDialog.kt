@@ -11,6 +11,7 @@ import cn.lolii.map_location_picker.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_location_sheet.*
 import kotlinx.android.synthetic.main.fragment_location_sheet_item.view.*
+import kotlinx.android.synthetic.main.fragment_location_sheet_item_address.view.*
 
 /**
  *
@@ -54,8 +55,14 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
     class SheetAdapter(private val poiResult: List<PoiAddress>,
                        private var onItemClickListener: OnItemClickListener? = null) : RecyclerView.Adapter<SheetAdapter.ViewHolder>() {
 
-        private var currentChecked: PoiAddress? = null
-        private var currentCheckedPosition: Int = -1
+        private var lastSelected: PoiAddress? = null
+
+        private fun setSelected(address: PoiAddress) {
+            lastSelected?.selected = false
+            address.selected = true
+            lastSelected = address
+            notifyDataSetChanged()
+        }
 
         override fun getItemCount(): Int = poiResult.size
 
@@ -64,22 +71,27 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.setData(position, poiResult[position])
+            holder.setData(poiResult[position])
         }
 
-        inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-            fun setData(position: Int, address: PoiAddress) {
+        inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view),
+                View.OnClickListener {
+
+            private var address: PoiAddress? = null
+
+            fun setData(address: PoiAddress) {
+                this.address = address
                 view.title.text = address.title
                 view.address.text = address.formatAddress
-                view.checked.isChecked = address == currentChecked
-                view.setOnClickListener {
-                    currentChecked = address
-                    if (currentCheckedPosition != -1) {
-                        notifyItemChanged(currentCheckedPosition)
-                    }
-                    currentCheckedPosition = position
-                    view.checked.isChecked = true
-                    onItemClickListener?.onItemClick(view, position, address)
+                view.checked.visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
+                view.setOnClickListener(this)
+            }
+
+            override fun onClick(v: View?) {
+                address?.let {
+                    setSelected(it)
+                    onItemClickListener?.onItemClick(view, adapterPosition, it)
+                    return@let
                 }
             }
         }

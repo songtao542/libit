@@ -21,6 +21,11 @@ val permissions = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION
 )
 
+val location_permissions = arrayOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
+)
+
 fun Context.checkAppPermission(vararg permissions: String): Boolean {
     var requestList = ArrayList<String>()
     if (permissions.isNotEmpty()) {

@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
 
     private val callback = Handler.Callback {
         handler?.sendEmptyMessageDelayed(1, 1000)
-        Log.d("TTTT", "MainActivity=${this@MainActivity}")
         return@Callback true
     }
     private var handler: Handler? = null

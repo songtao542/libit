@@ -30,4 +30,7 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="MapPickerStyle" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

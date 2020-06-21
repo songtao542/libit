@@ -231,8 +231,13 @@ fun AMapLocation.toPoiAddress(): PoiAddress {
             province = province,
             city = city,
             street = street,
-            address = address,
+            address = address ?: (province.value() + city.value() + district.value()
+                    + street.value() + streetNum.value() + poiName.value()),
             type = AddressType.ADDRESS.value)
+}
+
+fun String?.value(): String {
+    return this ?: ""
 }
 
 fun MapView.getCenter(): LatLng {

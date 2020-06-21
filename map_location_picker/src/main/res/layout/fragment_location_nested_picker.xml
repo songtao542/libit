@@ -42,7 +42,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@drawable/location_picker_my_location_selector"
+                    android:background="@drawable/ic_my_location_bg"
                     android:padding="12dp"
                     app:srcCompat="@drawable/ic_my_location" />
 

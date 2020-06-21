@@ -17,6 +17,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:debuggable="true"
         android:theme="@style/AppTheme">
 
         <service android:name="com.amap.api.location.APSService" /> <!-- Required. AppKey copied from Portal -->

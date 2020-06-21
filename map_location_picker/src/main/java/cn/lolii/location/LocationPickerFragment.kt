@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import cn.lolii.location.extension.checkAndRequestPermission
 import cn.lolii.location.extension.checkAppPermission
+import cn.lolii.location.extension.location_permissions
 import cn.lolii.location.model.PoiAddress
 import cn.lolii.map_location_picker.R
 import com.amap.api.maps2d.CameraUpdateFactory
@@ -60,7 +61,7 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
 
         mapView.onCreate(savedInstanceState)
         if (!checkPermission()) {
-            checkAndRequestPermission(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+            checkAndRequestPermission(*location_permissions)
         }
 
         //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
@@ -185,7 +186,7 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
 
 
     private fun checkPermission(): Boolean {
-        return context?.checkAppPermission(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION) == true
+        return context?.checkAppPermission(*location_permissions) == true
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

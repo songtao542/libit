@@ -6,4 +6,10 @@
     <string name="location_picker_title">选择地点</string>
     <string name="search_result_templete">搜索“%1$s”</string>
     <string name="search_result">搜索结果</string>
+    <string name="baidu_map_not_install">手机未安装百度地图</string>
+    <string name="a_map_not_install">手机未安装高德地图</string>
+    <string name="tencent_map_not_install">手机未安装腾讯地图</string>
+    <string name="a_map_name">高德地图</string>
+    <string name="tencent_map_name">腾讯地图</string>
+    <string name="baidu_map_name">百度地图</string>
 </resources>

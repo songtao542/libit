@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.lolii.location.extension.checkAndRequestPermission
 import cn.lolii.location.extension.checkAppPermission
+import cn.lolii.location.extension.location_permissions
 import cn.lolii.location.model.AddressType
 import cn.lolii.location.model.PoiAddress
 import cn.lolii.location.model.Position
@@ -131,15 +132,14 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
             search()
         }
 
-        if (checkAndRequestPermission(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            search()
-        }
+        // start search
+        search()
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        menu.clear()
-//        inflater.inflate(R.menu.location_picker, menu)
-//    }
+    /*override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.location_picker, menu)
+    }*/
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -147,7 +147,7 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
                 adapter.getSelected()?.let {
                     _onResultListener?.invoke(it)
                 }
-                activity?.onBackPressed()
+                //activity?.onBackPressed()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -170,28 +170,35 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
     }
 
     private fun search(keyword: String = "", latLng: LatLng? = null, noBound: Boolean = false) {
-        if (latLng != null) {
-            val location = Position(latLng)
-            mapProxy.reverseGeocode(location).observe(viewLifecycleOwner, Observer {
-                it?.type = AddressType.ADDRESS.value
-                fillAdapter(address = it, pois = pois)
-            })
-            mapProxy.searchPoi(keyword, location).observe(viewLifecycleOwner, Observer { result ->
-                fillAdapter(address = address, pois = result)
-            })
-        } else if (noBound) {
-            mapProxy.searchPoi(keyword).observe(viewLifecycleOwner, Observer { result ->
-                address = null
-                fillAdapter(address = address, pois = result)
-            })
-        } else {
-            viewModel?.getMyLocation { location ->
-                if (location is AMapLocation) {
-                    fillAdapter(address = location.toPoiAddress(), pois = pois)
-                }
-                mapProxy.searchPoi(keyword, Position(location)).observe(viewLifecycleOwner, Observer { result ->
+        if (!checkAndRequestPermission(*location_permissions)) {
+            return
+        }
+        when {
+            latLng != null -> {
+                val location = Position(latLng)
+                mapProxy.reverseGeocode(location).observe(viewLifecycleOwner, Observer {
+                    it?.type = AddressType.ADDRESS.value
+                    fillAdapter(address = it, pois = pois)
+                })
+                mapProxy.searchPoi(keyword, location).observe(viewLifecycleOwner, Observer { result ->
                     fillAdapter(address = address, pois = result)
                 })
+            }
+            noBound -> {
+                mapProxy.searchPoi(keyword).observe(viewLifecycleOwner, Observer { result ->
+                    address = null
+                    fillAdapter(address = address, pois = result)
+                })
+            }
+            else -> {
+                viewModel?.getMyLocation { location ->
+                    if (location is AMapLocation) {
+                        fillAdapter(address = location.toPoiAddress(), pois = pois)
+                    }
+                    mapProxy.searchPoi(keyword, Position(location)).observe(viewLifecycleOwner, Observer { result ->
+                        fillAdapter(address = address, pois = result)
+                    })
+                }
             }
         }
     }
@@ -237,7 +244,7 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (checkAppPermission(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+        if (checkAppPermission(*location_permissions)) {
             search()
         }
     }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ripple_color">#FFEEEEEE</color>
+    <color name="outline_button_disable_color">#FFE5E5E5</color>
+    <color name="outline_color">#FFE5E5E5</color>
+    <color name="button_disable_color">#FF99CBF8</color>
+    <color name="blue_color">#007cee</color>
+    <color name="toolbar_text_color">#ff191919</color>
+    <color name="preview_toolbar_text_color">#ffffffff</color>
+    <color name="apply_wallpaper_menu_bg_color">#ffffffff</color>
+    <color name="apply_wallpaper_menu_divider_color">#ffe5e5e5</color>
+    <color name="apply_wallpaper_button_text_color">#ff007cee</color>
+    <color name="preview_toolbar_bg_color">#99000000</color>
+</resources>

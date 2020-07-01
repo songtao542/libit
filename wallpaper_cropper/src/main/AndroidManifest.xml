@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cn.lolii.wallpapercropper">
+
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+
+    <application>
+        <activity
+            android:name="com.android.wallpapercropper.WallpaperCropActivity"
+            android:finishOnCloseSystemDialogs="true"
+            android:label="@string/crop_wallpaper"
+            android:theme="@style/NoActionBar">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.CROP_AND_SET_WALLPAPER" />
+                <data android:mimeType="image/*" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

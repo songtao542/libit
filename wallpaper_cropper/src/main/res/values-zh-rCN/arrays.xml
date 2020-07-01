@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="set_wallpaper_as">
+        <item>设为桌面</item>
+        <item>设为锁屏</item>
+        <item>同时设置</item>
+    </string-array>
+</resources>

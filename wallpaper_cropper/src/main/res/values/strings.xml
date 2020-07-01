@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="crop_wallpaper">Crop wallpaper</string>
+    <!-- Button label on Wallpaper picker screen; user selects this button to set a specific wallpaper -->
+    <string name="wallpaper_instructions">Set as wallpaper</string>
+    <!-- Error message when an image is selected as a wallpaper,
+         but the wallpaper cropper cannot load it. The user will
+         usually see this when using another app and trying to set
+         an image as the wallpaper -->
+    <string name="wallpaper_load_fail">Couldn\'t load image as wallpaper</string>
+    <string name="desktop_set_success">Wallpaper applied to Home screen</string>
+    <string name="lock_set_success">Wallpaper applied to Lock screen</string>
+    <string name="simultaneous_set_success">Wallpaper applied to Home and Lock screens</string>
+
+    <string name="apply_keyguard">设为锁屏</string>
+    <string name="apply_wallpaper">设为主屏幕</string>
+    <string name="apply_all">同时设定</string>
+    <string name="cancel">取消</string>
+
+
+
+</resources>

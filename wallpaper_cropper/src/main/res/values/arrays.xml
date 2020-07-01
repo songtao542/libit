@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="set_wallpaper_as">
+        <item>Set as desktop</item>
+        <item>Set as screen lock</item>
+        <item>Simultaneous setting</item>
+    </string-array>
+</resources>

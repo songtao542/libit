@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="wallpaper_instructions" msgid="3524143401182707094">"設為桌布"</string>
+    <string name="wallpaper_load_fail" msgid="4800700444605404650">"無法載入您要設為桌布的圖片"</string>
+    <string name="crop_wallpaper" msgid="4882870800623585836">"裁剪桌布"</string>
+    <string name="desktop_set_success">已將桌布套用至主螢幕</string>
+    <string name="lock_set_success">已將桌布套用至鎖定螢幕</string>
+    <string name="simultaneous_set_success">桌布已套用至主螢幕與鎖定螢幕</string>
+</resources>

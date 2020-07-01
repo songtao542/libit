@@ -19,9 +19,11 @@
             <option value="$PROJECT_DIR$/shimmer" />
             <option value="$PROJECT_DIR$/statebutton" />
             <option value="$PROJECT_DIR$/util" />
+            <option value="$PROJECT_DIR$/wallpaper_cropper" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
+        <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
   </component>

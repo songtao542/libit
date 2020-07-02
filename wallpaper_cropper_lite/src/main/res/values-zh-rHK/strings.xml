@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="wallpaper_instructions" msgid="3524143401182707094">"設定桌布"</string>
+    <string name="wallpaper_load_fail" msgid="4800700444605404650">"無法載入圖片設為桌布"</string>
+    <string name="crop_wallpaper" msgid="4882870800623585836">"裁剪桌布"</string>
+    <string name="desktop_set_success">螢幕牆紙已應用至主螢幕</string>
+    <string name="lock_set_success">螢幕牆紙已應用至鎖定螢幕</string>
+    <string name="simultaneous_set_success">螢幕牆紙已應用至主螢幕與鎖定螢幕</string>
+</resources>

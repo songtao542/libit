@@ -20,6 +20,7 @@
             <option value="$PROJECT_DIR$/statebutton" />
             <option value="$PROJECT_DIR$/util" />
             <option value="$PROJECT_DIR$/wallpaper_cropper" />
+            <option value="$PROJECT_DIR$/wallpaper_cropper_lite" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

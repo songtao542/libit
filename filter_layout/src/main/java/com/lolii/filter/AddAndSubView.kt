@@ -148,14 +148,14 @@ class AddAndSubView : LinearLayout, TextWatcher {
 
         mAddButton?.setOnClickListener {
             if (mValue < mMax) {
-                mValue += 1
+                setValue(mValue + 1, false)
                 mOnValueChangedListener?.invoke(this, mValue, false)
                 mValueChangedListener?.onValueChanged(this, mValue, false)
             }
         }
         mSubButton?.setOnClickListener {
             if (mValue > mMin) {
-                mValue -= 1
+                setValue(mValue - 1, false)
                 mOnValueChangedListener?.invoke(this, mValue, false)
                 mValueChangedListener?.onValueChanged(this, mValue, false)
             }
@@ -219,8 +219,29 @@ class AddAndSubView : LinearLayout, TextWatcher {
     }
 
     fun setValue(value: Int) {
+        setValue(value, true)
+    }
+
+    /**
+     * 是否触发监听器
+     */
+    fun setValue(value: Int, notify: Boolean) {
         mValue = value
-        mNumEditor?.setText("$value")
+        if (!notify) {
+            mNumEditor?.removeTextChangedListener(this)
+            mNumEditor?.let {
+                val text = "$value"
+                it.setText(text)
+                it.setSelection(text.length)
+            }
+            mNumEditor?.addTextChangedListener(this)
+        } else {
+            mNumEditor?.let {
+                val text = "$value"
+                it.setText(text)
+                it.setSelection(text.length)
+            }
+        }
     }
 
     fun setHint(value: Int) {
@@ -228,10 +249,13 @@ class AddAndSubView : LinearLayout, TextWatcher {
         mNumEditor?.hint = "$value"
     }
 
-    fun setHint(value: Int, clearText: Boolean) {
+    /**
+     * 是否清空文本框
+     */
+    fun setHint(value: Int, clear: Boolean) {
         mValue = value
         mNumEditor?.hint = "$value"
-        if (clearText) {
+        if (clear) {
             mNumEditor?.removeTextChangedListener(this)
             mNumEditor?.setText("")
             mNumEditor?.addTextChangedListener(this)

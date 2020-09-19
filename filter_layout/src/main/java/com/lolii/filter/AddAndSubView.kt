@@ -262,6 +262,11 @@ class AddAndSubView : LinearLayout, TextWatcher {
         }
     }
 
+    override fun clearFocus() {
+        super.clearFocus()
+        mNumEditor?.clearFocus()
+    }
+
     fun getValue(): Int {
         return mValue
     }

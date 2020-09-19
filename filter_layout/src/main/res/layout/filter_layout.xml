@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/leftBottomButton"
+            android:layout_width="150dp"
+            android:layout_height="@dimen/filter_bottom_button_height"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/filter_reset_button_selector"
+            android:gravity="center"
+            android:text="@string/reset"
+            android:textColor="@android:color/black" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/rightBottomButton"
+            android:layout_width="150dp"
+            android:layout_height="@dimen/filter_bottom_button_height"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/filter_confirm_button_selector"
+            android:gravity="center"
+            android:text="@string/confirm"
+            android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</merge>

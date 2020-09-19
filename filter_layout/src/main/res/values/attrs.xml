@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="FilterLayout">
+        <attr name="leftBottomButtonText" format="string|reference" />
+        <attr name="rightBottomButtonText" format="string|reference" />
+        <attr name="leftBottomButtonBackground" format="reference" />
+        <attr name="rightBottomButtonBackground" format="reference" />
+        <attr name="checkableItemBackground" format="reference" />
+        <attr name="textItemBackground" format="reference" />
+        <attr name="dateItemBackground" format="reference" />
+        <attr name="numberItemBackground" format="reference" />
+        <attr name="editableItemBackground" format="reference" />
+        <attr name="groupBackground" format="reference" />
+        <attr name="rowDividerHeight" format="dimension|reference" />
+        <attr name="columnDividerWidth" format="dimension|reference" />
+        <attr name="pageCount" format="integer" />
+        <attr name="leftTabTitle" format="string|reference" />
+        <attr name="rightTabTitle" format="string|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="AddAndSubView">
+        <attr name="addIcon" format="reference" />
+        <attr name="subIcon" format="reference" />
+        <attr name="editable" format="boolean" />
+        <attr name="editTextBackground" format="reference" />
+        <attr name="editTextHeight" format="dimension|reference" />
+        <attr name="editTextWidth" format="dimension|reference" />
+        <attr name="iconSize" format="dimension|reference" />
+        <attr name="value" format="integer" />
+        <attr name="minValue" format="integer" />
+        <attr name="maxValue" format="integer" />
+        <attr name="android:textColor" />
+        <attr name="android:textColorHint" />
+    </declare-styleable>
+
+</resources>

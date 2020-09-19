@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <ImageView
+        android:id="@+id/subButton"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_num_sub" />
+
+    <EditText
+        android:id="@+id/numEditor"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/add_and_sub_editor_background"
+        android:gravity="center"
+        android:imeOptions="actionDone"
+        android:inputType="numberSigned"
+        android:minWidth="60dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/addButton"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_num_add" />
+
+</merge>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/filter_item_outline_selector"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:maxLines="1"
+        android:minWidth="100dp"
+        android:paddingLeft="@dimen/filter_item_padding_h"
+        android:paddingTop="@dimen/filter_item_padding_v"
+        android:paddingRight="@dimen/filter_item_padding_h"
+        android:paddingBottom="@dimen/filter_item_padding_v"
+        android:textColor="@color/filter_item_text_color"
+        android:textColorHint="@android:color/darker_gray"
+        android:textSize="14sp"
+        app:chipIconEnabled="false" />
+
+    <View
+        android:layout_width="@dimen/filter_range_linker_width"
+        android:layout_height="1px"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/filter_range_linker_margin"
+        android:layout_marginRight="@dimen/filter_range_linker_margin"
+        android:background="@color/filter_range_linker_color" />
+
+    <EditText
+        android:id="@+id/end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/filter_item_outline_selector"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:maxLines="1"
+        android:minWidth="100dp"
+        android:paddingLeft="@dimen/filter_item_padding_h"
+        android:paddingTop="@dimen/filter_item_padding_v"
+        android:paddingRight="@dimen/filter_item_padding_h"
+        android:paddingBottom="@dimen/filter_item_padding_v"
+        android:textColor="@color/filter_item_text_color"
+        android:textColorHint="@android:color/darker_gray"
+        android:textSize="14sp"
+        app:chipIconEnabled="false" />
+
+</LinearLayout>

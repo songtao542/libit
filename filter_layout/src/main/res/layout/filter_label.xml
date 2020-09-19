@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/label"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/filter_item_outline_selector"
+    android:clickable="true"
+    android:ellipsize="none"
+    android:focusable="true"
+    android:gravity="center"
+    android:paddingLeft="@dimen/filter_item_padding_h"
+    android:paddingTop="@dimen/filter_item_padding_v"
+    android:paddingRight="@dimen/filter_item_padding_h"
+    android:paddingBottom="@dimen/filter_item_padding_v"
+    android:singleLine="true"
+    android:textAlignment="center"
+    android:textColor="@color/filter_item_text_color"
+    android:textSize="14sp" />

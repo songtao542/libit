@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dialog_datetime_padding_bottom">
+
+    <Button
+        android:id="@+id/btn_date_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/dialog_date_mode_end"
+        android:layout_marginRight="@dimen/dialog_date_mode_end"
+        android:layout_marginBottom="@dimen/dialog_date_mode_bottom"
+        android:background="@drawable/background_date_btn"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="@string/gregorian"
+        android:textColor="?attr/colorAccent"
+        android:textSize="@dimen/text_size_button_or_dialog"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <cn.lolii.picker.NumberPickerView
+            android:layout_width="@dimen/greeui_date_picker_padding"
+            android:layout_height="wrap_content"
+            app:gree_TextColorSelected="@android:color/transparent" />
+
+        <cn.lolii.picker.datepicker.GregorianLunarCalendarView
+            android:id="@+id/date_picker_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <cn.lolii.picker.NumberPickerView
+            android:layout_width="@dimen/greeui_date_picker_padding"
+            android:layout_height="wrap_content"
+            app:gree_TextColorSelected="@android:color/transparent" />
+
+    </LinearLayout>
+</LinearLayout>

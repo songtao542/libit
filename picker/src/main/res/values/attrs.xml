@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="NumberPickerView">
+        <!--set number of item displayed, default is 3-->
+        <attr name="showCount" format="reference|integer" />
+        <!--set if show divider, default is true-->
+        <attr name="showDivider" format="reference|boolean" />
+        <attr name="dividerColor" format="reference|color" />
+        <attr name="dividerMarginLeft" format="reference|dimension" />
+        <attr name="dividerMarginRight" format="reference|dimension" />
+        <attr name="dividerHeight" format="reference|dimension" />
+        <attr name="dividerDrawable" format="reference" />
+        <attr name="textColorNormal" format="reference|color" />
+        <attr name="textColorSelected" format="reference|color" />
+        <attr name="textColorHint" format="reference|color" />
+        <attr name="textSizeNormal" format="reference|dimension" />
+        <attr name="textSizeSelected" format="reference|dimension" />
+        <attr name="textSizeHint" format="reference|dimension" />
+        <attr name="textArray" format="reference" />
+        <attr name="minValue" format="reference|integer" />
+        <attr name="maxValue" format="reference|integer" />
+        <attr name="wrapSelectorWheel" format="reference|boolean" />
+        <attr name="respondChangeOnDetached" format="reference|boolean" />
+        <attr name="hintText" format="reference|string" />
+        <attr name="emptyItemHint" format="reference|string" />
+        <attr name="marginStartOfHint" format="reference|dimension" />
+        <attr name="marginEndOfHint" format="reference|dimension" />
+        <attr name="itemPaddingHorizontal" format="reference|dimension" />
+        <attr name="itemPaddingVertical" format="reference|dimension" />
+        <attr name="respondChangeInMainThread" format="reference|boolean" />
+        <attr name="textEllipsize" format="reference|string" />
+
+        <!--just used to measure maxWidth for wrap_content without hint,
+            the string array will never be displayed.
+            you can set this attr if you want to keep the wraped numberpickerview
+            width unchanged when alter the content list-->
+        <attr name="alternativeTextArrayWithMeasureHint" format="reference" />
+        <attr name="alternativeTextArrayWithoutMeasureHint" format="reference" />
+        <!--the max length of hint content-->
+        <attr name="alternativeHint" format="reference|string" />
+    </declare-styleable>
+
+</resources>

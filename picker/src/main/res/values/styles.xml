@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget" />
+
+    <style name="Widget.NumberPickerView">
+        <item name="dividerColor">@color/divider_color</item>
+        <item name="dividerHeight">1px</item>
+        <item name="textColorNormal">@color/number_picker_normal</item>
+        <item name="textColorSelected">@color/color_accent</item>
+        <item name="textColorHint">@color/color_accent</item>
+        <item name="textSizeNormal">@dimen/text_size_number_picker_normal</item>
+        <item name="textSizeSelected">@dimen/text_size_number_picker_selected</item>
+        <item name="wrapSelectorWheel">true</item>
+        <item name="showDivider">false</item>
+        <item name="itemPaddingVertical">@dimen/number_picker_item_space</item>
+    </style>
+    <style name="AlertDialog" parent="android:Widget">
+        <item name="android:layout">@layout/greeui_alert_dialog</item>
+        <item name="listLayout">@layout/greeui_select_dialog</item>
+        <item name="listItemLayout">@layout/greeui_select_dialog_item</item>
+        <item name="multiChoiceItemLayout">@layout/greeui_dialog_multichoice_item</item>
+        <item name="singleChoiceItemLayout">@layout/greeui_dialog_singlechoice_item</item>
+        <item name="buttonIconDimen">@dimen/greeui_dialog_progress_size</item>
+    </style>
+
+    <style name="AlertDialog.Button" parent="android:Widget.Material.Button.Borderless.Colored">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:textAppearance">@style/GreeUI.TextAppearance.Button</item>
+    </style>
+    <style name="AlertDialog.BottomBarButton" parent="GreeUI.AlertDialog.Button">
+        <item name="android:minWidth">32dp</item>
+        <item name="android:paddingStart">@dimen/greeui_dialog_preferred_padding</item>
+        <item name="android:paddingEnd">@dimen/greeui_dialog_preferred_padding</item>
+        <item name="android:textColor">@color/greeui_color_selector_btn_blue</item>
+    </style>
+    <style name="GreeUI.AlertDialog.Button" parent="android:Widget.Material.Button.Borderless.Colored">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:textAppearance">@style/GreeUI.TextAppearance.Button</item>
+    </style>
+</resources>

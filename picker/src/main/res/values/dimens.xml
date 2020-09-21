@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="text_size_number_picker_normal">18sp</dimen>
+    <dimen name="text_size_number_picker_selected">22sp</dimen>
+    <dimen name="number_picker_item_space">24dp</dimen>
+
+    <dimen name="time_picker_item_width">78dp</dimen>
+    <dimen name="action_bar_content_inset">15dp</dimen>
+    <dimen name="dialog_datetime_padding_bottom">10dp</dimen>
+    <dimen name="greeui_date_picker_padding">55dp</dimen>
+    <dimen name="greeui_time_picker_item_am_width">93dp</dimen>
+    <dimen name="greeui_time_picker_item_width">78dp</dimen>
+    <dimen name="greeui_dialog_time_item_padding">10dp</dimen>
+    <dimen name="dialog_date_picker_width">168dp</dimen>
+    <dimen name="greeui_dialog_date_picker_width2">218dp</dimen>
+    <dimen name="dialog_date_mode_end">34dp</dimen>
+    <dimen name="dialog_date_mode_bottom">12dp</dimen>
+
+    <dimen name="dialog_title_divider">16dp</dimen>
+    <dimen name="dialog_padding_top">24dp</dimen>
+    <!--弹窗标题、actionbar文字按钮-->
+    <dimen name="text_size_dialog_title">17sp</dimen>
+
+    <!--弹窗正文、按钮、空白页文字提醒、文本-->
+    <dimen name="text_size_button_or_dialog">15sp</dimen>
+    <dimen name="dialog_title_padding">20dp</dimen>
+</resources>

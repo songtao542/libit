@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/action_bar_content_inset"
+    android:paddingEnd="@dimen/action_bar_content_inset"
+    android:paddingBottom="@dimen/dialog_datetime_padding_bottom">
+
+    <cn.lolii.picker.NumberPickerView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:gree_TextColorSelected="@android:color/transparent" />
+
+    <cn.lolii.picker.datepicker.TimePickerView
+        android:id="@+id/time_picker_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <cn.lolii.picker.NumberPickerView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:gree_TextColorSelected="@android:color/transparent" />
+
+</LinearLayout>

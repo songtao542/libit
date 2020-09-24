@@ -1,5 +1,11 @@
-<resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">StateButton</string>
     <string name="shimmer">Shimmer</string>
     <string name="text_test">既有格局，又有布局；既有大气，更有静气。精谨细腻，笔笔有章法，这样一幅“工笔画”，怎能不让人期待？</string>
+    <string name="picker">Picker</string>
+
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+
 </resources>

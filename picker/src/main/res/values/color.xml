@@ -7,8 +7,5 @@
     <!--系统蓝，高亮色-->
     <color name="color_accent">#007cee</color>
 
-    <!--分割线-->
-    <color name="greeui_divider_color">#e5e5e5</color>
-
 
 </resources>

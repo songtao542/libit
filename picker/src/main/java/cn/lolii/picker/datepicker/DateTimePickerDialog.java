@@ -9,15 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.appcompat.app.AlertDialog;
+
 import java.util.Calendar;
 import java.util.Locale;
 
-import cn.lolii.picker.GreeAlertDialog;
 import cn.lolii.picker.R;
 
 
-public class GreeDateTimePickerDialog {
-    private static final String TAG = GreeDateTimePickerDialog.class.getSimpleName();
+public class DateTimePickerDialog {
+    private static final String TAG = DateTimePickerDialog.class.getSimpleName();
     private static final String FORMAT_TWO_NUMBER = "%02d";
 
     private Context mContext;
@@ -28,10 +29,10 @@ public class GreeDateTimePickerDialog {
     private TimePickerView mTimePickerView;
     private GregorianLunarCalendarView.CalendarData mCalendarData;
     private TimePickerView.TimeData mTimeData;
-    private GreeAlertDialog mDialog;
+    private AlertDialog mDialog;
     private String mDateStr, mTimeStr;
 
-    protected GreeDateTimePickerDialog(Context context, GreeAlertDialog dialog, GregorianLunarCalendarView calendarView, TimePickerView timePicker) {
+    protected DateTimePickerDialog(Context context, AlertDialog dialog, GregorianLunarCalendarView calendarView, TimePickerView timePicker) {
         mContext = context;
         mDialog = dialog;
         mCalendarView = calendarView;
@@ -61,6 +62,7 @@ public class GreeDateTimePickerDialog {
             mDialog.setTitle(title);
         }
     }
+
     public void setAutoUpdateTitle(boolean enable) {
         mIsAutoUpdateTitle = enable;
     }
@@ -72,16 +74,13 @@ public class GreeDateTimePickerDialog {
 
     private void setDateTimeChangeListener(final OnDateTimeChangeListener listener) {
         if (mCalendarView != null) {
-            mCalendarView.setOnDateChangedListener(new GregorianLunarCalendarView.OnDateChangedListener() {
-                @Override
-                public void onDateChanged(GregorianLunarCalendarView.CalendarData calendarData) {
-                    mCalendarData = calendarData ;
-                    if (mIsAutoUpdateTitle) {
-                        updateTitle(calendarData);
-                    }
-                    if (listener != null) {
-                        listener.onDateChanged(GreeDateTimePickerDialog.this, calendarData);
-                    }
+            mCalendarView.setOnDateChangedListener(calendarData -> {
+                mCalendarData = calendarData;
+                if (mIsAutoUpdateTitle) {
+                    updateTitle(calendarData);
+                }
+                if (listener != null) {
+                    listener.onDateChanged(DateTimePickerDialog.this, calendarData);
                 }
             });
         }
@@ -94,7 +93,7 @@ public class GreeDateTimePickerDialog {
                         updateTitle(timeData);
                     }
                     if (listener != null) {
-                        listener.onTimeChanged(GreeDateTimePickerDialog.this, timeData);
+                        listener.onTimeChanged(DateTimePickerDialog.this, timeData);
                     }
                 }
             });
@@ -102,7 +101,7 @@ public class GreeDateTimePickerDialog {
     }
 
     public TimePickerView.TimeData getSelectedTime() {
-		if (mTimeData == null && mTimePickerView != null) {
+        if (mTimeData == null && mTimePickerView != null) {
             mTimeData = mTimePickerView.getTimeData();
         }
         return mTimeData;
@@ -131,6 +130,7 @@ public class GreeDateTimePickerDialog {
         }
         return mCalendarData;
     }
+
     public String getSelectedDateToString() {
         return getDateString(getSelectedDate());
     }
@@ -158,13 +158,14 @@ public class GreeDateTimePickerDialog {
     }
 
     public interface OnDateTimeChangeListener {
-        default void onDateChanged(GreeDateTimePickerDialog dialog, GregorianLunarCalendarView.CalendarData calendarData) {
+        default void onDateChanged(DateTimePickerDialog dialog, GregorianLunarCalendarView.CalendarData calendarData) {
         }
 
-        default void onTimeChanged(GreeDateTimePickerDialog dialog, TimePickerView.TimeData timeData) {
+        default void onTimeChanged(DateTimePickerDialog dialog, TimePickerView.TimeData timeData) {
         }
     }
-	public TimePickerView getTimePickerView() {
+
+    public TimePickerView getTimePickerView() {
         return mTimePickerView;
     }
 
@@ -172,7 +173,7 @@ public class GreeDateTimePickerDialog {
         return mCalendarView;
     }
 
-    public GreeAlertDialog getDialog() {
+    public AlertDialog getDialog() {
         return mDialog;
     }
 
@@ -181,6 +182,7 @@ public class GreeDateTimePickerDialog {
             mDialog.show();
         }
     }
+
     public void dismiss() {
         if (mDialog != null) {
             mDialog.dismiss();
@@ -209,11 +211,13 @@ public class GreeDateTimePickerDialog {
     }
 
 
-    /**-------   Builder   -------*/
+    /**
+     * -------   Builder   -------
+     */
     public static class Builder {
         private Context mContext;
         private ChineseCalendar mCalendar;
-        private GreeDialogBuilder mBuilder;
+        private AlertDialog.Builder mBuilder;
         private int mYearMin, mYearMax;
         private boolean mIsAutoUpdateTitle = true;
         private boolean mIsShowGregorian = true;
@@ -224,11 +228,13 @@ public class GreeDateTimePickerDialog {
         private OnDateTimeChangeListener mDateTimeChangeListener;
         private int mShow24Hour = -1;
 
+        private boolean mCanceledOnTouchOutside = true;
+
         public Builder(Context context) {
             mContext = context;
             mCalendar = new ChineseCalendar();
-            mBuilder = new GreeDialogBuilder(context);
-            mBuilder.setTitle(0 +""); //避免外部未设置时无法显示title
+            mBuilder = new AlertDialog.Builder(context, R.style.PickerDialog);
+            mBuilder.setTitle(0 + ""); //避免外部未设置时无法显示title
         }
 
         public Builder(Context context, int year, int month, int day) {
@@ -249,18 +255,22 @@ public class GreeDateTimePickerDialog {
             mBuilder.setTitle(title);
             return this;
         }
+
         public Builder setAutoUpdateTitle(boolean enable) {
             mIsAutoUpdateTitle = enable;
             return this;
         }
+
         public Builder setIsWithViewDate(boolean isWith) {
             mIsWithViewDate = isWith;
             return this;
         }
+
         public Builder setIsWithViewTime(boolean isWith) {
             mIsWithViewTime = isWith;
             return this;
         }
+
         /**
          * @param hour [0,23] 设置到Calendar.HOUR_OF_DAY
          */
@@ -270,6 +280,7 @@ public class GreeDateTimePickerDialog {
             mIsWithViewTime = true;
             return this;
         }
+
         /**
          * @param hour 12-hour clock (0 - 11).  0 在12小时制显示为12
          * @param amPm {@link Calendar#AM} or {@link Calendar#PM}
@@ -283,6 +294,7 @@ public class GreeDateTimePickerDialog {
             mIsWithViewTime = true;
             return this;
         }
+
         public Builder setTimeShow24Hour(boolean isShow24Hour) {
             mShow24Hour = isShow24Hour ? 1 : 0;
             return this;
@@ -294,6 +306,7 @@ public class GreeDateTimePickerDialog {
             mYearMax = maxYear;
             return this;
         }
+
         /**
          * 以公历日期初始化
          */
@@ -301,8 +314,10 @@ public class GreeDateTimePickerDialog {
             setDefaultDate(year, month, day, false);
             return this;
         }
+
         /**
          * 以公历/农历日期初始化
+         *
          * @param isLunar true 农历
          */
         @SuppressLint("WrongConstant")
@@ -319,12 +334,15 @@ public class GreeDateTimePickerDialog {
             mIsWithViewDate = true;
             return this;
         }
+
         public Builder setDateTimeChangeListener(OnDateTimeChangeListener listener) {
             mDateTimeChangeListener = listener;
             return this;
         }
+
         /**
          * 用于设置创造Dialog时参数，如已显示，需要切换请用toGregorianMode() or toLunarMode()
+         *
          * @param isShowGregorian false 表示农历，默认true 公历
          */
         public Builder setShowGregorian(boolean isShowGregorian) {
@@ -337,40 +355,39 @@ public class GreeDateTimePickerDialog {
             return this;
         }
 
-        public GreeDateTimePickerDialog create() {
-            mBuilder.setTitleTextSizeById(R.dimen.greeui_text_size_dialog_title);
+        public DateTimePickerDialog create() {
             View contentView;
             GregorianLunarCalendarView calendarView = null;
             TimePickerView timePickerView = null;
             if (!mIsWithViewDate && mIsWithViewTime) {  // 只设置时间
                 contentView = View.inflate(mContext, R.layout.dialog_time_picker, null);
-                timePickerView = (TimePickerView) contentView.findViewById(R.id.time_picker_view);
+                timePickerView = contentView.findViewById(R.id.time_picker_view);
                 if (mShow24Hour >= 0) {
                     timePickerView.setIs24Hour(mShow24Hour == 1);
                 }
             } else if (mIsWithViewDate && mIsWithViewTime) {    // 日期时间都设置
                 contentView = View.inflate(mContext, R.layout.dialog_date_time_picker, null);
-                calendarView = (GregorianLunarCalendarView) contentView.findViewById(R.id.date_picker_view);
-                timePickerView = (TimePickerView) contentView.findViewById(R.id.time_picker_view);
+                calendarView = contentView.findViewById(R.id.date_picker_view);
+                timePickerView = contentView.findViewById(R.id.time_picker_view);
                 timePickerView.setIs24Hour(true);   // UI设计日期时间同时显示时，只有24h
                 timePickerView.setItemWrapContent();
-                timePickerView.setItemPadding(mContext.getResources().getDimensionPixelSize(R.dimen.greeui_dialog_time_item_padding));
+                timePickerView.setItemPadding(mContext.getResources().getDimensionPixelSize(R.dimen.dialog_time_item_padding));
             } else {    // 其他情况只设置日期，默认
                 contentView = View.inflate(mContext, R.layout.dialog_date_picker, null);
-                calendarView = (GregorianLunarCalendarView) contentView.findViewById(R.id.date_picker_view);
+                calendarView = contentView.findViewById(R.id.date_picker_view);
             }
             mBuilder.setView(contentView);
-            GreeAlertDialog dialog = mBuilder.create();
-
+            AlertDialog dialog = mBuilder.create();
+            dialog.setCanceledOnTouchOutside(mCanceledOnTouchOutside);
             //先创建pickerDialog实例，后续设置数据回调onChange
-            GreeDateTimePickerDialog pickerDialog = new GreeDateTimePickerDialog(mContext, dialog, calendarView, timePickerView);
+            DateTimePickerDialog pickerDialog = new DateTimePickerDialog(mContext, dialog, calendarView, timePickerView);
             pickerDialog.setDateTimeChangeListener(mDateTimeChangeListener);
             pickerDialog.setAutoUpdateTitle(mIsAutoUpdateTitle);
             pickerDialog.setWithView(mIsWithViewDate, mIsWithViewTime);
 
             //设置日期、时间数据，默认为当前系统日期时间
             if (calendarView != null) {
-                Log.d(TAG, "show() mIsAutoUpdateTitle:" + mIsAutoUpdateTitle +",mIsShowGregorian:" + mIsShowGregorian);
+                Log.d(TAG, "show() mIsAutoUpdateTitle:" + mIsAutoUpdateTitle + ",mIsShowGregorian:" + mIsShowGregorian);
                 calendarView.setMinValue(mYearMin);
                 calendarView.setMaxValue(mYearMax);
                 calendarView.init(mCalendar, mIsShowGregorian);
@@ -385,8 +402,8 @@ public class GreeDateTimePickerDialog {
             return pickerDialog;
         }
 
-        public GreeDateTimePickerDialog show() {
-            GreeDateTimePickerDialog pickerDialog = create();
+        public DateTimePickerDialog show() {
+            DateTimePickerDialog pickerDialog = create();
             pickerDialog.getDialog().show();
             return pickerDialog;
         }
@@ -406,7 +423,7 @@ public class GreeDateTimePickerDialog {
                         dateView.toLunarMode();
                         ((Button) v).setText(R.string.lunar);
                         ViewGroup.LayoutParams params = dateView.getLayoutParams();
-                        params.width = mContext.getResources().getDimensionPixelOffset(R.dimen.greeui_dialog_date_picker_width2);
+                        params.width = mContext.getResources().getDimensionPixelOffset(R.dimen.dialog_date_picker_width2);
                         dateView.setLayoutParams(params);
                     } else {
                         dateView.toGregorianMode();
@@ -419,22 +436,23 @@ public class GreeDateTimePickerDialog {
             });
         }
 
-        public Builder setDismissOnClickBtn(boolean enable) {
-            mBuilder.setDismissOnClickBtn(enable);
-            return this;
-        }
-
         public Builder setCanceledOnTouchOutside(boolean enable) {
-            mBuilder.setCanceledOnTouchOutside(enable);
-            return this;
-        }
-        public Builder setPositiveButton(DialogInterface.OnClickListener listener) {
-            mBuilder.setPositiveButton(listener);
+            mCanceledOnTouchOutside = enable;
             return this;
         }
 
-        public Builder setNegativeButton(DialogInterface.OnClickListener listener) {
-            mBuilder.setNegativeButton(listener);
+        public Builder setCancelable(boolean enable) {
+            mBuilder.setCancelable(enable);
+            return this;
+        }
+
+        public Builder setPositiveButton(int textResId, DialogInterface.OnClickListener listener) {
+            mBuilder.setPositiveButton(textResId, listener);
+            return this;
+        }
+
+        public Builder setNegativeButton(int textResId, DialogInterface.OnClickListener listener) {
+            mBuilder.setNegativeButton(textResId, listener);
             return this;
         }
 

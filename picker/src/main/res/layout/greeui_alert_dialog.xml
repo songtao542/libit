@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<cn.lolii.picker.AlertDialogLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/parentPanel"
     android:layout_width="match_parent"
@@ -8,7 +7,7 @@
     android:gravity="start|top"
     android:orientation="vertical">
 
-    <include layout="@layout/greeui_dialog_title" />
+    <include layout="@layout/dialog_title" />
 
     <FrameLayout
         android:id="@+id/contentPanel"
@@ -24,23 +23,23 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/greeui_dialog_title_divider"
+                android:paddingBottom="@dimen/dialog_title_divider"
                 android:orientation="vertical">
 
                 <Space
                     android:id="@+id/textSpacerNoTitle"
                     android:visibility="gone"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/greeui_dialog_padding_top" />
+                    android:layout_height="@dimen/dialog_padding_top" />
 
                 <TextView
                     android:id="@android:id/message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/greeui_dialog_space_extra"
-                    android:paddingStart="?android:attr/dialogPreferredPadding"
-                    android:paddingEnd="?android:attr/dialogPreferredPadding"
-                    android:textSize="@dimen/greeui_text_size_button_or_dialog" />
+                    android:paddingBottom="@dimen/dialog_space_extra"
+                    android:paddingStart="@dimen/date_picker_padding"
+                    android:paddingEnd="@dimen/date_picker_padding"
+                    android:textSize="@dimen/text_size_button_or_dialog" />
 
                 <Space
                     android:id="@+id/textSpacerNoButtons"
@@ -66,5 +65,5 @@
     <include
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/greeui_dialog_button_bar" />
-</cn.lolii.picker.AlertDialogLayout>
+        layout="@layout/dialog_button_bar" />
+</LinearLayout>

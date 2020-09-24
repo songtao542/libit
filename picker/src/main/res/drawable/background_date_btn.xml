@@ -3,7 +3,7 @@
     android:shape="rectangle">
     <stroke
         android:width="1px"
-        android:color="@color/greeui_divider_color" />
+        android:color="@color/divider_color" />
     <solid android:color="?android:attr/colorBackground" />
     <corners android:radius="9px" />
     <padding

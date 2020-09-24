@@ -244,6 +244,16 @@ class AddAndSubView : LinearLayout, TextWatcher {
         }
     }
 
+    fun clearEditorFocus() {
+        mNumEditor?.let {
+            it.clearFocus()
+            it.isFocusableInTouchMode = false
+            it.isFocusable = false
+            it.isFocusableInTouchMode = true
+            it.isFocusable = true
+        }
+    }
+
     fun setHint(value: Int) {
         mValue = value
         mNumEditor?.hint = "$value"
@@ -260,11 +270,6 @@ class AddAndSubView : LinearLayout, TextWatcher {
             mNumEditor?.setText("")
             mNumEditor?.addTextChangedListener(this)
         }
-    }
-
-    override fun clearFocus() {
-        super.clearFocus()
-        mNumEditor?.clearFocus()
     }
 
     fun getValue(): Int {

@@ -65,6 +65,7 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
 
     public GregorianLunarCalendarView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initInternal(context);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

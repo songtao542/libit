@@ -15,27 +15,11 @@
         <item name="showDivider">false</item>
         <item name="itemPaddingVertical">@dimen/number_picker_item_space</item>
     </style>
-    <style name="AlertDialog" parent="android:Widget">
-        <item name="android:layout">@layout/greeui_alert_dialog</item>
-        <item name="listLayout">@layout/greeui_select_dialog</item>
-        <item name="listItemLayout">@layout/greeui_select_dialog_item</item>
-        <item name="multiChoiceItemLayout">@layout/greeui_dialog_multichoice_item</item>
-        <item name="singleChoiceItemLayout">@layout/greeui_dialog_singlechoice_item</item>
-        <item name="buttonIconDimen">@dimen/greeui_dialog_progress_size</item>
+
+    <style name="PickerDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@drawable/round_shape</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:layout_gravity">bottom</item>
     </style>
 
-    <style name="AlertDialog.Button" parent="android:Widget.Material.Button.Borderless.Colored">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-        <item name="android:textAppearance">@style/GreeUI.TextAppearance.Button</item>
-    </style>
-    <style name="AlertDialog.BottomBarButton" parent="GreeUI.AlertDialog.Button">
-        <item name="android:minWidth">32dp</item>
-        <item name="android:paddingStart">@dimen/greeui_dialog_preferred_padding</item>
-        <item name="android:paddingEnd">@dimen/greeui_dialog_preferred_padding</item>
-        <item name="android:textColor">@color/greeui_color_selector_btn_blue</item>
-    </style>
-    <style name="GreeUI.AlertDialog.Button" parent="android:Widget.Material.Button.Borderless.Colored">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-        <item name="android:textAppearance">@style/GreeUI.TextAppearance.Button</item>
-    </style>
 </resources>

@@ -6,6 +6,11 @@
         <item>:</item>
         <item>:</item>
     </string-array>
+    <string name="lunar">Lunar</string>
+    <string name="gregorian">Gregorian</string>
+    <string name="year">/</string>
+    <string name="month">/</string>
+    <string name="day">/</string>
     <string name="leap">Le.</string>
     <string-array name="lunar_month_entries">
         <item>Jan.</item>

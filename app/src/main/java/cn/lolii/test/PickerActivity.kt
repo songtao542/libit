@@ -14,6 +14,8 @@ class PickerActivity : AppCompatActivity() {
 
         datePicker.setOnClickListener {
             val dialog = DateTimePickerDialog.Builder(this)
+                    .setWithDate(false)
+                    .setWithTime(true)
                     .setNegativeButton(R.string.cancel,object : DialogInterface.OnClickListener {
                         override fun onClick(p0: DialogInterface?, p1: Int) {
 

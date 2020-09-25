@@ -5,8 +5,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 
 import androidx.appcompat.app.AlertDialog;
@@ -17,19 +19,20 @@ import java.util.Locale;
 import cn.lolii.picker.R;
 
 
+@SuppressWarnings("unused")
 public class DateTimePickerDialog {
     private static final String TAG = DateTimePickerDialog.class.getSimpleName();
     private static final String FORMAT_TWO_NUMBER = "%02d";
 
-    private Context mContext;
+    private final Context mContext;
     private boolean mIsAutoUpdateTitle = true;
     private boolean mIsWithViewDate;
     private boolean mIsWithViewTime;
-    private GregorianLunarCalendarView mCalendarView;
-    private TimePickerView mTimePickerView;
+    private final GregorianLunarCalendarView mCalendarView;
+    private final TimePickerView mTimePickerView;
     private GregorianLunarCalendarView.CalendarData mCalendarData;
     private TimePickerView.TimeData mTimeData;
-    private AlertDialog mDialog;
+    private final AlertDialog mDialog;
     private String mDateStr, mTimeStr;
 
     protected DateTimePickerDialog(Context context, AlertDialog dialog, GregorianLunarCalendarView calendarView, TimePickerView timePicker) {
@@ -85,16 +88,13 @@ public class DateTimePickerDialog {
             });
         }
         if (mTimePickerView != null) {
-            mTimePickerView.setOnTimeChangeListener(new TimePickerView.OnTimeChangeListener() {
-                @Override
-                public void onTimeChange(TimePickerView.TimeData timeData) {
-                    mTimeData = timeData;
-                    if (mIsAutoUpdateTitle) {
-                        updateTitle(timeData);
-                    }
-                    if (listener != null) {
-                        listener.onTimeChanged(DateTimePickerDialog.this, timeData);
-                    }
+            mTimePickerView.setOnTimeChangeListener(timeData -> {
+                mTimeData = timeData;
+                if (mIsAutoUpdateTitle) {
+                    updateTitle(timeData);
+                }
+                if (listener != null) {
+                    listener.onTimeChanged(DateTimePickerDialog.this, timeData);
                 }
             });
         }
@@ -214,10 +214,11 @@ public class DateTimePickerDialog {
     /**
      * -------   Builder   -------
      */
+    @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
-        private Context mContext;
-        private ChineseCalendar mCalendar;
-        private AlertDialog.Builder mBuilder;
+        private final Context mContext;
+        private final ChineseCalendar mCalendar;
+        private final AlertDialog.Builder mBuilder;
         private int mYearMin, mYearMax;
         private boolean mIsAutoUpdateTitle = true;
         private boolean mIsShowGregorian = true;
@@ -229,21 +230,26 @@ public class DateTimePickerDialog {
         private int mShow24Hour = -1;
 
         private boolean mCanceledOnTouchOutside = true;
+        private int mGravity = Gravity.BOTTOM;
 
-        public Builder(Context context) {
+        public Builder(Context context, int theme) {
             mContext = context;
             mCalendar = new ChineseCalendar();
-            mBuilder = new AlertDialog.Builder(context, R.style.PickerDialog);
+            mBuilder = new AlertDialog.Builder(context, theme);
             mBuilder.setTitle(0 + ""); //避免外部未设置时无法显示title
         }
 
+        public Builder(Context context) {
+            this(context, R.style.PickerDialog);
+        }
+
         public Builder(Context context, int year, int month, int day) {
-            this(context);
+            this(context, R.style.PickerDialog);
             setDefaultDate(year, month, day);
         }
 
         public Builder(Context context, int hour, int minute) {
-            this(context);
+            this(context, R.style.PickerDialog);
             setDefaultTime(hour, minute);
         }
 
@@ -261,12 +267,12 @@ public class DateTimePickerDialog {
             return this;
         }
 
-        public Builder setIsWithViewDate(boolean isWith) {
+        public Builder setWithDate(boolean isWith) {
             mIsWithViewDate = isWith;
             return this;
         }
 
-        public Builder setIsWithViewTime(boolean isWith) {
+        public Builder setWithTime(boolean isWith) {
             mIsWithViewTime = isWith;
             return this;
         }
@@ -378,6 +384,10 @@ public class DateTimePickerDialog {
             }
             mBuilder.setView(contentView);
             AlertDialog dialog = mBuilder.create();
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setGravity(mGravity);
+            }
             dialog.setCanceledOnTouchOutside(mCanceledOnTouchOutside);
             //先创建pickerDialog实例，后续设置数据回调onChange
             DateTimePickerDialog pickerDialog = new DateTimePickerDialog(mContext, dialog, calendarView, timePickerView);
@@ -409,29 +419,26 @@ public class DateTimePickerDialog {
         }
 
         private void initDateModeBtn(View contentView, final GregorianLunarCalendarView dateView) {
-            Button button = (Button) contentView.findViewById(R.id.btn_date_mode);
+            Button button = contentView.findViewById(R.id.btn_date_mode);
             button.setVisibility(View.VISIBLE);
             if (dateView.isGregorian()) {
                 button.setText(R.string.gregorian);
             } else {
                 button.setText(R.string.lunar);
             }
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (dateView.isGregorian()) {
-                        dateView.toLunarMode();
-                        ((Button) v).setText(R.string.lunar);
-                        ViewGroup.LayoutParams params = dateView.getLayoutParams();
-                        params.width = mContext.getResources().getDimensionPixelOffset(R.dimen.dialog_date_picker_width2);
-                        dateView.setLayoutParams(params);
-                    } else {
-                        dateView.toGregorianMode();
-                        ((Button) v).setText(R.string.gregorian);
-                        ViewGroup.LayoutParams params = dateView.getLayoutParams();
-                        params.width = mContext.getResources().getDimensionPixelOffset(R.dimen.dialog_date_picker_width);
-                        dateView.setLayoutParams(params);
-                    }
+            button.setOnClickListener(v -> {
+                if (dateView.isGregorian()) {
+                    dateView.toLunarMode();
+                    ((Button) v).setText(R.string.lunar);
+                    ViewGroup.LayoutParams params = dateView.getLayoutParams();
+                    params.width = mContext.getResources().getDimensionPixelOffset(R.dimen.dialog_date_picker_width2);
+                    dateView.setLayoutParams(params);
+                } else {
+                    dateView.toGregorianMode();
+                    ((Button) v).setText(R.string.gregorian);
+                    ViewGroup.LayoutParams params = dateView.getLayoutParams();
+                    params.width = mContext.getResources().getDimensionPixelOffset(R.dimen.dialog_date_picker_width);
+                    dateView.setLayoutParams(params);
                 }
             });
         }
@@ -466,7 +473,10 @@ public class DateTimePickerDialog {
             return this;
         }
 
+        public Builder setGravity(int gravity) {
+            mGravity = gravity;
+            return this;
+        }
     }
-    /**-------   Builder End  -------*/
 
 }

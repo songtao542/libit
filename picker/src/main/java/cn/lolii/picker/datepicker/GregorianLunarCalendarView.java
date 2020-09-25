@@ -16,6 +16,7 @@ import java.util.Locale;
 import cn.lolii.picker.NumberPickerView;
 import cn.lolii.picker.R;
 
+@SuppressWarnings("unused")
 public class GregorianLunarCalendarView extends LinearLayout implements NumberPickerView.OnValueChangeListener {
     private static final String TAG = "GLunarCalendarView";
     private static final String FORMAT_TWO_NUMBER = "%02d";
@@ -76,9 +77,9 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
 
     private void initInternal(Context context) {
         View contentView = inflate(context, R.layout.gregorian_lunar_calendar, this);
-        mYearPickerView = (NumberPickerView) contentView.findViewById(R.id.picker_year);
-        mMonthPickerView = (NumberPickerView) contentView.findViewById(R.id.picker_month);
-        mDayPickerView = (NumberPickerView) contentView.findViewById(R.id.picker_day);
+        mYearPickerView = contentView.findViewById(R.id.picker_year);
+        mMonthPickerView = contentView.findViewById(R.id.picker_month);
+        mDayPickerView = contentView.findViewById(R.id.picker_day);
         mYearPickerView.setOnValueChangedListener(this);
         mMonthPickerView.setOnValueChangedListener(this);
         mDayPickerView.setOnValueChangedListener(this);
@@ -148,7 +149,7 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
             mYearSpan = mYearStop - mYearStart + 1;
         }
         @SuppressLint("WrongConstant")
-        int year = isGregorian ? cc.get(Calendar.YEAR) : ((ChineseCalendar) cc).get(ChineseCalendar.CHINESE_YEAR);
+        int year = isGregorian ? cc.get(Calendar.YEAR) : cc.get(ChineseCalendar.CHINESE_YEAR);
         return (year >= mYearStart) && (year <= mYearStop);
     }
 
@@ -350,7 +351,7 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
             int newDaySway = oldDaySway;
             if (oldMonthSway == 2) {    //公历只有2月变化
                 int newDayStop = LunarUtil.getDaysInMonthByMonthSway(newYear, oldMonthSway, true);
-                newDaySway = (oldDaySway <= newDayStop) ? oldDaySway : newDayStop;
+                newDaySway = Math.min(oldDaySway, newDayStop);
                 setValuesForPickerView(mDayPickerView, newDaySway, DAY_START, newDayStop, mDisplayDaysGregorian, true, true);
             }
             if (mOnDateChangedListener != null) {
@@ -386,7 +387,7 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
         int oldDaySway = mDayPickerView.getValue();
         int newDaySway = oldDaySway;
         if (oldDayStop != newDayStop) {
-            newDaySway = (oldDaySway <= newDayStop) ? oldDaySway : newDayStop;
+            newDaySway = Math.min(oldDaySway, newDayStop);
             setValuesForPickerView(mDayPickerView, newDaySway, DAY_START, newDayStop, isGregorian ? mDisplayDaysGregorian : mDisplayDaysLunar, true, true);
         }
         if (mOnDateChangedListener != null) {
@@ -398,24 +399,24 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
         if (mIsGregorian == isGregorian) {
             return;
         }
-        ChineseCalendar cc = (ChineseCalendar) getCalendarData().getCalendar();//根据mIsGregorian收集数据
+        ChineseCalendar cc = getCalendarData().getCalendar();//根据mIsGregorian收集数据
 
         mIsGregorian = isGregorian;
         setConfigs(cc, isGregorian, anim);//重新更新界面数据
     }
 
     public boolean toGregorianMode() {
-//        if(isScrollAnim()){
-//            return false;
-//        }
+        /*if(isScrollAnim()){
+            return false;
+        }*/
         setGregorian(true, false);
         return true;
     }
 
     public boolean toLunarMode() {
-//        if(isScrollAnim()) {
-//            return false;
-//        }
+        /*if(isScrollAnim()) {
+            return false;
+        }*/
         setGregorian(false, false);
         return true;
     }
@@ -495,7 +496,7 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
     }
 
     public static class CalendarData {
-        public boolean isGregorian = false;
+        public boolean isGregorian;
         public int pickedYear;
         public int pickedMonthSway;
         public int pickedDay;

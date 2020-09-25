@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Widget" />
 
-    <style name="Widget.NumberPickerView">
+    <style name="NumberPickerViewDefaultStyle">
         <item name="dividerColor">@color/divider_color</item>
         <item name="dividerHeight">1px</item>
         <item name="textColorNormal">@color/number_picker_normal</item>
@@ -17,9 +16,26 @@
     </style>
 
     <style name="PickerDialog" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowBackground">@drawable/round_shape</item>
-        <item name="android:gravity">bottom</item>
-        <item name="android:layout_gravity">bottom</item>
+        <item name="android:windowMinWidthMajor">92%</item>
+        <item name="android:windowMinWidthMinor">92%</item>
+        <item name="android:windowBackground">@drawable/inset_round_shape</item>
+        <item name="android:windowAnimationStyle">@style/BottomSheetAnimation</item>
+    </style>
+
+    <!-- 宽度占满屏幕 -->
+    <style name="BottomSheetPickerDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="android:windowBackground">@drawable/top_round_shape</item>
+        <item name="android:windowAnimationStyle">@style/BottomSheetAnimation</item>
+    </style>
+
+    <style name="BottomSheetAnimation">
+        <item name="android:windowEnterAnimation">@anim/anim_bottom_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_bottom_exit</item>
+        <item name="android:activityOpenEnterAnimation">@anim/anim_bottom_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/anim_bottom_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/anim_bottom_enter</item>
     </style>
 
 </resources>

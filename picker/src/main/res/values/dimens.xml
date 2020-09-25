@@ -23,7 +23,7 @@
     <!--弹窗正文、按钮、空白页文字提醒、文本-->
     <dimen name="text_size_button_or_dialog">15sp</dimen>
     <dimen name="dialog_title_padding">20dp</dimen>
-    <dimen name="date_picker_padding">55dp</dimen>
+    <dimen name="date_picker_padding">20dp</dimen>
     <dimen name="dialog_space_extra">8dp</dimen>
     <dimen name="dialog_buttonbar_height">48dp</dimen>
     <dimen name="date_picker_radius">10dp</dimen>

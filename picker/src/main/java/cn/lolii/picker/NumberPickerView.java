@@ -1,5 +1,6 @@
 package cn.lolii.picker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Scroller;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import java.util.Map;
@@ -31,6 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * email : yeah0126@yeah.net
  * github : https://github.com/Carbs0126/NumberPickerView
  */
+@SuppressWarnings({"unused", "FieldCanBeLocal", "SuspiciousNameCombination"})
 public class NumberPickerView extends View {
     // default text color of not selected item
     private static final int DEFAULT_TEXT_COLOR_NORMAL = 0xffcecece;
@@ -85,7 +88,7 @@ public class NumberPickerView extends View {
     private static final int DEFAULT_INTERVAL_REVISE_DURATION = 300;
 
     // max and min durations when scrolling from one value to another
-    private static final int DEFAULT_MIN_SCROLL_BY_INDEX_DURATION = DEFAULT_INTERVAL_REVISE_DURATION * 1;
+    private static final int DEFAULT_MIN_SCROLL_BY_INDEX_DURATION = DEFAULT_INTERVAL_REVISE_DURATION;
     private static final int DEFAULT_MAX_SCROLL_BY_INDEX_DURATION = DEFAULT_INTERVAL_REVISE_DURATION * 2;
 
     private static final String TEXT_ELLIPSIZE_START = "start";
@@ -170,9 +173,9 @@ public class NumberPickerView extends View {
     private Scroller mScroller;
     private VelocityTracker mVelocityTracker;
 
-    private Paint mPaintDivider = new Paint();
-    private TextPaint mPaintText = new TextPaint();
-    private Paint mPaintHint = new Paint();
+    private final Paint mPaintDivider = new Paint();
+    private final TextPaint mPaintText = new TextPaint();
+    private final Paint mPaintHint = new Paint();
 
     private String[] mDisplayedValues;
     private CharSequence[] mAlterTextArrayWithMeasureHint;
@@ -182,7 +185,7 @@ public class NumberPickerView extends View {
     private Handler mHandlerInNewThread;
     private Handler mHandlerInMainThread;
 
-    private Map<String, Integer> mTextWidthCache = new ConcurrentHashMap<>();
+    private final Map<String, Integer> mTextWidthCache = new ConcurrentHashMap<>();
 
     // compatible for NumberPicker, value always offset by MinValue
     public interface OnValueChangeListener {
@@ -225,7 +228,7 @@ public class NumberPickerView extends View {
 
     public NumberPickerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initAttr(context, attrs, defStyleAttr, R.style.Widget_NumberPickerView);
+        initAttr(context, attrs, defStyleAttr, R.style.NumberPickerViewDefaultStyle);
         init(context);
     }
 
@@ -346,16 +349,16 @@ public class NumberPickerView extends View {
         if (mMinShowIndex == -1 || mMaxShowIndex == -1) {
             updateValueForInit();
         }
-        initHandler();
+        initHandler(context);
     }
 
-    private void initHandler() {
+    private void initHandler(Context context) {
         mHandlerThread = new HandlerThread("HandlerThread-For-Refreshing");
         mHandlerThread.start();
 
         mHandlerInNewThread = new Handler(mHandlerThread.getLooper()) {
             @Override
-            public void handleMessage(Message msg) {
+            public void handleMessage(@NonNull Message msg) {
                 switch (msg.what) {
                     case HANDLER_WHAT_REFRESH:
                         if (!mScroller.isFinished()) {
@@ -402,9 +405,9 @@ public class NumberPickerView extends View {
                 }
             }
         };
-        mHandlerInMainThread = new Handler() {
+        mHandlerInMainThread = new Handler(context.getMainLooper()) {
             @Override
-            public void handleMessage(Message msg) {
+            public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case HANDLER_WHAT_REQUEST_LAYOUT:
@@ -433,6 +436,7 @@ public class NumberPickerView extends View {
                 measureHeight(heightMeasureSpec));
     }
 
+    @SuppressWarnings({"SingleStatementInBlock", "UnclearExpression"})
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -446,8 +450,6 @@ public class NumberPickerView extends View {
                 defaultValue = getValue() - mMinValue;
             } else if (mCurrentItemIndexEffect) {
                 defaultValue = mCurrDrawFirstItemIndex + (mShownCount - 1) / 2;
-            } else {
-                defaultValue = 0;
             }
         }
         correctPositionByDefaultValue(defaultValue, mWrapSelectorWheel && mWrapSelectorWheelCheck);
@@ -461,7 +463,7 @@ public class NumberPickerView extends View {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (mHandlerThread == null || !mHandlerThread.isAlive()) {
-            initHandler();
+            initHandler(getContext());
         }
     }
 
@@ -557,7 +559,7 @@ public class NumberPickerView extends View {
         }
         updateContent(newDisplayedValues);
         updateMaxWHOfDisplayedValues(true);
-        mPrevPickedIndex = 0 + mMinShowIndex;
+        mPrevPickedIndex = mMinShowIndex;
         correctPositionByDefaultValue(0, mWrapSelectorWheel && mWrapSelectorWheelCheck);
         postInvalidate();
         mHandlerInMainThread.sendEmptyMessage(HANDLER_WHAT_REQUEST_LAYOUT);
@@ -581,7 +583,7 @@ public class NumberPickerView extends View {
                     mPendingWrapToLinear = true;
                 }
             } else {
-                mWrapSelectorWheel = wrapSelectorWheel;
+                mWrapSelectorWheel = true;
                 updateWrapStateByContent();
                 postInvalidate();
             }
@@ -673,6 +675,7 @@ public class NumberPickerView extends View {
      * @param newVal        currPicked value
      * @param respondChange if want to respond onchange callbacks
      */
+    @SuppressWarnings("ConditionCoveredByFurtherCondition")
     private void respondPickedValueChanged(int oldVal, int newVal, Object respondChange) {
         onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
         if (oldVal != newVal) {
@@ -741,7 +744,7 @@ public class NumberPickerView extends View {
         if (needRespond) {
             mHandlerInNewThread.sendMessageDelayed(getMsg(HANDLER_WHAT_REFRESH), duration / 4);
         } else {
-            mHandlerInNewThread.sendMessageDelayed(getMsg(HANDLER_WHAT_REFRESH, 0, 0, needRespond), duration / 4);
+            mHandlerInNewThread.sendMessageDelayed(getMsg(HANDLER_WHAT_REFRESH, 0, 0, false), duration / 4);
         }
         postInvalidate();
     }
@@ -893,6 +896,7 @@ public class NumberPickerView extends View {
         setMinAndMaxShowIndex(minShowIndex, maxShowIndex, true);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void setMinAndMaxShowIndex(int minShowIndex, int maxShowIndex, boolean needRefresh) {
         if (minShowIndex > maxShowIndex) {
             throw new IllegalArgumentException("minShowIndex should be less than maxShowIndex, minShowIndex is "
@@ -918,7 +922,7 @@ public class NumberPickerView extends View {
         mMinShowIndex = minShowIndex;
         mMaxShowIndex = maxShowIndex;
         if (needRefresh) {
-            mPrevPickedIndex = 0 + mMinShowIndex;
+            mPrevPickedIndex = mMinShowIndex;
             correctPositionByDefaultValue(0, mWrapSelectorWheel && mWrapSelectorWheelCheck);
             postInvalidate();
         }
@@ -935,7 +939,7 @@ public class NumberPickerView extends View {
         if (friction <= 0) {
             throw new IllegalArgumentException("you should set a a positive float friction, now friction is " + friction);
         }
-        mFriction = ViewConfiguration.get(getContext()).getScrollFriction() / friction;
+        mFriction = ViewConfiguration.getScrollFriction() / friction;
     }
 
     //compatible for NumberPicker
@@ -999,10 +1003,8 @@ public class NumberPickerView extends View {
             if (index < 0) {
                 index = index + size;
             }
-            return index;
-        } else {
-            return index;
         }
+        return index;
     }
 
     private void internalSetWrapToLinear() {
@@ -1015,9 +1017,9 @@ public class NumberPickerView extends View {
     private void updateDividerAttr() {
         mDividerIndex0 = mShownCount / 2;
         mDividerIndex1 = mDividerIndex0 + 1;
-        dividerY0 = mDividerIndex0 * mViewHeight / mShownCount;
-        dividerY1 = mDividerIndex1 * mViewHeight / mShownCount;
-   /*     if (mDividerMarginL < 0) {
+        dividerY0 = mDividerIndex0 * 1f * mViewHeight / mShownCount;
+        dividerY1 = mDividerIndex1 * 1f * mViewHeight / mShownCount;
+        /*if (mDividerMarginL < 0) {
             mDividerMarginL = 0;
         }
         if (mDividerMarginR < 0) {
@@ -1088,6 +1090,8 @@ public class NumberPickerView extends View {
 
     private boolean mFlagMayPress = false;
 
+    @SuppressWarnings("StatementWithEmptyBody")
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!isEnabled()) {
@@ -1114,9 +1118,7 @@ public class NumberPickerView extends View {
                 break;
             case MotionEvent.ACTION_MOVE:
                 float spanY = downY - currY;
-
                 if (mFlagMayPress && (-mScaledTouchSlop < spanY && spanY < mScaledTouchSlop)) {
-
                 } else {
                     mFlagMayPress = false;
                     mCurrDrawGlobalY = limitY((int) (downYGlobal + spanY));
@@ -1165,8 +1167,6 @@ public class NumberPickerView extends View {
         if (0 <= showCountIndex && showCountIndex < mShownCount) {
             //clicked the showCountIndex of the view
             scrollByIndexSmoothly(showCountIndex - mShownCount / 2);
-        } else {
-            //wrong
         }
     }
 
@@ -1354,10 +1354,10 @@ public class NumberPickerView extends View {
                     str = TextUtils.ellipsize(str, mPaintText, getWidth() - 2 * mItemPaddingHorizontal, getEllipsizeType());
                 }
                 canvas.drawText(str.toString(), mViewCenterX,
-                        y + mItemHeight / 2 + textSizeCenterYOffset, mPaintText);
+                        y + mItemHeight / 2f + textSizeCenterYOffset, mPaintText);
             } else if (!TextUtils.isEmpty(mEmptyItemHint)) {
                 canvas.drawText(mEmptyItemHint, mViewCenterX,
-                        y + mItemHeight / 2 + textSizeCenterYOffset, mPaintText);
+                        y + mItemHeight / 2f + textSizeCenterYOffset, mPaintText);
             }
         }
     }
@@ -1403,7 +1403,7 @@ public class NumberPickerView extends View {
             return;
         }
         canvas.drawText(mHintText,
-                mViewCenterX + (mMaxWidthOfDisplayedValues + mWidthOfHintText) / 2 + mMarginStartOfHint,
+                mViewCenterX + (mMaxWidthOfDisplayedValues + mWidthOfHintText) / 2f + mMarginStartOfHint,
                 (dividerY0 + dividerY1) / 2 + mTextSizeHintCenterYOffset, mPaintHint);
     }
 
@@ -1499,7 +1499,7 @@ public class NumberPickerView extends View {
     }
 
     private void updateWrapStateByContent() {
-        mWrapSelectorWheelCheck = mDisplayedValues.length <= mShownCount ? false : true;
+        mWrapSelectorWheelCheck = mDisplayedValues.length > mShownCount;
     }
 
     private int refineValueByLimit(int value, int minValue, int maxValue, boolean wrap) {
@@ -1509,15 +1509,14 @@ public class NumberPickerView extends View {
             } else if (value < minValue) {
                 value = (value - minValue) % getOneRecycleSize() + maxValue + 1;
             }
-            return value;
         } else {
             if (value > maxValue) {
                 value = maxValue;
             } else if (value < minValue) {
                 value = minValue;
             }
-            return value;
         }
+        return value;
     }
 
     private void stopRefreshing() {
@@ -1543,6 +1542,7 @@ public class NumberPickerView extends View {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private Message getMsg(int what) {
         return getMsg(what, 0, 0, null);
     }
@@ -1559,11 +1559,7 @@ public class NumberPickerView extends View {
     //===tool functions===//
     private boolean isStringEqual(String a, String b) {
         if (a == null) {
-            if (b == null) {
-                return true;
-            } else {
-                return false;
-            }
+            return b == null;
         } else {
             return a.equals(b);
         }

@@ -1,5 +1,6 @@
 package cn.lolii.picker.datepicker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.text.format.DateFormat;
@@ -19,6 +20,7 @@ import cn.lolii.picker.NumberPickerView;
 import cn.lolii.picker.R;
 
 
+@SuppressWarnings("unused")
 public class TimePickerView extends LinearLayout implements NumberPickerView.OnValueChangeListener {
     private static final String TAG = "TimePickerView";
     private static final String FORMAT_TWO_NUMBER = "%02d";
@@ -57,10 +59,10 @@ public class TimePickerView extends LinearLayout implements NumberPickerView.OnV
 
     private void initInternal(Context context) {
         final View inflate = View.inflate(context, R.layout.time_picker_layout, this);
-        mPickerViewAmPm = (NumberPickerView) inflate.findViewById(R.id.picker_amPm);
-        mPickerViewTimeDivider = (NumberPickerView) inflate.findViewById(R.id.picker_time_divider);
-        mPickerViewHour = (NumberPickerView) inflate.findViewById(R.id.picker_hour);
-        mPickerViewMinute = (NumberPickerView) inflate.findViewById(R.id.picker_min);
+        mPickerViewAmPm = inflate.findViewById(R.id.picker_amPm);
+        mPickerViewTimeDivider = inflate.findViewById(R.id.picker_time_divider);
+        mPickerViewHour = inflate.findViewById(R.id.picker_hour);
+        mPickerViewMinute = inflate.findViewById(R.id.picker_min);
         mPickerViewAmPm.setOnValueChangedListener(this);
         mPickerViewHour.setOnValueChangedListener(this);
         mPickerViewMinute.setOnValueChangedListener(this);
@@ -89,23 +91,21 @@ public class TimePickerView extends LinearLayout implements NumberPickerView.OnV
     private ViewTreeObserver.OnWindowFocusChangeListener mOnWindowFocusChangeListener;
 
 
+    @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             if (mOnWindowFocusChangeListener == null) {
-                mOnWindowFocusChangeListener = new ViewTreeObserver.OnWindowFocusChangeListener() {
-                    @Override
-                    public void onWindowFocusChanged(boolean hasFocus) {
-                        if (!hasFocus || !mAuto24Hour) {
-                            return;
-                        }
-                        boolean is24Hour = DateFormat.is24HourFormat(getContext());
-                        Log.d(TAG, "onWindowFocusChanged() hasFocus is24Hour:" + is24Hour);
-                        if (mIs24Hour != is24Hour) {
-                            mIs24Hour = is24Hour;
-                            initDisplayTime();
-                        }
+                mOnWindowFocusChangeListener = hasFocus -> {
+                    if (!hasFocus || !mAuto24Hour) {
+                        return;
+                    }
+                    boolean is24Hour = DateFormat.is24HourFormat(getContext());
+                    Log.d(TAG, "onWindowFocusChanged() hasFocus is24Hour:" + is24Hour);
+                    if (mIs24Hour != is24Hour) {
+                        mIs24Hour = is24Hour;
+                        initDisplayTime();
                     }
                 };
                 getViewTreeObserver().addOnWindowFocusChangeListener(mOnWindowFocusChangeListener);
@@ -191,6 +191,7 @@ public class TimePickerView extends LinearLayout implements NumberPickerView.OnV
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void initPickerViewData(NumberPickerView picker, int minValue, int maxValue, int value) {
         picker.setMinValue(minValue);
         picker.setMaxValue(maxValue);

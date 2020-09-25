@@ -14,18 +14,51 @@ class PickerActivity : AppCompatActivity() {
 
         datePicker.setOnClickListener {
             val dialog = DateTimePickerDialog.Builder(this)
+                    .setWithDate(true)
+                    .setWithTime(false)
+                    .setTitle("选择日期")
+                    .setNegativeButton(R.string.cancel) { _, _ -> }
+                    .setPositiveButton(R.string.confirm) { _, _ -> }
+                    .create()
+            dialog.show()
+        }
+        timePicker.setOnClickListener {
+            val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(false)
                     .setWithTime(true)
-                    .setNegativeButton(R.string.cancel,object : DialogInterface.OnClickListener {
-                        override fun onClick(p0: DialogInterface?, p1: Int) {
-
-                        }
-                    } )
-                    .setPositiveButton(R.string.confirm, object : DialogInterface.OnClickListener {
-                        override fun onClick(p0: DialogInterface?, p1: Int) {
-
-                        }
-                    })
+                    .setTitle("选择时间")
+                    .setNegativeButton(R.string.cancel) { _, _ -> }
+                    .setPositiveButton(R.string.confirm) { _, _ -> }
+                    .create()
+            dialog.show()
+        }
+        time24Picker.setOnClickListener {
+            val dialog = DateTimePickerDialog.Builder(this)
+                    .setWithDate(false)
+                    .setWithTime(true)
+                    .setTimeShow24Hour(false)
+                    .setTitle("选择时间")
+                    .setNegativeButton(R.string.cancel) { _, _ -> }
+                    .setPositiveButton(R.string.confirm) { _, _ -> }
+                    .create()
+            dialog.show()
+        }
+        dateTimePicker.setOnClickListener {
+            val dialog = DateTimePickerDialog.Builder(this)
+                    .setWithDate(true)
+                    .setWithTime(true)
+                    .setNegativeButton(R.string.cancel) { _, _ -> }
+                    .setPositiveButton(R.string.confirm) { _, _ -> }
+                    .create()
+            dialog.show()
+        }
+        lunarPicker.setOnClickListener {
+            val dialog = DateTimePickerDialog.Builder(this)
+                    .setWithDate(true)
+                    .setWithTime(true)
+                    .setChangeDateModeEnable(true)
+                    .setNegativeButton(R.string.cancel) { _, _ -> }
+                    .setPositiveButton(R.string.confirm) { _, _ -> }
                     .create()
             dialog.show()
         }

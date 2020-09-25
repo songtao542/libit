@@ -1344,9 +1344,9 @@ public class NumberPickerView extends View {
             mPaintText.setColor(textColor);
             mPaintText.setTextSize(textSize);
 
-//            String familyName = "sans-serif-light";
-//            Typeface tf = Typeface.create(familyName, Typeface.NORMAL);
-//            mPaintText.setTypeface(tf);
+            /*String familyName = "sans-serif-light";
+            Typeface tf = Typeface.create(familyName, Typeface.NORMAL);
+            mPaintText.setTypeface(tf);*/
 
             if (0 <= index && index < getOneRecycleSize()) {
                 CharSequence str = mDisplayedValues[index + mMinShowIndex];

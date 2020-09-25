@@ -11,9 +11,9 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingStart="@dimen/date_picker_padding"
+        android:paddingStart="@dimen/dialog_title_padding"
         android:paddingTop="@dimen/dialog_padding_top"
-        android:paddingEnd="@dimen/date_picker_padding"
+        android:paddingEnd="@dimen/dialog_title_padding"
         android:paddingBottom="@dimen/dialog_title_divider">
 
         <ImageView

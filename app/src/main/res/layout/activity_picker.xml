@@ -14,7 +14,30 @@
         android:id="@+id/datePicker"
         android:layout_width="200dp"
         android:layout_height="50dp"
-
         android:text="Date Picker" />
+
+    <Button
+        android:id="@+id/timePicker"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="Time Picker" />
+
+    <Button
+        android:id="@+id/time24Picker"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="24 Time Picker" />
+
+    <Button
+        android:id="@+id/dateTimePicker"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="Date Time Picker" />
+
+    <Button
+        android:id="@+id/lunarPicker"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="Date Time Picker" />
 
 </LinearLayout>

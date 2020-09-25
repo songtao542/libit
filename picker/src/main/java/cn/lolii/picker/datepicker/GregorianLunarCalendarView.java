@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.RequiresApi;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import cn.lolii.picker.NumberPickerView;
@@ -36,6 +37,9 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
     private int mYearStart = 1901;
     private int mYearStop = 2036;
     private int mYearSpan = mYearStop - mYearStart + 1;
+
+    private int mMonthStart = 0;
+    private int mDayStart = 1;
 
     private NumberPickerView mYearPickerView;
     private NumberPickerView mMonthPickerView;
@@ -107,6 +111,55 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
         }
         mYearStop = maxValue;
         mYearSpan = mYearStop - mYearStart + 1;
+    }
+
+    public void setMinValue(Calendar minValue) {
+        int year = minValue.get(Calendar.YEAR);
+        if (!LunarUtil.isValidYear(year)) {
+            return;
+        }
+        if (mYearStart == year) {
+            return;
+        }
+        mYearStart = year;
+        mMonthStart = minValue.get(Calendar.MONTH);
+        mDayStart = minValue.get(Calendar.DATE);
+        mYearSpan = mYearStop - mYearStart + 1;
+        mYearPickerView.setWrapSelectorWheel(false);
+        mMonthPickerView.setWrapSelectorWheel(false);
+        mDayPickerView.setWrapSelectorWheel(false);
+    }
+
+    public void setMaxValue(Calendar maxValue) {
+        int year = maxValue.get(Calendar.YEAR);
+        if (!LunarUtil.isValidYear(year)) {
+            return;
+        }
+        if (mYearStop == year) {
+            return;
+        }
+        mYearStop = year;
+        mYearSpan = mYearStop - mYearStart + 1;
+        mYearPickerView.setWrapSelectorWheel(false);
+        mMonthPickerView.setWrapSelectorWheel(false);
+        mDayPickerView.setWrapSelectorWheel(false);
+    }
+
+    @Override
+    public void onValueChange(NumberPickerView picker, int oldVal, int newVal) {
+        if (picker == null) {
+            return;
+        }
+        if (picker == mYearPickerView) {
+            passiveUpdateMonthAndDay(oldVal, newVal, mIsGregorian);
+        } else if (picker == mMonthPickerView) {
+            int fixYear = mYearPickerView.getValue();
+            passiveUpdateDay(fixYear, fixYear, oldVal, newVal, mIsGregorian);
+        } else if (picker == mDayPickerView) {
+            if (mOnDateChangedListener != null) {
+                mOnDateChangedListener.onDateChanged(getCalendarData());
+            }
+        }
     }
 
     /**
@@ -237,18 +290,18 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
         return true;
     }
 
+    @SuppressLint("WrongConstant")
     private void initValuesForY(ChineseCalendar cc, boolean isGregorian, boolean anim) {
         mYearPickerView.setWrapSelectorWheel(false);
+        int yearSway;
         if (isGregorian) {
-            int yearSway = cc.get(Calendar.YEAR);
+            yearSway = cc.get(Calendar.YEAR);
             setValuesForPickerView(mYearPickerView, yearSway, mYearStart, mYearStop, mDisplayYearsGregorian, false, anim);
-            mYear = yearSway;
         } else {
-            @SuppressLint("WrongConstant")
-            int yearSway = cc.get(ChineseCalendar.CHINESE_YEAR);
+            yearSway = cc.get(ChineseCalendar.CHINESE_YEAR);
             setValuesForPickerView(mYearPickerView, yearSway, mYearStart, mYearStop, mDisplayYearsLunar, false, anim);
-            mYear = yearSway;
         }
+        mYear = yearSway;
     }
 
     @SuppressLint("WrongConstant")
@@ -273,17 +326,18 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
 
     @SuppressLint("WrongConstant")
     private void initValuesForD(ChineseCalendar cc, boolean isGregorian, boolean anim) {
-        if (isGregorian) {
-            int dayStop = LunarUtil.getGregorianDaysInMonthByMonthSway(cc.get(Calendar.YEAR), cc.get(Calendar.MONTH) + 1);
-            int daySway = cc.get(Calendar.DAY_OF_MONTH);
+        int dayStop;
+        int daySway;
+        if (isGregorian) {//公历
+            dayStop = LunarUtil.getGregorianDaysInMonthByMonthSway(cc.get(Calendar.YEAR), cc.get(Calendar.MONTH) + 1);
+            daySway = cc.get(Calendar.DAY_OF_MONTH);
             setValuesForPickerView(mDayPickerView, daySway, DAY_START, dayStop, mDisplayDaysGregorian, false, anim);
-            mDay = daySway;
         } else {
-            int dayStop = ChineseCalendar.daysInChineseMonth(cc.get(ChineseCalendar.CHINESE_YEAR), cc.get(ChineseCalendar.CHINESE_MONTH));
-            int daySway = cc.get(ChineseCalendar.CHINESE_DATE);
+            dayStop = ChineseCalendar.daysInChineseMonth(cc.get(ChineseCalendar.CHINESE_YEAR), cc.get(ChineseCalendar.CHINESE_MONTH));
+            daySway = cc.get(ChineseCalendar.CHINESE_DATE);
             setValuesForPickerView(mDayPickerView, daySway, DAY_START, dayStop, mDisplayDaysLunar, false, anim);
-            mDay = daySway;
         }
+        mDay = daySway;
     }
 
     private void setValuesForPickerView(NumberPickerView pickerView, int newSway, int newStart, int newStop,
@@ -325,24 +379,6 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
         }
     }
 
-
-    @Override
-    public void onValueChange(NumberPickerView picker, int oldVal, int newVal) {
-        if (picker == null) {
-            return;
-        }
-        if (picker == mYearPickerView) {
-            passiveUpdateMonthAndDay(oldVal, newVal, mIsGregorian);
-        } else if (picker == mMonthPickerView) {
-            int fixYear = mYearPickerView.getValue();
-            passiveUpdateDay(fixYear, fixYear, oldVal, newVal, mIsGregorian);
-        } else if (picker == mDayPickerView) {
-            if (mOnDateChangedListener != null) {
-                mOnDateChangedListener.onDateChanged(getCalendarData());
-            }
-        }
-    }
-
     private void passiveUpdateMonthAndDay(int oldYear, int newYear, boolean isGregorian) {
         int oldMonthSway = mMonthPickerView.getValue();
         int oldDaySway = mDayPickerView.getValue();
@@ -352,10 +388,21 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
             if (oldMonthSway == 2) {    //公历只有2月变化
                 int newDayStop = LunarUtil.getDaysInMonthByMonthSway(newYear, oldMonthSway, true);
                 newDaySway = Math.min(oldDaySway, newDayStop);
-                setValuesForPickerView(mDayPickerView, newDaySway, DAY_START, newDayStop, mDisplayDaysGregorian, true, true);
+                if (newYear == mYearStart) {
+                    if (mMonthStart > 0) {
+                        int newMonthSway = Math.max(oldMonthSway, mMonthStart);
+                        setValuesForPickerView(mMonthPickerView, newMonthSway, mMonthStart, MONTH_STOP_GREGORIAN, mDisplayMonthsGregorian, true, true);
+                        if (mDayStart > 1) {
+                            newDaySway = Math.max(newDaySway, mDayStart);
+                            setValuesForPickerView(mDayPickerView, newDaySway, DAY_START, newDayStop, mDisplayDaysGregorian, true, true);
+                        }
+                    }
+                } else {
+                    setValuesForPickerView(mDayPickerView, newDaySway, DAY_START, newDayStop, mDisplayDaysGregorian, true, true);
+                }
             }
             if (mOnDateChangedListener != null) {
-                mOnDateChangedListener.onDateChanged(getCalendarData(newYear, oldMonthSway, newDaySway, isGregorian));
+                mOnDateChangedListener.onDateChanged(getCalendarData(newYear, oldMonthSway, newDaySway, true));
             }
         } else {
             int newYearMonthOfLeap = LunarUtil.getMonthLeapByYear(newYear);//1.计算当前year是否有闰月
@@ -371,10 +418,9 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
                 newMonthSway = LunarUtil.convertMonthLunarToMonthSway(oldMonthLunarAbs, newYearMonthOfLeap);
                 setValuesForPickerView(mMonthPickerView, newMonthSway, MONTH_START,
                         newYearMonthOfLeap == 0 ? MONTH_STOP_GREGORIAN : MONTH_STOP_LUNAR_LEAP, currDisplayMonthsLunar, false, true);
-
             }
             //处理日视图
-            passiveUpdateDay(oldYear, newYear, oldMonthSway, newMonthSway, isGregorian);
+            passiveUpdateDay(oldYear, newYear, oldMonthSway, newMonthSway, false);
         }
     }
 

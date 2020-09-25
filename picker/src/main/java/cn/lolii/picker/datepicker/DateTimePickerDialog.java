@@ -381,6 +381,11 @@ public class DateTimePickerDialog {
             } else {    // 其他情况只设置日期，默认
                 contentView = View.inflate(mContext, R.layout.dialog_date_picker, null);
                 calendarView = contentView.findViewById(R.id.date_picker_view);
+
+                GregorianLunarCalendarView cv = contentView.findViewById(R.id.date_picker_view);
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(2020);
+                cv.setMinValue();
             }
             mBuilder.setView(contentView);
             AlertDialog dialog = mBuilder.create();

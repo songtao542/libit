@@ -267,5 +267,8 @@ public class TimePickerView extends LinearLayout implements NumberPickerView.OnV
     public boolean is24HourView() {
         return mIs24Hour;
     }
+
+
+
 }
 

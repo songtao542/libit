@@ -33,23 +33,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal">
-
-            <cn.lolii.picker.NumberPickerView
-                android:layout_width="@dimen/date_picker_padding"
-                android:layout_height="wrap_content"
-                app:textColorSelected="@android:color/transparent" />
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/date_picker_padding"
+            android:paddingRight="@dimen/date_picker_padding">
 
             <cn.lolii.picker.datepicker.GregorianLunarCalendarView
                 android:id="@+id/date_picker_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
-
-            <cn.lolii.picker.NumberPickerView
-                android:layout_width="@dimen/date_picker_padding"
-                android:layout_height="wrap_content"
-                app:textColorSelected="@android:color/transparent" />
 
         </LinearLayout>
     </LinearLayout>

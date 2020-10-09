@@ -9,7 +9,6 @@ import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import cn.lolii.picker.NumberPickerView
 import cn.lolii.picker.R
-import cn.lolii.picker.datepicker.LunarUtil
 import java.util.*
 import kotlin.math.min
 
@@ -318,7 +317,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
                 if (oldDayValue < mDayStart) {
                     newDayValue = mDayStart
                 }
-                val newDayStop = LunarUtil.getDaysInMonthByMonthSway(newYear, newMonthValue, true)
+                val newDayStop = getDaysInMonth(newYear, newMonthValue)
                 setValuesForPickerView(mDayPickerView, newDayValue, mDayStart, newDayStop, mDisplayStartDays)
             } else {
                 shouldUpdateDays = true

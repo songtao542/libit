@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import androidx.annotation.RequiresApi;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import cn.lolii.picker.NumberPickerView;
@@ -41,6 +40,9 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
     private int mMonthStart = 0;
     private int mDayStart = 1;
 
+    private int mMonthEnd = 11;
+    private int mDayEnd = 31;
+
     private NumberPickerView mYearPickerView;
     private NumberPickerView mMonthPickerView;
     private NumberPickerView mDayPickerView;
@@ -53,6 +55,12 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
     private String[] mDisplayDaysGregorian;
     private String[] mDisplayYearsLunar;
     private String[] mDisplayDaysLunar;
+
+    private String[] mDisplayStartMonthsGregorian;
+    private String[] mDisplayStartDaysGregorian;
+
+    private String[] mDisplayEndMonthsGregorian;
+    private String[] mDisplayEndDaysGregorian;
 
     private int mYear = mYearStart;
     private int mMonth = 1;
@@ -122,9 +130,9 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
             return;
         }
         mYearStart = year;
+        mYearSpan = mYearStop - mYearStart + 1;
         mMonthStart = minValue.get(Calendar.MONTH);
         mDayStart = minValue.get(Calendar.DATE);
-        mYearSpan = mYearStop - mYearStart + 1;
         mYearPickerView.setWrapSelectorWheel(false);
         mMonthPickerView.setWrapSelectorWheel(false);
         mDayPickerView.setWrapSelectorWheel(false);
@@ -140,6 +148,8 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
         }
         mYearStop = year;
         mYearSpan = mYearStop - mYearStart + 1;
+        mMonthEnd = maxValue.get(Calendar.MONTH);
+        mDayEnd = maxValue.get(Calendar.DATE);
         mYearPickerView.setWrapSelectorWheel(false);
         mMonthPickerView.setWrapSelectorWheel(false);
         mDayPickerView.setWrapSelectorWheel(false);
@@ -151,11 +161,14 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
             return;
         }
         if (picker == mYearPickerView) {
+            Log.d("TTTT", "yyyyyyyyyyyyyyy");
             passiveUpdateMonthAndDay(oldVal, newVal, mIsGregorian);
         } else if (picker == mMonthPickerView) {
+            Log.d("TTTT", "mmmmmmmmmmmmmmm");
             int fixYear = mYearPickerView.getValue();
             passiveUpdateDay(fixYear, fixYear, oldVal, newVal, mIsGregorian);
         } else if (picker == mDayPickerView) {
+            Log.d("TTTT", "ddddddddddddddd");
             if (mOnDateChangedListener != null) {
                 mOnDateChangedListener.onDateChanged(getCalendarData());
             }
@@ -360,6 +373,9 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
         int oldStop = pickerView.getMaxValue();
         int oldSpan = oldStop - oldStart + 1;
         int fromValue = pickerView.getValue();
+        Log.d("TTTT", "newSway=" + newSway + "  newStart=" + newStart + "  newStop=" + newStop + "  newSpan=" + newSpan
+                + "  oldSpan:" + oldSpan
+        );
         if (newSpan > oldSpan) {
             pickerView.setDisplayedValues(newDisplayedVales);
             pickerView.setMinValue(newStart);
@@ -379,30 +395,137 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
         }
     }
 
+    private String[] getStartMonthsGregorian() {
+        if (mMonthStart != 0 ||
+                mDisplayStartMonthsGregorian == null ||
+                mDisplayStartMonthsGregorian.length != (MONTH_STOP_GREGORIAN - mMonthStart)) {
+            if (mDisplayStartMonthsGregorian == null) {
+                Log.d("TTTT", "-------------------mMonthStart--------------------" + mMonthStart);
+                for (int k = 0; k < mDisplayMonthsGregorian.length; k++) {
+                    Log.d("TTTT", "mmm: " + k + "  " + mDisplayMonthsGregorian[k]);
+                }
+                mDisplayStartMonthsGregorian = new String[MONTH_STOP_GREGORIAN - mMonthStart];
+                for (int i = mMonthStart, j = 0; i < MONTH_STOP_GREGORIAN; i++, j++) {
+                    mDisplayStartMonthsGregorian[j] = mDisplayMonthsGregorian[i];
+                    Log.d("TTTT", "vvvvvvvv: " + i + "->" + j + "  " + mDisplayMonthsGregorian[i]);
+                }
+            }
+            Log.d("TTTT", "---------------------------------------");
+            return mDisplayStartMonthsGregorian;
+        } else {
+            return mDisplayMonthsGregorian;
+        }
+    }
+
+    private String[] getStartDaysGregorian() {
+        if (mDayStart != 1 ||
+                mDisplayStartDaysGregorian == null ||
+                mDisplayStartDaysGregorian.length != (DAY_STOP_GREGORIAN - mDayStart + 1)) {
+            if (mDisplayStartDaysGregorian == null) {
+                for (int k = 0; k < mDisplayDaysGregorian.length; k++) {
+                    Log.d("TTTT", "ddd: " + k + "  " + mDisplayDaysGregorian[k]);
+                }
+                Log.d("TTTT", "--------------------mDayStart-------------------" + mDayStart);
+                mDisplayStartDaysGregorian = new String[DAY_STOP_GREGORIAN - mDayStart + 1];
+                for (int i = mDayStart - 1, j = 0; i < DAY_STOP_GREGORIAN; i++, j++) {
+                    mDisplayStartDaysGregorian[j] = mDisplayDaysGregorian[i];
+                    Log.d("TTTT", "vvvvvvvv: " + i + "->" + j + "  " + mDisplayDaysGregorian[i]);
+                }
+            }
+            Log.d("TTTT", "---------------------------------------");
+            return mDisplayStartDaysGregorian;
+        } else {
+            return mDisplayDaysGregorian;
+        }
+    }
+
+    private String[] getEndMonthsGregorian() {
+        if (mMonthEnd != 11 ||
+                mDisplayEndMonthsGregorian == null ||
+                mDisplayEndMonthsGregorian.length != (mMonthEnd + 1)) {
+            if (mDisplayEndMonthsGregorian == null) {
+                mDisplayEndMonthsGregorian = new String[mMonthEnd + 1];
+                for (int i = 0, j = 0; i < mMonthEnd + 1; i++, j++) {
+                    mDisplayEndMonthsGregorian[j] = mDisplayMonthsGregorian[i];
+                }
+            }
+            return mDisplayEndMonthsGregorian;
+        } else {
+            return mDisplayMonthsGregorian;
+        }
+    }
+
+    private String[] getEndDaysGregorian() {
+        if (mDayEnd != 31 ||
+                mDisplayEndDaysGregorian == null ||
+                mDisplayEndDaysGregorian.length != mDayEnd) {
+            if (mDisplayEndDaysGregorian == null) {
+                mDisplayEndDaysGregorian = new String[mDayEnd];
+                for (int i = 0, j = 0; i < mDayEnd; i++, j++) {
+                    mDisplayEndDaysGregorian[j] = mDisplayDaysGregorian[i];
+                }
+            }
+            return mDisplayEndDaysGregorian;
+        } else {
+            return mDisplayDaysGregorian;
+        }
+    }
+
     private void passiveUpdateMonthAndDay(int oldYear, int newYear, boolean isGregorian) {
         int oldMonthSway = mMonthPickerView.getValue();
         int oldDaySway = mDayPickerView.getValue();
-
+        Log.d("TTTT", "oldMonthSway===>" + oldMonthSway
+                + "  oldDaySway=" + oldDaySway
+                + "  mMonthStart=" + mMonthStart
+        );
         if (isGregorian) {
             int newDaySway = oldDaySway;
-            if (oldMonthSway == 2) {    //公历只有2月变化
+            /*if (oldMonthSway == 2  ) {    //公历只有2月变化
                 int newDayStop = LunarUtil.getDaysInMonthByMonthSway(newYear, oldMonthSway, true);
                 newDaySway = Math.min(oldDaySway, newDayStop);
-                if (newYear == mYearStart) {
-                    if (mMonthStart > 0) {
-                        int newMonthSway = Math.max(oldMonthSway, mMonthStart);
-                        setValuesForPickerView(mMonthPickerView, newMonthSway, mMonthStart, MONTH_STOP_GREGORIAN, mDisplayMonthsGregorian, true, true);
-                        if (mDayStart > 1) {
-                            newDaySway = Math.max(newDaySway, mDayStart);
-                            setValuesForPickerView(mDayPickerView, newDaySway, DAY_START, newDayStop, mDisplayDaysGregorian, true, true);
-                        }
-                    }
-                } else {
-                    setValuesForPickerView(mDayPickerView, newDaySway, DAY_START, newDayStop, mDisplayDaysGregorian, true, true);
+                setValuesForPickerView(mDayPickerView, newDaySway, DAY_START, newDayStop, mDisplayDaysGregorian, true, true);
+            }*/
+            int newMonthSway = oldMonthSway;
+            boolean shouldUpdateDays = false;
+            if (newYear == mYearStart) {
+                if (oldMonthSway < mMonthStart + 1) {
+                    newMonthSway = mMonthStart + 1;
                 }
+                setValuesForPickerView(mMonthPickerView, newMonthSway, mMonthStart + 1, MONTH_STOP_GREGORIAN, getStartMonthsGregorian(), true, true);
+                if (oldMonthSway == mMonthStart + 1) {
+                    if (oldDaySway < mDayStart) {
+                        newDaySway = mDayStart;
+                    }
+                    int newDayStop = LunarUtil.getDaysInMonthByMonthSway(newYear, newMonthSway, true);
+                    setValuesForPickerView(mDayPickerView, newDaySway, mDayStart, newDayStop, getStartDaysGregorian(), false, true);
+                } else {
+                    shouldUpdateDays = true;
+                }
+            } else if (newYear == mYearStop) {
+                if (oldMonthSway > mMonthEnd + 1) {
+                    newMonthSway = mMonthEnd + 1;
+                }
+                setValuesForPickerView(mMonthPickerView, newMonthSway, MONTH_START, mMonthEnd + 1, getEndMonthsGregorian(), true, true);
+                if (oldMonthSway == mMonthEnd + 1) {
+                    if (oldDaySway > mDayEnd) {
+                        newDaySway = mDayEnd;
+                    }
+                    setValuesForPickerView(mDayPickerView, newDaySway, DAY_START, mDayEnd, getEndDaysGregorian(), false, true);
+                } else {
+                    shouldUpdateDays = true;
+                }
+            } else {
+                setValuesForPickerView(mMonthPickerView, newMonthSway, MONTH_START, MONTH_STOP_GREGORIAN, mDisplayMonthsGregorian, true, true);
+                shouldUpdateDays = true;
             }
+            if (shouldUpdateDays) {
+                int newDayStop = LunarUtil.getDaysInMonthByMonthSway(newYear, oldMonthSway, true);
+                newDaySway = Math.min(oldDaySway, newDayStop);
+                setValuesForPickerView(mDayPickerView, newDaySway, DAY_START, newDayStop, mDisplayDaysGregorian, false, true);
+            }
+
             if (mOnDateChangedListener != null) {
-                mOnDateChangedListener.onDateChanged(getCalendarData(newYear, oldMonthSway, newDaySway, true));
+                mOnDateChangedListener.onDateChanged(getCalendarData(newYear, newMonthSway, newDaySway, true));
             }
         } else {
             int newYearMonthOfLeap = LunarUtil.getMonthLeapByYear(newYear);//1.计算当前year是否有闰月
@@ -432,7 +555,19 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
         }
         int oldDaySway = mDayPickerView.getValue();
         int newDaySway = oldDaySway;
-        if (oldDayStop != newDayStop) {
+
+        if (newYear == mYearStart && newMonthSway == mMonthStart + 1) {
+            if (oldDaySway < mDayStart) {
+                newDaySway = mDayStart;
+            }
+            newDayStop = LunarUtil.getDaysInMonthByMonthSway(newYear, newMonthSway, true);
+            setValuesForPickerView(mDayPickerView, newDaySway, mDayStart, newDayStop, getStartDaysGregorian(), false, true);
+        } else if (newYear == mYearStop && newMonthSway == mMonthEnd + 1) {
+            if (oldDaySway > mDayEnd) {
+                newDaySway = mDayEnd;
+            }
+            setValuesForPickerView(mDayPickerView, newDaySway, DAY_START, mDayEnd, getEndDaysGregorian(), false, true);
+        } else if (oldDayStop != newDayStop || newYear == mYearStart || newYear == mYearStop) {
             newDaySway = Math.min(oldDaySway, newDayStop);
             setValuesForPickerView(mDayPickerView, newDaySway, DAY_START, newDayStop, isGregorian ? mDisplayDaysGregorian : mDisplayDaysLunar, true, true);
         }

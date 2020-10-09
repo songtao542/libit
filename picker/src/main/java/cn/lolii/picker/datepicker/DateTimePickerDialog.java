@@ -381,11 +381,6 @@ public class DateTimePickerDialog {
             } else {    // 其他情况只设置日期，默认
                 contentView = View.inflate(mContext, R.layout.dialog_date_picker, null);
                 calendarView = contentView.findViewById(R.id.date_picker_view);
-
-                GregorianLunarCalendarView cv = contentView.findViewById(R.id.date_picker_view);
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(2020);
-                cv.setMinValue();
             }
             mBuilder.setView(contentView);
             AlertDialog dialog = mBuilder.create();
@@ -403,8 +398,18 @@ public class DateTimePickerDialog {
             //设置日期、时间数据，默认为当前系统日期时间
             if (calendarView != null) {
                 Log.d(TAG, "show() mIsAutoUpdateTitle:" + mIsAutoUpdateTitle + ",mIsShowGregorian:" + mIsShowGregorian);
-                calendarView.setMinValue(mYearMin);
-                calendarView.setMaxValue(mYearMax);
+                /*calendarView.setMinValue(mYearMin);
+                calendarView.setMaxValue(mYearMax);*/
+
+                GregorianLunarCalendarView cv = contentView.findViewById(R.id.date_picker_view);
+                Calendar min = Calendar.getInstance();
+                min.set(2020, 8, 25);
+                cv.setMinValue(min);
+
+                Calendar max = Calendar.getInstance();
+                max.set(2020 + 10, 9, 25);
+                cv.setMaxValue(max);
+
                 calendarView.init(mCalendar, mIsShowGregorian);
                 if (mChangeDateModeEnable) {
                     initDateModeBtn(contentView, calendarView);

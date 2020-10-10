@@ -12,6 +12,7 @@
     <string name="month">/</string>
     <string name="day">/</string>
     <string name="leap">Le.</string>
+
     <string-array name="lunar_month_entries">
         <item>Jan.</item>
         <item>Feb.</item>
@@ -71,4 +72,7 @@
         <item>AM</item>
         <item>PM</item>
     </string-array>
+
+    <string name="select_address">Select Address</string>
+    <string name="please_select">Please Select</string>
 </resources>

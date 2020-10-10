@@ -29,9 +29,9 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     private var mCalendar: Calendar = Calendar.getInstance()
     private var mIs24HourFormat = false
     private var mAuto24Hour = true //自动根据系统24小时显示不同view
-    private var mDisplayHour24: Array<String> = emptyArray()
-    private var mDisplayHour12: Array<String> = emptyArray()
-    private var mDisplayMinute: Array<String> = emptyArray()
+    private var mDisplayHour24: List<String> = emptyList()
+    private var mDisplayHour12: List<String> = emptyList()
+    private var mDisplayMinute: List<String> = emptyList()
     private var mOnTimeChangeListener: OnTimeChangeListener? = null
     private var mOnWindowFocusChangeListener: ViewTreeObserver.OnWindowFocusChangeListener? = null
 
@@ -114,13 +114,17 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         initDisplayTime()
     }
 
-    fun setIs24Hour(is24Hour: Boolean) {
+    fun set24HourFormat(is24HourFormat: Boolean) {
         mAuto24Hour = false
-        if (mIs24HourFormat == is24Hour) {
+        if (mIs24HourFormat == is24HourFormat) {
             return
         }
-        mIs24HourFormat = is24Hour
+        mIs24HourFormat = is24HourFormat
         initDisplayTime()
+    }
+
+    fun is24HourFormat(): Boolean {
+        return mIs24HourFormat
     }
 
     private fun initDisplayTime() {
@@ -134,17 +138,18 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         } else {
             mTimeDividerView.visibility = GONE
             mAmPmPickerView.visibility = VISIBLE
-            mAmPmPickerView.setDisplayedValues(context.resources.getStringArray(R.array.am_pm_entries), false)
+            val apm = context.resources.getStringArray(R.array.am_pm_entries)
+            mAmPmPickerView.setDisplayedValues(arrayListOf(*apm), false)
             initPickerViewData(mAmPmPickerView, 0, 1, calendar[Calendar.AM_PM])
         }
         // hour
         if (mIs24HourFormat && mDisplayHour24.isEmpty()) {
-            mDisplayHour24 = Array(24) {
+            mDisplayHour24 = MutableList(24) {
                 String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, it)
             }
         }
         if (!mIs24HourFormat && mDisplayHour12.isEmpty()) {
-            mDisplayHour12 = Array(12) {
+            mDisplayHour12 = MutableList(12) {
                 if (it == 0) 12.toString() else it.toString()
             }
         }
@@ -155,7 +160,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
 
         // minute
         if (mDisplayMinute.isEmpty()) {
-            mDisplayMinute = Array(60) {
+            mDisplayMinute = MutableList(60) {
                 String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, it)
             }
         }
@@ -215,10 +220,6 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
 
     fun setOnTimeChangeListener(onTimeChangeListener: OnTimeChangeListener?) {
         mOnTimeChangeListener = onTimeChangeListener
-    }
-
-    fun is24HourFormat(): Boolean {
-        return mIs24HourFormat
     }
 
     interface OnTimeChangeListener {

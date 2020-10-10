@@ -70,4 +70,6 @@
         <item>三十</item>
     </string-array>
 
+    <string name="select_address">选择地址</string>
+    <string name="please_select">请选择</string>
 </resources>

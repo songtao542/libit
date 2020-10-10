@@ -16,6 +16,7 @@ import android.os.Message;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -25,6 +26,8 @@ import android.widget.Scroller;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -177,9 +180,9 @@ public class NumberPickerView extends View {
     private final TextPaint mPaintText = new TextPaint();
     private final Paint mPaintHint = new Paint();
 
-    private String[] mDisplayedValues;
-    private CharSequence[] mAlterTextArrayWithMeasureHint;
-    private CharSequence[] mAlterTextArrayWithoutMeasureHint;
+    private List<? extends CharSequence> mDisplayedValues;
+    private List<? extends CharSequence> mAlterTextArrayWithMeasureHint;
+    private List<? extends CharSequence> mAlterTextArrayWithoutMeasureHint;
 
     private HandlerThread mHandlerThread;
     private Handler mHandlerInNewThread;
@@ -194,7 +197,7 @@ public class NumberPickerView extends View {
 
     public interface OnValueChangeListenerRelativeToRaw {
         void onValueChangeRelativeToRaw(NumberPickerView picker, int oldPickedIndex, int newPickedIndex,
-                                        String[] displayedValues);
+                                        List<? extends CharSequence> displayedValues);
     }
 
     public interface OnValueChangeListenerInScrolling {
@@ -260,7 +263,7 @@ public class NumberPickerView extends View {
             } else if (attr == R.styleable.NumberPickerView_dividerMarginRight) {
                 mDividerMarginR = a.getDimensionPixelSize(attr, DEFAULT_DIVIDER_MARGIN_HORIZONTAL);
             } else if (attr == R.styleable.NumberPickerView_textArray) {
-                mDisplayedValues = convertCharSequenceArrayToStringArray(a.getTextArray(attr));
+                mDisplayedValues = convertCharSequenceArrayToList(a.getTextArray(attr));
             } else if (attr == R.styleable.NumberPickerView_textColorNormal) {
                 mTextColorNormal = a.getColor(attr, DEFAULT_TEXT_COLOR_NORMAL);
             } else if (attr == R.styleable.NumberPickerView_textColorSelected) {
@@ -296,9 +299,9 @@ public class NumberPickerView extends View {
             } else if (attr == R.styleable.NumberPickerView_itemPaddingHorizontal) {
                 mItemPaddingHorizontal = a.getDimensionPixelSize(attr, dp2px(context, DEFAULT_ITEM_PADDING_DP_H));
             } else if (attr == R.styleable.NumberPickerView_alternativeTextArrayWithMeasureHint) {
-                mAlterTextArrayWithMeasureHint = a.getTextArray(attr);
+                mAlterTextArrayWithMeasureHint = convertCharSequenceArrayToList(a.getTextArray(attr));
             } else if (attr == R.styleable.NumberPickerView_alternativeTextArrayWithoutMeasureHint) {
-                mAlterTextArrayWithoutMeasureHint = a.getTextArray(attr);
+                mAlterTextArrayWithoutMeasureHint = convertCharSequenceArrayToList(a.getTextArray(attr));
             } else if (attr == R.styleable.NumberPickerView_respondChangeOnDetached) {
                 mRespondChangeOnDetach = a.getBoolean(attr, DEFAULT_RESPOND_CHANGE_ON_DETACH);
             } else if (attr == R.styleable.NumberPickerView_respondChangeInMainThread) {
@@ -515,12 +518,13 @@ public class NumberPickerView extends View {
 
     public int getRawContentSize() {
         if (mDisplayedValues != null) {
-            return mDisplayedValues.length;
+            //return mDisplayedValues.length;
+            return mDisplayedValues.size();
         }
         return 0;
     }
 
-    public void setDisplayedValuesAndPickedIndex(String[] newDisplayedValues, int pickedIndex, boolean needRefresh) {
+    public void setDisplayedValuesAndPickedIndex(List<? extends CharSequence> newDisplayedValues, int pickedIndex, boolean needRefresh) {
         stopScrolling();
         if (newDisplayedValues == null) {
             throw new IllegalArgumentException("newDisplayedValues should not be null.");
@@ -540,21 +544,21 @@ public class NumberPickerView extends View {
         }
     }
 
-    public void setDisplayedValues(String[] newDisplayedValues, boolean needRefresh) {
+    public void setDisplayedValues(List<? extends CharSequence> newDisplayedValues, boolean needRefresh) {
         setDisplayedValuesAndPickedIndex(newDisplayedValues, 0, needRefresh);
     }
 
-    public void setDisplayedValues(String[] newDisplayedValues) {
+    public void setDisplayedValues(List<CharSequence> newDisplayedValues) {
         stopRefreshing();
         stopScrolling();
         if (newDisplayedValues == null) {
             throw new IllegalArgumentException("newDisplayedValues should not be null.");
         }
 
-        if (mMaxValue - mMinValue + 1 > newDisplayedValues.length) {
+        if (mMaxValue - mMinValue + 1 > newDisplayedValues.size()) {
             throw new IllegalArgumentException("mMaxValue - mMinValue + 1 should not be greater than mDisplayedValues.length, now "
                     + "((mMaxValue - mMinValue + 1) is " + (mMaxValue - mMinValue + 1)
-                    + " newDisplayedValues.length is " + newDisplayedValues.length
+                    + " newDisplayedValues.length is " + newDisplayedValues.size()
                     + ", you need to set MaxValue and MinValue before setDisplayedValues(String[])");
         }
         updateContent(newDisplayedValues);
@@ -570,7 +574,7 @@ public class NumberPickerView extends View {
      *
      * @return The displayed values.
      */
-    public String[] getDisplayedValues() {
+    public List<? extends CharSequence> getDisplayedValues() {
         return mDisplayedValues;
     }
 
@@ -650,13 +654,13 @@ public class NumberPickerView extends View {
      *
      * @param display new values to be displayed
      */
-    public void refreshByNewDisplayedValues(String[] display) {
+    public void refreshByNewDisplayedValues(List<CharSequence> display) {
         int minValue = getMinValue();
 
         int oldMaxValue = getMaxValue();
         int oldSpan = oldMaxValue - minValue + 1;
 
-        int newMaxValue = display.length - 1;
+        int newMaxValue = display.size() - 1;
         int newSpan = newMaxValue - minValue + 1;
 
         if (newSpan > oldSpan) {
@@ -768,9 +772,9 @@ public class NumberPickerView extends View {
         if (mDisplayedValues == null) {
             throw new NullPointerException("mDisplayedValues should not be null");
         }
-        if (maxValue - mMinValue + 1 > mDisplayedValues.length) {
+        if (maxValue - mMinValue + 1 > mDisplayedValues.size()) {
             throw new IllegalArgumentException("(maxValue - mMinValue + 1) should not be greater than mDisplayedValues.length now " +
-                    " (maxValue - mMinValue + 1) is " + (maxValue - mMinValue + 1) + " and mDisplayedValues.length is " + mDisplayedValues.length);
+                    " (maxValue - mMinValue + 1) is " + (maxValue - mMinValue + 1) + " and mDisplayedValues.length is " + mDisplayedValues.size());
         }
         mMaxValue = maxValue;
         mMaxShowIndex = mMaxValue - mMinValue + mMinShowIndex;
@@ -799,8 +803,8 @@ public class NumberPickerView extends View {
         return getPickedIndexRelativeToRaw() + mMinValue;
     }
 
-    public String getContentByCurrValue() {
-        return mDisplayedValues[getValue() - mMinValue];
+    public CharSequence getContentByCurrValue() {
+        return mDisplayedValues.get(getValue() - mMinValue);
     }
 
     public boolean getWrapSelectorWheel() {
@@ -907,16 +911,16 @@ public class NumberPickerView extends View {
         } else {
             if (minShowIndex < 0) {
                 throw new IllegalArgumentException("minShowIndex should not be less than 0, now minShowIndex is " + minShowIndex);
-            } else if (minShowIndex > mDisplayedValues.length - 1) {
+            } else if (minShowIndex > mDisplayedValues.size() - 1) {
                 throw new IllegalArgumentException("minShowIndex should not be greater than (mDisplayedValues.length - 1), now " +
-                        "(mDisplayedValues.length - 1) is " + (mDisplayedValues.length - 1) + " minShowIndex is " + minShowIndex);
+                        "(mDisplayedValues.length - 1) is " + (mDisplayedValues.size() - 1) + " minShowIndex is " + minShowIndex);
             }
 
             if (maxShowIndex < 0) {
                 throw new IllegalArgumentException("maxShowIndex should not be less than 0, now maxShowIndex is " + maxShowIndex);
-            } else if (maxShowIndex > mDisplayedValues.length - 1) {
+            } else if (maxShowIndex > mDisplayedValues.size() - 1) {
                 throw new IllegalArgumentException("maxShowIndex should not be greater than (mDisplayedValues.length - 1), now " +
-                        "(mDisplayedValues.length - 1) is " + (mDisplayedValues.length - 1) + " maxShowIndex is " + maxShowIndex);
+                        "(mDisplayedValues.length - 1) is " + (mDisplayedValues.size() - 1) + " maxShowIndex is " + maxShowIndex);
             }
         }
         mMinShowIndex = minShowIndex;
@@ -961,6 +965,14 @@ public class NumberPickerView extends View {
     //compatible for NumberPicker
     public void setOnValueChangedListener(OnValueChangeListener listener) {
         mOnValueChangeListener = listener;
+        if (listener == null) {
+            if (mHandlerInMainThread != null) {
+                mHandlerInMainThread.removeCallbacksAndMessages(null);
+            }
+            if (mHandlerInNewThread != null) {
+                mHandlerInNewThread.removeCallbacksAndMessages(null);
+            }
+        }
     }
 
     public void setOnValueChangedListenerRelativeToRaw(OnValueChangeListenerRelativeToRaw listener) {
@@ -1047,16 +1059,10 @@ public class NumberPickerView extends View {
             mTextSizeSelected = mItemHeight;
         }
 
-        if (mPaintHint == null) {
-            throw new IllegalArgumentException("mPaintHint should not be null.");
-        }
         mPaintHint.setTextSize(mTextSizeHint);
         mTextSizeHintCenterYOffset = getTextCenterYOffset(mPaintHint.getFontMetrics());
         mWidthOfHintText = getTextWidth(mHintText, mPaintHint);
 
-        if (mPaintText == null) {
-            throw new IllegalArgumentException("mPaintText should not be null.");
-        }
         mPaintText.setTextSize(mTextSizeSelected);
         mTextSizeSelectedCenterYOffset = getTextCenterYOffset(mPaintText.getFontMetrics());
         mPaintText.setTextSize(mTextSizeNormal);
@@ -1349,7 +1355,7 @@ public class NumberPickerView extends View {
             mPaintText.setTypeface(tf);*/
 
             if (0 <= index && index < getOneRecycleSize()) {
-                CharSequence str = mDisplayedValues[index + mMinShowIndex];
+                CharSequence str = mDisplayedValues.get(index + mMinShowIndex);
                 if (mTextEllipsize != null) {
                     str = TextUtils.ellipsize(str, mPaintText, getWidth() - 2 * mItemPaddingHorizontal, getEllipsizeType());
                 }
@@ -1418,7 +1424,7 @@ public class NumberPickerView extends View {
         mPaintText.setTextSize(savedTextSize);
     }
 
-    private int getMaxWidthOfTextArray(CharSequence[] array, Paint paint) {
+    private int getMaxWidthOfTextArray(List<? extends CharSequence> array, Paint paint) {
         if (array == null) {
             return 0;
         }
@@ -1459,14 +1465,14 @@ public class NumberPickerView extends View {
         mPaintText.setTextSize(savedTextSize);
     }
 
-    private void updateContentAndIndex(String[] newDisplayedValues) {
+    private void updateContentAndIndex(List<CharSequence> newDisplayedValues) {
         mMinShowIndex = 0;
-        mMaxShowIndex = newDisplayedValues.length - 1;
+        mMaxShowIndex = newDisplayedValues.size() - 1;
         mDisplayedValues = newDisplayedValues;
         updateWrapStateByContent();
     }
 
-    private void updateContent(String[] newDisplayedValues) {
+    private void updateContent(List<? extends CharSequence> newDisplayedValues) {
         mDisplayedValues = newDisplayedValues;
         updateWrapStateByContent();
     }
@@ -1476,7 +1482,7 @@ public class NumberPickerView extends View {
         inflateDisplayedValuesIfNull();
         updateWrapStateByContent();
         mMinShowIndex = 0;
-        mMaxShowIndex = mDisplayedValues.length - 1;
+        mMaxShowIndex = mDisplayedValues.size() - 1;
     }
 
     private void updateValueForInit() {
@@ -1486,20 +1492,21 @@ public class NumberPickerView extends View {
             mMinShowIndex = 0;
         }
         if (mMaxShowIndex == -1) {
-            mMaxShowIndex = mDisplayedValues.length - 1;
+            mMaxShowIndex = mDisplayedValues.size() - 1;
         }
         setMinAndMaxShowIndex(mMinShowIndex, mMaxShowIndex, false);
     }
 
     private void inflateDisplayedValuesIfNull() {
         if (mDisplayedValues == null) {
-            mDisplayedValues = new String[1];
-            mDisplayedValues[0] = "0";
+            ArrayList<String> temp = new ArrayList<>(1);
+            temp.add(0, "0");
+            mDisplayedValues = temp;
         }
     }
 
     private void updateWrapStateByContent() {
-        mWrapSelectorWheelCheck = mDisplayedValues.length > mShownCount;
+        mWrapSelectorWheelCheck = mDisplayedValues.size() > mShownCount;
     }
 
     private int refineValueByLimit(int value, int minValue, int maxValue, boolean wrap) {
@@ -1601,14 +1608,23 @@ public class NumberPickerView extends View {
         return startSize + (endSize - startSize) * fraction;
     }
 
-    private String[] convertCharSequenceArrayToStringArray(CharSequence[] charSequences) {
+    private List<CharSequence> convertCharSequenceArrayToList(CharSequence[] charSequences) {
         if (charSequences == null) {
             return null;
         }
-        String[] ret = new String[charSequences.length];
+        List<CharSequence> ret = new ArrayList<>(charSequences.length);
         for (int i = 0; i < charSequences.length; i++) {
-            ret[i] = charSequences[i].toString();
+            ret.add(charSequences[i].toString());
         }
         return ret;
+    }
+
+
+    public void setNormalTextSize(float textSize) {
+        mTextSizeNormal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSize, getResources().getDisplayMetrics());
+    }
+
+    public void setSelectTextSize(float textSize) {
+        mTextSizeSelected = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSize, getResources().getDisplayMetrics());
     }
 }

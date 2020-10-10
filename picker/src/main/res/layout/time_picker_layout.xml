@@ -5,12 +5,12 @@
     <cn.lolii.picker.NumberPickerView
         android:id="@+id/picker_amPm"
         android:layout_width="@dimen/time_picker_item_width"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <cn.lolii.picker.NumberPickerView
         android:id="@+id/picker_hour"
         android:layout_width="@dimen/time_picker_item_width"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <cn.lolii.picker.NumberPickerView
         android:id="@+id/picker_time_divider"
@@ -21,6 +21,6 @@
     <cn.lolii.picker.NumberPickerView
         android:id="@+id/picker_min"
         android:layout_width="@dimen/time_picker_item_width"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 </merge>

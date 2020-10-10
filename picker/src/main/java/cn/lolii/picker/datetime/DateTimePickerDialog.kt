@@ -8,7 +8,6 @@ import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import cn.lolii.picker.R
-import cn.lolii.picker.datepicker.ChineseCalendar
 import java.util.*
 
 @Suppress("unused")
@@ -116,7 +115,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
         builder.append(calendar[Calendar.MONTH] + 1).append(mContext.getString(R.string.month))
         builder.append(calendar[Calendar.DAY_OF_MONTH]).append(mContext.getString(R.string.day))
         builder.append("  ")
-        builder.append(getNameOfWeek(calendar[ChineseCalendar.DAY_OF_WEEK]))
+        builder.append(getNameOfWeek(calendar[Calendar.DAY_OF_WEEK]))
         return builder.toString()
     }
 
@@ -149,12 +148,12 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
         private var mIsWithViewDate = false
         private var mIsWithViewTime = false
         private var mDateTimeChangeListener: OnDateTimeChangeListener? = null
-        private var mShow24Hour = -1
+        private var mIs24HourFormat = -1
         private var mCanceledOnTouchOutside = true
         private var mGravity = Gravity.BOTTOM
 
         init {
-            mBuilder.setTitle(0.toString() + "") //避免外部未设置时无法显示title
+            mBuilder.setTitle(mContext.getString(R.string.please_select)) //避免外部未设置时无法显示title
         }
 
         constructor(context: Context, year: Int, month: Int, day: Int) : this(context, R.style.PickerDialog) {
@@ -213,8 +212,8 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             return this
         }
 
-        fun setTimeShow24Hour(isShow24Hour: Boolean): Builder {
-            mShow24Hour = if (isShow24Hour) 1 else 0
+        fun set24HourFormat(is24HourFormat: Boolean): Builder {
+            mIs24HourFormat = if (is24HourFormat) 1 else 0
             return this
         }
 
@@ -258,14 +257,14 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             if (!mIsWithViewDate && mIsWithViewTime) {  // 只设置时间
                 contentView = View.inflate(mContext, R.layout.dialog_time_picker, null)
                 timePickerView = contentView.findViewById(R.id.time_picker_view)
-                if (mShow24Hour >= 0) {
-                    timePickerView.setIs24Hour(mShow24Hour == 1)
+                if (mIs24HourFormat >= 0) {
+                    timePickerView.set24HourFormat(mIs24HourFormat == 1)
                 }
             } else if (mIsWithViewDate && mIsWithViewTime) {    // 日期时间都设置
                 contentView = View.inflate(mContext, R.layout.dialog_date_time_picker, null)
                 calendarView = contentView.findViewById(R.id.date_picker_view)
                 timePickerView = contentView.findViewById(R.id.time_picker_view)
-                timePickerView.setIs24Hour(true) // UI设计日期时间同时显示时，只有24h
+                timePickerView.set24HourFormat(true) // UI设计日期时间同时显示时，只有24h
                 timePickerView.setItemWrapContent()
                 timePickerView.setItemPadding(mContext.resources.getDimensionPixelSize(R.dimen.dialog_time_item_padding))
             } else {    // 其他情况只设置日期，默认

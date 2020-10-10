@@ -40,4 +40,10 @@
         android:layout_height="50dp"
         android:text="Date Time Picker" />
 
+    <Button
+        android:id="@+id/addressPicker"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="Address Picker" />
+
 </LinearLayout>

@@ -282,7 +282,7 @@ public class NumberPickerView extends View {
                 mMaxShowIndex = a.getInteger(attr, 0);
             } else if (attr == R.styleable.NumberPickerView_wrapSelectorWheel) {
                 mWrapSelectorWheel = a.getBoolean(attr, DEFAULT_WRAP_SELECTOR_WHEEL);
-            } else if (attr == R.styleable.NumberPickerView_showDivider) {
+            } else if (attr == R.styleable.NumberPickerView_showItemDivider) {
                 mShowDivider = a.getBoolean(attr, DEFAULT_SHOW_DIVIDER);
             } else if (attr == R.styleable.NumberPickerView_hintText) {
                 mHintText = a.getString(attr);

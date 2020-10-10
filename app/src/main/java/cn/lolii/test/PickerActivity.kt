@@ -145,7 +145,8 @@ class PickerActivity : AppCompatActivity() {
             placeTime.setSingleChoice(true)
             filterData.add(placeTime)
 
-            f.setRightPageFilter(filterData)
+            f.setFilter(filterData)
+            f.setShowAsDialog(true)
 
             f.show(this)
         }

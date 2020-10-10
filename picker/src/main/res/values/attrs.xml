@@ -5,7 +5,7 @@
         <!--set number of item displayed, default is 3-->
         <attr name="showCount" format="reference|integer" />
         <!--set if show divider, default is true-->
-        <attr name="showDivider" format="reference|boolean" />
+        <attr name="showItemDivider" format="reference|boolean" />
         <attr name="dividerColor" format="reference|color" />
         <attr name="dividerMarginLeft" format="reference|dimension" />
         <attr name="dividerMarginRight" format="reference|dimension" />

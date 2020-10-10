@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.lolii.filter.FilterDialogFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:text="@string/filter" />
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="10dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:navigationIcon="@drawable/ic_back">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingStart="0dp"
+            android:paddingEnd="?attr/actionBarSize"
+            android:text="@string/filter"
+            android:textAppearance="@style/FilterTitle"
+            android:textColor="@android:color/black" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dddddd" />
 
     <com.lolii.filter.FilterLayout
         android:id="@+id/filterLayout"

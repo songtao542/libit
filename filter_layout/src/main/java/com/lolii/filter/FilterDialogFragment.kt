@@ -7,9 +7,9 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
 
 /**
@@ -84,8 +84,8 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
             it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             it.setGravity(Gravity.TOP)
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                //it.isStatusBarContrastEnforced = false
-                //it.isNavigationBarContrastEnforced = false
+                it.isStatusBarContrastEnforced = false
+                it.isNavigationBarContrastEnforced = false
             }
         }
         dialog.setCancelable(true)
@@ -95,10 +95,6 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //val backButton = view.findViewById<View>(R.id.backButton)
-        //backButton?.setOnClickListener {
-        //    back()
-        //}
         view.findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
             back()
         }
@@ -136,15 +132,19 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
         } else {
             if (activity.supportFragmentManager.findFragmentByTag(FILTER_TAG) == null) {
                 activity.supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right,
-                                R.anim.slide_in_right, R.anim.slide_out_right)
+                        .setCustomAnimations(
+                                R.anim.anim_right_enter, R.anim.anim_right_exit,
+                                R.anim.anim_right_enter, R.anim.anim_right_exit
+                        )
                         .add(android.R.id.content, this, FILTER_TAG)
                         .addToBackStack(FILTER_TAG)
                         .commitAllowingStateLoss()
             } else {
                 activity.supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right,
-                                R.anim.slide_in_right, R.anim.slide_out_right)
+                        .setCustomAnimations(
+                                R.anim.anim_right_enter, R.anim.anim_right_exit,
+                                R.anim.anim_right_enter, R.anim.anim_right_exit
+                        )
                         .addToBackStack(FILTER_TAG)
                         .show(this)
                         .commitAllowingStateLoss()
@@ -159,8 +159,8 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
                 back()
             } else {
                 activity.supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right,
-                                R.anim.slide_in_right, R.anim.slide_out_right)
+                        .setCustomAnimations(R.anim.anim_right_enter, R.anim.anim_right_exit,
+                                R.anim.anim_right_enter, R.anim.anim_right_exit)
                         .hide(this)
                         .commitAllowingStateLoss()
                 return true

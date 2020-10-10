@@ -204,6 +204,6 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     }
 
     interface OnTimeChangeListener {
-        fun onTimeChange(timeValue: Time)
+        fun onTimeChange(time: Time)
     }
 }

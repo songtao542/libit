@@ -4,6 +4,6 @@
     <item android:color="@android:color/white" android:state_pressed="true" />
     <item android:color="@android:color/white" android:state_checked="true" />
     <item android:color="@android:color/white" android:state_selected="true" />
-    <item android:color="@android:color/white" />
+    <item android:color="#333333" />
 
 </selector>

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-
     <style name="NumberPickerViewDefaultStyle">
         <item name="dividerColor">@color/divider_color</item>
         <item name="dividerHeight">1px</item>
@@ -11,7 +9,7 @@
         <item name="textSizeNormal">@dimen/text_size_number_picker_normal</item>
         <item name="textSizeSelected">@dimen/text_size_number_picker_selected</item>
         <item name="wrapSelectorWheel">true</item>
-        <item name="showDivider">false</item>
+        <item name="showItemDivider">false</item>
         <item name="itemPaddingVertical">@dimen/number_picker_item_space</item>
     </style>
 

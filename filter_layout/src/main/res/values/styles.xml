@@ -14,8 +14,12 @@
     </style>
 
     <style name="Animation.Design.TopSheetDialog" parent="Animation.AppCompat.Dialog">
-        <item name="android:windowEnterAnimation">@anim/top_sheet_slide_in</item>
-        <item name="android:windowExitAnimation">@anim/top_sheet_slide_out</item>
+        <item name="android:windowEnterAnimation">@anim/anim_top_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_top_exit</item>
+    </style>
+
+    <style name="FilterTitle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:gravity">center</item>
     </style>
 
 </resources>

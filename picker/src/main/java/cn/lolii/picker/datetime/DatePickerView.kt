@@ -128,7 +128,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
                 passiveUpdateDay(fixYear, fixYear, oldVal, newVal)
             }
             picker === mDayPickerView -> {
-                mOnDateChangedListener?.onDateChanged(dateValue)
+                mOnDateChangedListener?.onDateChanged(value)
             }
         }
     }
@@ -177,7 +177,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         passiveUpdateMonthAndDay(year, year)
         passiveUpdateDay(year, year, month, month)
 
-        mOnDateChangedListener?.onDateChanged(dateValue)
+        mOnDateChangedListener?.onDateChanged(value)
     }
 
     private fun initDisplayData() {
@@ -346,7 +346,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
             newDayValue = min(oldDayValue, newDayStop)
             setDisplayedValuesForPickerView(mDayPickerView, newDayValue, DAY_START, newDayStop, mDisplayDays)
         }
-        mOnDateChangedListener?.onDateChanged(DateValue(newYear, newMonthValue, newDayValue))
+        mOnDateChangedListener?.onDateChanged(Date(newYear, newMonthValue, newDayValue))
     }
 
     private fun passiveUpdateDay(oldYear: Int, newYear: Int, oldMonthSway: Int, newMonthValue: Int) {
@@ -372,7 +372,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
             newDayValue = min(oldDayValue, newDayStop)
             setDisplayedValuesForPickerView(mDayPickerView, newDayValue, DAY_START, newDayStop, mDisplayDays)
         }
-        mOnDateChangedListener?.onDateChanged(DateValue(newYear, newMonthValue, newDayValue))
+        mOnDateChangedListener?.onDateChanged(Date(newYear, newMonthValue, newDayValue))
     }
 
     fun setTextColor(selectedColor: Int, normalColor: Int) {
@@ -432,18 +432,14 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    val dateValue: DateValue
-        get() = DateValue(mYearPickerView.value, mMonthPickerView.value, mDayPickerView.value)
+    val value: Date
+        get() = Date(mYearPickerView.value, mMonthPickerView.value, mDayPickerView.value)
 
     fun setOnDateChangedListener(listener: OnDateChangedListener?) {
         mOnDateChangedListener = listener
     }
 
-    data class DateValue(val year: Int, val month: Int, val day: Int) {
-        val calendar: Calendar = Calendar.getInstance().apply { set(year, month, day) }
-    }
-
     interface OnDateChangedListener {
-        fun onDateChanged(dateValue: DateValue)
+        fun onDateChanged(date: Date)
     }
 }

@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="filter_item_vertical_margin">12dp</dimen>
-    <dimen name="filter_item_height">32dp</dimen>
     <dimen name="filter_list_padding">16dp</dimen>
     <dimen name="filter_bottom_button_height">36dp</dimen>
-    <dimen name="filter_item_padding_h">8dp</dimen>
-    <dimen name="filter_item_padding_v">5dp</dimen>
     <dimen name="filter_range_linker_width">10dp</dimen>
     <dimen name="filter_range_linker_margin">5dp</dimen>
 
+    <dimen name="filter_item_vertical_margin">6dp</dimen>
+    <dimen name="filter_action_height">40dp</dimen>
+    <dimen name="filter_item_height">36dp</dimen>
+    <dimen name="filter_item_padding_h">14dp</dimen>
+    <dimen name="filter_item_padding_v">5dp</dimen>
+    <dimen name="filter_item_rw">10dp</dimen>
+    <dimen name="filter_item_rd">5dp</dimen>
 </resources>

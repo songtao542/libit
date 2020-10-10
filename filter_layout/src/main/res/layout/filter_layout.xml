@@ -29,13 +29,13 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/leftBottomButton"
+            android:id="@+id/reset"
             android:layout_width="150dp"
-            android:layout_height="@dimen/filter_bottom_button_height"
+            android:layout_height="@dimen/filter_action_height"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/filter_reset_button_selector"
+            android:background="@drawable/filter_reset_button_bg"
             android:gravity="center"
-            android:text="@string/reset"
+            android:text="@string/filter_reset"
             android:textColor="@android:color/black" />
 
         <Space
@@ -44,13 +44,13 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/rightBottomButton"
+            android:id="@+id/confirm"
             android:layout_width="150dp"
-            android:layout_height="@dimen/filter_bottom_button_height"
+            android:layout_height="@dimen/filter_action_height"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/filter_confirm_button_selector"
+            android:background="@drawable/filter_bottom_button_bg"
             android:gravity="center"
-            android:text="@string/confirm"
+            android:text="@string/filter_confirm"
             android:textColor="@android:color/white" />
 
         <Space

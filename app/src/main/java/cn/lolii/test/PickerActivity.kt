@@ -1,13 +1,17 @@
 package cn.lolii.test
 
 import android.content.DialogInterface
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import cn.lolii.picker.address.Address
 import cn.lolii.picker.address.AddressPickerDialog
 import cn.lolii.picker.datetime.DateTimePickerDialog
 import cn.lolii.test.test.R
+import com.lolii.filter.FilterDialogFragment
+import com.lolii.filter.FilterItem
+import com.lolii.filter.SimpleCheckableFilterItem
+import com.lolii.filter.SimpleFilterGroup
 import kotlinx.android.synthetic.main.activity_picker.*
 import java.util.*
 
@@ -93,6 +97,57 @@ class PickerActivity : AppCompatActivity() {
                     .setPositiveButton(R.string.confirm, DialogInterface.OnClickListener { _, _ -> })
                     .create()
             dialog.show()
+        }
+
+        filter.setOnClickListener {
+            val f = FilterDialogFragment()
+            val filterData: ArrayList<FilterItem> = ArrayList()
+            val orderTypeGroup = SimpleFilterGroup("订单类型")
+            orderTypeGroup.add(SimpleCheckableFilterItem("网批订单"))
+            orderTypeGroup.add(SimpleCheckableFilterItem("标准订单"))
+            orderTypeGroup.add(SimpleCheckableFilterItem("非标准订单"))
+            orderTypeGroup.add(SimpleCheckableFilterItem("订货计划订单"))
+            orderTypeGroup.setSingleChoice(true)
+            filterData.add(orderTypeGroup)
+
+            val orderStatusGroup = SimpleFilterGroup("订单状态")
+            orderStatusGroup.add(SimpleCheckableFilterItem("草稿"))
+            orderStatusGroup.add(SimpleCheckableFilterItem("待接单"))
+            orderStatusGroup.add(SimpleCheckableFilterItem("已驳回"))
+            orderStatusGroup.add(SimpleCheckableFilterItem("待发货"))
+            orderStatusGroup.add(SimpleCheckableFilterItem("部分发货"))
+            orderStatusGroup.add(SimpleCheckableFilterItem("全部发货"))
+            orderStatusGroup.add(SimpleCheckableFilterItem("待付款"))
+            orderStatusGroup.add(SimpleCheckableFilterItem("待收款确认"))
+            orderStatusGroup.add(SimpleCheckableFilterItem("交易关闭"))
+            orderStatusGroup.add(SimpleCheckableFilterItem("交易取消"))
+            orderStatusGroup.add(SimpleCheckableFilterItem("计划发货"))
+            orderStatusGroup.setSingleChoice(true)
+            filterData.add(orderStatusGroup)
+
+            val paymentStatusGroup = SimpleFilterGroup("付款状态")
+            paymentStatusGroup.add(SimpleCheckableFilterItem("待付款"))
+            paymentStatusGroup.add(SimpleCheckableFilterItem("已收讫"))
+            paymentStatusGroup.add(SimpleCheckableFilterItem("部分付款"))
+            paymentStatusGroup.setSingleChoice(true)
+            filterData.add(paymentStatusGroup)
+
+            val placeTime = SimpleFilterGroup("下单时间")
+            placeTime.add(SimpleCheckableFilterItem("近三个月订单"))
+            placeTime.add(SimpleCheckableFilterItem("今年内订单"))
+            placeTime.add(SimpleCheckableFilterItem("2019年订单"))
+            placeTime.add(SimpleCheckableFilterItem("2018年订单"))
+            placeTime.add(SimpleCheckableFilterItem("2017年订单"))
+            placeTime.add(SimpleCheckableFilterItem("2016年订单"))
+            placeTime.add(SimpleCheckableFilterItem("2015年订单"))
+            placeTime.add(SimpleCheckableFilterItem("2014年订单"))
+            placeTime.add(SimpleCheckableFilterItem("2014年以前订单"))
+            placeTime.setSingleChoice(true)
+            filterData.add(placeTime)
+
+            f.setRightPageFilter(filterData)
+
+            f.show(this)
         }
     }
 }

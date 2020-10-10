@@ -10,24 +10,7 @@ import kotlin.collections.ArrayList
  * Author:         songtao
  * CreateDate:     2020/9/12 17:58
  */
-interface FilterItem {
-    /**
-     * 标签名称
-     */
-    fun getName(): String
-
-    /**
-     * 标签提示语
-     */
-    fun getHint(): String {
-        return getName()
-    }
-
-    /**
-     * 标签类型
-     */
-    fun getType(): Int
-
+interface FilterType {
     @Suppress("MayBeConstant")
     companion object {
         const val TYPE_GROUP = 0
@@ -48,10 +31,30 @@ interface FilterItem {
             put(TYPE_TEXT, R.layout.filter_text)
             put(TYPE_CHECKABLE, R.layout.filter_label)
             put(TYPE_NUMBER, R.layout.filter_label)
-            put(TYPE_NUMBER_RANGE, R.layout.filter_number_range)
             put(TYPE_EDITABLE, R.layout.filter_editable)
             put(TYPE_EDITABLE_RANGE, R.layout.filter_editable_range)
+            put(TYPE_NUMBER_RANGE, R.layout.filter_number_range)
         }
+    }
+
+    /**
+     * 标签类型
+     */
+    fun getType(): Int
+}
+
+
+interface FilterItem : FilterType {
+    /**
+     * 标签名称
+     */
+    fun getName(): String
+
+    /**
+     * 标签提示语
+     */
+    fun getHint(): String {
+        return getName()
     }
 }
 
@@ -63,27 +66,38 @@ interface FilterGroup : FilterItem {
     fun isSingleChoice() = false
 }
 
-interface RangeFilterItem : FilterItem {
+interface RangeFilterItem : FilterType {
+    fun getStartName(): String
+    fun getStartHint(): String {
+        return getStartName()
+    }
+
     fun getEndName(): String
     fun getEndHint(): String {
         return getEndName()
     }
 }
 
-interface DateFilterItem : FilterItem {
-    fun setDate(date: Date?)
-    fun getDate(): Date?
+interface DateRange {
     fun getMinDate(): Date?
     fun getMaxDate(): Date?
 }
 
-interface DateRangeFilterItem : DateFilterItem, RangeFilterItem {
+interface DateFilterItem : FilterItem, DateRange {
+    fun setDate(date: Date?)
+    fun getDate(): Date?
+}
+
+interface DateRangeFilterItem : RangeFilterItem, DateRange {
+    fun setStartDate(date: Date?)
+    fun getStartDate(): Date?
+
     fun setEndDate(date: Date?)
     fun getEndDate(): Date?
 }
 
 interface CheckableFilterItem : FilterItem {
-    fun setCheck(check: Boolean)
+    fun setChecked(checked: Boolean)
 
     /**
      * 是否被选中
@@ -111,12 +125,25 @@ interface EditableFilterItem : FilterItem {
     }
 }
 
-interface EditableRangeFilterItem : EditableFilterItem, RangeFilterItem {
+interface EditableRangeFilterItem : RangeFilterItem {
+    /**
+     *  获取输入文本
+     */
+    fun getStartText(): String
+    fun setStartText(text: String)
+
     /**
      *  获取输入文本
      */
     fun getEndText(): String
     fun setEndText(text: String)
+
+    /**
+     * {see android.text.InputType}
+     */
+    fun getInputType(): Int {
+        return InputType.TYPE_CLASS_TEXT
+    }
 }
 
 interface FilterConfigurator {
@@ -124,7 +151,7 @@ interface FilterConfigurator {
      * 布局文件
      */
     fun getLayoutResource(): Map<Int, Int> {
-        return FilterItem.TYPE_MAP
+        return FilterType.TYPE_MAP
     }
 
     /**
@@ -137,6 +164,12 @@ interface FilterConfigurator {
 class SimpleFilterConfigurator : FilterConfigurator
 
 open class SimpleFilterGroup(private val name: String) : FilterGroup {
+
+    var tag: Any? = null
+
+    constructor(name: String, tag: Any) : this(name) {
+        this.tag = tag
+    }
 
     private val mItems = ArrayList<FilterItem>()
     private var mSingleChoice = false
@@ -171,7 +204,7 @@ open class SimpleFilterGroup(private val name: String) : FilterGroup {
     }
 
     override fun getType(): Int {
-        return FilterItem.TYPE_GROUP
+        return FilterType.TYPE_GROUP
     }
 
     override fun getItems(): List<FilterItem> {
@@ -218,7 +251,7 @@ open class SimpleFilterGroup(private val name: String) : FilterGroup {
     fun getDateRange(): Pair<Date?, Date?>? {
         for (item in mItems) {
             if (item is DateRangeFilterItem) {
-                return Pair(item.getDate(), item.getEndDate())
+                return Pair(item.getStartDate(), item.getEndDate())
             }
         }
         return null
@@ -236,7 +269,7 @@ open class SimpleFilterGroup(private val name: String) : FilterGroup {
     fun getTextRange(): Pair<String, String>? {
         for (item in mItems) {
             if (item is EditableRangeFilterItem) {
-                return Pair(item.getText(), item.getText())
+                return Pair(item.getStartText(), item.getEndText())
             }
         }
         return null
@@ -258,15 +291,33 @@ open class SimpleEditableFilterItem(private var mHint: String) : EditableFilterI
     }
 
     override fun getType(): Int {
-        return FilterItem.TYPE_EDITABLE
+        return FilterType.TYPE_EDITABLE
     }
 }
 
-open class SimpleEditableRangeFilterItem(private var mHint: String = "",
+open class SimpleEditableRangeFilterItem(private var mStartHint: String = "",
                                          private var mEndHint: String = "")
-    : SimpleEditableFilterItem(mHint), EditableRangeFilterItem {
+    : EditableRangeFilterItem {
 
+    private var mInputType: Int = InputType.TYPE_CLASS_TEXT
+    private var mStartText: String = ""
     private var mEndText: String = ""
+
+    override fun getStartText(): String {
+        return mStartText
+    }
+
+    override fun setStartText(text: String) {
+        mStartText = text
+    }
+
+    override fun getStartName(): String {
+        return getStartHint()
+    }
+
+    override fun getStartHint(): String {
+        return mStartHint
+    }
 
     override fun getEndText(): String {
         return mEndText
@@ -284,24 +335,56 @@ open class SimpleEditableRangeFilterItem(private var mHint: String = "",
         return mEndHint
     }
 
+    fun setInputType(inputType: Int) {
+        mInputType = inputType
+    }
+
+    override fun getInputType(): Int {
+        return mInputType
+    }
+
     override fun getType(): Int {
-        return FilterItem.TYPE_EDITABLE_RANGE
+        return FilterType.TYPE_EDITABLE_RANGE
     }
 }
 
-open class SimpleDateFilterItem(private val name: String) : DateFilterItem {
+open class SimpleDateRange : DateRange {
+    private val current: Calendar = Calendar.getInstance(TimeZone.getDefault())
+    private val min: Calendar = Calendar.getInstance(TimeZone.getDefault()).apply {
+        set(current.get(Calendar.YEAR) - 10, 1, 1)
+    }
+    private val max: Calendar = Calendar.getInstance(TimeZone.getDefault()).apply {
+        set(current.get(Calendar.YEAR) + 10, 1, 1)
+    }
+
+    private var mYearOffset: Int = 0
+
+    override fun getMinDate(): Date? {
+        if (mYearOffset > 0) {
+            min.set(current.get(Calendar.YEAR) - mYearOffset, 1, 1)
+            return min.time
+        }
+        return min.time
+    }
+
+    override fun getMaxDate(): Date? {
+        if (mYearOffset > 0) {
+            max.set(current.get(Calendar.YEAR) + mYearOffset, 1, 1)
+            return max.time
+        }
+        return max.time
+    }
+
+    fun setYearOffset(yearOffset: Int) {
+        mYearOffset = yearOffset
+    }
+}
+
+open class SimpleDateFilterItem(private val name: String) : SimpleDateRange(), DateFilterItem {
     private var mDate: Date? = null
 
     override fun getDate(): Date? {
         return mDate
-    }
-
-    override fun getMinDate(): Date? {
-        return null
-    }
-
-    override fun getMaxDate(): Date? {
-        return null
     }
 
     override fun setDate(date: Date?) {
@@ -317,37 +400,53 @@ open class SimpleDateFilterItem(private val name: String) : DateFilterItem {
     }
 
     override fun getType(): Int {
-        return FilterItem.TYPE_DATE
+        return FilterType.TYPE_DATE
     }
 }
 
-open class SimpleDateRangeFilterItem(name: String,
-                                     private val mEndHint: String) :
-        SimpleDateFilterItem(name), DateRangeFilterItem {
+open class SimpleDateRangeFilterItem(private val mStartHint: String,
+                                     private val mEndHint: String) : SimpleDateRange(), DateRangeFilterItem {
     private var mEndDate: Date? = null
+    private var mStartDate: Date? = null
 
-    override fun setEndDate(date: Date?) {
-        mEndDate = date
+    override fun getStartDate(): Date? {
+        return mStartDate
+    }
+
+    override fun setStartDate(date: Date?) {
+        mStartDate = date
     }
 
     override fun getEndDate(): Date? {
         return mEndDate
     }
 
-    override fun getType(): Int {
-        return FilterItem.TYPE_DATE_RANGE
+    override fun setEndDate(date: Date?) {
+        mEndDate = date
+    }
+
+    override fun getStartName(): String {
+        return mStartHint
     }
 
     override fun getEndName(): String {
         return mEndHint
     }
 
+    override fun getStartHint(): String {
+        return mStartHint
+    }
+
     override fun getEndHint(): String {
         return mEndHint
     }
+
+    override fun getType(): Int {
+        return FilterType.TYPE_DATE_RANGE
+    }
 }
 
-open class DefaultCheckableFilterItem(private val name: String) : CheckableFilterItem {
+open class SimpleCheckableFilterItem(private val name: String) : CheckableFilterItem {
 
     private var mChecked = false
 
@@ -355,8 +454,8 @@ open class DefaultCheckableFilterItem(private val name: String) : CheckableFilte
         return mChecked
     }
 
-    override fun setCheck(check: Boolean) {
-        mChecked = check
+    override fun setChecked(checked: Boolean) {
+        mChecked = checked
     }
 
     override fun getName(): String {
@@ -368,6 +467,6 @@ open class DefaultCheckableFilterItem(private val name: String) : CheckableFilte
     }
 
     override fun getType(): Int {
-        return FilterItem.TYPE_CHECKABLE
+        return FilterType.TYPE_CHECKABLE
     }
 }

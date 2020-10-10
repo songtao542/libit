@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="reset">重置</string>
-    <string name="confirm">确认</string>
+    <string name="filter_reset">重置</string>
+    <string name="filter_confirm">确认</string>
+    <string name="picker_cancel">取消</string>
+    <string name="picker_confirm">确定</string>
+
+
 </resources>

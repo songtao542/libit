@@ -166,7 +166,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         }
         mMinutePickerView.setDisplayedValues(mDisplayMinute, false)
         initPickerViewData(mMinutePickerView, 0, 59, calendar[Calendar.MINUTE])
-        mOnTimeChangeListener?.onTimeChange(timeValue)
+        mOnTimeChangeListener?.onTimeChange(value)
     }
 
     private fun initPickerViewData(picker: NumberPickerView, minValue: Int, maxValue: Int, value: Int) {
@@ -188,34 +188,15 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         } else if (picker === mMinutePickerView) {
             mCalendar[Calendar.MINUTE] = newVal
         }
-        mOnTimeChangeListener?.onTimeChange(timeValue)
+        mOnTimeChangeListener?.onTimeChange(value)
     }
 
-    data class TimeValue(
-            /**
-             * 小时
-             */
-            val hour: Int,
-            /**
-             * 分钟
-             */
-            val minute: Int,
-            /**
-             * 上午下午
-             */
-            val apm: Int,
-            /**
-             * 是否24小时制
-             */
-            val is24HourFormat: Boolean)
-
-
     @Suppress("MemberVisibilityCanBePrivate")
-    val timeValue: TimeValue
+    val value: Time
         get() {
             var hour = mHourPickerView.value
             hour = if (!mIs24HourFormat && hour == 0) 12 else hour
-            return TimeValue(hour, mMinutePickerView.value, mAmPmPickerView.value, mIs24HourFormat)
+            return Time(hour, mMinutePickerView.value, mAmPmPickerView.value, mIs24HourFormat)
         }
 
     fun setOnTimeChangeListener(onTimeChangeListener: OnTimeChangeListener?) {
@@ -223,6 +204,6 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     }
 
     interface OnTimeChangeListener {
-        fun onTimeChange(timeValue: TimeValue)
+        fun onTimeChange(timeValue: Time)
     }
 }

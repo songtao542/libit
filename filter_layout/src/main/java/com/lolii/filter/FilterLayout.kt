@@ -3,12 +3,10 @@ package com.lolii.filter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
-import android.graphics.drawable.GradientDrawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +14,8 @@ import android.widget.Checkable
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -24,7 +24,6 @@ import com.google.android.material.tabs.TabLayout
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-
 
 /**
  * Author:         songtao
@@ -41,21 +40,20 @@ class FilterLayout : LinearLayout {
     private var mRightPage: LinearLayout? = null
     private var mLeftPageRecycleView: RecyclerView? = null
     private var mRightPageRecycleView: RecyclerView? = null
-    private val mLeftPageFilterAdapter by lazy { FilterAdapter() }
+    private var mLeftPageFilterAdapter = FilterAdapter()
     private var mRightPageFilterAdapter: FilterAdapter? = null
     private var mFooter: View? = null
-    private var mLeftButton: TextView? = null
-    private var mRightButton: TextView? = null
+    private var mReset: View? = null
+    private var mConfirm: View? = null
     private var mViewPager: ViewPager? = null
     private var mTabLayout: TabLayout? = null
-    private var mRowDividerHeight = 0f
-    private var mColumnDividerWidth = 0f
+
     private var mPageCount = 1
 
     private var mLeftPageClickToReturn: Boolean = false
     private var mRightPageClickToReturn: Boolean = false
-    private var mLeftTabTitle: CharSequence = ""
-    private var mRightTabTitle: CharSequence = ""
+    private var mLeftPageTitle: String = ""
+    private var mRightPageTitle: String = ""
     private var mLeftPageListPadding: Rect? = null
     private var mRightPageListPadding: Rect? = null
     private var mOnResultListener: OnResultListener? = null
@@ -63,77 +61,33 @@ class FilterLayout : LinearLayout {
     private var mOnResetListener: OnResetListener? = null
     private var mOnConfirmListener: OnConfirmListener? = null
 
-    private var mGroupItemBackground: Int = 0
-    private var mCheckableItemBackground: Int = 0
-    private var mDateItemBackground: Int = 0
-    private var mNumberItemBackground: Int = 0
-    private var mEditableItemBackground: Int = 0
-    private var mTextItemBackground: Int = 0
-
     constructor(context: Context) : super(context) {
-        init(context, null, 0, 0)
+        init(context)
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        init(context, attrs, 0, 0)
+        init(context)
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init(context, attrs, defStyleAttr, 0)
+        init(context)
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
-        init(context, attrs, defStyleAttr, defStyleRes)
+        init(context)
     }
 
-    private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
+    private fun init(context: Context) {
         orientation = VERTICAL
-
-        var leftButtonText: CharSequence? = null
-        var rightButtonText: CharSequence? = null
-        var leftButtonBackground = 0
-        var rightButtonBackground = 0
-        var pageCount = 1
-
-        if (attrs != null) {
-            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FilterLayout, defStyleAttr, defStyleRes)
-            leftButtonText = typedArray.getText(R.styleable.FilterLayout_leftBottomButtonText)
-            rightButtonText = typedArray.getText(R.styleable.FilterLayout_rightBottomButtonText)
-            leftButtonBackground = typedArray.getResourceId(R.styleable.FilterLayout_leftBottomButtonBackground, 0)
-            rightButtonBackground = typedArray.getResourceId(R.styleable.FilterLayout_rightBottomButtonBackground, 0)
-            pageCount = typedArray.getInt(R.styleable.FilterLayout_columnDividerWidth, 1)
-            mGroupItemBackground = typedArray.getResourceId(R.styleable.FilterLayout_groupBackground, 0)
-            mCheckableItemBackground = typedArray.getResourceId(R.styleable.FilterLayout_checkableItemBackground, 0)
-            mNumberItemBackground = typedArray.getResourceId(R.styleable.FilterLayout_numberItemBackground, 0)
-            mEditableItemBackground = typedArray.getResourceId(R.styleable.FilterLayout_editableItemBackground, 0)
-            mDateItemBackground = typedArray.getResourceId(R.styleable.FilterLayout_dateItemBackground, 0)
-            mTextItemBackground = typedArray.getResourceId(R.styleable.FilterLayout_textItemBackground, 0)
-            val dh = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12f, context.resources.displayMetrics)
-            mRowDividerHeight = typedArray.getDimension(R.styleable.FilterLayout_rowDividerHeight, dh)
-            mColumnDividerWidth = typedArray.getDimension(R.styleable.FilterLayout_columnDividerWidth, dh)
-            mLeftTabTitle = typedArray.getText(R.styleable.FilterLayout_columnDividerWidth) ?: ""
-            mRightTabTitle = typedArray.getText(R.styleable.FilterLayout_columnDividerWidth) ?: ""
-            typedArray.recycle()
-        }
-
-        //setBackgroundColor(ResourcesCompat.getColor(context.resources, android.R.color.white, null))
+        setBackgroundColor(ResourcesCompat.getColor(context.resources, android.R.color.white, null))
         LayoutInflater.from(context).inflate(R.layout.filter_layout, this, true)
         mTabLayout = findViewById(R.id.tabLayout)
         mViewPager = findViewById(R.id.viewpager)
         mFooter = findViewById(R.id.footer)
-        mLeftButton = findViewById(R.id.leftBottomButton)
-        mRightButton = findViewById(R.id.rightBottomButton)
+        mReset = findViewById(R.id.reset)
+        mConfirm = findViewById(R.id.confirm)
 
-        leftButtonText?.let { mLeftButton?.setText(it) }
-        rightButtonText?.let { mRightButton?.setText(it) }
-        if (leftButtonBackground != 0) {
-            mLeftButton?.setBackgroundResource(leftButtonBackground)
-        }
-        if (rightButtonBackground != 0) {
-            mRightButton?.setBackgroundResource(rightButtonBackground)
-        }
-
-        mPageCount = if (mRightPageFilterAdapter != null) 2 else pageCount
+        mPageCount = if (mRightPageFilterAdapter != null) 2 else 1
 
         if (mPageCount == 1) {
             mTabLayout?.visibility = View.GONE
@@ -161,10 +115,10 @@ class FilterLayout : LinearLayout {
             }
 
             override fun getPageTitle(position: Int): CharSequence? {
-                return if (position == 0) mLeftTabTitle else mRightTabTitle
+                return if (position == 0) mLeftPageTitle else mRightPageTitle
             }
         }
-        mLeftButton?.setOnClickListener {
+        mReset?.setOnClickListener {
             when (mViewPager?.currentItem) {
                 0 -> {
                     mLeftPageFilterAdapter.reset()
@@ -178,7 +132,7 @@ class FilterLayout : LinearLayout {
             mOnResetListener?.onReset(it)
         }
 
-        mRightButton?.setOnClickListener {
+        mConfirm?.setOnClickListener {
             when (mViewPager?.currentItem) {
                 0 -> {
                     mLeftPageFilterAdapter.mOriginData?.let { data ->
@@ -242,10 +196,8 @@ class FilterLayout : LinearLayout {
             flexDirection = FlexDirection.ROW
             justifyContent = JustifyContent.FLEX_START
         }
-        val drawable = GradientDrawable()
-        mColumnDividerWidth.toInt().let { drawable.setSize(it, it) }
         recyclerView.addItemDecoration(FlexboxItemDecoration(context).apply {
-            setDrawable(drawable)
+            setDrawable(ContextCompat.getDrawable(context, R.drawable.filter_item_divider))
             setOrientation(FlexboxItemDecoration.VERTICAL)
         })
     }
@@ -329,10 +281,10 @@ class FilterLayout : LinearLayout {
 
     fun setTabTitle(leftPageTitle: String?, rightPageTitle: String?) {
         if (leftPageTitle != null) {
-            mLeftTabTitle = leftPageTitle
+            mLeftPageTitle = leftPageTitle
         }
         if (rightPageTitle != null) {
-            mRightTabTitle = rightPageTitle
+            mRightPageTitle = rightPageTitle
         }
         mTabLayout?.setupWithViewPager(mViewPager)
     }
@@ -351,12 +303,12 @@ class FilterLayout : LinearLayout {
         mRightPageFilterAdapter?.setData(items, context != null)
     }
 
-    inner class FilterAdapter : RecyclerView.Adapter<FilterAdapter.ViewHolder>() {
+    class FilterAdapter : RecyclerView.Adapter<FilterAdapter.ViewHolder>() {
 
         private val mDefaultLayoutId = R.layout.filter_text
 
         var mOriginData: List<FilterItem>? = null
-        private val mData = ArrayList<FilterItem>()
+        val mData = ArrayList<FilterItem>()
 
         var mFilterConfigurator: FilterConfigurator? = null
 
@@ -366,13 +318,13 @@ class FilterLayout : LinearLayout {
             for (item in mData) {
                 val filterItem = if (item is WrapperFilterItem) item.wrapped else item
                 if (filterItem is CheckableFilterItem) {
-                    filterItem.setCheck(false)
+                    filterItem.setChecked(false)
                 }
                 if (filterItem is DateFilterItem) {
                     filterItem.setDate(null)
                 }
                 if (filterItem is DateRangeFilterItem) {
-                    filterItem.setDate(null)
+                    filterItem.setStartDate(null)
                     filterItem.setEndDate(null)
                 }
             }
@@ -408,7 +360,7 @@ class FilterLayout : LinearLayout {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             var resId = mFilterConfigurator?.getLayoutResource()?.get(viewType)
-                    ?: FilterItem.TYPE_MAP[viewType]
+                    ?: FilterType.TYPE_MAP[viewType]
             if (resId == null) {
                 Log.d(TAG, "can't find layout resource for view type: $viewType")
                 resId = mDefaultLayoutId
@@ -418,32 +370,11 @@ class FilterLayout : LinearLayout {
                     FlexboxLayoutManager.LayoutParams.WRAP_CONTENT,
                     FlexboxLayoutManager.LayoutParams.WRAP_CONTENT)
             (lp as? FlexboxLayoutManager.LayoutParams)?.let {
-                it.flexGrow = if (viewType == FilterItem.TYPE_GROUP) 1f else 0f
+                it.flexGrow = if (viewType == FilterType.TYPE_GROUP) 1f else 0f
                 it.alignSelf = AlignItems.FLEX_START
-                mRowDividerHeight.toInt().let { height ->
-                    it.topMargin = height
-                    it.bottomMargin = height
-                }
-            }
-            when (viewType) {
-                FilterItem.TYPE_GROUP -> {
-                    if (mGroupItemBackground != 0) view.setBackgroundResource(mGroupItemBackground)
-                }
-                FilterItem.TYPE_CHECKABLE -> {
-                    if (mCheckableItemBackground != 0) view.setBackgroundResource(mCheckableItemBackground)
-                }
-                FilterItem.TYPE_DATE, FilterItem.TYPE_DATE_RANGE -> {
-                    if (mDateItemBackground != 0) view.setBackgroundResource(mDateItemBackground)
-                }
-                FilterItem.TYPE_NUMBER, FilterItem.TYPE_NUMBER_RANGE -> {
-                    if (mNumberItemBackground != 0) view.setBackgroundResource(mNumberItemBackground)
-                }
-                FilterItem.TYPE_EDITABLE, FilterItem.TYPE_EDITABLE_RANGE -> {
-                    if (mEditableItemBackground != 0) view.setBackgroundResource(mEditableItemBackground)
-                }
-                FilterItem.TYPE_TEXT -> {
-                    if (mTextItemBackground != 0) view.setBackgroundResource(mTextItemBackground)
-                }
+                val margin = parent.context.resources.getDimension(R.dimen.filter_item_vertical_margin).toInt()
+                it.topMargin = margin
+                it.bottomMargin = margin
             }
             view.layoutParams = lp
             return ViewHolder(view)
@@ -460,15 +391,15 @@ class FilterLayout : LinearLayout {
                     itemView.isChecked = filterItem.isChecked()
                 }
                 when (item.getType()) {
-                    FilterItem.TYPE_GROUP -> {
+                    FilterType.TYPE_GROUP -> {
                         itemView.findViewById<TextView>(R.id.text)?.text = item.getName()
                     }
-                    FilterItem.TYPE_EDITABLE -> {
+                    FilterType.TYPE_EDITABLE -> {
                         itemView.findViewById<EditText>(R.id.text)?.let {
                             configureEditable(item, it, false)
                         }
                     }
-                    FilterItem.TYPE_EDITABLE_RANGE -> {
+                    FilterType.TYPE_EDITABLE_RANGE -> {
                         itemView.findViewById<EditText>(R.id.start)?.let {
                             configureEditable(item, it, false)
                         }
@@ -476,22 +407,22 @@ class FilterLayout : LinearLayout {
                             configureEditable(item, it, true)
                         }
                     }
-                    FilterItem.TYPE_TEXT -> {
+                    FilterType.TYPE_TEXT -> {
                         itemView.findViewById<TextView>(R.id.text)?.let {
                             configureCheckable(item, it)
                         }
                     }
-                    FilterItem.TYPE_CHECKABLE -> {
+                    FilterType.TYPE_CHECKABLE -> {
                         itemView.findViewById<TextView>(R.id.label)?.let {
                             configureCheckable(item, it)
                         }
                     }
-                    FilterItem.TYPE_DATE -> {
+                    FilterType.TYPE_DATE -> {
                         itemView.findViewById<TextView>(R.id.label)?.let {
                             configureDate(item, it, false)
                         }
                     }
-                    FilterItem.TYPE_DATE_RANGE -> {
+                    FilterType.TYPE_DATE_RANGE -> {
                         itemView.findViewById<TextView>(R.id.startDate)?.let {
                             configureDate(item, it, false)
                         }
@@ -499,9 +430,9 @@ class FilterLayout : LinearLayout {
                             configureDate(item, it, true)
                         }
                     }
-                    FilterItem.TYPE_NUMBER -> {
+                    FilterType.TYPE_NUMBER -> {
                     }
-                    FilterItem.TYPE_NUMBER_RANGE -> {
+                    FilterType.TYPE_NUMBER_RANGE -> {
                     }
                 }
                 if (mClickToBackListener != null) {
@@ -526,7 +457,7 @@ class FilterLayout : LinearLayout {
 
                         override fun afterTextChanged(s: Editable?) {
                             val text = s?.toString() ?: ""
-                            if (!end) filterItem.setText(text) else filterItem.setEndText(text)
+                            if (!end) filterItem.setStartText(text) else filterItem.setEndText(text)
                         }
                     })
                 } else if (filterItem is EditableFilterItem) {
@@ -552,13 +483,13 @@ class FilterLayout : LinearLayout {
                     textView.hint = filterItem.getHint()
                     textView.text = filterItem.getName()
                     textView.setOnClickListener {
-                        filterItem.setCheck(!filterItem.isChecked())
+                        filterItem.setChecked(!filterItem.isChecked())
                         if (item is WrapperFilterItem && item.parent.isSingleChoice()) {
                             for (child in item.parent.getItems()) {
                                 if (child == item || child == item.wrapped) {
                                     continue
                                 }
-                                (child as? CheckableFilterItem)?.setCheck(false)
+                                (child as? CheckableFilterItem)?.setChecked(false)
                             }
                         }
                         notifyDataSetChanged()
@@ -572,30 +503,55 @@ class FilterLayout : LinearLayout {
                     textView.hint = if (!end) filterItem.getHint() else filterItem.getEndHint()
                     textView.text = format(
                             if (!end) filterItem.getName() else filterItem.getEndName(),
-                            if (!end) filterItem.getDate() else filterItem.getEndDate()
+                            if (!end) filterItem.getStartDate() else filterItem.getEndDate()
                     )
                     textView.setOnClickListener {
-                        Picker.pickDate(textView.context, object : Picker.OnDateSelectListener {
+                        val listener = object : Picker.OnDateSelectListener {
                             override fun onDateSelect(date: Date) {
                                 if (!end) {
-                                    filterItem.setDate(date)
+                                    filterItem.setStartDate(date)
                                 } else {
                                     filterItem.setEndDate(date)
                                 }
                                 notifyDataSetChanged()
                             }
-                        })
+                        }
+                        if (filterItem.getMinDate() != null && filterItem.getMaxDate() != null) {
+                            val minDate = if (end) {
+                                filterItem.getStartDate() ?: filterItem.getMinDate()
+                            } else {
+                                filterItem.getMinDate()
+                            }
+                            val maxData = if (end) {
+                                filterItem.getMaxDate()
+                            } else {
+                                filterItem.getEndDate() ?: filterItem.getMaxDate()
+                            }
+                            Picker.pickDate(textView.context, minDate!!, maxData!!, listener)
+                        } else {
+                            Picker.pickDate(textView.context, listener)
+                        }
                     }
                 } else if (filterItem is DateFilterItem) {
                     textView.hint = filterItem.getHint()
                     textView.text = format(filterItem.getName(), filterItem.getDate())
                     textView.setOnClickListener {
-                        Picker.pickDate(textView.context, object : Picker.OnDateSelectListener {
+                        val listener = object : Picker.OnDateSelectListener {
                             override fun onDateSelect(date: Date) {
                                 filterItem.setDate(date)
                                 notifyDataSetChanged()
                             }
-                        })
+                        }
+                        if (filterItem.getMinDate() != null && filterItem.getMaxDate() != null) {
+                            val minDate = if (end) {
+                                filterItem.getDate() ?: filterItem.getMinDate()
+                            } else {
+                                filterItem.getMinDate()
+                            }
+                            Picker.pickDate(textView.context, minDate!!, filterItem.getMaxDate()!!, listener)
+                        } else {
+                            Picker.pickDate(textView.context, listener)
+                        }
                     }
                 }
             }

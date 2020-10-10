@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatDialog
@@ -15,11 +16,13 @@ import androidx.fragment.app.FragmentActivity
  * Author:         songtao
  * CreateDate:     2020/9/12 16:32
  */
-
 @Suppress("unused")
-class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinationResultListener, FilterLayout.OnResultListener {
+class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinationResultListener,
+        FilterLayout.OnResultListener {
+
     companion object {
-        private const val FRAGMENT_TAG = "filter"
+        const val TAG = "FilterDialogFragment"
+        const val FILTER_TAG = "filter"
     }
 
     private var mFilterLayout: FilterLayout? = null
@@ -81,8 +84,8 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
             it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             it.setGravity(Gravity.TOP)
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                it.isStatusBarContrastEnforced = false
-                it.isNavigationBarContrastEnforced = false
+                //it.isStatusBarContrastEnforced = false
+                //it.isNavigationBarContrastEnforced = false
             }
         }
         dialog.setCancelable(true)
@@ -92,9 +95,12 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val titleBar = view.findViewById<Toolbar>(R.id.title_bar)
-        titleBar?.setNavigationOnClickListener {
-            onBackPressed()
+        //val backButton = view.findViewById<View>(R.id.backButton)
+        //backButton?.setOnClickListener {
+        //    back()
+        //}
+        view.findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
+            back()
         }
         mFilterLayout = view.findViewById(R.id.filterLayout)
         mFilterLayout?.setOnResultListener(this)
@@ -113,9 +119,11 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
             mFilterLayout?.setRightPageFilter(it, mRightFilterConfigurator)
         }
         mFilterLayout?.setClickToReturnMode(mLeftPageClickToReturn, mRightPageClickToReturn)
+        mOnResetListener?.let { mFilterLayout?.setOnResetListener(it) }
         mFilterLayout?.setOnConfirmListener(object : FilterLayout.OnConfirmListener {
             override fun onConfirm(view: View) {
-                onBackPressed()
+                back()
+                mOnConfirmListener?.onConfirm(view)
             }
         })
     }
@@ -123,30 +131,53 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
     fun show(activity: FragmentActivity) {
         if (mShowAsDialog) {
             val transaction = activity.supportFragmentManager.beginTransaction()
-            transaction.addToBackStack(FRAGMENT_TAG)
-            show(transaction, FRAGMENT_TAG)
+            transaction.addToBackStack(FILTER_TAG)
+            show(transaction, FILTER_TAG)
         } else {
-            activity.supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right,
-                            R.anim.slide_in_right, R.anim.slide_out_right)
-                    .add(android.R.id.content, this, FRAGMENT_TAG)
-                    .addToBackStack(FRAGMENT_TAG)
-                    .commitAllowingStateLoss()
+            if (activity.supportFragmentManager.findFragmentByTag(FILTER_TAG) == null) {
+                activity.supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right,
+                                R.anim.slide_in_right, R.anim.slide_out_right)
+                        .add(android.R.id.content, this, FILTER_TAG)
+                        .addToBackStack(FILTER_TAG)
+                        .commitAllowingStateLoss()
+            } else {
+                activity.supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right,
+                                R.anim.slide_in_right, R.anim.slide_out_right)
+                        .addToBackStack(FILTER_TAG)
+                        .show(this)
+                        .commitAllowingStateLoss()
+            }
         }
     }
 
     fun onBackPressed(): Boolean {
         val activity = activity ?: return false
-        if (isVisible && activity.supportFragmentManager.backStackEntryCount > 0) {
+        if (isVisible) {
+            if (mShowAsDialog) {
+                back()
+            } else {
+                activity.supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right,
+                                R.anim.slide_in_right, R.anim.slide_out_right)
+                        .hide(this)
+                        .commitAllowingStateLoss()
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun back() {
+        val activity = activity ?: return
+        if (activity.supportFragmentManager.backStackEntryCount > 0) {
             dialog?.let { dia ->
                 dia.setOnDismissListener(null)
                 dia.dismiss()
             }
-            //activity.supportFragmentManager.popBackStack()
-            activity.supportFragmentManager.popBackStack(FRAGMENT_TAG, 0)
-            return true
+            activity.supportFragmentManager.popBackStack()
         }
-        return false
     }
 
     fun setShowAsDialog(showAsDialog: Boolean) {
@@ -154,10 +185,18 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
     }
 
     fun setOnResultListener(listener: FilterLayout.OnResultListener) {
+        if (listener == this) {
+            Log.e(TAG, "Can't set FilterDialogFragment it self as listener.")
+            return
+        }
         mOnResultListener = listener
     }
 
     fun setOnCombinationResultListener(listener: FilterLayout.OnCombinationResultListener) {
+        if (listener == this) {
+            Log.e(TAG, "Can't set FilterDialogFragment it self as listener.")
+            return
+        }
         mOnCombinationResultListener = listener
     }
 
@@ -207,12 +246,20 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
 
     override fun onResult(pageLeftResult: List<FilterItem>?, pageRightResult: List<FilterItem>?) {
         mOnCombinationResultListener?.onResult(pageLeftResult, pageRightResult)
-        onBackPressed()
+        back()
     }
 
     override fun onResult(result: List<FilterItem>) {
         mOnResultListener?.onResult(result)
-        onBackPressed()
+        back()
+    }
+
+    fun setOnResetListener(listener: FilterLayout.OnResetListener) {
+        mOnResetListener = listener
+    }
+
+    fun setOnConfirmListener(listener: FilterLayout.OnConfirmListener) {
+        mOnConfirmListener = listener
     }
 
 }

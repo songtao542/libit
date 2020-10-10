@@ -10,7 +10,7 @@ import kotlin.collections.ArrayList
  * Author:         songtao
  * CreateDate:     2020/9/12 17:58
  */
-interface FilterType {
+interface Filter {
     @Suppress("MayBeConstant")
     companion object {
         const val TYPE_GROUP = 0
@@ -29,7 +29,7 @@ interface FilterType {
             put(TYPE_DATE, R.layout.filter_label)
             put(TYPE_DATE_RANGE, R.layout.filter_date_range)
             put(TYPE_TEXT, R.layout.filter_text)
-            put(TYPE_CHECKABLE, R.layout.filter_label)
+            put(TYPE_CHECKABLE, R.layout.filter_checkable)
             put(TYPE_NUMBER, R.layout.filter_label)
             put(TYPE_EDITABLE, R.layout.filter_editable)
             put(TYPE_EDITABLE_RANGE, R.layout.filter_editable_range)
@@ -44,7 +44,7 @@ interface FilterType {
 }
 
 
-interface FilterItem : FilterType {
+interface FilterItem : Filter {
     /**
      * 标签名称
      */
@@ -62,11 +62,11 @@ interface FilterGroup : FilterItem {
     /**
      * 类别标签列表
      */
-    fun getItems(): List<FilterItem>
+    fun getItems(): List<Filter>
     fun isSingleChoice() = false
 }
 
-interface RangeFilterItem : FilterType {
+interface RangeFilterItem : Filter {
     fun getStartName(): String
     fun getStartHint(): String {
         return getStartName()
@@ -151,13 +151,13 @@ interface FilterConfigurator {
      * 布局文件
      */
     fun getLayoutResource(): Map<Int, Int> {
-        return FilterType.TYPE_MAP
+        return Filter.TYPE_MAP
     }
 
     /**
      * 配置显示
      */
-    fun configure(viewType: Int, itemView: View, filterItem: FilterItem) {
+    fun configure(viewType: Int, itemView: View, filterItem: Filter) {
     }
 }
 
@@ -204,7 +204,7 @@ open class SimpleFilterGroup(private val name: String) : FilterGroup {
     }
 
     override fun getType(): Int {
-        return FilterType.TYPE_GROUP
+        return Filter.TYPE_GROUP
     }
 
     override fun getItems(): List<FilterItem> {
@@ -291,7 +291,7 @@ open class SimpleEditableFilterItem(private var mHint: String) : EditableFilterI
     }
 
     override fun getType(): Int {
-        return FilterType.TYPE_EDITABLE
+        return Filter.TYPE_EDITABLE
     }
 }
 
@@ -344,7 +344,7 @@ open class SimpleEditableRangeFilterItem(private var mStartHint: String = "",
     }
 
     override fun getType(): Int {
-        return FilterType.TYPE_EDITABLE_RANGE
+        return Filter.TYPE_EDITABLE_RANGE
     }
 }
 
@@ -400,7 +400,7 @@ open class SimpleDateFilterItem(private val name: String) : SimpleDateRange(), D
     }
 
     override fun getType(): Int {
-        return FilterType.TYPE_DATE
+        return Filter.TYPE_DATE
     }
 }
 
@@ -442,7 +442,7 @@ open class SimpleDateRangeFilterItem(private val mStartHint: String,
     }
 
     override fun getType(): Int {
-        return FilterType.TYPE_DATE_RANGE
+        return Filter.TYPE_DATE_RANGE
     }
 }
 
@@ -467,6 +467,6 @@ open class SimpleCheckableFilterItem(private val name: String) : CheckableFilter
     }
 
     override fun getType(): Int {
-        return FilterType.TYPE_CHECKABLE
+        return Filter.TYPE_CHECKABLE
     }
 }

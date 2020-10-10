@@ -244,12 +244,12 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
         mFilterLayout?.setRightPageFilter(items, configurator)
     }
 
-    override fun onResult(pageLeftResult: List<FilterItem>?, pageRightResult: List<FilterItem>?) {
+    override fun onResult(pageLeftResult: List<Filter>?, pageRightResult: List<Filter>?) {
         mOnCombinationResultListener?.onResult(pageLeftResult, pageRightResult)
         back()
     }
 
-    override fun onResult(result: List<FilterItem>) {
+    override fun onResult(result: List<Filter>) {
         mOnResultListener?.onResult(result)
         back()
     }

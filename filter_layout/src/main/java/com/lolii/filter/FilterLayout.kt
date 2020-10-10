@@ -215,11 +215,11 @@ class FilterLayout : LinearLayout {
     }
 
     interface OnResultListener {
-        fun onResult(result: List<FilterItem>)
+        fun onResult(result: List<Filter>)
     }
 
     interface OnCombinationResultListener {
-        fun onResult(pageLeftResult: List<FilterItem>?, pageRightResult: List<FilterItem>?)
+        fun onResult(pageLeftResult: List<Filter>?, pageRightResult: List<Filter>?)
     }
 
     interface OnResetListener {
@@ -308,11 +308,11 @@ class FilterLayout : LinearLayout {
         private val mDefaultLayoutId = R.layout.filter_text
 
         var mOriginData: List<FilterItem>? = null
-        val mData = ArrayList<FilterItem>()
+        private val mData = ArrayList<Filter>()
 
         var mFilterConfigurator: FilterConfigurator? = null
 
-        var mClickToBackListener: ((item: FilterItem) -> Unit)? = null
+        var mClickToBackListener: ((item: Filter) -> Unit)? = null
 
         fun reset() {
             for (item in mData) {
@@ -346,7 +346,7 @@ class FilterLayout : LinearLayout {
             }
         }
 
-        fun setClickToReturnListener(clickToBackListener: ((item: FilterItem) -> Unit)?) {
+        fun setClickToReturnListener(clickToBackListener: ((item: Filter) -> Unit)?) {
             mClickToBackListener = clickToBackListener
         }
 
@@ -360,7 +360,7 @@ class FilterLayout : LinearLayout {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             var resId = mFilterConfigurator?.getLayoutResource()?.get(viewType)
-                    ?: FilterType.TYPE_MAP[viewType]
+                    ?: Filter.TYPE_MAP[viewType]
             if (resId == null) {
                 Log.d(TAG, "can't find layout resource for view type: $viewType")
                 resId = mDefaultLayoutId
@@ -370,7 +370,7 @@ class FilterLayout : LinearLayout {
                     FlexboxLayoutManager.LayoutParams.WRAP_CONTENT,
                     FlexboxLayoutManager.LayoutParams.WRAP_CONTENT)
             (lp as? FlexboxLayoutManager.LayoutParams)?.let {
-                it.flexGrow = if (viewType == FilterType.TYPE_GROUP) 1f else 0f
+                it.flexGrow = if (viewType == Filter.TYPE_GROUP) 1f else 0f
                 it.alignSelf = AlignItems.FLEX_START
                 val margin = parent.context.resources.getDimension(R.dimen.filter_item_vertical_margin).toInt()
                 it.topMargin = margin
@@ -385,21 +385,21 @@ class FilterLayout : LinearLayout {
         }
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            fun setData(item: FilterItem) {
+            fun setData(item: Filter) {
                 val filterItem = if (item is WrapperFilterItem) item.wrapped else item
                 if (itemView is Checkable && filterItem is CheckableFilterItem) {
                     itemView.isChecked = filterItem.isChecked()
                 }
                 when (item.getType()) {
-                    FilterType.TYPE_GROUP -> {
-                        itemView.findViewById<TextView>(R.id.text)?.text = item.getName()
+                    Filter.TYPE_GROUP -> {
+                        itemView.findViewById<TextView>(R.id.text)?.text = (item as FilterGroup).getName()
                     }
-                    FilterType.TYPE_EDITABLE -> {
+                    Filter.TYPE_EDITABLE -> {
                         itemView.findViewById<EditText>(R.id.text)?.let {
                             configureEditable(item, it, false)
                         }
                     }
-                    FilterType.TYPE_EDITABLE_RANGE -> {
+                    Filter.TYPE_EDITABLE_RANGE -> {
                         itemView.findViewById<EditText>(R.id.start)?.let {
                             configureEditable(item, it, false)
                         }
@@ -407,22 +407,22 @@ class FilterLayout : LinearLayout {
                             configureEditable(item, it, true)
                         }
                     }
-                    FilterType.TYPE_TEXT -> {
+                    Filter.TYPE_TEXT -> {
                         itemView.findViewById<TextView>(R.id.text)?.let {
                             configureCheckable(item, it)
                         }
                     }
-                    FilterType.TYPE_CHECKABLE -> {
+                    Filter.TYPE_CHECKABLE -> {
                         itemView.findViewById<TextView>(R.id.label)?.let {
                             configureCheckable(item, it)
                         }
                     }
-                    FilterType.TYPE_DATE -> {
+                    Filter.TYPE_DATE -> {
                         itemView.findViewById<TextView>(R.id.label)?.let {
                             configureDate(item, it, false)
                         }
                     }
-                    FilterType.TYPE_DATE_RANGE -> {
+                    Filter.TYPE_DATE_RANGE -> {
                         itemView.findViewById<TextView>(R.id.startDate)?.let {
                             configureDate(item, it, false)
                         }
@@ -430,9 +430,9 @@ class FilterLayout : LinearLayout {
                             configureDate(item, it, true)
                         }
                     }
-                    FilterType.TYPE_NUMBER -> {
+                    Filter.TYPE_NUMBER -> {
                     }
-                    FilterType.TYPE_NUMBER_RANGE -> {
+                    Filter.TYPE_NUMBER_RANGE -> {
                     }
                 }
                 if (mClickToBackListener != null) {
@@ -443,11 +443,11 @@ class FilterLayout : LinearLayout {
                 mFilterConfigurator?.configure(filterItem.getType(), itemView, filterItem)
             }
 
-            private fun configureEditable(item: FilterItem, editText: EditText, end: Boolean) {
+            private fun configureEditable(item: Filter, editText: EditText, end: Boolean) {
                 val filterItem = if (item is WrapperFilterItem) item.wrapped else item
                 if (filterItem is EditableRangeFilterItem) {
                     editText.inputType = filterItem.getInputType()
-                    editText.hint = if (!end) filterItem.getHint() else filterItem.getEndHint()
+                    editText.hint = if (!end) filterItem.getStartHint() else filterItem.getEndHint()
                     editText.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                         }
@@ -477,7 +477,7 @@ class FilterLayout : LinearLayout {
                 }
             }
 
-            private fun configureCheckable(item: FilterItem, textView: TextView) {
+            private fun configureCheckable(item: Filter, textView: TextView) {
                 val filterItem = if (item is WrapperFilterItem) item.wrapped else item
                 if (filterItem is CheckableFilterItem) {
                     textView.hint = filterItem.getHint()
@@ -497,12 +497,12 @@ class FilterLayout : LinearLayout {
                 }
             }
 
-            private fun configureDate(item: FilterItem, textView: TextView, end: Boolean) {
+            private fun configureDate(item: Filter, textView: TextView, end: Boolean) {
                 val filterItem = if (item is WrapperFilterItem) item.wrapped else item
                 if (filterItem is DateRangeFilterItem) {
-                    textView.hint = if (!end) filterItem.getHint() else filterItem.getEndHint()
+                    textView.hint = if (!end) filterItem.getStartHint() else filterItem.getEndHint()
                     textView.text = format(
-                            if (!end) filterItem.getName() else filterItem.getEndName(),
+                            if (!end) filterItem.getStartName() else filterItem.getEndName(),
                             if (!end) filterItem.getStartDate() else filterItem.getEndDate()
                     )
                     textView.setOnClickListener {
@@ -567,7 +567,7 @@ class FilterLayout : LinearLayout {
         }
     }
 
-    private class WrapperFilterItem(val wrapped: FilterItem, val parent: FilterGroup) :
-            FilterItem by wrapped
+    private class WrapperFilterItem(val wrapped: Filter, val parent: FilterGroup) :
+            Filter by wrapped
 
 }

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <CheckedTextView
+    <androidx.appcompat.widget.AppCompatCheckedTextView
         android:id="@+id/startDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         android:layout_marginRight="@dimen/filter_range_linker_margin"
         android:background="@color/filter_range_linker_color" />
 
-    <CheckedTextView
+    <androidx.appcompat.widget.AppCompatCheckedTextView
         android:id="@+id/endDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

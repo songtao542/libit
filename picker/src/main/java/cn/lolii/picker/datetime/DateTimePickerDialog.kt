@@ -153,7 +153,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
         private var mGravity = Gravity.BOTTOM
 
         init {
-            mBuilder.setTitle(mContext.getString(R.string.please_select)) //避免外部未设置时无法显示title
+            mBuilder.setTitle(" ") //避免外部未设置时无法显示title
         }
 
         constructor(context: Context, year: Int, month: Int, day: Int) : this(context, R.style.PickerDialog) {
@@ -217,6 +217,10 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             return this
         }
 
+        /**
+         * @param month (1-12)
+         * @param day (1-31)
+         */
         fun setMinDate(year: Int, month: Int, day: Int): Builder {
             if (mMinDateCalendar == null) {
                 mMinDateCalendar = Calendar.getInstance()
@@ -227,6 +231,10 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             return this
         }
 
+        /**
+         * @param month (1-12)
+         * @param day (1-31)
+         */
         fun setMaxDate(year: Int, month: Int, day: Int): Builder {
             if (mMaxDateCalendar == null) {
                 mMaxDateCalendar = Calendar.getInstance()
@@ -255,12 +263,14 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             var calendarView: DatePickerView? = null
             var timePickerView: TimePickerView? = null
             if (!mIsWithViewDate && mIsWithViewTime) {  // 只设置时间
+                mBuilder.setTitle(mContext.getString(R.string.select_time))
                 contentView = View.inflate(mContext, R.layout.dialog_time_picker, null)
                 timePickerView = contentView.findViewById(R.id.time_picker_view)
                 if (mIs24HourFormat >= 0) {
                     timePickerView.set24HourFormat(mIs24HourFormat == 1)
                 }
             } else if (mIsWithViewDate && mIsWithViewTime) {    // 日期时间都设置
+                mBuilder.setTitle(mContext.getString(R.string.select_date_time))
                 contentView = View.inflate(mContext, R.layout.dialog_date_time_picker, null)
                 calendarView = contentView.findViewById(R.id.date_picker_view)
                 timePickerView = contentView.findViewById(R.id.time_picker_view)
@@ -268,6 +278,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
                 timePickerView.setItemWrapContent()
                 timePickerView.setItemPadding(mContext.resources.getDimensionPixelSize(R.dimen.dialog_time_item_padding))
             } else {    // 其他情况只设置日期，默认
+                mBuilder.setTitle(mContext.getString(R.string.select_date))
                 contentView = View.inflate(mContext, R.layout.dialog_date_picker, null)
                 calendarView = contentView.findViewById(R.id.date_picker_view)
             }

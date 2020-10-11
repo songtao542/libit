@@ -136,7 +136,7 @@ interface CheckableFilterItem : FilterItem {
 }
 
 interface NumberFilterItem : FilterItem, Boundary<Int> {
-    fun setNumber(number: Int)
+    fun setNumber(number: Int?)
     fun getNumber(): Int?
 
     override fun getType(): Int {
@@ -145,10 +145,10 @@ interface NumberFilterItem : FilterItem, Boundary<Int> {
 }
 
 interface NumberRangeFilterItem : RangeFilterItem, Boundary<Int> {
-    fun setStartNumber(number: Int)
+    fun setStartNumber(number: Int?)
     fun getStartNumber(): Int?
 
-    fun setEndNumber(number: Int)
+    fun setEndNumber(number: Int?)
     fun getEndNumber(): Int?
 
     override fun getType(): Int {
@@ -193,7 +193,7 @@ interface AddressFilterItem : FilterItem {
 
     fun getAddress(): Address?
 
-    fun setAddress(address: Address)
+    fun setAddress(address: Address?)
 
     override fun getType(): Int {
         return Filter.TYPE_ADDRESS

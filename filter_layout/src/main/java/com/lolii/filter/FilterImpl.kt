@@ -305,7 +305,7 @@ open class SimpleNumberFilterItem(private val hint: String, min: Int, max: Int)
     : SimpleNumberBoundary(min, max), NumberFilterItem {
     private var mNumber: Int? = null
 
-    override fun setNumber(number: Int) {
+    override fun setNumber(number: Int?) {
         mNumber = number
     }
 
@@ -323,7 +323,7 @@ open class SimpleNumberRangeFilterItem(private val startHint: String, private va
     private var mStartNumber: Int? = null
     private var mEndNumber: Int? = null
 
-    override fun setStartNumber(number: Int) {
+    override fun setStartNumber(number: Int?) {
         mStartNumber = number
     }
 
@@ -331,7 +331,7 @@ open class SimpleNumberRangeFilterItem(private val startHint: String, private va
         return mStartNumber
     }
 
-    override fun setEndNumber(number: Int) {
+    override fun setEndNumber(number: Int?) {
         mEndNumber = number
     }
 
@@ -352,7 +352,7 @@ open class SimpleAddressFilterItem(private val hint: String) : AddressFilterItem
 
     private var mAddress: Address? = null
 
-    override fun setAddress(address: Address) {
+    override fun setAddress(address: Address?) {
         mAddress = address
     }
 

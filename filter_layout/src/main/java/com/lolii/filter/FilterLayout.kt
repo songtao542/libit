@@ -328,6 +328,16 @@ class FilterLayout : LinearLayout {
                     filterItem.setStartDate(null)
                     filterItem.setEndDate(null)
                 }
+                if (filterItem is NumberFilterItem) {
+                    filterItem.setNumber(null)
+                }
+                if (filterItem is NumberRangeFilterItem) {
+                    filterItem.setStartNumber(null)
+                    filterItem.setEndNumber(null)
+                }
+                if (filterItem is AddressFilterItem) {
+                    filterItem.setAddress(null)
+                }
             }
         }
 

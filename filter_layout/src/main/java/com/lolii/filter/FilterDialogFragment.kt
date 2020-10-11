@@ -41,8 +41,8 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
 
     private var mLeftFilterData: List<FilterItem>? = null
     private var mRightFilterData: List<FilterItem>? = null
-    private var mLeftFilterConfigurator: FilterConfigurator? = null
-    private var mRightFilterConfigurator: FilterConfigurator? = null
+    private var mLeftFilterConfigurator: FilterAdapter? = null
+    private var mRightFilterConfigurator: FilterAdapter? = null
 
     private var mShowAsDialog: Boolean = true
 
@@ -66,7 +66,7 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = InnerDialog(context, R.style.Theme_TopSheetDialog)
+        val dialog = InnerDialog(context, R.style.TopSheetDialog)
         dialog.window?.let {
             val lp = it.attributes ?: WindowManager.LayoutParams()
             it.attributes?.let { attr -> lp.copyFrom(attr) }
@@ -228,17 +228,17 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
         mFilterLayout?.setTabTitle(leftPageTitle, rightPageTitle)
     }
 
-    fun setFilter(items: List<FilterItem>, configurator: FilterConfigurator? = null) {
+    fun setFilter(items: List<FilterItem>, configurator: FilterAdapter? = null) {
         setLeftPageFilter(items, configurator)
     }
 
-    fun setLeftPageFilter(items: List<FilterItem>, configurator: FilterConfigurator? = null) {
+    fun setLeftPageFilter(items: List<FilterItem>, configurator: FilterAdapter? = null) {
         mLeftFilterData = items
         mLeftFilterConfigurator = configurator
         mFilterLayout?.setLeftPageFilter(items, configurator)
     }
 
-    fun setRightPageFilter(items: List<FilterItem>, configurator: FilterConfigurator? = null) {
+    fun setRightPageFilter(items: List<FilterItem>, configurator: FilterAdapter? = null) {
         mRightFilterData = items
         mRightFilterConfigurator = configurator
         mFilterLayout?.setRightPageFilter(items, configurator)

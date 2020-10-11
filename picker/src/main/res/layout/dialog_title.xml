@@ -24,6 +24,7 @@
             android:scaleType="fitCenter"
             android:src="@null" />
 
+        <!--style="?android:attr/windowTitleStyle"-->
         <TextView
             android:id="@+id/alertTitle"
             style="?android:attr/windowTitleStyle"

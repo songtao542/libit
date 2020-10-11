@@ -3,7 +3,6 @@ package cn.lolii.picker.datetime
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
-import android.net.wifi.p2p.WifiP2pManager
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -11,6 +10,23 @@ import androidx.appcompat.app.AlertDialog
 import cn.lolii.picker.R
 import java.util.*
 
+/**
+ * 修改标题和底部Button样式
+ * <style name="YourActivityOrDialogTheme" parent="Theme.AppCompat.Light">
+ *     <!-- dialog 样式 -->
+ *     <item name="android:buttonBarNegativeButtonStyle">@style/DialogButtonStyle</item>
+ *     <item name="android:buttonBarPositiveButtonStyle">@style/DialogButtonStyle</item>
+ *     <item name="android:windowTitleStyle">@style/DialogTitleStyle</item>
+ * </style>
+ *
+ * <style name="DialogTitleStyle" parent="TextAppearance.AppCompat.Title">
+ *     <item name="android:textColor">#007cee</item>
+ * </style>
+
+ * <style name="DialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+ *     <item name="android:textColor">#007cee</item>
+ * </style>
+ */
 @Suppress("unused")
 class DateTimePickerDialog private constructor(private val mContext: Context,
                                                private val dialog: AlertDialog,
@@ -42,16 +58,6 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
     private var mDateStr: String? = null
     private var mTimeStr: String? = null
 
-    private var mActionListener: OnActionListener? = null
-    private var mPositiveClickListener: DialogInterface.OnClickListener? = null
-    private var mNegativeClickListener: DialogInterface.OnClickListener? = null
-
-    init {
-        dialog.setOnDismissListener {
-
-        }
-    }
-
     private fun updateTitle(dateValue: Date) {
         mDateStr = getDateString(dateValue)
         var title = mDateStr
@@ -81,14 +87,6 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
     private fun setWithView(withDate: Boolean, withTime: Boolean) {
         mIsWithViewDate = withDate
         mIsWithViewTime = withTime
-    }
-
-    private fun setPositiveClickListener(listener: DialogInterface.OnClickListener) {
-        mPositiveClickListener = listener
-    }
-
-    private fun setNegativeClickListener(listener: DialogInterface.OnClickListener) {
-        mNegativeClickListener = listener
     }
 
     private fun setDateTimeChangeListener(listener: OnDateTimeChangeListener?) {
@@ -323,15 +321,16 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             val contentView: View
             var calendarView: DatePickerView? = null
             var timePickerView: TimePickerView? = null
+            val title: CharSequence
             if (!mIsWithViewDate && mIsWithViewTime) {  // 只设置时间
-                mBuilder.setTitle(mContext.getString(R.string.select_time))
+                title = mContext.getString(R.string.select_time)
                 contentView = View.inflate(mContext, R.layout.dialog_time_picker, null)
                 timePickerView = contentView.findViewById(R.id.time_picker_view)
                 if (mIs24HourFormat >= 0) {
                     timePickerView.set24HourFormat(mIs24HourFormat == 1)
                 }
             } else if (mIsWithViewDate && mIsWithViewTime) {    // 日期时间都设置
-                mBuilder.setTitle(mContext.getString(R.string.select_date_time))
+                title = mContext.getString(R.string.select_date_time)
                 contentView = View.inflate(mContext, R.layout.dialog_date_time_picker, null)
                 calendarView = contentView.findViewById(R.id.date_picker_view)
                 timePickerView = contentView.findViewById(R.id.time_picker_view)
@@ -339,39 +338,41 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
                 timePickerView.setItemWrapContent()
                 timePickerView.setItemPadding(mContext.resources.getDimensionPixelSize(R.dimen.dialog_time_item_padding))
             } else {    // 其他情况只设置日期，默认
-                mBuilder.setTitle(mContext.getString(R.string.select_date))
+                title = mContext.getString(R.string.select_date)
                 contentView = View.inflate(mContext, R.layout.dialog_date_picker, null)
                 calendarView = contentView.findViewById(R.id.date_picker_view)
             }
 
-            var wrapPositive: WrapDialogOnClickListener? = null
-            var wrapNegative: WrapDialogOnClickListener? = null
+            var wrapPositiveListener: WrapDialogOnClickListener? = null
+            var wrapNegativeListener: WrapDialogOnClickListener? = null
 
             val actionListener = mActionListener
             val positiveClickListener = mPositiveClickListener
+            val positiveText = mPositiveText ?: mContext.getText(R.string.dialog_confirm)
             if (actionListener != null) {
-                wrapPositive = if (positiveClickListener == null) {
+                wrapPositiveListener = if (positiveClickListener == null) {
                     WrapDialogOnClickListener(actionListener)
                 } else {
                     WrapDialogOnClickListener(actionListener, positiveClickListener)
                 }
-                mBuilder.setPositiveButton(mPositiveText, wrapPositive)
+                mBuilder.setPositiveButton(positiveText, wrapPositiveListener)
             } else if (positiveClickListener != null) {
-                mBuilder.setPositiveButton(mPositiveText, positiveClickListener)
+                mBuilder.setPositiveButton(positiveText, positiveClickListener)
             }
 
             val negativeClickListener = mNegativeClickListener
+            val negativeText = mNegativeText ?: mContext.getText(R.string.dialog_cancel)
             if (actionListener != null) {
-                wrapNegative = if (negativeClickListener == null) {
+                wrapNegativeListener = if (negativeClickListener == null) {
                     WrapDialogOnClickListener(actionListener)
                 } else {
                     WrapDialogOnClickListener(actionListener, negativeClickListener)
                 }
-                mBuilder.setNegativeButton(mNegativeText, wrapNegative)
+                mBuilder.setNegativeButton(negativeText, wrapNegativeListener)
             } else if (positiveClickListener != null) {
-                mBuilder.setPositiveButton(mNegativeText, negativeClickListener)
+                mBuilder.setNegativeButton(negativeText, negativeClickListener)
             }
-
+            mBuilder.setTitle(title)
             mBuilder.setView(contentView)
 
             val dialog = mBuilder.create()
@@ -396,8 +397,8 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             }
             timePickerView?.initDisplayTime(mCalendar)
             Log.d(TAG, "show() isAutoUpdateTitle:$mIsAutoUpdateTitle withDate:$mIsWithViewDate,withTime:$mIsWithViewTime,autoUpdateTitle:$mIsAutoUpdateTitle")
-            wrapPositive?.setPickerDialog(pickerDialog)
-            wrapNegative?.setPickerDialog(pickerDialog)
+            wrapPositiveListener?.setPickerDialog(pickerDialog)
+            wrapNegativeListener?.setPickerDialog(pickerDialog)
             return pickerDialog
         }
 
@@ -418,28 +419,44 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
         fun setPositiveButton(textResId: Int, listener: DialogInterface.OnClickListener): Builder {
             mPositiveClickListener = listener
             mPositiveText = mContext.getText(textResId)
-            //mBuilder.setPositiveButton(textResId, listener)
             return this
         }
 
         fun setPositiveButton(text: CharSequence, listener: DialogInterface.OnClickListener): Builder {
             mPositiveClickListener = listener
             mPositiveText = text
-            //mBuilder.setPositiveButton(text, listener)
             return this
         }
 
         fun setNegativeButton(textResId: Int, listener: DialogInterface.OnClickListener): Builder {
             mNegativeClickListener = listener
             mNegativeText = mContext.getText(textResId)
-            //mBuilder.setNegativeButton(textResId, listener)
             return this
         }
 
         fun setNegativeButton(text: CharSequence, listener: DialogInterface.OnClickListener): Builder {
             mNegativeClickListener = listener
             mNegativeText = text
-            //mBuilder.setNegativeButton(text, listener)
+            return this
+        }
+
+        fun setPositiveButtonText(textResId: Int): Builder {
+            mPositiveText = mContext.getText(textResId)
+            return this
+        }
+
+        fun setPositiveButtonText(text: CharSequence): Builder {
+            mPositiveText = text
+            return this
+        }
+
+        fun setNegativeButtonText(textResId: Int): Builder {
+            mNegativeText = mContext.getText(textResId)
+            return this
+        }
+
+        fun setNegativeButtonText(text: CharSequence): Builder {
+            mNegativeText = text
             return this
         }
 
@@ -456,10 +473,10 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
         private class WrapDialogOnClickListener(private val actionListener: OnActionListener) : DialogInterface.OnClickListener {
 
             private var mPickerDialog: DateTimePickerDialog? = null
-            private var mListener: DialogInterface.OnClickListener? = null
+            private var mWrappedListener: DialogInterface.OnClickListener? = null
 
             constructor(actionListener: OnActionListener, listener: DialogInterface.OnClickListener) : this(actionListener) {
-                mListener = listener
+                mWrappedListener = listener
             }
 
             fun setPickerDialog(pickerDialog: DateTimePickerDialog) {
@@ -467,7 +484,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             }
 
             override fun onClick(dialog: DialogInterface, which: Int) {
-                mListener?.onClick(dialog, which)
+                mWrappedListener?.onClick(dialog, which)
                 if (mPickerDialog?.mIsWithViewDate == true) {
                     mPickerDialog?.mDateValue?.let {
                         actionListener.onAction(dialog, which, it)

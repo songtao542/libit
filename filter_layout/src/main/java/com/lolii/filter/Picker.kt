@@ -53,7 +53,7 @@ object Picker {
 
         start.time = startDate
         end.time = endDate
-        val dialog = DateTimePickerDialog.Builder(context)
+        DateTimePickerDialog.Builder(context)
                 .setWithDate(true)
                 .setWithTime(false)
                 .setDefaultDate(current)
@@ -64,8 +64,7 @@ object Picker {
                         listener.onDateSelect(date.calendar.time)
                     }
                 })
-                .create()
-        dialog.show()
+                .show()
     }
 
     interface OnDateSelectListener {

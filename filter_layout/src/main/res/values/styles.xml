@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.TopSheetDialog" parent="Theme.AppCompat.Dialog">
+    <style name="TopSheetDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowAnimationStyle">@style/Animation.Design.TopSheetDialog</item>
+        <item name="android:windowAnimationStyle">@style/TopSheetDialogAnimation</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.2</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
@@ -11,15 +11,23 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <!-- dialog 样式 -->
+        <item name="android:buttonBarNegativeButtonStyle">@style/DialogButtonStyle</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/DialogButtonStyle</item>
+        <item name="android:windowTitleStyle">@style/DialogTitleStyle</item>
     </style>
 
-    <style name="Animation.Design.TopSheetDialog" parent="Animation.AppCompat.Dialog">
+    <style name="DialogTitleStyle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">#007cee</item>
+    </style>
+
+    <style name="DialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">#007cee</item>
+    </style>
+
+    <style name="TopSheetDialogAnimation" parent="Animation.AppCompat.Dialog">
         <item name="android:windowEnterAnimation">@anim/anim_top_enter</item>
         <item name="android:windowExitAnimation">@anim/anim_top_exit</item>
-    </style>
-
-    <style name="FilterTitle" parent="TextAppearance.AppCompat.Title">
-        <item name="android:gravity">center</item>
     </style>
 
 </resources>

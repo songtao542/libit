@@ -40,8 +40,8 @@ class FilterLayout : LinearLayout {
     private var mRightPage: LinearLayout? = null
     private var mLeftPageRecycleView: RecyclerView? = null
     private var mRightPageRecycleView: RecyclerView? = null
-    private var mLeftPageFilterAdapter = FilterAdapter()
-    private var mRightPageFilterAdapter: FilterAdapter? = null
+    private var mLeftPageFilterAdapter = FilterViewAdapter()
+    private var mRightPageFilterAdapter: FilterViewAdapter? = null
     private var mFooter: View? = null
     private var mReset: View? = null
     private var mConfirm: View? = null
@@ -93,7 +93,7 @@ class FilterLayout : LinearLayout {
             mTabLayout?.visibility = View.GONE
         } else {
             if (mRightPageFilterAdapter == null) {
-                mRightPageFilterAdapter = FilterAdapter()
+                mRightPageFilterAdapter = FilterViewAdapter()
             }
             initRightPage(context)
         }
@@ -270,7 +270,7 @@ class FilterLayout : LinearLayout {
         }
         if (rightPageClickToReturn) {
             if (mRightPageFilterAdapter == null) {
-                mRightPageFilterAdapter = FilterAdapter()
+                mRightPageFilterAdapter = FilterViewAdapter()
             }
             mRightPageFilterAdapter?.setClickToReturnListener {
                 mOnCombinationResultListener?.onResult(null, arrayListOf(it))
@@ -289,28 +289,28 @@ class FilterLayout : LinearLayout {
         mTabLayout?.setupWithViewPager(mViewPager)
     }
 
-    fun setLeftPageFilter(items: List<FilterItem>, configurator: FilterConfigurator? = null) {
-        mLeftPageFilterAdapter.mFilterConfigurator = configurator
+    fun setLeftPageFilter(items: List<FilterItem>, adapter: FilterAdapter? = null) {
+        mLeftPageFilterAdapter.mFilterAdapter = adapter
         mLeftPageFilterAdapter.setData(items, context != null)
     }
 
-    fun setRightPageFilter(items: List<FilterItem>, configurator: FilterConfigurator? = null) {
+    fun setRightPageFilter(items: List<FilterItem>, adapter: FilterAdapter? = null) {
         if (mRightPageFilterAdapter == null) {
-            mRightPageFilterAdapter = FilterAdapter()
+            mRightPageFilterAdapter = FilterViewAdapter()
             context?.let { initRightPage(it) }
         }
-        mRightPageFilterAdapter?.mFilterConfigurator = configurator
+        mRightPageFilterAdapter?.mFilterAdapter = adapter
         mRightPageFilterAdapter?.setData(items, context != null)
     }
 
-    class FilterAdapter : RecyclerView.Adapter<FilterAdapter.ViewHolder>() {
+    class FilterViewAdapter : RecyclerView.Adapter<FilterViewAdapter.ViewHolder>() {
 
         private val mDefaultLayoutId = R.layout.filter_text
 
         var mOriginData: List<FilterItem>? = null
         private val mData = ArrayList<Filter>()
 
-        var mFilterConfigurator: FilterConfigurator? = null
+        var mFilterAdapter: FilterAdapter? = null
 
         var mClickToBackListener: ((item: Filter) -> Unit)? = null
 
@@ -336,7 +336,7 @@ class FilterLayout : LinearLayout {
             for (item in data) {
                 mData.add(item)
                 if (item is FilterGroup) {
-                    for (childItem in item.getItems()) {
+                    for (childItem in item.getChildren()) {
                         mData.add(WrapperFilterItem(childItem, item))
                     }
                 }
@@ -359,7 +359,7 @@ class FilterLayout : LinearLayout {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            var resId = mFilterConfigurator?.getLayoutResource()?.get(viewType)
+            var resId = mFilterAdapter?.getLayoutResource()?.get(viewType)
                     ?: Filter.TYPE_MAP[viewType]
             if (resId == null) {
                 Log.d(TAG, "can't find layout resource for view type: $viewType")
@@ -392,7 +392,7 @@ class FilterLayout : LinearLayout {
                 }
                 when (item.getType()) {
                     Filter.TYPE_GROUP -> {
-                        itemView.findViewById<TextView>(R.id.text)?.text = (item as FilterGroup).getName()
+                        itemView.findViewById<TextView>(R.id.text)?.text = (item as FilterGroup).getText()
                     }
                     Filter.TYPE_EDITABLE -> {
                         itemView.findViewById<EditText>(R.id.text)?.let {
@@ -440,7 +440,7 @@ class FilterLayout : LinearLayout {
                         mClickToBackListener?.invoke(filterItem)
                     }
                 }
-                mFilterConfigurator?.configure(filterItem.getType(), itemView, filterItem)
+                mFilterAdapter?.configure(filterItem.getType(), itemView, filterItem)
             }
 
             private fun configureEditable(item: Filter, editText: EditText, end: Boolean) {
@@ -448,6 +448,15 @@ class FilterLayout : LinearLayout {
                 if (filterItem is EditableRangeFilterItem) {
                     editText.inputType = filterItem.getInputType()
                     editText.hint = if (!end) filterItem.getStartHint() else filterItem.getEndHint()
+                    if (!end) {
+                        if (filterItem.getStartText().isNotBlank()) {
+                            editText.setText(filterItem.getStartText())
+                        }
+                    } else {
+                        if (filterItem.getEndText().isNotBlank()) {
+                            editText.setText(filterItem.getEndText())
+                        }
+                    }
                     editText.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                         }
@@ -463,6 +472,9 @@ class FilterLayout : LinearLayout {
                 } else if (filterItem is EditableFilterItem) {
                     editText.inputType = filterItem.getInputType()
                     editText.hint = filterItem.getHint()
+                    if (filterItem.getText().isNotBlank()) {
+                        editText.setText(filterItem.getText())
+                    }
                     editText.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                         }
@@ -481,11 +493,13 @@ class FilterLayout : LinearLayout {
                 val filterItem = if (item is WrapperFilterItem) item.wrapped else item
                 if (filterItem is CheckableFilterItem) {
                     textView.hint = filterItem.getHint()
-                    textView.text = filterItem.getName()
+                    if (filterItem.getText().isNotBlank()) {
+                        textView.text = filterItem.getText()
+                    }
                     textView.setOnClickListener {
                         filterItem.setChecked(!filterItem.isChecked())
                         if (item is WrapperFilterItem && item.parent.isSingleChoice()) {
-                            for (child in item.parent.getItems()) {
+                            for (child in item.parent.getChildren()) {
                                 if (child == item || child == item.wrapped) {
                                     continue
                                 }
@@ -501,8 +515,16 @@ class FilterLayout : LinearLayout {
                 val filterItem = if (item is WrapperFilterItem) item.wrapped else item
                 if (filterItem is DateRangeFilterItem) {
                     textView.hint = if (!end) filterItem.getStartHint() else filterItem.getEndHint()
+                    var startText: String = filterItem.getStartText()
+                    if (startText.isBlank()) {
+                        startText = filterItem.getStartHint()
+                    }
+                    var endText: String = filterItem.getEndText()
+                    if (endText.isBlank()) {
+                        endText = filterItem.getEndHint()
+                    }
                     textView.text = format(
-                            if (!end) filterItem.getStartName() else filterItem.getEndName(),
+                            if (!end) startText else endText,
                             if (!end) filterItem.getStartDate() else filterItem.getEndDate()
                     )
                     textView.setOnClickListener {
@@ -527,14 +549,18 @@ class FilterLayout : LinearLayout {
                             } else {
                                 filterItem.getEndDate() ?: filterItem.getMaxDate()
                             }
-                            Picker.pickDate(textView.context, minDate!!, maxData!!, listener)
+                            Picker.pickDate(textView.context, minDate, maxData, listener)
                         } else {
                             Picker.pickDate(textView.context, listener)
                         }
                     }
                 } else if (filterItem is DateFilterItem) {
                     textView.hint = filterItem.getHint()
-                    textView.text = format(filterItem.getName(), filterItem.getDate())
+                    var text: String = filterItem.getText()
+                    if (text.isBlank()) {
+                        text = filterItem.getHint()
+                    }
+                    textView.text = format(text, filterItem.getDate())
                     textView.setOnClickListener {
                         val listener = object : Picker.OnDateSelectListener {
                             override fun onDateSelect(date: Date) {
@@ -548,7 +574,7 @@ class FilterLayout : LinearLayout {
                             } else {
                                 filterItem.getMinDate()
                             }
-                            Picker.pickDate(textView.context, minDate!!, filterItem.getMaxDate()!!, listener)
+                            Picker.pickDate(textView.context, minDate, filterItem.getMaxDate()!!, listener)
                         } else {
                             Picker.pickDate(textView.context, listener)
                         }

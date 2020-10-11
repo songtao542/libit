@@ -24,7 +24,6 @@
             android:paddingStart="0dp"
             android:paddingEnd="?attr/actionBarSize"
             android:text="@string/filter"
-            android:textAppearance="@style/FilterTitle"
             android:textColor="@android:color/black" />
     </androidx.appcompat.widget.Toolbar>
 

@@ -315,7 +315,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
                 newMonthValue = mMonthStart + 1
             }
             setDisplayedValuesForPickerView(mMonthPickerView, newMonthValue, mMonthStart + 1, MONTH_STOP, mDisplayStartMonths)
-            if (oldMonthValue == mMonthStart + 1) {
+            if (newMonthValue == mMonthStart + 1) {
                 if (oldDayValue < mDayStart) {
                     newDayValue = mDayStart
                 }
@@ -329,7 +329,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
                 newMonthValue = mMonthEnd + 1
             }
             setDisplayedValuesForPickerView(mMonthPickerView, newMonthValue, MONTH_START, mMonthEnd + 1, mDisplayEndMonths)
-            if (oldMonthValue == mMonthEnd + 1) {
+            if (newMonthValue == mMonthEnd + 1) {
                 if (oldDayValue > mDayEnd) {
                     newDayValue = mDayEnd
                 }
@@ -346,7 +346,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
             newDayValue = min(oldDayValue, newDayStop)
             setDisplayedValuesForPickerView(mDayPickerView, newDayValue, DAY_START, newDayStop, mDisplayDays)
         }
-        mOnDateChangedListener?.onDateChanged(Date(newYear, newMonthValue, newDayValue))
+        mOnDateChangedListener?.onDateChanged(Date(newYear, newMonthValue - 1, newDayValue))
     }
 
     private fun passiveUpdateDay(oldYear: Int, newYear: Int, oldMonthSway: Int, newMonthValue: Int) {
@@ -372,7 +372,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
             newDayValue = min(oldDayValue, newDayStop)
             setDisplayedValuesForPickerView(mDayPickerView, newDayValue, DAY_START, newDayStop, mDisplayDays)
         }
-        mOnDateChangedListener?.onDateChanged(Date(newYear, newMonthValue, newDayValue))
+        mOnDateChangedListener?.onDateChanged(Date(newYear, newMonthValue - 1, newDayValue))
     }
 
     fun setTextColor(selectedColor: Int, normalColor: Int) {
@@ -433,7 +433,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
 
     @Suppress("MemberVisibilityCanBePrivate")
     val value: Date
-        get() = Date(mYearPickerView.value, mMonthPickerView.value, mDayPickerView.value)
+        get() = Date(mYearPickerView.value, mMonthPickerView.value - 1, mDayPickerView.value)
 
     fun setOnDateChangedListener(listener: OnDateChangedListener?) {
         mOnDateChangedListener = listener

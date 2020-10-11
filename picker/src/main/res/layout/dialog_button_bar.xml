@@ -27,6 +27,7 @@
             android:layoutDirection="locale"
             android:orientation="horizontal">
 
+            <!--style="?android:attr/buttonBarNegativeButtonStyle"-->
             <Button
                 android:id="@android:id/button2"
                 style="?android:attr/buttonBarNegativeButtonStyle"
@@ -42,6 +43,7 @@
                 android:layout_weight="1"
                 android:visibility="gone" />
 
+            <!--style="?android:attr/buttonBarNeutralButtonStyle"-->
             <Button
                 android:id="@android:id/button3"
                 style="?android:attr/buttonBarNeutralButtonStyle"
@@ -50,6 +52,7 @@
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground" />
 
+            <!--style="?android:attr/buttonBarPositiveButtonStyle"-->
             <Button
                 android:id="@android:id/button1"
                 style="?android:attr/buttonBarPositiveButtonStyle"

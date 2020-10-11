@@ -18,6 +18,7 @@
             android:id="@+id/backButton"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="centerInside"
             android:src="@drawable/ic_back" />
 

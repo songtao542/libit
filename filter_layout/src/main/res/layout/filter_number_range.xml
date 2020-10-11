@@ -4,20 +4,21 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <CheckedTextView
+    <androidx.appcompat.widget.AppCompatCheckedTextView
         android:id="@+id/startNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/filter_item_outline_selector"
+        android:background="@drawable/filter_item_selector"
         android:clickable="true"
+        android:ellipsize="none"
         android:focusable="true"
         android:gravity="center"
-        android:maxLines="1"
         android:paddingLeft="@dimen/filter_item_padding_h"
         android:paddingTop="@dimen/filter_item_padding_v"
         android:paddingRight="@dimen/filter_item_padding_h"
         android:paddingBottom="@dimen/filter_item_padding_v"
-        android:text="2020"
+        android:singleLine="true"
+        android:textAlignment="center"
         android:textColor="@color/filter_item_text_color"
         android:textSize="14sp" />
 
@@ -29,20 +30,21 @@
         android:layout_marginRight="@dimen/filter_item_rd"
         android:background="#ff4d4d4d" />
 
-    <CheckedTextView
+    <androidx.appcompat.widget.AppCompatCheckedTextView
         android:id="@+id/endNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/filter_item_outline_selector"
+        android:background="@drawable/filter_item_selector"
         android:clickable="true"
+        android:ellipsize="none"
         android:focusable="true"
         android:gravity="center"
-        android:maxLines="1"
         android:paddingLeft="@dimen/filter_item_padding_h"
         android:paddingTop="@dimen/filter_item_padding_v"
         android:paddingRight="@dimen/filter_item_padding_h"
         android:paddingBottom="@dimen/filter_item_padding_v"
-        android:text="2020"
+        android:singleLine="true"
+        android:textAlignment="center"
         android:textColor="@color/filter_item_text_color"
         android:textSize="14sp" />
 

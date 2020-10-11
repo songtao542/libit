@@ -3,6 +3,7 @@
 package com.lolii.filter
 
 import android.text.InputType
+import cn.lolii.picker.address.Address
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -52,10 +53,6 @@ open class SimpleFilterGroup(private val name: String) : FilterGroup {
         return name
     }
 
-    override fun getType(): Int {
-        return Filter.TYPE_GROUP
-    }
-
     override fun getChildren(): List<Filter> {
         return mItems
     }
@@ -77,7 +74,6 @@ open class SimpleFilterGroup(private val name: String) : FilterGroup {
         }
         return values
     }
-
 
     fun getCheckedValue(): CheckableFilterItem? {
         for (item in mItems) {
@@ -106,7 +102,7 @@ open class SimpleFilterGroup(private val name: String) : FilterGroup {
         return null
     }
 
-    fun getEditText(): String? {
+    fun getEditText(): CharSequence? {
         for (item in mItems) {
             if (item is EditableFilterItem) {
                 return item.getText()
@@ -115,7 +111,7 @@ open class SimpleFilterGroup(private val name: String) : FilterGroup {
         return null
     }
 
-    fun getEditTextRange(): Pair<String, String>? {
+    fun getEditTextRange(): Pair<CharSequence, CharSequence>? {
         for (item in mItems) {
             if (item is EditableRangeFilterItem) {
                 return Pair(item.getStartText(), item.getEndText())
@@ -126,22 +122,18 @@ open class SimpleFilterGroup(private val name: String) : FilterGroup {
 }
 
 open class SimpleEditableFilterItem(private var mHint: String) : EditableFilterItem {
-    private var mText: String = ""
+    private var mText: CharSequence = ""
 
-    override fun getText(): String {
+    override fun getText(): CharSequence {
         return mText
     }
 
-    override fun setText(text: String) {
+    override fun setText(text: CharSequence) {
         mText = text
     }
 
-    override fun getHint(): String {
+    override fun getHint(): CharSequence {
         return mHint
-    }
-
-    override fun getType(): Int {
-        return Filter.TYPE_EDITABLE
     }
 }
 
@@ -150,30 +142,30 @@ open class SimpleEditableRangeFilterItem(private var mStartHint: String = "",
     : EditableRangeFilterItem {
 
     private var mInputType: Int = InputType.TYPE_CLASS_TEXT
-    private var mStartText: String = ""
-    private var mEndText: String = ""
+    private var mStartText: CharSequence = ""
+    private var mEndText: CharSequence = ""
 
-    override fun getStartText(): String {
+    override fun getStartText(): CharSequence {
         return mStartText
     }
 
-    override fun setStartText(text: String) {
+    override fun setStartText(text: CharSequence) {
         mStartText = text
     }
 
-    override fun getStartHint(): String {
+    override fun getStartHint(): CharSequence {
         return mStartHint
     }
 
-    override fun getEndText(): String {
+    override fun getEndText(): CharSequence {
         return mEndText
     }
 
-    override fun setEndText(text: String) {
+    override fun setEndText(text: CharSequence) {
         mEndText = text
     }
 
-    override fun getEndHint(): String {
+    override fun getEndHint(): CharSequence {
         return mEndHint
     }
 
@@ -184,13 +176,9 @@ open class SimpleEditableRangeFilterItem(private var mStartHint: String = "",
     override fun getInputType(): Int {
         return mInputType
     }
-
-    override fun getType(): Int {
-        return Filter.TYPE_EDITABLE_RANGE
-    }
 }
 
-open class SimpleDateBoundary : DateBoundary {
+open class SimpleDateBoundary : Boundary<Date> {
     private val mCurrent: Calendar = Calendar.getInstance(TimeZone.getDefault())
 
     private val mMin: Calendar = Calendar.getInstance(TimeZone.getDefault()).apply {
@@ -203,7 +191,7 @@ open class SimpleDateBoundary : DateBoundary {
 
     private var mYearOffset: Int = 0
 
-    override fun getMinDate(): Date {
+    override fun getMin(): Date {
         if (mYearOffset > 0) {
             mMin.set(mCurrent.get(Calendar.YEAR) - mYearOffset, 1, 1)
             return mMin.time
@@ -211,7 +199,7 @@ open class SimpleDateBoundary : DateBoundary {
         return mMin.time
     }
 
-    override fun getMaxDate(): Date {
+    override fun getMax(): Date {
         if (mYearOffset > 0) {
             mMax.set(mCurrent.get(Calendar.YEAR) + mYearOffset, 1, 1)
             return mMax.time
@@ -235,16 +223,12 @@ open class SimpleDateFilterItem(private val hint: String) : SimpleDateBoundary()
         mDate = date
     }
 
-    override fun getText(): String {
+    override fun getText(): CharSequence {
         return hint
     }
 
-    override fun getHint(): String {
+    override fun getHint(): CharSequence {
         return hint
-    }
-
-    override fun getType(): Int {
-        return Filter.TYPE_DATE
     }
 }
 
@@ -269,24 +253,20 @@ open class SimpleDateRangeFilterItem(private val startHint: String,
         mEndDate = date
     }
 
-    override fun getStartText(): String {
+    override fun getStartText(): CharSequence {
         return startHint
     }
 
-    override fun getEndText(): String {
+    override fun getEndText(): CharSequence {
         return endHint
     }
 
-    override fun getStartHint(): String {
+    override fun getStartHint(): CharSequence {
         return startHint
     }
 
-    override fun getEndHint(): String {
+    override fun getEndHint(): CharSequence {
         return endHint
-    }
-
-    override fun getType(): Int {
-        return Filter.TYPE_DATE_RANGE
     }
 }
 
@@ -302,15 +282,89 @@ open class SimpleCheckableFilterItem(private val name: String) : CheckableFilter
         mChecked = checked
     }
 
-    override fun getText(): String {
+    override fun getText(): CharSequence {
         return name
     }
 
-    override fun getHint(): String {
+    override fun getHint(): CharSequence {
         return name
     }
+}
 
-    override fun getType(): Int {
-        return Filter.TYPE_CHECKABLE
+open class SimpleNumberBoundary(private val min: Int, private val max: Int) : Boundary<Int> {
+    override fun getMin(): Int {
+        return min
+    }
+
+    override fun getMax(): Int {
+        return max
+    }
+}
+
+open class SimpleNumberFilterItem(private val hint: String, min: Int, max: Int)
+    : SimpleNumberBoundary(min, max), NumberFilterItem {
+    private var mNumber: Int? = null
+
+    override fun setNumber(number: Int) {
+        mNumber = number
+    }
+
+    override fun getNumber(): Int? {
+        return mNumber
+    }
+
+    override fun getText(): CharSequence {
+        return hint
+    }
+}
+
+open class SimpleNumberRangeFilterItem(private val startHint: String, private val endHint: String, min: Int, max: Int)
+    : SimpleNumberBoundary(min, max), NumberRangeFilterItem {
+    private var mStartNumber: Int? = null
+    private var mEndNumber: Int? = null
+
+    override fun setStartNumber(number: Int) {
+        mStartNumber = number
+    }
+
+    override fun getStartNumber(): Int? {
+        return mStartNumber
+    }
+
+    override fun setEndNumber(number: Int) {
+        mEndNumber = number
+    }
+
+    override fun getEndNumber(): Int? {
+        return mEndNumber
+    }
+
+    override fun getStartText(): CharSequence {
+        return startHint
+    }
+
+    override fun getEndText(): CharSequence {
+        return endHint
+    }
+}
+
+open class SimpleAddressFilterItem(private val hint: String) : AddressFilterItem {
+
+    private var mAddress: Address? = null
+
+    override fun setAddress(address: Address) {
+        mAddress = address
+    }
+
+    override fun getAddress(): Address? {
+        return mAddress
+    }
+
+    override fun getText(): CharSequence {
+        return hint
+    }
+
+    override fun getHint(): CharSequence {
+        return hint
     }
 }

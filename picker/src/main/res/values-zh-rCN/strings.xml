@@ -73,6 +73,7 @@
     <string name="dialog_confirm">确认</string>
     <string name="dialog_cancel">取消</string>
     <string name="select_address">选择地址</string>
+    <string name="please_select">请选择</string>
     <string name="select_date_time">选择日期和时间</string>
     <string name="select_date">选择日期</string>
     <string name="select_time">选择时间</string>

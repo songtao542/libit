@@ -5,27 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.lolii.filter.FilterDialogFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:elevation="10dp"
-        app:contentInsetStart="0dp"
-        app:contentInsetStartWithNavigation="0dp"
-        app:navigationIcon="@drawable/ic_back">
+        android:elevation="10dp">
+
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_back" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:paddingStart="0dp"
-            android:paddingEnd="?attr/actionBarSize"
             android:text="@string/filter"
-            android:textColor="@android:color/black" />
-    </androidx.appcompat.widget.Toolbar>
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"

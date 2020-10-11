@@ -1,4 +1,4 @@
-package cn.lolii.picker.address
+package cn.lolii.picker
 
 import android.content.Context
 import android.content.DialogInterface
@@ -6,10 +6,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import cn.lolii.picker.R
-import cn.lolii.picker.cascade.CascadePickerView
-import cn.lolii.picker.datetime.DateTimePickerDialog
-import cn.lolii.picker.datetime.Time
+import kotlin.math.abs
 
 /**
  * 修改标题和底部Button样式
@@ -29,24 +26,20 @@ import cn.lolii.picker.datetime.Time
  * </style>
  */
 @Suppress("unused")
-class AddressPickerDialog private constructor(private val mContext: Context,
-                                              private val dialog: AlertDialog,
-                                              private val cascadePickerView: CascadePickerView,
-                                              private val addressData: List<Province>) {
+class PickerDialog private constructor(private val mContext: Context,
+                                       private val dialog: AlertDialog,
+                                       private val pickerView: NumberPickerView,
+                                       private val data: List<DisplayValue>) {
 
     companion object {
-        private const val TAG = "AddressPickerDialog"
+        private const val TAG = "PickerDialog"
     }
 
-    private var mIsAutoUpdateTitle = true
+    private var mIsAutoUpdateTitle = false
 
     private var mAddressStr: String? = null
-    private var mAddress: Address? = null
-
-    private fun updateTitle(address: Address) {
-        mAddressStr = address.formattedAddress
-        updateTitle(mAddressStr)
-    }
+    private var mValueIndex: Int? = null
+    private var mValue: DisplayValue? = null
 
     private fun updateTitle(title: CharSequence?) {
         dialog.setTitle(title)
@@ -56,28 +49,24 @@ class AddressPickerDialog private constructor(private val mContext: Context,
         mIsAutoUpdateTitle = enable
     }
 
-    private fun setOnAddressChangeListener(listener: OnAddressChangeListener?) {
-        cascadePickerView.setOnValueChangeListener(object : CascadePickerView.OnValueChangeListener {
-            override fun onValueChange(value: CascadePickerView.Value) {
-                try {
-                    val province = addressData[value.index1]
-                    val city = province.getChildren()[value.index2] as City
-                    val district = city.getChildren()[value.index3] as District
-                    val address = Address(province.code, province.name, city.code, city.name, district.code, district.name)
-                    mAddress = address
-                    if (mIsAutoUpdateTitle) {
-                        updateTitle(address)
-                    }
-                    listener?.onAddressChanged(this@AddressPickerDialog, address)
-                } catch (e: Throwable) {
-                    Log.e(TAG, "error: ", e)
-                }
-            }
-        })
+    private fun setOnValueChangedListener(listener: OnValueChangeListener?) {
+        pickerView.setOnValueChangedListener { _, _, newVal ->
+            notifyListener(newVal, listener)
+        }
+        notifyListener(pickerView.value, listener)
     }
 
-    interface OnAddressChangeListener {
-        fun onAddressChanged(dialog: AddressPickerDialog, address: Address) {}
+    private fun notifyListener(index: Int, listener: OnValueChangeListener?) {
+        mValueIndex = index
+        mValue = data[index]
+        if (mIsAutoUpdateTitle) {
+            updateTitle(mValue?.getDisplayValue())
+        }
+        listener?.onValueChanged(this, index, data[index])
+    }
+
+    interface OnValueChangeListener {
+        fun onValueChanged(dialog: PickerDialog, index: Int, value: DisplayValue) {}
     }
 
     interface OnActionListener {
@@ -89,7 +78,7 @@ class AddressPickerDialog private constructor(private val mContext: Context,
          *              {@link DialogInterface#BUTTON_POSITIVE}) or the position
          *              of the item clicked
          */
-        fun onAction(dialog: DialogInterface, which: Int, address: Address) {}
+        fun onAction(dialog: DialogInterface, which: Int, index: Int, value: DisplayValue) {}
     }
 
     fun show() {
@@ -101,11 +90,11 @@ class AddressPickerDialog private constructor(private val mContext: Context,
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    class Builder(private val mContext: Context, theme: Int = R.style.BottomSheetPickerDialog) {
+    class Builder(private val mContext: Context, theme: Int = R.style.PickerDialog) {
         private val mBuilder: AlertDialog.Builder = AlertDialog.Builder(mContext, theme)
 
-        private var mIsAutoUpdateTitle = true
-        private var mOnAddressChangeListener: OnAddressChangeListener? = null
+        private var mIsAutoUpdateTitle = false
+        private var mOnValueChangeListener: OnValueChangeListener? = null
         private var mCanceledOnTouchOutside = true
         private var mGravity = Gravity.BOTTOM
 
@@ -115,10 +104,13 @@ class AddressPickerDialog private constructor(private val mContext: Context,
         private var mPositiveText: CharSequence? = null
         private var mNegativeText: CharSequence? = null
 
-        private var mDefaultAddress: Address? = null
+        private var mDisplayValues: List<DisplayValue> = emptyList()
+        private var mDefaultValue: DisplayValue? = null
+
+        private var mCycle = true
 
         init {
-            mBuilder.setTitle(mContext.getString(R.string.select_address)) //避免外部未设置时无法显示title
+            mBuilder.setTitle(mContext.getString(R.string.please_select))
         }
 
         /**
@@ -135,23 +127,31 @@ class AddressPickerDialog private constructor(private val mContext: Context,
             return this
         }
 
-        fun setDefaultAddress(address: Address?): Builder {
-            mDefaultAddress = address
+        fun setDefaultValue(value: DisplayValue?): Builder {
+            mDefaultValue = value
             return this
         }
 
-        fun setOnAddressChangeListener(listener: OnAddressChangeListener?): Builder {
-            mOnAddressChangeListener = listener
+        fun setDefaultValue(value: Int?): Builder {
+            mDefaultValue = if (value != null) NumberDisplayValue(value) else null
             return this
         }
 
-        fun create(): AddressPickerDialog {
-            val contentView = View.inflate(mContext, R.layout.dialog_cascade_picker, null)
-            val cascadePickerView: CascadePickerView = contentView.findViewById(R.id.cascade_picker_view)
-            cascadePickerView.setTextSize(14f, 15f)
-            val addressData: List<Province> = AddressProvider.getProvince(mContext)
-            val index = resolveDefaultAddress(addressData)
-            cascadePickerView.setData(addressData, index[0], index[1], index[2])
+        fun setOnValueChangeListener(listener: OnValueChangeListener?): Builder {
+            mOnValueChangeListener = listener
+            return this
+        }
+
+        fun create(): PickerDialog {
+            val contentView = View.inflate(mContext, R.layout.dialog_picker, null)
+            val pickerView: NumberPickerView = contentView.findViewById(R.id.picker_view)
+
+            pickerView.displayedValues = resolveDisplayValues()
+            pickerView.minValue = 0
+            pickerView.maxValue = mDisplayValues.size - 1
+            pickerView.value = resolveCurrentValue()
+
+            pickerView.wrapSelectorWheel = mCycle
 
             var wrapPositiveListener: WrapDialogOnClickListener? = null
             var wrapNegativeListener: WrapDialogOnClickListener? = null
@@ -189,9 +189,9 @@ class AddressPickerDialog private constructor(private val mContext: Context,
             window?.setGravity(mGravity)
             dialog.setCanceledOnTouchOutside(mCanceledOnTouchOutside)
             //先创建pickerDialog实例，后续设置数据回调onChange
-            val pickerDialog = AddressPickerDialog(mContext, dialog, cascadePickerView, addressData)
+            val pickerDialog = PickerDialog(mContext, dialog, pickerView, mDisplayValues)
             pickerDialog.setAutoUpdateTitle(mIsAutoUpdateTitle)
-            pickerDialog.setOnAddressChangeListener(mOnAddressChangeListener)
+            pickerDialog.setOnValueChangedListener(mOnValueChangeListener)
 
             wrapPositiveListener?.setPickerDialog(pickerDialog)
             wrapNegativeListener?.setPickerDialog(pickerDialog)
@@ -199,36 +199,25 @@ class AddressPickerDialog private constructor(private val mContext: Context,
             return pickerDialog
         }
 
-        private fun resolveDefaultAddress(addressData: List<Province>): IntArray {
-            val result = intArrayOf(0, 0, 0)
-            val address = mDefaultAddress ?: return result
-            for (i in addressData.indices) {
-                val province = addressData[i]
-                if (province.code == address.provinceCode) {
-                    result[0] = i
-                    val cities = province.cities
-                    for (j in cities.indices) {
-                        val city = cities[j]
-                        if (city.code == address.cityCode) {
-                            result[1] = j
-                            val districts = city.districts
-                            for (k in districts.indices) {
-                                val district = districts[k]
-                                if (district.code == address.districtCode) {
-                                    result[2] = k
-                                    break
-                                }
-                            }
-                            break
-                        }
-                    }
-                    break
+        private fun resolveCurrentValue(): Int {
+            val current = mDefaultValue ?: return 0
+            for (i in mDisplayValues.indices) {
+                if (current == mDisplayValues[i]) {
+                    return i
                 }
+            }
+            return 0
+        }
+
+        private fun resolveDisplayValues(): List<CharSequence> {
+            val result = ArrayList<CharSequence>(mDisplayValues.size)
+            for (v in mDisplayValues) {
+                result.add(v.getDisplayValue())
             }
             return result
         }
 
-        fun show(): AddressPickerDialog {
+        fun show(): PickerDialog {
             return create().also { it.dialog.show() }
         }
 
@@ -239,6 +228,25 @@ class AddressPickerDialog private constructor(private val mContext: Context,
 
         fun setCancelable(enable: Boolean): Builder {
             mBuilder.setCancelable(enable)
+            return this
+        }
+
+        fun setDisplayValues(values: List<DisplayValue>): Builder {
+            mDisplayValues = values
+            return this
+        }
+
+        fun setDisplayValues(from: Int, to: Int): Builder {
+            val values = ArrayList<DisplayValue>(abs(to - from) + 1)
+            for (i in from..to) {
+                values.add(NumberDisplayValue(i))
+            }
+            mDisplayValues = values
+            return this
+        }
+
+        fun setCycle(cycle: Boolean): Builder {
+            mCycle = cycle
             return this
         }
 
@@ -298,23 +306,46 @@ class AddressPickerDialog private constructor(private val mContext: Context,
 
         private class WrapDialogOnClickListener(private val actionListener: OnActionListener) : DialogInterface.OnClickListener {
 
-            private var mPickerDialog: AddressPickerDialog? = null
+            private var mPickerDialog: PickerDialog? = null
             private var mWrappedListener: DialogInterface.OnClickListener? = null
 
             constructor(actionListener: OnActionListener, listener: DialogInterface.OnClickListener) : this(actionListener) {
                 mWrappedListener = listener
             }
 
-            fun setPickerDialog(pickerDialog: AddressPickerDialog) {
+            fun setPickerDialog(pickerDialog: PickerDialog) {
                 mPickerDialog = pickerDialog
             }
 
             override fun onClick(dialog: DialogInterface, which: Int) {
                 mWrappedListener?.onClick(dialog, which)
-                mPickerDialog?.mAddress?.let {
-                    actionListener.onAction(dialog, which, it)
+                val index = mPickerDialog?.mValueIndex
+                val value = mPickerDialog?.mValue
+                if (index != null && value != null) {
+                    actionListener.onAction(dialog, which, index, value)
                 }
             }
         }
+    }
+
+    class NumberDisplayValue(private val value: Int) : DisplayValue {
+        override fun getDisplayValue(): CharSequence {
+            return "$value"
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (other is NumberDisplayValue) {
+                return other.value == value
+            }
+            return false
+        }
+
+        override fun hashCode(): Int {
+            return value
+        }
+    }
+
+    interface DisplayValue {
+        fun getDisplayValue(): CharSequence
     }
 }

@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="filter_range_linker_color">#ff4d4d4d</color>
+
+    <color name="light_blue">#007cee</color>
+    <color name="light_blue_pressed">#0372d9</color>
+
+    <color name="filter_item_normal_bg_color">#f4f6fa</color>
+    <color name="filter_item_select_bg_color">#007cee</color>
+    <color name="filter_item_pressed_bg_color">#dde3f0</color>
+
+    <color name="filter_item_normal_text_color">#333333</color>
+    <color name="filter_item_select_text_color">#ffffff</color>
+    <color name="filter_item_pressed_text_color">#333333</color>
 </resources>

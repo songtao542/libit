@@ -965,14 +965,6 @@ public class NumberPickerView extends View {
     //compatible for NumberPicker
     public void setOnValueChangedListener(OnValueChangeListener listener) {
         mOnValueChangeListener = listener;
-        if (listener == null) {
-            if (mHandlerInMainThread != null) {
-                mHandlerInMainThread.removeCallbacksAndMessages(null);
-            }
-            if (mHandlerInNewThread != null) {
-                mHandlerInNewThread.removeCallbacksAndMessages(null);
-            }
-        }
     }
 
     public void setOnValueChangedListenerRelativeToRaw(OnValueChangeListenerRelativeToRaw listener) {

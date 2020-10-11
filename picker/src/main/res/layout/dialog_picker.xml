@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/dialog_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dialog_datetime_padding_bottom"
+        android:paddingRight="@dimen/dialog_datetime_padding_bottom"
+        android:paddingBottom="@dimen/dialog_datetime_padding_bottom">
+
+        <cn.lolii.picker.NumberPickerView
+            android:id="@+id/picker_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <include layout="@layout/dialog_button_bar" />
+
+</LinearLayout>

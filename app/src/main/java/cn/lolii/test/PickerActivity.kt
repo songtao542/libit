@@ -139,6 +139,18 @@ class PickerActivity : AppCompatActivity() {
             editableRange.add(SimpleEditableRangeFilterItem("最少", "最多"))
             filterData.add(editableRange)
 
+            val address = SimpleFilterGroup("发货地址")
+            address.add(SimpleAddressFilterItem("选择发货地址"))
+            filterData.add(address)
+
+            val number = SimpleFilterGroup("发货数量")
+            number.add(SimpleNumberFilterItem("选择发货数量", 1, 200))
+            filterData.add(number)
+
+            val numberRange = SimpleFilterGroup("发货数量")
+            numberRange.add(SimpleNumberRangeFilterItem("最少数量", "最多数量", 1, 200))
+            filterData.add(numberRange)
+
             f.setFilter(filterData)
             f.setShowAsDialog(true)
 

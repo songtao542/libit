@@ -11,6 +11,7 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="actionBarSize">@dimen/action_bar_height</item>
         <!-- dialog 样式 -->
         <item name="android:buttonBarNegativeButtonStyle">@style/DialogButtonStyle</item>
         <item name="android:buttonBarPositiveButtonStyle">@style/DialogButtonStyle</item>
@@ -18,11 +19,12 @@
     </style>
 
     <style name="DialogTitleStyle" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textColor">#007cee</item>
+        <item name="android:textColor">@color/light_blue</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
     </style>
 
     <style name="DialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
-        <item name="android:textColor">#007cee</item>
+        <item name="android:textColor">@color/light_blue</item>
     </style>
 
     <style name="TopSheetDialogAnimation" parent="Animation.AppCompat.Dialog">

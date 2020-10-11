@@ -33,7 +33,7 @@
             android:layout_width="150dp"
             android:layout_height="@dimen/filter_action_height"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/filter_reset_button_bg"
+            android:background="@drawable/filter_reset_button_selector"
             android:gravity="center"
             android:text="@string/filter_reset"
             android:textColor="@android:color/black" />
@@ -48,7 +48,7 @@
             android:layout_width="150dp"
             android:layout_height="@dimen/filter_action_height"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/filter_bottom_button_bg"
+            android:background="@drawable/filter_confirm_button_selector"
             android:gravity="center"
             android:text="@string/filter_confirm"
             android:textColor="@android:color/white" />

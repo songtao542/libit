@@ -19,6 +19,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
+import cn.lolii.picker.address.Address
 import com.google.android.flexbox.*
 import com.google.android.material.tabs.TabLayout
 import java.text.SimpleDateFormat
@@ -431,8 +432,22 @@ class FilterLayout : LinearLayout {
                         }
                     }
                     Filter.TYPE_NUMBER -> {
+                        itemView.findViewById<TextView>(R.id.label)?.let {
+                            configureNumber(item, it, false)
+                        }
                     }
                     Filter.TYPE_NUMBER_RANGE -> {
+                        itemView.findViewById<TextView>(R.id.startNumber)?.let {
+                            configureNumber(item, it, false)
+                        }
+                        itemView.findViewById<TextView>(R.id.endNumber)?.let {
+                            configureNumber(item, it, true)
+                        }
+                    }
+                    Filter.TYPE_ADDRESS -> {
+                        itemView.findViewById<TextView>(R.id.label)?.let {
+                            configureAddress(item, it)
+                        }
                     }
                 }
                 if (mClickToBackListener != null) {
@@ -515,11 +530,11 @@ class FilterLayout : LinearLayout {
                 val filterItem = if (item is WrapperFilterItem) item.wrapped else item
                 if (filterItem is DateRangeFilterItem) {
                     textView.hint = if (!end) filterItem.getStartHint() else filterItem.getEndHint()
-                    var startText: String = filterItem.getStartText()
+                    var startText: CharSequence = filterItem.getStartText()
                     if (startText.isBlank()) {
                         startText = filterItem.getStartHint()
                     }
-                    var endText: String = filterItem.getEndText()
+                    var endText: CharSequence = filterItem.getEndText()
                     if (endText.isBlank()) {
                         endText = filterItem.getEndHint()
                     }
@@ -538,25 +553,26 @@ class FilterLayout : LinearLayout {
                                 notifyDataSetChanged()
                             }
                         }
-                        if (filterItem.getMinDate() != null && filterItem.getMaxDate() != null) {
-                            val minDate = if (end) {
-                                filterItem.getStartDate() ?: filterItem.getMinDate()
-                            } else {
-                                filterItem.getMinDate()
-                            }
-                            val maxData = if (end) {
-                                filterItem.getMaxDate()
-                            } else {
-                                filterItem.getEndDate() ?: filterItem.getMaxDate()
-                            }
-                            Picker.pickDate(textView.context, minDate, maxData, listener)
+                        val currentDate = if (end) {
+                            filterItem.getEndDate() ?: Date()
                         } else {
-                            Picker.pickDate(textView.context, listener)
+                            filterItem.getStartDate() ?: Date()
                         }
+                        val minDate = if (end) {
+                            filterItem.getStartDate() ?: filterItem.getMin()
+                        } else {
+                            filterItem.getMin()
+                        }
+                        val maxData = if (end) {
+                            filterItem.getMax()
+                        } else {
+                            filterItem.getEndDate() ?: filterItem.getMax()
+                        }
+                        Picker.pickDate(textView.context, currentDate, minDate, maxData, listener)
                     }
                 } else if (filterItem is DateFilterItem) {
                     textView.hint = filterItem.getHint()
-                    var text: String = filterItem.getText()
+                    var text: CharSequence = filterItem.getText()
                     if (text.isBlank()) {
                         text = filterItem.getHint()
                     }
@@ -568,27 +584,113 @@ class FilterLayout : LinearLayout {
                                 notifyDataSetChanged()
                             }
                         }
-                        if (filterItem.getMinDate() != null && filterItem.getMaxDate() != null) {
-                            val minDate = if (end) {
-                                filterItem.getDate() ?: filterItem.getMinDate()
-                            } else {
-                                filterItem.getMinDate()
-                            }
-                            Picker.pickDate(textView.context, minDate, filterItem.getMaxDate()!!, listener)
-                        } else {
-                            Picker.pickDate(textView.context, listener)
-                        }
+                        val currentDate = filterItem.getDate() ?: Date()
+                        Picker.pickDate(textView.context, currentDate, filterItem.getMin(), filterItem.getMax(), listener)
                     }
                 }
             }
 
             @SuppressLint("SimpleDateFormat")
-            private fun format(hint: String, date: Date?): String {
+            private fun format(hint: CharSequence, date: Date?): CharSequence {
                 if (date == null) {
                     return hint
                 }
                 val format = SimpleDateFormat("yyyy-MM-dd")
                 return format.format(date)
+            }
+
+
+            private fun configureAddress(item: Filter, textView: TextView) {
+                val filterItem = if (item is WrapperFilterItem) item.wrapped else item
+                if (filterItem is AddressFilterItem) {
+                    textView.hint = filterItem.getHint()
+                    val address = filterItem.getAddress()
+                    if (address == null) {
+                        if (filterItem.getText().isNotBlank()) {
+                            textView.text = filterItem.getText()
+                        }
+                    } else {
+                        textView.text = address.formattedAddress
+                    }
+                    textView.setOnClickListener {
+                        Picker.pickAddress(textView.context, address, object : Picker.OnAddressSelectListener {
+                            override fun onAddressSelect(address: Address) {
+                                filterItem.setAddress(address)
+                                notifyDataSetChanged()
+                            }
+                        })
+                    }
+                }
+            }
+
+            private fun configureNumber(item: Filter, textView: TextView, end: Boolean) {
+                val filterItem = if (item is WrapperFilterItem) item.wrapped else item
+                if (filterItem is NumberRangeFilterItem) {
+                    textView.hint = if (!end) filterItem.getStartHint() else filterItem.getEndHint()
+                    var startText: CharSequence? = filterItem.getStartNumber()?.toString()
+                    if (startText.isNullOrBlank()) {
+                        startText = filterItem.getStartText()
+                        if (startText.isBlank()) {
+                            startText = filterItem.getStartHint()
+                        }
+                    }
+                    var endText: CharSequence? = filterItem.getEndNumber()?.toString()
+                    if (endText.isNullOrBlank()) {
+                        endText = filterItem.getEndText()
+                        if (endText.isBlank()) {
+                            endText = filterItem.getEndHint()
+                        }
+                    }
+                    textView.text = if (!end) startText else endText
+                    textView.setOnClickListener {
+                        val listener = object : Picker.OnNumberSelectListener {
+                            override fun onNumberSelect(number: Int) {
+                                if (!end) {
+                                    filterItem.setStartNumber(number)
+                                } else {
+                                    filterItem.setEndNumber(number)
+                                }
+                                notifyDataSetChanged()
+                            }
+                        }
+                        val currentNumber = if (end) {
+                            filterItem.getEndNumber()
+                        } else {
+                            filterItem.getStartNumber()
+                        }
+                        val minNumber = if (end) {
+                            filterItem.getStartNumber() ?: filterItem.getMin()
+                        } else {
+                            filterItem.getMin()
+                        }
+                        val maxNumber = if (end) {
+                            filterItem.getMax()
+                        } else {
+                            filterItem.getEndNumber() ?: filterItem.getMax()
+                        }
+                        Picker.pickNumber(textView.context, currentNumber, minNumber, maxNumber, listener)
+                    }
+                } else if (filterItem is NumberFilterItem) {
+                    textView.hint = filterItem.getHint()
+                    var text: CharSequence? = filterItem.getNumber()?.toString()
+                    if (text.isNullOrBlank()) {
+                        text = filterItem.getText()
+                        if (text.isBlank()) {
+                            text = filterItem.getHint()
+                        }
+                    }
+                    textView.text = text
+                    textView.setOnClickListener {
+                        val listener = object : Picker.OnNumberSelectListener {
+                            override fun onNumberSelect(number: Int) {
+                                filterItem.setNumber(number)
+                                notifyDataSetChanged()
+                            }
+                        }
+                        val currentNumber = filterItem.getNumber()
+                        Picker.pickNumber(textView.context, currentNumber, filterItem.getMin(), filterItem.getMax(), listener)
+                    }
+                }
             }
         }
     }

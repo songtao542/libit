@@ -95,7 +95,7 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
+        view.findViewById<View>(R.id.backButton).setOnClickListener {
             back()
         }
         mFilterLayout = view.findViewById(R.id.filterLayout)

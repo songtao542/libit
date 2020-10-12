@@ -14,7 +14,13 @@ import java.io.InputStream
 
 object AddressProvider {
 
+    private var provinces: List<Province>? = null
+
     fun getProvince(context: Context): List<Province> {
+        val ps = provinces
+        if (!ps.isNullOrEmpty()) {
+            return ps
+        }
         val inputStream: InputStream = context.resources.openRawResource(R.raw.city_data)
         val provinceList = ArrayList<Province>()
         val provinceArray = JSONArray(inputStream.bufferedReader().readText())
@@ -40,6 +46,7 @@ object AddressProvider {
             }
             provinceList.add(Province(provinceObj.getString("code"), provinceObj.getString("name"), cityList))
         }
+        provinces = provinceList
         return provinceList
     }
 }

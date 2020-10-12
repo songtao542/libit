@@ -84,7 +84,7 @@ class PickerActivity : AppCompatActivity() {
             val dialog = AddressPickerDialog.Builder(this)
                     .setAutoUpdateTitle(true)
                     .setDefaultAddress(mAddress)
-                    .setOnAddressChangeListener(object : AddressPickerDialog.OnAddressChangeListener {
+                    .setOnAddressChangedListener(object : AddressPickerDialog.OnAddressChangedListener {
                         override fun onAddressChanged(dialog: AddressPickerDialog, address: Address) {
                             Log.d("TTTT", "picked address: $address")
                             mAddress = address

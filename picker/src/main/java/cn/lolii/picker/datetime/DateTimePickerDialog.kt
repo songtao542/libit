@@ -89,7 +89,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
         mIsWithViewTime = withTime
     }
 
-    private fun setDateTimeChangeListener(listener: OnDateTimeChangeListener?) {
+    private fun setOnDateTimeChangedListener(listener: OnDateTimeChangeListener?) {
         datePickerView?.setOnDateChangedListener(object : DatePickerView.OnDateChangedListener {
             override fun onDateChanged(date: Date) {
                 mDateValue = date
@@ -100,8 +100,8 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             }
         })
 
-        timePickerView?.setOnTimeChangeListener(object : TimePickerView.OnTimeChangeListener {
-            override fun onTimeChange(time: Time) {
+        timePickerView?.setOnTimeChangedListener(object : TimePickerView.OnTimeChangedListener {
+            override fun onTimeChanged(time: Time) {
                 mTimeValue = time
                 if (mIsAutoUpdateTitle) {
                     updateTitle(time)
@@ -312,7 +312,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             return this
         }
 
-        fun setDateTimeChangeListener(listener: OnDateTimeChangeListener?): Builder {
+        fun setOnDateTimeChangedListener(listener: OnDateTimeChangeListener?): Builder {
             mDateTimeChangeListener = listener
             return this
         }
@@ -381,7 +381,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             dialog.setCanceledOnTouchOutside(mCanceledOnTouchOutside)
             //先创建pickerDialog实例，后续设置数据回调onChange
             val pickerDialog = DateTimePickerDialog(mContext, dialog, calendarView, timePickerView)
-            pickerDialog.setDateTimeChangeListener(mDateTimeChangeListener)
+            pickerDialog.setOnDateTimeChangedListener(mDateTimeChangeListener)
             pickerDialog.setAutoUpdateTitle(mIsAutoUpdateTitle)
             pickerDialog.setWithView(mIsWithViewDate, mIsWithViewTime)
 

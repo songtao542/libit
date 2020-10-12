@@ -137,7 +137,7 @@ class PickerDialog private constructor(private val mContext: Context,
             return this
         }
 
-        fun setOnValueChangeListener(listener: OnValueChangeListener?): Builder {
+        fun setOnValueChangedListener(listener: OnValueChangeListener?): Builder {
             mOnValueChangeListener = listener
             return this
         }

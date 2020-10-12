@@ -8,8 +8,6 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import cn.lolii.picker.R
 import cn.lolii.picker.cascade.CascadePickerView
-import cn.lolii.picker.datetime.DateTimePickerDialog
-import cn.lolii.picker.datetime.Time
 
 /**
  * 修改标题和底部Button样式
@@ -56,7 +54,7 @@ class AddressPickerDialog private constructor(private val mContext: Context,
         mIsAutoUpdateTitle = enable
     }
 
-    private fun setOnAddressChangeListener(listener: OnAddressChangeListener?) {
+    private fun setOnAddressChangedListener(listener: OnAddressChangedListener?) {
         cascadePickerView.setOnValueChangeListener(object : CascadePickerView.OnValueChangeListener {
             override fun onValueChange(value: CascadePickerView.Value) {
                 try {
@@ -76,7 +74,7 @@ class AddressPickerDialog private constructor(private val mContext: Context,
         })
     }
 
-    interface OnAddressChangeListener {
+    interface OnAddressChangedListener {
         fun onAddressChanged(dialog: AddressPickerDialog, address: Address) {}
     }
 
@@ -105,7 +103,7 @@ class AddressPickerDialog private constructor(private val mContext: Context,
         private val mBuilder: AlertDialog.Builder = AlertDialog.Builder(mContext, theme)
 
         private var mIsAutoUpdateTitle = true
-        private var mOnAddressChangeListener: OnAddressChangeListener? = null
+        private var mOnAddressChangeListener: OnAddressChangedListener? = null
         private var mCanceledOnTouchOutside = true
         private var mGravity = Gravity.BOTTOM
 
@@ -140,7 +138,7 @@ class AddressPickerDialog private constructor(private val mContext: Context,
             return this
         }
 
-        fun setOnAddressChangeListener(listener: OnAddressChangeListener?): Builder {
+        fun setOnAddressChangedListener(listener: OnAddressChangedListener?): Builder {
             mOnAddressChangeListener = listener
             return this
         }
@@ -191,7 +189,7 @@ class AddressPickerDialog private constructor(private val mContext: Context,
             //先创建pickerDialog实例，后续设置数据回调onChange
             val pickerDialog = AddressPickerDialog(mContext, dialog, cascadePickerView, addressData)
             pickerDialog.setAutoUpdateTitle(mIsAutoUpdateTitle)
-            pickerDialog.setOnAddressChangeListener(mOnAddressChangeListener)
+            pickerDialog.setOnAddressChangedListener(mOnAddressChangeListener)
 
             wrapPositiveListener?.setPickerDialog(pickerDialog)
             wrapNegativeListener?.setPickerDialog(pickerDialog)

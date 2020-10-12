@@ -32,7 +32,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     private var mDisplayHour24: List<String> = emptyList()
     private var mDisplayHour12: List<String> = emptyList()
     private var mDisplayMinute: List<String> = emptyList()
-    private var mOnTimeChangeListener: OnTimeChangeListener? = null
+    private var mOnTimeChangeListener: OnTimeChangedListener? = null
     private var mOnWindowFocusChangeListener: ViewTreeObserver.OnWindowFocusChangeListener? = null
 
     @JvmOverloads
@@ -166,7 +166,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         }
         mMinutePickerView.setDisplayedValues(mDisplayMinute, false)
         initPickerViewData(mMinutePickerView, 0, 59, calendar[Calendar.MINUTE])
-        mOnTimeChangeListener?.onTimeChange(value)
+        mOnTimeChangeListener?.onTimeChanged(value)
     }
 
     private fun initPickerViewData(picker: NumberPickerView, minValue: Int, maxValue: Int, value: Int) {
@@ -188,7 +188,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         } else if (picker === mMinutePickerView) {
             mCalendar[Calendar.MINUTE] = newVal
         }
-        mOnTimeChangeListener?.onTimeChange(value)
+        mOnTimeChangeListener?.onTimeChanged(value)
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -199,11 +199,11 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
             return Time(hour, mMinutePickerView.value, mAmPmPickerView.value, mIs24HourFormat)
         }
 
-    fun setOnTimeChangeListener(onTimeChangeListener: OnTimeChangeListener?) {
+    fun setOnTimeChangedListener(onTimeChangeListener: OnTimeChangedListener?) {
         mOnTimeChangeListener = onTimeChangeListener
     }
 
-    interface OnTimeChangeListener {
-        fun onTimeChange(time: Time)
+    interface OnTimeChangedListener {
+        fun onTimeChanged(time: Time)
     }
 }

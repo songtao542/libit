@@ -43,6 +43,10 @@ class AddAndSubView : RelativeLayout, TextWatcher {
     private var mOnValueOutOfRangeListener: ((view: AddAndSubView, value: Int) -> Unit)? = null
     private var mOnEmptyListener: ((view: AddAndSubView) -> Unit)? = null
     private var mValueChangedListener: OnValueChangedListener? = null
+
+    private var mOnInputDoneListener: ((view: AddAndSubView, value: Int) -> Unit)? = null
+    private var mInputDoneListener: OnInputDoneListener? = null
+
     private var mValueOutOfRangeListener: OnValueOutOfRangeListener? = null
     private var mEmptyListener: OnEmptyListener? = null
     private var mTextClickListener: OnClickListener? = null
@@ -209,6 +213,8 @@ class AddAndSubView : RelativeLayout, TextWatcher {
                 val text = v.text ?: return@setOnEditorActionListener true
                 setAndCheckValue(text.toString(), false)
                 hideSoftInputFromWindow(v)
+                mOnInputDoneListener?.invoke(this, mValue)
+                mInputDoneListener?.onInputDone(this, mValue)
             }
             return@setOnEditorActionListener true
         }

@@ -1,30 +1,41 @@
 package com.lolii.filter
 
+import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.res.ResourcesCompat
 
 /**
  * Author:         songtao
  * CreateDate:     2020/9/18 14:54
  */
 
-@Suppress("unused")
-class AddAndSubView : LinearLayout, TextWatcher {
+@Suppress("unused", "MemberVisibilityCanBePrivate")
+class AddAndSubView : RelativeLayout, TextWatcher {
 
     private var mAddButton: ImageView? = null
     private var mSubButton: ImageView? = null
     private var mNumEditor: EditText? = null
+    private val mEditorRect = Rect()
+    private var mEditorMaskView: View? = null
     private var mMin: Int = 0
     private var mMax: Int = 0
     private var mValue: Int = 0
@@ -34,6 +45,10 @@ class AddAndSubView : LinearLayout, TextWatcher {
     private var mValueChangedListener: OnValueChangedListener? = null
     private var mValueOutOfRangeListener: OnValueOutOfRangeListener? = null
     private var mEmptyListener: OnEmptyListener? = null
+    private var mTextClickListener: OnClickListener? = null
+    private var mShowEditDialog = false
+
+    private var mImm: InputMethodManager? = null
 
     constructor(context: Context) : super(context) {
         init(context, null, 0, 0)
@@ -52,49 +67,63 @@ class AddAndSubView : LinearLayout, TextWatcher {
     }
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
-        orientation = HORIZONTAL
         LayoutInflater.from(context).inflate(R.layout.add_and_sub_view, this, true)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            focusable = View.FOCUSABLE
+        }
+        isFocusableInTouchMode = true
+        mImm = getSystemService(context, InputMethodManager::class.java)
 
-        var addIcon = R.drawable.ic_num_add
-        var subIcon = R.drawable.ic_num_sub
+        var addIcon = ResourcesCompat.getDrawable(context.resources, R.drawable.ic_num_add, context.theme)
+        var subIcon = ResourcesCompat.getDrawable(context.resources, R.drawable.ic_num_sub, context.theme)
         var editable = true
-        var editTextBackground = 0
+        var editTextBackground: Drawable? = null
         var editTextWidth = 0f
         var editTextHeight = 0f
         var iconSize = 0f
+        var iconPadding = 0f
         var textColor: ColorStateList? = null
         var textColorHint: ColorStateList? = null
 
+        var value = 0
+
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.AddAndSubView, defStyleAttr, defStyleRes)
-            addIcon = typedArray.getResourceId(R.styleable.AddAndSubView_addIcon, 0)
-            subIcon = typedArray.getResourceId(R.styleable.AddAndSubView_addIcon, 0)
-            editable = typedArray.getBoolean(R.styleable.AddAndSubView_editable, true)
-            editTextBackground = typedArray.getResourceId(R.styleable.AddAndSubView_editTextBackground, 0)
-            editTextWidth = typedArray.getDimension(R.styleable.AddAndSubView_editTextWidth, 0f)
-            editTextHeight = typedArray.getDimension(R.styleable.AddAndSubView_editTextHeight, 0f)
+            mShowEditDialog = typedArray.getBoolean(R.styleable.AddAndSubView_showEditDialog, false)
+            addIcon = typedArray.getDrawable(R.styleable.AddAndSubView_addIcon) ?: addIcon
+            subIcon = typedArray.getDrawable(R.styleable.AddAndSubView_subIcon) ?: subIcon
+            editable = if (mShowEditDialog) false else typedArray.getBoolean(R.styleable.AddAndSubView_editable, true)
+            editTextBackground = typedArray.getDrawable(R.styleable.AddAndSubView_editBackground)
+            editTextWidth = typedArray.getDimension(R.styleable.AddAndSubView_editWidth, 0f)
+            editTextHeight = typedArray.getDimension(R.styleable.AddAndSubView_editHeight, 0f)
             textColor = typedArray.getColorStateList(R.styleable.AddAndSubView_android_textColor)
             textColorHint = typedArray.getColorStateList(R.styleable.AddAndSubView_android_textColorHint)
             iconSize = typedArray.getDimension(R.styleable.AddAndSubView_iconSize, 0f)
-            mValue = typedArray.getInt(R.styleable.AddAndSubView_value, 0)
+            iconPadding = typedArray.getDimension(R.styleable.AddAndSubView_iconPadding, 0f)
+            val iconColorList = typedArray.getColorStateList(R.styleable.AddAndSubView_iconColor)
+            if (iconColorList != null) {
+                addIcon?.setTintList(iconColorList)
+                subIcon?.setTintList(iconColorList)
+            }
             mMin = typedArray.getInt(R.styleable.AddAndSubView_minValue, 0)
             mMax = typedArray.getInt(R.styleable.AddAndSubView_maxValue, 0)
+            value = typedArray.getInt(R.styleable.AddAndSubView_value, mMin)
             typedArray.recycle()
         }
 
         mAddButton = findViewById(R.id.addButton)
         mSubButton = findViewById(R.id.subButton)
         mNumEditor = findViewById(R.id.numEditor)
+        mEditorMaskView = findViewById(R.id.editorMaskView)
 
-        if (addIcon != 0) {
-            mAddButton?.setImageResource(addIcon)
-        }
-        if (subIcon != 0) {
-            mSubButton?.setImageResource(subIcon)
-        }
+        mAddButton?.setImageDrawable(addIcon)
+        mSubButton?.setImageDrawable(subIcon)
+
+        mNumEditor?.setText(value.toString())
+        setValueInner(value)
         mNumEditor?.isEnabled = editable
-        if (editTextBackground != 0) {
-            mNumEditor?.setBackgroundResource(editTextBackground)
+        editTextBackground?.let {
+            mNumEditor?.setBackground(it)
         }
 
         mNumEditor?.let {
@@ -110,8 +139,9 @@ class AddAndSubView : LinearLayout, TextWatcher {
                 val defaultWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60f, context.resources.displayMetrics).toInt()
                 val w: Int = if (editTextWidth > 0) editTextWidth.toInt() else defaultWidth
                 val h: Int = if (editTextHeight > 0) editTextHeight.toInt() else defaultWidth / 2
-                lp = LayoutParams(w, h)
-                lp.gravity = Gravity.CENTER_VERTICAL
+                lp = LayoutParams(w, h).apply {
+                    addRule(CENTER_VERTICAL, 1)
+                }
             }
             it.layoutParams = lp
         }
@@ -122,8 +152,9 @@ class AddAndSubView : LinearLayout, TextWatcher {
                 alp.width = size
                 alp.height = size
             } else {
-                alp = LayoutParams(size, size)
-                alp.gravity = Gravity.CENTER_VERTICAL
+                alp = LayoutParams(size, size).apply {
+                    addRule(CENTER_VERTICAL, 1)
+                }
             }
             mAddButton?.layoutParams = alp
             var slp = mSubButton?.layoutParams
@@ -131,10 +162,16 @@ class AddAndSubView : LinearLayout, TextWatcher {
                 slp.width = size
                 slp.height = size
             } else {
-                slp = LayoutParams(size, size)
-                slp.gravity = Gravity.CENTER_VERTICAL
+                slp = LayoutParams(size, size).apply {
+                    addRule(CENTER_VERTICAL, 1)
+                }
             }
             mSubButton?.layoutParams = slp
+        }
+        if (iconPadding > 0) {
+            val padding = iconPadding.toInt()
+            mAddButton?.setPadding(padding, padding, padding, padding)
+            mSubButton?.setPadding(padding, padding, padding, padding)
         }
 
         mNumEditor?.let {
@@ -150,30 +187,81 @@ class AddAndSubView : LinearLayout, TextWatcher {
             if (mValue < mMax) {
                 setValue(mValue + 1, false)
                 mOnValueChangedListener?.invoke(this, mValue, false)
-                mValueChangedListener?.onValueChanged(this, mValue, false)
+                mValueChangedListener?.onValueChanged(this, mValue, edited = false)
             }
         }
         mSubButton?.setOnClickListener {
             if (mValue > mMin) {
                 setValue(mValue - 1, false)
                 mOnValueChangedListener?.invoke(this, mValue, false)
-                mValueChangedListener?.onValueChanged(this, mValue, false)
+                mValueChangedListener?.onValueChanged(this, mValue, edited = false)
             }
         }
         mNumEditor?.addTextChangedListener(this)
         mNumEditor?.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 val text = mNumEditor?.text ?: return@setOnFocusChangeListener
-                setAndCheckValue(text.toString())
+                setAndCheckValue(text.toString(), false)
             }
         }
         mNumEditor?.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val text = v.text ?: return@setOnEditorActionListener true
-                setAndCheckValue(text.toString())
+                setAndCheckValue(text.toString(), false)
+                hideSoftInputFromWindow(v)
             }
             return@setOnEditorActionListener true
         }
+
+        configEditDialog()
+    }
+
+    private fun configEditDialog() {
+        if (mShowEditDialog) {
+            mNumEditor?.isClickable = false
+            mEditorMaskView?.setOnClickListener {
+                showInputDialog()
+            }
+        }
+    }
+
+    private fun hideSoftInputFromWindow(v: View) {
+        val view = (context as? Activity)?.currentFocus ?: v
+        mImm?.hideSoftInputFromWindow(view.windowToken, 0)
+        v.clearFocus()
+        view.clearFocus()
+        requestFocus()
+    }
+
+    fun showInputDialog(): Dialog {
+        val view = LayoutInflater.from(context).inflate(R.layout.add_and_sub_edit_dialog, null)
+        val editText = view.findViewById<EditText>(R.id.editText)
+        val dialog = AlertDialog.Builder(context, R.style.AddAndSubEditDialog)
+                .setView(view)
+                .setPositiveButton(R.string.dialog_confirm) { dialog, _ ->
+                    dialog.dismiss()
+                    editText?.text?.let {
+                        setAndCheckValue(it.toString(), true)
+                    }
+                }
+                .create()
+        editText.setOnEditorActionListener { v, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                dialog.dismiss()
+                val text = v.text ?: return@setOnEditorActionListener true
+                setAndCheckValue(text.toString(), true)
+                hideSoftInputFromWindow(v)
+            }
+            return@setOnEditorActionListener true
+        }
+        dialog.show()
+        editText.requestFocus()
+        dialog.window?.let {
+            it.setLayout((context.resources.displayMetrics.widthPixels / 4f * 3f).toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
+            it.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+            it.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+        }
+        return dialog
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -184,38 +272,60 @@ class AddAndSubView : LinearLayout, TextWatcher {
 
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         val text = s?.toString() ?: return
-        setAndCheckValue(text)
+        setAndCheckValue(text, false)
     }
 
-    private fun setAndCheckValue(text: String) {
+    private fun setAndCheckValue(text: String, updateTextView: Boolean) {
         if (text.isNotBlank() && TextUtils.isDigitsOnly(text)) {
-            val number = text.toInt()
+            var number = text.toInt()
             if (number < mMin || number > mMax) {
-                mOnValueOutOfRangeListener?.invoke(this, number)
-                mValueOutOfRangeListener?.onValueOutOfRange(this, number)
+                if (mValueOutOfRangeListener != null || mValueOutOfRangeListener != null) {
+                    mOnValueOutOfRangeListener?.invoke(this, number)
+                    mValueOutOfRangeListener?.onValueOutOfRange(this, number)
+                } else {
+                    number = if (number < mMin) mMin else mMax
+                    mNumEditor?.removeTextChangedListener(this)
+                    mNumEditor?.setText(number.toString())
+                    mNumEditor?.addTextChangedListener(this)
+                }
                 return
             }
             if (number != mValue) {
-                mValue = number
+                setValueInner(number)
+                if (updateTextView) {
+                    mNumEditor?.removeTextChangedListener(this)
+                    mNumEditor?.setText(number.toString())
+                    mNumEditor?.addTextChangedListener(this)
+                }
                 mOnValueChangedListener?.invoke(this, number, true)
                 mValueChangedListener?.onValueChanged(this, number, true)
             }
         } else {
             mOnEmptyListener?.invoke(this)
             mEmptyListener?.onEmpty(this)
-            if (mOnEmptyListener == null && mEmptyListener == null) {
-                mNumEditor?.hint = mValue.toString()
-            }
+            mNumEditor?.hint = mValue.toString()
         }
     }
 
 
     fun setMinValue(min: Int) {
         mMin = min
+        updateButtonState()
     }
 
     fun setMaxValue(max: Int) {
         mMax = max
+        updateButtonState()
+    }
+
+    private fun setValueInner(value: Int) {
+        mValue = value
+        updateButtonState()
+    }
+
+    private fun updateButtonState() {
+        mAddButton?.isEnabled = mValue < mMax
+        mSubButton?.isEnabled = mValue > mMin
     }
 
     fun setValue(value: Int) {
@@ -226,7 +336,7 @@ class AddAndSubView : LinearLayout, TextWatcher {
      * 是否触发监听器
      */
     fun setValue(value: Int, notify: Boolean) {
-        mValue = value
+        setValueInner(value)
         if (!notify) {
             mNumEditor?.removeTextChangedListener(this)
             mNumEditor?.let {
@@ -255,7 +365,7 @@ class AddAndSubView : LinearLayout, TextWatcher {
     }
 
     fun setHint(value: Int) {
-        mValue = value
+        setValueInner(value)
         mNumEditor?.hint = "$value"
     }
 
@@ -263,7 +373,7 @@ class AddAndSubView : LinearLayout, TextWatcher {
      * 是否清空文本框
      */
     fun setHint(value: Int, clear: Boolean) {
-        mValue = value
+        setValueInner(value)
         mNumEditor?.hint = "$value"
         if (clear) {
             mNumEditor?.removeTextChangedListener(this)
@@ -300,12 +410,25 @@ class AddAndSubView : LinearLayout, TextWatcher {
         mEmptyListener = listener
     }
 
+    fun setOnTextViewClickListener(listener: OnClickListener?) {
+        if (listener != null) {
+            mNumEditor?.isEnabled = false
+            mEditorMaskView?.setOnClickListener(listener)
+        } else {
+            configEditDialog()
+        }
+    }
+
     interface OnValueChangedListener {
         fun onValueChanged(view: AddAndSubView, value: Int, edited: Boolean)
     }
 
     interface OnValueOutOfRangeListener {
         fun onValueOutOfRange(view: AddAndSubView, value: Int)
+    }
+
+    interface OnInputDoneListener {
+        fun onInputDone(view: AddAndSubView, value: Int)
     }
 
     interface OnEmptyListener {

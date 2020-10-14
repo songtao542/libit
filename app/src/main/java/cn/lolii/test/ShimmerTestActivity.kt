@@ -3,7 +3,7 @@ package cn.lolii.test
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import cn.lolii.test.test.R
+import cn.lolii.test.R
 import com.lolii.shimmer.ShimmerLayout
 
 

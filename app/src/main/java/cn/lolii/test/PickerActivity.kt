@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import cn.lolii.picker.address.Address
 import cn.lolii.picker.address.AddressPickerDialog
 import cn.lolii.picker.datetime.DateTimePickerDialog
-import cn.lolii.test.test.R
+import cn.lolii.test.R
 import com.lolii.filter.*
 import kotlinx.android.synthetic.main.activity_picker.*
 import java.util.*

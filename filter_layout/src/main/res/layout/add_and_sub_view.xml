@@ -2,36 +2,54 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="40dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
-    tools:parentTag="android.widget.LinearLayout">
+    tools:parentTag="android.widget.RelativeLayout">
 
     <ImageView
         android:id="@+id/subButton"
         android:layout_width="40dp"
-        android:layout_height="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
         android:padding="8dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_num_sub" />
+
 
     <EditText
         android:id="@+id/numEditor"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
+        android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
+        android:layout_toEndOf="@+id/subButton"
         android:background="@drawable/add_and_sub_editor_background"
         android:gravity="center"
         android:imeOptions="actionDone"
         android:inputType="numberSigned"
-        android:minWidth="60dp"
+        android:minWidth="40dp"
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/black"
         android:textSize="14sp" />
 
+    <View
+        android:id="@+id/editorMaskView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/numEditor"
+        android:layout_alignTop="@+id/numEditor"
+        android:layout_alignEnd="@+id/numEditor"
+        android:layout_alignBottom="@+id/numEditor"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical" />
+
     <ImageView
         android:id="@+id/addButton"
         android:layout_width="40dp"
-        android:layout_height="match_parent"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/numEditor"
         android:padding="8dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_num_add" />

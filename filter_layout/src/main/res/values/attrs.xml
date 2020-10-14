@@ -23,10 +23,13 @@
         <attr name="addIcon" format="reference" />
         <attr name="subIcon" format="reference" />
         <attr name="editable" format="boolean" />
-        <attr name="editTextBackground" format="reference" />
-        <attr name="editTextHeight" format="dimension|reference" />
-        <attr name="editTextWidth" format="dimension|reference" />
+        <attr name="showEditDialog" format="boolean" />
+        <attr name="editBackground" format="reference" />
+        <attr name="editHeight" format="dimension|reference" />
+        <attr name="editWidth" format="dimension|reference" />
         <attr name="iconSize" format="dimension|reference" />
+        <attr name="iconPadding" format="dimension|reference" />
+        <attr name="iconColor" format="reference|color" />
         <attr name="value" format="integer" />
         <attr name="minValue" format="integer" />
         <attr name="maxValue" format="integer" />

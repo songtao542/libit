@@ -32,4 +32,15 @@
         <item name="android:windowExitAnimation">@anim/anim_top_exit</item>
     </style>
 
+    <style name="AddAndSubEditDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@drawable/round_shape</item>
+        <item name="android:windowMinWidthMajor">68%</item>
+        <item name="android:windowMinWidthMinor">68%</item>
+        <!-- dialog 样式 -->
+        <item name="android:buttonBarNegativeButtonStyle">@style/DialogButtonStyle</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/DialogButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/DialogButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/DialogButtonStyle</item>
+    </style>
+
 </resources>

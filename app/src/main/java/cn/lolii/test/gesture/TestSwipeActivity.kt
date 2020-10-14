@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.PagerAdapter
-import cn.lolii.test.test.R
+import cn.lolii.test.R
 import kotlinx.android.synthetic.main.activity_main_gesture_swipe.*
 
 class TestSwipeActivity : AppCompatActivity() {

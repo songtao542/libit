@@ -213,8 +213,6 @@ class AddAndSubView : RelativeLayout, TextWatcher {
                 val text = v.text ?: return@setOnEditorActionListener true
                 setAndCheckValue(text.toString(), false)
                 hideSoftInputFromWindow(v)
-                mOnInputDoneListener?.invoke(this, mValue)
-                mInputDoneListener?.onInputDone(this, mValue)
             }
             return@setOnEditorActionListener true
         }
@@ -237,6 +235,8 @@ class AddAndSubView : RelativeLayout, TextWatcher {
         v.clearFocus()
         view.clearFocus()
         requestFocus()
+        mOnInputDoneListener?.invoke(this, mValue)
+        mInputDoneListener?.onInputDone(this, mValue)
     }
 
     fun showInputDialog(): Dialog {

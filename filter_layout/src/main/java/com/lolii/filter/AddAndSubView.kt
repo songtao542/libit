@@ -31,6 +31,7 @@ import androidx.core.content.res.ResourcesCompat
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class AddAndSubView : RelativeLayout, TextWatcher {
 
+    private var mNotifyChangeWhenActionDone: Boolean = false
     private var mAddButton: ImageView? = null
     private var mSubButton: ImageView? = null
     private var mNumEditor: EditText? = null
@@ -43,9 +44,6 @@ class AddAndSubView : RelativeLayout, TextWatcher {
     private var mOnValueOutOfRangeListener: ((view: AddAndSubView, value: Int) -> Unit)? = null
     private var mOnEmptyListener: ((view: AddAndSubView) -> Unit)? = null
     private var mValueChangedListener: OnValueChangedListener? = null
-
-    private var mOnInputDoneListener: ((view: AddAndSubView, value: Int) -> Unit)? = null
-    private var mInputDoneListener: OnInputDoneListener? = null
 
     private var mValueOutOfRangeListener: OnValueOutOfRangeListener? = null
     private var mEmptyListener: OnEmptyListener? = null
@@ -202,16 +200,10 @@ class AddAndSubView : RelativeLayout, TextWatcher {
             }
         }
         mNumEditor?.addTextChangedListener(this)
-        mNumEditor?.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) {
-                val text = mNumEditor?.text ?: return@setOnFocusChangeListener
-                setAndCheckValue(text.toString(), false)
-            }
-        }
         mNumEditor?.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val text = v.text ?: return@setOnEditorActionListener true
-                setAndCheckValue(text.toString(), false)
+                setAndCheckValue(text.toString(), updateTextView = false, actionDone = true)
                 hideSoftInputFromWindow(v)
             }
             return@setOnEditorActionListener true
@@ -235,8 +227,6 @@ class AddAndSubView : RelativeLayout, TextWatcher {
         v.clearFocus()
         view.clearFocus()
         requestFocus()
-        mOnInputDoneListener?.invoke(this, mValue)
-        mInputDoneListener?.onInputDone(this, mValue)
     }
 
     fun showInputDialog(): Dialog {
@@ -244,10 +234,13 @@ class AddAndSubView : RelativeLayout, TextWatcher {
         val editText = view.findViewById<EditText>(R.id.editText)
         val dialog = AlertDialog.Builder(context, R.style.AddAndSubEditDialog)
                 .setView(view)
+                .setNegativeButton(R.string.dialog_cancel) { dialog, _ ->
+                    dialog.dismiss()
+                }
                 .setPositiveButton(R.string.dialog_confirm) { dialog, _ ->
                     dialog.dismiss()
                     editText?.text?.let {
-                        setAndCheckValue(it.toString(), true)
+                        setAndCheckValue(it.toString(), updateTextView = true, actionDone = true)
                     }
                 }
                 .create()
@@ -255,7 +248,7 @@ class AddAndSubView : RelativeLayout, TextWatcher {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 dialog.dismiss()
                 val text = v.text ?: return@setOnEditorActionListener true
-                setAndCheckValue(text.toString(), true)
+                setAndCheckValue(text.toString(), updateTextView = true, actionDone = true)
                 hideSoftInputFromWindow(v)
             }
             return@setOnEditorActionListener true
@@ -278,10 +271,10 @@ class AddAndSubView : RelativeLayout, TextWatcher {
 
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         val text = s?.toString() ?: return
-        setAndCheckValue(text, false)
+        setAndCheckValue(text, updateTextView = false, actionDone = false)
     }
 
-    private fun setAndCheckValue(text: String, updateTextView: Boolean) {
+    private fun setAndCheckValue(text: String, updateTextView: Boolean, actionDone: Boolean) {
         if (text.isNotBlank() && TextUtils.isDigitsOnly(text)) {
             var number = text.toInt()
             if (number < mMin || number > mMax) {
@@ -296,6 +289,7 @@ class AddAndSubView : RelativeLayout, TextWatcher {
                 }
                 return
             }
+            var notify = if (mNotifyChangeWhenActionDone) actionDone else false
             if (number != mValue) {
                 setValueInner(number)
                 if (updateTextView) {
@@ -303,8 +297,13 @@ class AddAndSubView : RelativeLayout, TextWatcher {
                     mNumEditor?.setText(number.toString())
                     mNumEditor?.addTextChangedListener(this)
                 }
-                mOnValueChangedListener?.invoke(this, number, true)
-                mValueChangedListener?.onValueChanged(this, number, true)
+                if (!mNotifyChangeWhenActionDone) {
+                    notify = true
+                }
+            }
+            if (notify) {
+                mOnValueChangedListener?.invoke(this, mValue, true)
+                mValueChangedListener?.onValueChanged(this, mValue, true)
             }
         } else {
             mOnEmptyListener?.invoke(this)
@@ -392,6 +391,10 @@ class AddAndSubView : RelativeLayout, TextWatcher {
         return mValue
     }
 
+    fun setNotifyChangeWhenActionDone(notifyChangeWhenActionDone: Boolean) {
+        mNotifyChangeWhenActionDone = notifyChangeWhenActionDone
+    }
+
     fun setOnValueChangedListener(listener: ((view: AddAndSubView, value: Int, edited: Boolean) -> Unit)? = null) {
         mOnValueChangedListener = listener
     }
@@ -431,10 +434,6 @@ class AddAndSubView : RelativeLayout, TextWatcher {
 
     interface OnValueOutOfRangeListener {
         fun onValueOutOfRange(view: AddAndSubView, value: Int)
-    }
-
-    interface OnInputDoneListener {
-        fun onInputDone(view: AddAndSubView, value: Int)
     }
 
     interface OnEmptyListener {

@@ -7,6 +7,7 @@ import android.content.res.ColorStateList
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.AttributeSet
@@ -121,6 +122,12 @@ class AddAndSubView : RelativeLayout, TextWatcher {
         mAddButton?.setImageDrawable(addIcon)
         mSubButton?.setImageDrawable(subIcon)
 
+        if (mMax != 0) {
+            setupEditorFilter(mMax)
+        } else {
+            setupEditorFilter(Int.MAX_VALUE)
+        }
+
         mNumEditor?.setText(value.toString())
         setValueInner(value)
         mNumEditor?.isEnabled = editable
@@ -138,9 +145,9 @@ class AddAndSubView : RelativeLayout, TextWatcher {
                     lp.height = editTextHeight.toInt()
                 }
             } else {
-                val defaultWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60f, context.resources.displayMetrics).toInt()
+                val defaultWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40f, context.resources.displayMetrics).toInt()
                 val w: Int = if (editTextWidth > 0) editTextWidth.toInt() else defaultWidth
-                val h: Int = if (editTextHeight > 0) editTextHeight.toInt() else defaultWidth / 2
+                val h: Int = if (editTextHeight > 0) editTextHeight.toInt() else defaultWidth / 5 * 3
                 lp = LayoutParams(w, h).apply {
                     addRule(CENTER_VERTICAL, 1)
                 }
@@ -276,32 +283,35 @@ class AddAndSubView : RelativeLayout, TextWatcher {
 
     private fun setAndCheckValue(text: String, updateTextView: Boolean, actionDone: Boolean) {
         if (text.isNotBlank() && TextUtils.isDigitsOnly(text)) {
-            var number = text.toInt()
+            // 最大输入长度限制为 Int.MAX_VALUE 的长度，即最多输入10个字符，所以这里转换成 Long 类型一定不会出错
+            val num = text.toLong()
+            var number = if (num > Int.MAX_VALUE) Int.MAX_VALUE else num.toInt()
             if (number < mMin || number > mMax) {
                 if (mValueOutOfRangeListener != null || mValueOutOfRangeListener != null) {
                     mOnValueOutOfRangeListener?.invoke(this, number)
                     mValueOutOfRangeListener?.onValueOutOfRange(this, number)
                 } else {
                     number = if (number < mMin) mMin else mMax
-                    mNumEditor?.removeTextChangedListener(this)
-                    mNumEditor?.setText(number.toString())
-                    mNumEditor?.addTextChangedListener(this)
+                    updateTextWithoutNotify(number.toString())
                 }
                 return
             }
-            var notify = if (mNotifyChangeWhenActionDone) actionDone else false
+
+            if (num > Int.MAX_VALUE) {
+                updateTextWithoutNotify(number.toString())
+            }
+
+            var notifyValueChange = if (mNotifyChangeWhenActionDone) actionDone else false
             if (number != mValue) {
                 setValueInner(number)
                 if (updateTextView) {
-                    mNumEditor?.removeTextChangedListener(this)
-                    mNumEditor?.setText(number.toString())
-                    mNumEditor?.addTextChangedListener(this)
+                    updateTextWithoutNotify(number.toString())
                 }
                 if (!mNotifyChangeWhenActionDone) {
-                    notify = true
+                    notifyValueChange = true
                 }
             }
-            if (notify) {
+            if (notifyValueChange) {
                 mOnValueChangedListener?.invoke(this, mValue, true)
                 mValueChangedListener?.onValueChanged(this, mValue, true)
             }
@@ -313,6 +323,17 @@ class AddAndSubView : RelativeLayout, TextWatcher {
     }
 
 
+    private fun updateTextWithoutNotify(text: String) {
+        mNumEditor?.let {
+            it.removeTextChangedListener(this)
+            it.setText(text)
+            if (text.isNotBlank()) {
+                it.setSelection(text.length)
+            }
+            it.addTextChangedListener(this)
+        }
+    }
+
     fun setMinValue(min: Int) {
         mMin = min
         updateButtonState()
@@ -320,7 +341,19 @@ class AddAndSubView : RelativeLayout, TextWatcher {
 
     fun setMaxValue(max: Int) {
         mMax = max
+        setupEditorFilter(max)
         updateButtonState()
+    }
+
+    private fun setupEditorFilter(max: Int) {
+        mNumEditor?.let {
+            val filters = it.filters
+            if (!filters.isNullOrEmpty()) {
+                it.filters = arrayOf(*it.filters, InputFilter.LengthFilter(max.toString().length))
+            } else {
+                it.filters = arrayOf(InputFilter.LengthFilter(max.toString().length))
+            }
+        }
     }
 
     private fun setValueInner(value: Int) {
@@ -343,19 +376,9 @@ class AddAndSubView : RelativeLayout, TextWatcher {
     fun setValue(value: Int, notify: Boolean) {
         setValueInner(value)
         if (!notify) {
-            mNumEditor?.removeTextChangedListener(this)
-            mNumEditor?.let {
-                val text = "$value"
-                it.setText(text)
-                it.setSelection(text.length)
-            }
-            mNumEditor?.addTextChangedListener(this)
+            updateTextWithoutNotify(value.toString())
         } else {
-            mNumEditor?.let {
-                val text = "$value"
-                it.setText(text)
-                it.setSelection(text.length)
-            }
+            mNumEditor?.setText(value.toString())
         }
     }
 
@@ -381,9 +404,7 @@ class AddAndSubView : RelativeLayout, TextWatcher {
         setValueInner(value)
         mNumEditor?.hint = "$value"
         if (clear) {
-            mNumEditor?.removeTextChangedListener(this)
-            mNumEditor?.setText("")
-            mNumEditor?.addTextChangedListener(this)
+            updateTextWithoutNotify("")
         }
     }
 

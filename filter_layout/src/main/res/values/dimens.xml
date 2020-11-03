@@ -15,7 +15,5 @@
     <dimen name="filter_item_padding_v">5dp</dimen>
     <dimen name="filter_item_rw">10dp</dimen>
     <dimen name="filter_item_rd">5dp</dimen>
-    <dimen name="add_and_sub_dialog_edit_view_height">40dp</dimen>
-    <dimen name="add_and_sub_dialog_edit_view_radius">8dp</dimen>
 
 </resources>

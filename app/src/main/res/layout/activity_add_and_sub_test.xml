@@ -8,7 +8,7 @@
     android:padding="20dp"
     tools:context="cn.lolii.test.AddAndSubTextActivity">
 
-    <com.lolii.filter.AddAndSubView
+    <cn.lolii.widget.AddSubView
         android:id="@+id/addAndSubView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

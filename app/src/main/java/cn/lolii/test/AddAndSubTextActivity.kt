@@ -1,14 +1,13 @@
 package cn.lolii.test
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cn.lolii.test.R
 import kotlinx.android.synthetic.main.activity_add_and_sub_test.*
 import kotlinx.android.synthetic.main.activity_add_and_sub_test_item.view.*
 

@@ -4,25 +4,25 @@
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/filter_item_height" />
-            <solid android:color="@color/light_blue_pressed" />
+            <solid android:color="@color/filter_light_blue_pressed" />
         </shape>
     </item>
     <item android:state_checked="true">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/filter_item_height" />
-            <solid android:color="@color/light_blue_pressed" />
+            <solid android:color="@color/filter_light_blue_pressed" />
         </shape>
     </item>
     <item android:state_selected="true">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/filter_item_height" />
-            <solid android:color="@color/light_blue_pressed" />
+            <solid android:color="@color/filter_light_blue_pressed" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/filter_item_height" />
-            <solid android:color="@color/light_blue" />
+            <solid android:color="@color/filter_light_blue" />
         </shape>
     </item>
 

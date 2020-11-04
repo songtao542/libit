@@ -10,22 +10,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="cn.lolii.test.AddAndSubTextActivity"
-            android:label="@string/add_and_sub">
+            android:name=".TestFragmentVisible"
+            android:label="@string/test_fragment_visible">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".AddAndSubTextActivity"
+            android:label="@string/add_and_sub">
 
         </activity>
         <activity
-            android:name="cn.lolii.test.PickerActivity"
-            android:label="@string/picker">
-
-        </activity>
+            android:name=".PickerActivity"
+            android:label="@string/picker"></activity>
         <activity
-            android:name="cn.lolii.test.ShimmerTestActivity"
+            android:name=".ShimmerTestActivity"
             android:label="@string/shimmer">
 
             <!-- <intent-filter> -->
@@ -35,7 +37,7 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name="cn.lolii.test.MainActivity">
+        <activity android:name=".MainActivity">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -45,7 +47,7 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name="cn.lolii.test.gesture.TestDragActivity"
+            android:name=".gesture.TestDragActivity"
             android:label="TestDrag">
 
             <!-- <intent-filter> -->
@@ -56,7 +58,7 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name="cn.lolii.test.gesture.TestSwipeActivity"
+            android:name=".gesture.TestSwipeActivity"
             android:label="TestSwipe">
 
             <!-- <intent-filter> -->

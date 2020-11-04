@@ -8,5 +8,6 @@
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
     <string name="add_and_sub">AddAndSub</string>
+    <string name="test_fragment_visible">Fragment可见性</string>
 
 </resources>

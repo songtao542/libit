@@ -1,13 +1,21 @@
 package cn.lolii.popup
 
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.text.TextPaint
+import android.transition.Fade
+import android.transition.Transition
+import android.transition.TransitionListenerAdapter
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
@@ -46,16 +54,15 @@ class PopupMenu {
     private val mContext: Context
     private var mPopupWindow: PopupWindow? = null
     private var mHeight = ViewGroup.LayoutParams.WRAP_CONTENT
+
+    /**
+     * -2 == LayoutParams.WRAP_CONTENT
+     * -1 == LayoutParams.MATCH_PARENT
+     *  0 == Absolutely dpi
+     */
     private var mWidth = ViewGroup.LayoutParams.WRAP_CONTENT
     private var mVisibleCount = 0
     private var mLayoutAnimationEnabled = false
-
-    /**
-     * -2 == LayoutParams.WRAP_CONTENT;
-     * -1 == LayoutParams.MATCH_PARENT;
-     * 0 == Absolutely dpi
-     */
-    private var mWidthMode = -2
     private var mAdapter: DropMenuAdapter = DropMenuAdapter()
     private lateinit var mListView: ListView
     private lateinit var mMaskView: View
@@ -371,7 +378,6 @@ class PopupMenu {
      */
     fun setFullScreenWidth() {
         mWidth = mContext.resources.displayMetrics.widthPixels
-        mWidthMode = 0
     }
 
     /**
@@ -379,7 +385,6 @@ class PopupMenu {
      */
     fun setWidth(width: Int) {
         mWidth = dp2px(width)
-        mWidthMode = 0
     }
 
     /**
@@ -417,7 +422,7 @@ class PopupMenu {
     }
 
     private fun calculateWidth() {
-        if (mWidthMode == ViewGroup.LayoutParams.WRAP_CONTENT) {
+        if (mWidth == ViewGroup.LayoutParams.WRAP_CONTENT) {
             val paint = TextPaint()
             paint.textSize = sp2px(mTextSize).toFloat()
             var hasIcon = false
@@ -486,15 +491,40 @@ class PopupMenu {
         }
 
         mPopupWindow = PopupWindow(mRootView, mWidth, height, true).also {
-            it.setBackgroundDrawable(if (mShowMask) ColorDrawable(0x66000000) else ColorDrawable(Color.WHITE))
+            it.setBackgroundDrawable(if (mShowMask) ColorDrawable(0x88000000.toInt()) else ColorDrawable(Color.WHITE))
             it.isOutsideTouchable = true
-            it.animationStyle = 0
             it.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+            it.animationStyle = R.style.PopupMenuAnimation
             it.elevation = if (mShowMask) 0f else dp2px(20).toFloat()
             it.setOnDismissListener {
                 mOnDismissListener?.onDismiss()
             }
+            if (mShowMask && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                it.exitTransition = Fade(Fade.OUT).setDuration(150).addListener(object : Transition.TransitionListener {
+                    override fun onTransitionStart(transition: Transition?) {
+                        AnimatorSet().apply {
+                            play(ObjectAnimator.ofFloat(mListView, View.ALPHA, 1f, 0f))
+                            play(ObjectAnimator.ofFloat(mListView, View.TRANSLATION_Y, 0f, (-mListView.height).toFloat()))
+                            interpolator = AccelerateInterpolator()
+                            duration = 150
+                        }.start()
+                    }
+
+                    override fun onTransitionEnd(transition: Transition?) {
+                    }
+
+                    override fun onTransitionCancel(transition: Transition?) {
+                    }
+
+                    override fun onTransitionPause(transition: Transition?) {
+                    }
+
+                    override fun onTransitionResume(transition: Transition?) {
+                    }
+                })
+            }
         }
+
         mMaskView.setOnClickListener { mPopupWindow?.dismiss() }
     }
 

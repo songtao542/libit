@@ -35,6 +35,7 @@ dependencies {
     implementation project(':picker')
     implementation project(':filter_layout')
     implementation project(':addsub')
+    implementation project(':popup')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'

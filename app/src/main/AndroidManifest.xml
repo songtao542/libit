@@ -10,13 +10,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".TestFragmentVisible"
-            android:label="@string/test_fragment_visible">
+            android:name=".PopupMenuTestActivity"
+            android:label="PopupMenu"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".TestFragmentVisible"
+            android:label="@string/test_fragment_visible">
+
         </activity>
         <activity
             android:name=".AddAndSubTextActivity"
@@ -25,7 +32,7 @@
         </activity>
         <activity
             android:name=".PickerActivity"
-            android:label="@string/picker"></activity>
+            android:label="@string/picker" />
         <activity
             android:name=".ShimmerTestActivity"
             android:label="@string/shimmer">

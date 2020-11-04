@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="add_sub_dialog_edit_view_height">40dp</dimen>
+    <dimen name="add_sub_dialog_edit_view_radius">8dp</dimen>
+    <dimen name="add_sub_dialog_buttonbar_height">48dp</dimen>
+    <dimen name="add_sub_action_bar_content_inset">15dp</dimen>
+
+</resources>

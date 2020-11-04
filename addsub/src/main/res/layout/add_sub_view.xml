@@ -24,7 +24,7 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:layout_toEndOf="@+id/subButton"
-        android:background="@drawable/add_and_sub_editor_background"
+        android:background="@drawable/add_sub_editor_background"
         android:gravity="center"
         android:imeOptions="actionDone"
         android:inputType="numberSigned"

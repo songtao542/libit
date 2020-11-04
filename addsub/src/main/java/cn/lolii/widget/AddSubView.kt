@@ -1,4 +1,4 @@
-package com.lolii.filter
+package cn.lolii.widget
 
 import android.app.Activity
 import android.app.Dialog
@@ -23,6 +23,7 @@ import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.res.ResourcesCompat
+import cn.lolii.addsub.R
 
 /**
  * Author:         songtao
@@ -30,7 +31,7 @@ import androidx.core.content.res.ResourcesCompat
  */
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class AddAndSubView : RelativeLayout, TextWatcher {
+class AddSubView : RelativeLayout, TextWatcher {
 
     private var mNotifyChangeWhenActionDone: Boolean = false
     private var mAddButton: ImageView? = null
@@ -41,9 +42,9 @@ class AddAndSubView : RelativeLayout, TextWatcher {
     private var mMin: Int = 0
     private var mMax: Int = 0
     private var mValue: Int = 0
-    private var mOnValueChangedListener: ((view: AddAndSubView, value: Int, causeByEdit: Boolean) -> Unit)? = null
-    private var mOnValueOutOfRangeListener: ((view: AddAndSubView, value: Int) -> Unit)? = null
-    private var mOnEmptyListener: ((view: AddAndSubView) -> Unit)? = null
+    private var mOnValueChangedListener: ((view: AddSubView, value: Int, causeByEdit: Boolean) -> Unit)? = null
+    private var mOnValueOutOfRangeListener: ((view: AddSubView, value: Int) -> Unit)? = null
+    private var mOnEmptyListener: ((view: AddSubView) -> Unit)? = null
     private var mValueChangedListener: OnValueChangedListener? = null
 
     private var mValueOutOfRangeListener: OnValueOutOfRangeListener? = null
@@ -70,7 +71,7 @@ class AddAndSubView : RelativeLayout, TextWatcher {
     }
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
-        LayoutInflater.from(context).inflate(R.layout.add_and_sub_view, this, true)
+        LayoutInflater.from(context).inflate(R.layout.add_sub_view, this, true)
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             focusable = View.FOCUSABLE
         }
@@ -91,26 +92,26 @@ class AddAndSubView : RelativeLayout, TextWatcher {
         var value = 0
 
         if (attrs != null) {
-            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.AddAndSubView, defStyleAttr, defStyleRes)
-            mShowEditDialog = typedArray.getBoolean(R.styleable.AddAndSubView_showEditDialog, false)
-            addIcon = typedArray.getDrawable(R.styleable.AddAndSubView_addIcon) ?: addIcon
-            subIcon = typedArray.getDrawable(R.styleable.AddAndSubView_subIcon) ?: subIcon
-            editable = if (mShowEditDialog) false else typedArray.getBoolean(R.styleable.AddAndSubView_editable, true)
-            editTextBackground = typedArray.getDrawable(R.styleable.AddAndSubView_editBackground)
-            editTextWidth = typedArray.getDimension(R.styleable.AddAndSubView_editWidth, 0f)
-            editTextHeight = typedArray.getDimension(R.styleable.AddAndSubView_editHeight, 0f)
-            textColor = typedArray.getColorStateList(R.styleable.AddAndSubView_android_textColor)
-            textColorHint = typedArray.getColorStateList(R.styleable.AddAndSubView_android_textColorHint)
-            iconSize = typedArray.getDimension(R.styleable.AddAndSubView_iconSize, 0f)
-            iconPadding = typedArray.getDimension(R.styleable.AddAndSubView_iconPadding, 0f)
-            val iconColorList = typedArray.getColorStateList(R.styleable.AddAndSubView_iconColor)
+            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.AddSubView, defStyleAttr, defStyleRes)
+            mShowEditDialog = typedArray.getBoolean(R.styleable.AddSubView_showEditDialog, false)
+            addIcon = typedArray.getDrawable(R.styleable.AddSubView_addIcon) ?: addIcon
+            subIcon = typedArray.getDrawable(R.styleable.AddSubView_subIcon) ?: subIcon
+            editable = if (mShowEditDialog) false else typedArray.getBoolean(R.styleable.AddSubView_editable, true)
+            editTextBackground = typedArray.getDrawable(R.styleable.AddSubView_editBackground)
+            editTextWidth = typedArray.getDimension(R.styleable.AddSubView_editWidth, 0f)
+            editTextHeight = typedArray.getDimension(R.styleable.AddSubView_editHeight, 0f)
+            textColor = typedArray.getColorStateList(R.styleable.AddSubView_android_textColor)
+            textColorHint = typedArray.getColorStateList(R.styleable.AddSubView_android_textColorHint)
+            iconSize = typedArray.getDimension(R.styleable.AddSubView_iconSize, 0f)
+            iconPadding = typedArray.getDimension(R.styleable.AddSubView_iconPadding, 0f)
+            val iconColorList = typedArray.getColorStateList(R.styleable.AddSubView_iconColor)
             if (iconColorList != null) {
                 addIcon?.setTintList(iconColorList)
                 subIcon?.setTintList(iconColorList)
             }
-            mMin = typedArray.getInt(R.styleable.AddAndSubView_minValue, 0)
-            mMax = typedArray.getInt(R.styleable.AddAndSubView_maxValue, 0)
-            value = typedArray.getInt(R.styleable.AddAndSubView_value, mMin)
+            mMin = typedArray.getInt(R.styleable.AddSubView_minValue, 0)
+            mMax = typedArray.getInt(R.styleable.AddSubView_maxValue, 0)
+            value = typedArray.getInt(R.styleable.AddSubView_value, mMin)
             typedArray.recycle()
         }
 
@@ -237,14 +238,14 @@ class AddAndSubView : RelativeLayout, TextWatcher {
     }
 
     fun showInputDialog(): Dialog {
-        val view = LayoutInflater.from(context).inflate(R.layout.add_and_sub_edit_dialog, null)
+        val view = LayoutInflater.from(context).inflate(R.layout.add_sub_edit_dialog, null)
         val editText = view.findViewById<EditText>(R.id.editText)
         val dialog = AlertDialog.Builder(context, R.style.AddAndSubEditDialog)
                 .setView(view)
-                .setNegativeButton(R.string.dialog_cancel) { dialog, _ ->
+                .setNegativeButton(R.string.add_sub_dialog_cancel) { dialog, _ ->
                     dialog.dismiss()
                 }
-                .setPositiveButton(R.string.dialog_confirm) { dialog, _ ->
+                .setPositiveButton(R.string.add_sub_dialog_confirm) { dialog, _ ->
                     dialog.dismiss()
                     editText?.text?.let {
                         setAndCheckValue(it.toString(), updateTextView = true, actionDone = true)
@@ -416,15 +417,15 @@ class AddAndSubView : RelativeLayout, TextWatcher {
         mNotifyChangeWhenActionDone = notifyChangeWhenActionDone
     }
 
-    fun setOnValueChangedListener(listener: ((view: AddAndSubView, value: Int, edited: Boolean) -> Unit)? = null) {
+    fun setOnValueChangedListener(listener: ((view: AddSubView, value: Int, edited: Boolean) -> Unit)? = null) {
         mOnValueChangedListener = listener
     }
 
-    fun setOnValueOutOfRangeListener(listener: ((view: AddAndSubView, value: Int) -> Unit)? = null) {
+    fun setOnValueOutOfRangeListener(listener: ((view: AddSubView, value: Int) -> Unit)? = null) {
         mOnValueOutOfRangeListener = listener
     }
 
-    fun setOnEmptyListener(listener: ((view: AddAndSubView) -> Unit)? = null) {
+    fun setOnEmptyListener(listener: ((view: AddSubView) -> Unit)? = null) {
         mOnEmptyListener = listener
     }
 
@@ -450,15 +451,15 @@ class AddAndSubView : RelativeLayout, TextWatcher {
     }
 
     interface OnValueChangedListener {
-        fun onValueChanged(view: AddAndSubView, value: Int, edited: Boolean)
+        fun onValueChanged(view: AddSubView, value: Int, edited: Boolean)
     }
 
     interface OnValueOutOfRangeListener {
-        fun onValueOutOfRange(view: AddAndSubView, value: Int)
+        fun onValueOutOfRange(view: AddSubView, value: Int)
     }
 
     interface OnEmptyListener {
-        fun onEmpty(view: AddAndSubView)
+        fun onEmpty(view: AddSubView)
     }
 
 }

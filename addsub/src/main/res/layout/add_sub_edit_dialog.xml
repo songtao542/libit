@@ -7,19 +7,19 @@
     <EditText
         android:id="@+id/editText"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/add_and_sub_dialog_edit_view_height"
+        android:layout_height="@dimen/add_sub_dialog_edit_view_height"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="50dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/add_and_sub_dialog_edit_background"
+        android:background="@drawable/add_sub_dialog_edit_text_background"
         android:gravity="center"
         android:imeOptions="actionDone"
         android:inputType="numberSigned"
-        android:paddingLeft="@dimen/add_and_sub_dialog_edit_view_radius"
-        android:paddingRight="@dimen/add_and_sub_dialog_edit_view_radius"
+        android:paddingLeft="@dimen/add_sub_dialog_edit_view_radius"
+        android:paddingRight="@dimen/add_sub_dialog_edit_view_radius"
         android:textColor="@android:color/black" />
 
-    <include layout="@layout/dialog_button_bar" />
+    <include layout="@layout/add_sub_edit_dialog_button_bar" />
 
 </LinearLayout>

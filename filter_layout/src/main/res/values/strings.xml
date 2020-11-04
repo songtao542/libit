@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="filter_reset">重置</string>
     <string name="filter_confirm">确认</string>
     <string name="picker_cancel">取消</string>
     <string name="picker_confirm">确定</string>
     <string name="filter">筛选</string>
-
-
 </resources>

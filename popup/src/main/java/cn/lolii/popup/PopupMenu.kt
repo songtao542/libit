@@ -69,6 +69,7 @@ class PopupMenu {
     private var mTextGravity = Gravity.CENTER_VERTICAL or Gravity.LEFT
     private val mMenuItems: ArrayList<MenuItem> = ArrayList()
     private var mOnMenuItemClickListener: OnMenuItemClickListener? = null
+    private var mDefaultCheckedPosition = -1
     private var mCheckedPosition = -1
     private var mCheckedTitle: String? = null
     private var mShowMask = false
@@ -128,12 +129,12 @@ class PopupMenu {
             mPopupWindow?.dismiss()
             mCheckedPosition = position
             val menuItem = (view as MenuItemLayout).menuItem
-            menuItem.mIsChecked = true
+            menuItem.setChecked(true)
             for (item in mMenuItems) {
                 if (menuItem === item) {
                     continue
                 }
-                item.mIsChecked = false
+                item.setChecked(false)
             }
             mAdapter.notifyDataSetChanged()
             mOnMenuItemClickListener?.onOptionsItemSelected(menuItem)
@@ -229,6 +230,14 @@ class PopupMenu {
     /**
      * @param position the checked position
      */
+    fun setDefaultCheckedPosition(position: Int) {
+        mDefaultCheckedPosition = position
+        setupMenuCheck()
+    }
+
+    /**
+     * @param position the checked position
+     */
     fun setCheckedPosition(position: Int) {
         mCheckedPosition = position
         setupMenuCheck()
@@ -239,7 +248,7 @@ class PopupMenu {
      *
      * @param title the checked title
      */
-    fun setCheckedPosition(title: String) {
+    fun setCheckedTitle(title: String) {
         mCheckedTitle = title
         setupMenuCheck()
     }
@@ -271,18 +280,23 @@ class PopupMenu {
         if (position != -1) {
             for (i in mMenuItems.indices) {
                 val item = mMenuItems[i]
-                item.mIsChecked = i == position
+                item.setChecked(i == position)
             }
         } else {
             // 确保只有一个被选中
-            var checkedItem: MenuItem? = null
             for (i in mMenuItems.indices) {
                 val item = mMenuItems[i]
-                if (checkedItem == null && item.isChecked) {
-                    checkedItem = item
+                if (mCheckedPosition == -1 && item.isChecked) {
+                    mCheckedPosition = i
+                    item.setChecked(true)
                 } else {
-                    item.mIsChecked = false
+                    item.setChecked(false)
                 }
+            }
+            if (mCheckedPosition == -1
+                    && mDefaultCheckedPosition >= 0
+                    && mDefaultCheckedPosition < mMenuItems.size) {
+                mMenuItems[mDefaultCheckedPosition].setChecked(true)
             }
         }
     }
@@ -292,19 +306,19 @@ class PopupMenu {
      */
     fun add(resId: Int, title: String) {
         val menuItem = MenuItem(resId, title)
-        menuItem.mPosition = mMenuItems.size
+        menuItem.setPosition(mMenuItems.size)
         mMenuItems.add(menuItem)
     }
 
     fun add(title: String) {
         val menuItem = MenuItem(title)
-        menuItem.mPosition = mMenuItems.size
+        menuItem.setPosition(mMenuItems.size)
         mMenuItems.add(menuItem)
     }
 
     fun add(resId: Int) {
         val menuItem = MenuItem(resId)
-        menuItem.mPosition = mMenuItems.size
+        menuItem.setPosition(mMenuItems.size)
         mMenuItems.add(menuItem)
     }
 
@@ -409,10 +423,10 @@ class PopupMenu {
             var hasIcon = false
             var hasTail = false
             for (menuItem in mMenuItems) {
-                if (menuItem.mIconResId != 0) {
+                if (menuItem.icon != 0) {
                     hasIcon = true
                 }
-                if (menuItem.mTailIconResId != 0) {
+                if (menuItem.tail != 0) {
                     hasTail = true
                 }
                 if (!menuItem.title.isBlank()) {
@@ -561,11 +575,11 @@ class PopupMenu {
     }
 
     class MenuItem {
-        var mPosition = 0
-        var mIconResId = 0
-        var mTailIconResId = 0
-        var mIsChecked = false
-        var mTitle: String
+        private var mPosition = 0
+        private var mIconResId = 0
+        private var mTailIconResId = 0
+        private var mIsChecked = false
+        private var mTitle: String = ""
 
         constructor(title: String) {
             mTitle = title
@@ -579,7 +593,17 @@ class PopupMenu {
             mTailIconResId = tailIconResId
         }
 
-        constructor(iconResId: Int) : this(iconResId, "")
+        constructor(iconResId: Int) {
+            mIconResId = iconResId
+        }
+
+        internal fun setPosition(position: Int) {
+            mPosition = position
+        }
+
+        internal fun setChecked(checked: Boolean) {
+            mIsChecked = checked
+        }
 
         /**
          * 文字
@@ -633,7 +657,7 @@ class PopupMenu {
         }
 
         private fun addIconView(menuItem: MenuItem) {
-            val resId = menuItem.mIconResId
+            val resId = menuItem.icon
             if (resId == 0) return
             if (mIconView == null) {
                 mIconView = ImageView(context).apply {
@@ -651,7 +675,7 @@ class PopupMenu {
         }
 
         private fun addTailIconView(menuItem: MenuItem) {
-            val resId = menuItem.mTailIconResId
+            val resId = menuItem.tail
             if (resId == 0) return
             if (mTailIconView == null) {
                 mTailIconView = ImageView(context).apply {

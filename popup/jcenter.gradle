@@ -1,0 +1,130 @@
+// 这里添加下面两行代码
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+// 项目主页
+def siteUrl = 'https://github.com/songtao542/mylib'
+// Git仓库的url
+def gitUrl = 'https://github.com/songtao542/mylib.git'
+
+// 唯一包名,比如 implementation 'androidx.appcompat:appcompat:1.2.0' 中的 androidx.appcompat 就是这里配置的
+group = "cn.lolii.popup"
+
+//项目引用的版本号,比如implementation 'androidx.appcompat:appcompat:1.2.0'中的 1.2.0 就是这里配置的
+version = "1.0.0"
+
+install {
+    repositories.mavenInstaller {
+        // 生成pom.xml和参数
+        pom {
+            project {
+                packaging 'aar'
+
+                // 可选,项目名称
+                name 'popup'
+
+                // 可选,项目描述
+                description 'Android popup menu widget.'
+
+                // 项目主页
+                url siteUrl
+
+                // 软件开源协议,现在一般都是Apache License2.0吧
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                //填写开发者基本信息,这里需要修改
+                developers {
+                    developer {
+                        // 开发者的id
+                        id 'songtao'
+
+                        // 开发者名字
+                        name 'songtao'
+
+                        // 开发者邮箱
+                        email 'songtao542@gmail.com'
+                    }
+                }
+
+                scm {
+                    // Git仓库地址
+                    connection gitUrl
+
+                    // Git仓库地址
+                    developerConnection gitUrl
+
+                    // 项目主页
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+// 生成jar包的task
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier.set("sources")
+}
+
+// 生成jarDoc的task
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    // 忽略注释语法错误,如果用jdk1.8你的注释写的不规范就编译不过
+    failOnError false
+}
+
+// 生成javaDoc的jar,不需要修改
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier.set("javadoc")
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+// 这里是读取Bintray相关的信息,
+// 我们上传项目到github上的时候会把gradle文件传上去,
+// 所以不要把帐号密码的信息直接写在这里,
+// 写在local.properties中,这里动态读取
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    // Bintray的用户名
+    user = properties.getProperty("bintray.user")
+
+    // Bintray刚才保存的ApiKey
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+
+    pkg {
+        //Repository名字,需要自己在bintray网站上先添加
+        repo = "popup"
+
+        // 发布到Bintray上的项目名字,
+        // 这里的名字不是 implementation 'androidx.appcompat:appcompat:1.2.0'中的 appcompat
+        name = "popup"
+
+        // Bintray的组织id
+        userOrg = 'lolii'
+
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+
+        // 覆盖已有版本
+        override = true
+
+        // 是否是公开项目
+        publish = true
+    }
+}

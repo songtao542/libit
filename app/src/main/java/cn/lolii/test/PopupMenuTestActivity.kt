@@ -9,12 +9,12 @@ import kotlinx.android.synthetic.main.activity_popup_menu_test.*
 class PopupMenuTestActivity : AppCompatActivity() {
 
     private val mMenus = arrayListOf(
-            PopupMenu.MenuItem(R.drawable.ic_charge_black, "充电", R.drawable.ic_charge_black),
-            PopupMenu.MenuItem(R.drawable.ic_charge_black, "快速充电", R.drawable.ic_charge_black),
-            PopupMenu.MenuItem(R.drawable.ic_charge_black, "极快速充电", R.drawable.ic_charge_black),
-            PopupMenu.MenuItem(R.drawable.ic_charge_black, "快充电", R.drawable.ic_charge_black),
-            PopupMenu.MenuItem(R.drawable.ic_charge_black, "慢速充电", R.drawable.ic_charge_black),
-            PopupMenu.MenuItem(R.drawable.ic_charge_black, "极慢速充电", R.drawable.ic_charge_black)
+            PopupMenu.MenuItem(R.drawable.ic_charge_black, "充电", R.drawable.menu_selector),
+            PopupMenu.MenuItem(R.drawable.ic_charge_black, "快速充电", R.drawable.menu_selector),
+            PopupMenu.MenuItem(R.drawable.ic_charge_black, "极快速充电", R.drawable.menu_selector),
+            PopupMenu.MenuItem(R.drawable.ic_charge_black, "快充电", R.drawable.menu_selector),
+            PopupMenu.MenuItem(R.drawable.ic_charge_black, "慢速充电", R.drawable.menu_selector),
+            PopupMenu.MenuItem(R.drawable.ic_charge_black, "极慢速充电", R.drawable.menu_selector)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +29,7 @@ class PopupMenuTestActivity : AppCompatActivity() {
             popupMenu.setShowMask(true)
             //popupMenu.setVisibleItemCount(3)
             popupMenu.setItemHeight(60)
-
+            popupMenu.setDefaultCheckedPosition(2)
             popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
                 override fun onOptionsItemSelected(item: PopupMenu.MenuItem?) {
                     Log.d("TTTT", "clicked: $item")

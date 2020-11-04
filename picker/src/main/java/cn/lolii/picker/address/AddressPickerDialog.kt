@@ -116,7 +116,7 @@ class AddressPickerDialog private constructor(private val mContext: Context,
         private var mDefaultAddress: Address? = null
 
         init {
-            mBuilder.setTitle(mContext.getString(R.string.select_address)) //避免外部未设置时无法显示title
+            mBuilder.setTitle(mContext.getString(R.string.picker_select_address)) //避免外部未设置时无法显示title
         }
 
         /**
@@ -144,7 +144,7 @@ class AddressPickerDialog private constructor(private val mContext: Context,
         }
 
         fun create(): AddressPickerDialog {
-            val contentView = View.inflate(mContext, R.layout.dialog_cascade_picker, null)
+            val contentView = View.inflate(mContext, R.layout.picker_dialog_cascade, null)
             val cascadePickerView: CascadePickerView = contentView.findViewById(R.id.cascade_picker_view)
             cascadePickerView.setTextSize(14f, 15f)
             val addressData: List<Province> = AddressProvider.getProvince(mContext)
@@ -156,7 +156,7 @@ class AddressPickerDialog private constructor(private val mContext: Context,
 
             val actionListener = mActionListener
             val positiveClickListener = mPositiveClickListener
-            val positiveText = mPositiveText ?: mContext.getText(R.string.dialog_confirm)
+            val positiveText = mPositiveText ?: mContext.getText(R.string.picker_dialog_confirm)
             if (actionListener != null) {
                 wrapPositiveListener = if (positiveClickListener == null) {
                     WrapDialogOnClickListener(actionListener)
@@ -169,7 +169,7 @@ class AddressPickerDialog private constructor(private val mContext: Context,
             }
 
             val negativeClickListener = mNegativeClickListener
-            val negativeText = mNegativeText ?: mContext.getText(R.string.dialog_cancel)
+            val negativeText = mNegativeText ?: mContext.getText(R.string.picker_dialog_cancel)
             if (actionListener != null) {
                 wrapNegativeListener = if (negativeClickListener == null) {
                     WrapDialogOnClickListener(actionListener)

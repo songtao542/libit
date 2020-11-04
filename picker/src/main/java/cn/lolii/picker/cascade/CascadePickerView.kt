@@ -56,7 +56,7 @@ class CascadePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     }
 
     private fun initInternal(context: Context) {
-        val inflate = inflate(context, R.layout.cascade_picker_layout, this)
+        val inflate = inflate(context, R.layout.picker_cascade_layout, this)
         mFirstPickerView = inflate.findViewById(R.id.picker_first)
         mSecondPickerView = inflate.findViewById(R.id.picker_second)
         mThirdPickerView = inflate.findViewById(R.id.picker_third)

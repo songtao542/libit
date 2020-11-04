@@ -495,7 +495,6 @@ public class NumberPickerView extends View {
         }
         // see the comments on mRespondChangeOnDetach, if mRespondChangeOnDetach is false,
         // please initialize NumberPickerView's data every time setting up NumberPickerView,
-        // set the demo of GregorianLunarCalendar
         int currPickedIndex = getWillPickIndexByGlobalY(mCurrDrawGlobalY);
         if (currPickedIndex != mPrevPickedIndex && mRespondChangeOnDetach) {
             try {

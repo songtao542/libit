@@ -4,25 +4,25 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/dialog_title" />
+    <include layout="@layout/picker_dialog_title" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/dialog_datetime_padding_bottom"
-        android:paddingRight="@dimen/dialog_datetime_padding_bottom"
-        android:paddingBottom="@dimen/dialog_datetime_padding_bottom">
+        android:paddingLeft="@dimen/picker_dialog_content_padding"
+        android:paddingRight="@dimen/picker_dialog_content_padding"
+        android:paddingBottom="@dimen/picker_dialog_content_padding">
 
-        <cn.lolii.picker.cascade.CascadePickerView
-            android:id="@+id/cascade_picker_view"
+        <cn.lolii.picker.NumberPickerView
+            android:id="@+id/picker_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
     </LinearLayout>
 
-    <include layout="@layout/dialog_button_bar" />
+    <include layout="@layout/picker_dialog_button_bar" />
 
 </LinearLayout>

@@ -2,7 +2,6 @@ package cn.lolii.picker
 
 import android.content.Context
 import android.content.DialogInterface
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -110,7 +109,7 @@ class PickerDialog private constructor(private val mContext: Context,
         private var mCycle = true
 
         init {
-            mBuilder.setTitle(mContext.getString(R.string.please_select))
+            mBuilder.setTitle(mContext.getString(R.string.picker_please_select))
         }
 
         /**
@@ -143,7 +142,7 @@ class PickerDialog private constructor(private val mContext: Context,
         }
 
         fun create(): PickerDialog {
-            val contentView = View.inflate(mContext, R.layout.dialog_picker, null)
+            val contentView = View.inflate(mContext, R.layout.picker_dialog, null)
             val pickerView: NumberPickerView = contentView.findViewById(R.id.picker_view)
 
             pickerView.displayedValues = resolveDisplayValues()
@@ -158,7 +157,7 @@ class PickerDialog private constructor(private val mContext: Context,
 
             val actionListener = mActionListener
             val positiveClickListener = mPositiveClickListener
-            val positiveText = mPositiveText ?: mContext.getText(R.string.dialog_confirm)
+            val positiveText = mPositiveText ?: mContext.getText(R.string.picker_dialog_confirm)
             if (actionListener != null) {
                 wrapPositiveListener = if (positiveClickListener == null) {
                     WrapDialogOnClickListener(actionListener)
@@ -171,7 +170,7 @@ class PickerDialog private constructor(private val mContext: Context,
             }
 
             val negativeClickListener = mNegativeClickListener
-            val negativeText = mNegativeText ?: mContext.getText(R.string.dialog_cancel)
+            val negativeText = mNegativeText ?: mContext.getText(R.string.picker_dialog_cancel)
             if (actionListener != null) {
                 wrapNegativeListener = if (negativeClickListener == null) {
                     WrapDialogOnClickListener(actionListener)

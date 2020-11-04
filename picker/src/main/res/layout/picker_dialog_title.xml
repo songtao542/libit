@@ -11,10 +11,10 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingStart="@dimen/dialog_title_padding"
-        android:paddingTop="@dimen/dialog_padding_top"
-        android:paddingEnd="@dimen/dialog_title_padding"
-        android:paddingBottom="@dimen/dialog_title_divider">
+        android:paddingStart="@dimen/picker_dialog_title_padding"
+        android:paddingTop="@dimen/picker_dialog_title_padding_top"
+        android:paddingEnd="@dimen/picker_dialog_title_padding"
+        android:paddingBottom="@dimen/picker_dialog_title_padding_bottom">
 
         <ImageView
             android:id="@android:id/icon"
@@ -34,7 +34,7 @@
             android:fontFamily="sans-serif"
             android:gravity="center"
             android:singleLine="true"
-            android:textSize="@dimen/text_size_dialog_title" />
+            android:textSize="@dimen/picker_dialog_title_text_size" />
     </LinearLayout>
 
 </LinearLayout>

@@ -5,24 +5,16 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/dialog_title" />
+    <include layout="@layout/picker_dialog_title" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/dialog_datetime_padding_bottom">
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <cn.lolii.picker.datetime.DatePickerView
-            android:id="@+id/date_picker_view"
-            android:layout_width="@dimen/dialog_date_picker_width"
-            android:layout_height="wrap_content" />
+        android:paddingStart="@dimen/time_picker_dialog_content_padding"
+        android:paddingEnd="@dimen/time_picker_dialog_content_padding"
+        android:paddingBottom="@dimen/picker_dialog_content_padding">
 
         <Space
             android:layout_width="0dp"
@@ -41,6 +33,6 @@
 
     </LinearLayout>
 
-    <include layout="@layout/dialog_button_bar" />
+    <include layout="@layout/picker_dialog_button_bar" />
 
 </LinearLayout>

@@ -46,7 +46,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     }
 
     private fun initInternal(context: Context) {
-        val inflate = inflate(context, R.layout.time_picker_layout, this)
+        val inflate = inflate(context, R.layout.picker_time_layout, this)
         mAmPmPickerView = inflate.findViewById(R.id.picker_amPm)
         mTimeDividerView = inflate.findViewById(R.id.picker_time_divider)
         mHourPickerView = inflate.findViewById(R.id.picker_hour)
@@ -138,7 +138,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         } else {
             mTimeDividerView.visibility = GONE
             mAmPmPickerView.visibility = VISIBLE
-            val apm = context.resources.getStringArray(R.array.am_pm_entries)
+            val apm = context.resources.getStringArray(R.array.picker_am_pm_entries)
             mAmPmPickerView.setDisplayedValues(arrayListOf(*apm), false)
             initPickerViewData(mAmPmPickerView, 0, 1, calendar[Calendar.AM_PM])
         }

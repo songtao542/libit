@@ -116,7 +116,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
         if (time.is24HourFormat) {
             builder.append(String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, time.hour))
         } else {
-            builder.append(mContext.resources.getStringArray(R.array.am_pm_entries)[time.apm])
+            builder.append(mContext.resources.getStringArray(R.array.picker_am_pm_entries)[time.apm])
             builder.append(time.hour)
         }
         builder.append(mContext.resources.getString(R.string.time_divider))
@@ -323,23 +323,23 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             var timePickerView: TimePickerView? = null
             val title: CharSequence
             if (!mIsWithViewDate && mIsWithViewTime) {  // 只设置时间
-                title = mContext.getString(R.string.select_time)
-                contentView = View.inflate(mContext, R.layout.dialog_time_picker, null)
+                title = mContext.getString(R.string.picker_select_time)
+                contentView = View.inflate(mContext, R.layout.picker_time_dialog, null)
                 timePickerView = contentView.findViewById(R.id.time_picker_view)
                 if (mIs24HourFormat >= 0) {
                     timePickerView.set24HourFormat(mIs24HourFormat == 1)
                 }
             } else if (mIsWithViewDate && mIsWithViewTime) {    // 日期时间都设置
-                title = mContext.getString(R.string.select_date_time)
-                contentView = View.inflate(mContext, R.layout.dialog_date_time_picker, null)
+                title = mContext.getString(R.string.picker_select_date_time)
+                contentView = View.inflate(mContext, R.layout.picker_date_time_dialog, null)
                 calendarView = contentView.findViewById(R.id.date_picker_view)
                 timePickerView = contentView.findViewById(R.id.time_picker_view)
                 timePickerView.set24HourFormat(true) // UI设计日期时间同时显示时，只有24h
                 timePickerView.setItemWrapContent()
-                timePickerView.setItemPadding(mContext.resources.getDimensionPixelSize(R.dimen.dialog_time_item_padding))
+                timePickerView.setItemPadding(mContext.resources.getDimensionPixelSize(R.dimen.time_picker_item_padding))
             } else {    // 其他情况只设置日期，默认
-                title = mContext.getString(R.string.select_date)
-                contentView = View.inflate(mContext, R.layout.dialog_date_picker, null)
+                title = mContext.getString(R.string.picker_select_date)
+                contentView = View.inflate(mContext, R.layout.picker_date_dialog, null)
                 calendarView = contentView.findViewById(R.id.date_picker_view)
             }
 
@@ -348,7 +348,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
 
             val actionListener = mActionListener
             val positiveClickListener = mPositiveClickListener
-            val positiveText = mPositiveText ?: mContext.getText(R.string.dialog_confirm)
+            val positiveText = mPositiveText ?: mContext.getText(R.string.picker_dialog_confirm)
             if (actionListener != null) {
                 wrapPositiveListener = if (positiveClickListener == null) {
                     WrapDialogOnClickListener(actionListener)
@@ -361,7 +361,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             }
 
             val negativeClickListener = mNegativeClickListener
-            val negativeText = mNegativeText ?: mContext.getText(R.string.dialog_cancel)
+            val negativeText = mNegativeText ?: mContext.getText(R.string.picker_dialog_cancel)
             if (actionListener != null) {
                 wrapNegativeListener = if (negativeClickListener == null) {
                     WrapDialogOnClickListener(actionListener)

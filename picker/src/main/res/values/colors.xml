@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="divider_color_dialog">#c9c9c9</color>
+    <color name="picker_dialog_divider_color">#c9c9c9</color>
+
+    <!--分割线-->
+    <color name="picker_item_divider_color">#e5e5e5</color>
+    <color name="picker_item_text_color_normal">#cecece</color>
+    <!--系统蓝，高亮色-->
+    <color name="picker_color_accent">#007cee</color>
+
 </resources>

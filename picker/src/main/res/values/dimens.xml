@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="text_size_number_picker_normal">18sp</dimen>
-    <dimen name="text_size_number_picker_selected">22sp</dimen>
+    <dimen name="number_picker_text_size_normal">18sp</dimen>
+    <dimen name="number_picker_text_size_selected">22sp</dimen>
     <dimen name="number_picker_item_space">24dp</dimen>
 
     <dimen name="action_bar_content_inset">15dp</dimen>
-    <dimen name="dialog_datetime_padding_bottom">10dp</dimen>
-    <dimen name="time_picker_item_am_width">93dp</dimen>
-    <dimen name="time_picker_item_width">78dp</dimen>
-    <dimen name="dialog_time_item_padding">10dp</dimen>
-    <dimen name="dialog_date_picker_width">168dp</dimen>
-    <dimen name="dialog_date_picker_width2">218dp</dimen>
-    <dimen name="dialog_date_mode_end">34dp</dimen>
-    <dimen name="dialog_date_mode_bottom">12dp</dimen>
+    <dimen name="picker_dialog_content_padding">10dp</dimen>
+    <dimen name="time_picker_dialog_content_padding">15dp</dimen>
+    <dimen name="number_picker_view_width">78dp</dimen>
+    <dimen name="time_picker_item_padding">10dp</dimen>
+    <dimen name="date_picker_view_width">168dp</dimen>
 
-    <dimen name="dialog_title_divider">16dp</dimen>
-    <dimen name="dialog_padding_top">24dp</dimen>
+    <dimen name="picker_dialog_title_padding_bottom">16dp</dimen>
+    <dimen name="picker_dialog_title_padding_top">24dp</dimen>
     <!--弹窗标题、actionbar文字按钮-->
-    <dimen name="text_size_dialog_title">17sp</dimen>
+    <dimen name="picker_dialog_title_text_size">17sp</dimen>
 
     <!--弹窗正文、按钮、空白页文字提醒、文本-->
-    <dimen name="text_size_button_or_dialog">15sp</dimen>
-    <dimen name="dialog_title_padding">20dp</dimen>
-    <dimen name="date_picker_padding">55dp</dimen>
-    <dimen name="dialog_space_extra">8dp</dimen>
-    <dimen name="dialog_buttonbar_height">48dp</dimen>
-    <dimen name="date_picker_radius">10dp</dimen>
+    <dimen name="picker_dialog_title_padding">20dp</dimen>
+    <dimen name="date_picker_dialog_content_padding">55dp</dimen>
+    <dimen name="picker_dialog_buttonbar_height">48dp</dimen>
+    <dimen name="picker_dialog_background_radius">10dp</dimen>
 </resources>

@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="lunar">农历</string>
-    <string name="gregorian">公历</string>
     <string name="year">年</string>
     <string name="month">月</string>
     <string name="day">日</string>
-    <string name="leap">闰</string>
-    <string name="text_search">搜索</string>
 
-    <string-array name="am_pm_entries">
+    <string-array name="picker_am_pm_entries">
         <item>上午</item>
         <item>下午</item>
     </string-array>
-    <string-array name="week_entries">
+
+    <string-array name="picker_week_entries">
         <item>周日</item>
         <item>周一</item>
         <item>周二</item>
@@ -22,59 +19,11 @@
         <item>周六</item>
     </string-array>
 
-    <string-array name="lunar_month_entries">
-        <item>正月</item>
-        <item>二月</item>
-        <item>三月</item>
-        <item>四月</item>
-        <item>五月</item>
-        <item>六月</item>
-        <item>七月</item>
-        <item>八月</item>
-        <item>九月</item>
-        <item>十月</item>
-        <item>冬月</item>
-        <item>腊月</item>
-    </string-array>
-
-    <string-array name="lunar_day_entries">
-        <item>初一</item>
-        <item>初二</item>
-        <item>初三</item>
-        <item>初四</item>
-        <item>初五</item>
-        <item>初六</item>
-        <item>初七</item>
-        <item>初八</item>
-        <item>初九</item>
-        <item>初十</item>
-        <item>十一</item>
-        <item>十二</item>
-        <item>十三</item>
-        <item>十四</item>
-        <item>十五</item>
-        <item>十六</item>
-        <item>十七</item>
-        <item>十八</item>
-        <item>十九</item>
-        <item>廿十</item>
-        <item>廿一</item>
-        <item>廿二</item>
-        <item>廿三</item>
-        <item>廿四</item>
-        <item>廿五</item>
-        <item>廿六</item>
-        <item>廿七</item>
-        <item>廿八</item>
-        <item>廿九</item>
-        <item>三十</item>
-    </string-array>
-
-    <string name="dialog_confirm">确认</string>
-    <string name="dialog_cancel">取消</string>
-    <string name="select_address">选择地址</string>
-    <string name="please_select">请选择</string>
-    <string name="select_date_time">选择日期和时间</string>
-    <string name="select_date">选择日期</string>
-    <string name="select_time">选择时间</string>
+    <string name="picker_dialog_confirm">确认</string>
+    <string name="picker_dialog_cancel">取消</string>
+    <string name="picker_select_address">选择地址</string>
+    <string name="picker_please_select">请选择</string>
+    <string name="picker_select_date_time">选择日期和时间</string>
+    <string name="picker_select_date">选择日期</string>
+    <string name="picker_select_time">选择时间</string>
 </resources>

@@ -32,7 +32,13 @@
         </activity>
         <activity
             android:name=".PickerActivity"
-            android:label="@string/picker" />
+            android:label="@string/picker" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ShimmerTestActivity"
             android:label="@string/shimmer">

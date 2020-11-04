@@ -77,7 +77,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     }
 
     private fun initInternal(context: Context) {
-        val contentView = inflate(context, R.layout.date_picker_layout, this)
+        val contentView = inflate(context, R.layout.picker_date_layout, this)
         mYearPickerView = contentView.findViewById(R.id.picker_year)
         mMonthPickerView = contentView.findViewById(R.id.picker_month)
         mDayPickerView = contentView.findViewById(R.id.picker_day)

@@ -1,20 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="cn.lolii.screenrecord">
+    package="com.liabit.screenrecord">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application>
         <activity
-                android:name="cn.lolii.screenrecord.RequestMediaProjectionPermissionActivity"
-                android:configChanges="orientation|keyboardHidden|screenSize"
-                android:theme="@style/RequestScreenRecordPermissionTheme"
-                android:excludeFromRecents="true"
-                android:launchMode="singleTask"/>
+            android:name="com.liabit.screenrecord.RequestMediaProjectionPermissionActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:theme="@style/RequestScreenRecordPermissionTheme" />
 
-        <service android:name=".ScreenRecordService"/>
+        <service android:name="com.liabit.screenrecord.ScreenRecordService" />
     </application>
 
 </manifest>

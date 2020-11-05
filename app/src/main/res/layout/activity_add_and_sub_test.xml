@@ -6,9 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context="cn.lolii.test.AddAndSubTextActivity">
+    tools:context="com.liabit.test.AddAndSubTextActivity">
 
-    <cn.lolii.widget.AddSubView
+    <com.liabit.widget.AddSubView
         android:id="@+id/addAndSubView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

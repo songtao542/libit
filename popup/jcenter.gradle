@@ -8,7 +8,7 @@ def siteUrl = 'https://github.com/songtao542/mylib'
 def gitUrl = 'https://github.com/songtao542/mylib.git'
 
 // 唯一包名,比如 implementation 'androidx.appcompat:appcompat:1.2.0' 中的 androidx.appcompat 就是这里配置的
-group = "cn.lolii.popup"
+group = "com.liabit.popup"
 
 //项目引用的版本号,比如implementation 'androidx.appcompat:appcompat:1.2.0'中的 1.2.0 就是这里配置的
 version = "1.0.0"
@@ -115,7 +115,7 @@ bintray {
         name = "popup"
 
         // Bintray的组织id
-        userOrg = 'lolii'
+        userOrg = 'liabit'
 
         websiteUrl = siteUrl
         vcsUrl = gitUrl

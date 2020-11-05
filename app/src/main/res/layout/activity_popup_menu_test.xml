@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
-    tools:context=".PopupMenuTestActivity">
+    tools:context="com.liabit.test.PopupMenuTestActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

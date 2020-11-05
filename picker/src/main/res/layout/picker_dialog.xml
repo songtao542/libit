@@ -15,7 +15,7 @@
         android:paddingRight="@dimen/picker_dialog_content_padding"
         android:paddingBottom="@dimen/picker_dialog_content_padding">
 
-        <cn.lolii.picker.NumberPickerView
+        <com.liabit.picker.NumberPickerView
             android:id="@+id/picker_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

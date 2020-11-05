@@ -5,12 +5,12 @@
     android:orientation="vertical">
 
 
-    <cn.lolii.test.gesture.TestSwipeLayout
+    <com.liabit.test.gesture.TestSwipeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <cn.lolii.test.gesture.TestButton
+        <com.liabit.test.gesture.TestButton
             android:id="@+id/text1"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -23,10 +23,10 @@
                 android:background="#ff4444"
                 android:text="swipe text1" />
 
-        </cn.lolii.test.gesture.TestButton>
+        </com.liabit.test.gesture.TestButton>
 
 
-        <cn.lolii.test.gesture.TestButton
+        <com.liabit.test.gesture.TestButton
             android:id="@+id/text2"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -38,10 +38,10 @@
                 android:layout_gravity="center"
                 android:background="#ffff44"
                 android:text="swipe text2" />
-        </cn.lolii.test.gesture.TestButton>
+        </com.liabit.test.gesture.TestButton>
 
 
-        <cn.lolii.test.gesture.TestButton
+        <com.liabit.test.gesture.TestButton
             android:id="@+id/text3"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -53,7 +53,7 @@
                 android:layout_gravity="center"
                 android:background="#ff2ff4"
                 android:text="swipe text3" />
-        </cn.lolii.test.gesture.TestButton>
-    </cn.lolii.test.gesture.TestSwipeLayout>
+        </com.liabit.test.gesture.TestButton>
+    </com.liabit.test.gesture.TestSwipeLayout>
 
 </LinearLayout>

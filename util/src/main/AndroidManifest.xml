@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.lolii.util">
-    <uses-permission android:name="android.permission.CAMERA"/>
+    package="com.liabit.test">
+
+    <uses-permission android:name="android.permission.CAMERA" />
 </manifest>

@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity"
+        tools:context="com.liabit.test.MainActivity"
         android:background="#181E2E"
         android:orientation="vertical">
 
@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"/>
 
-    <cn.lolii.statebutton.CircleStateButton
+    <com.liabit.statebutton.CircleStateButton
             android:id="@+id/circleStateButton"
             android:layout_width="wrap_content"
             android:layout_gravity="center"
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"/>
 
-    <cn.lolii.statebutton.RoundCornerStateButton
+    <com.liabit.statebutton.RoundCornerStateButton
             android:id="@+id/roundedStateButton"
             android:layout_width="wrap_content"
             android:layout_gravity="center"

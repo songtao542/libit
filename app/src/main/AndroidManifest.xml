@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.lolii.test">
+    package="com.liabit.test">
 
     <application
         android:allowBackup="true"
@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".PopupMenuTestActivity"
+            android:name="com.liabit.test.PopupMenuTestActivity"
             android:label="PopupMenu"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -21,17 +21,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TestFragmentVisible"
+            android:name="com.liabit.test.TestFragmentVisible"
             android:label="@string/test_fragment_visible">
 
         </activity>
         <activity
-            android:name=".AddAndSubTextActivity"
+            android:name="com.liabit.test.AddAndSubTextActivity"
             android:label="@string/add_and_sub">
 
         </activity>
         <activity
-            android:name=".PickerActivity"
+            android:name="com.liabit.test.PickerActivity"
             android:label="@string/picker" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,7 +40,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ShimmerTestActivity"
+            android:name="com.liabit.test.ShimmerTestActivity"
             android:label="@string/shimmer">
 
             <!-- <intent-filter> -->
@@ -50,7 +50,7 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name="com.liabit.test.MainActivity">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -60,7 +60,7 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".gesture.TestDragActivity"
+            android:name="com.liabit.test.gesture.TestDragActivity"
             android:label="TestDrag">
 
             <!-- <intent-filter> -->
@@ -71,7 +71,7 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".gesture.TestSwipeActivity"
+            android:name="com.liabit.test.gesture.TestSwipeActivity"
             android:label="TestSwipe">
 
             <!-- <intent-filter> -->

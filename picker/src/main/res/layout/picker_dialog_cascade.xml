@@ -15,7 +15,7 @@
         android:paddingRight="@dimen/picker_dialog_content_padding"
         android:paddingBottom="@dimen/picker_dialog_content_padding">
 
-        <cn.lolii.picker.cascade.CascadePickerView
+        <com.liabit.picker.cascade.CascadePickerView
             android:id="@+id/cascade_picker_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

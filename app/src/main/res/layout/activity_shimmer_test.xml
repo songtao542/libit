@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <com.lolii.shimmer.ShimmerLayout
+    <com.liabit.shimmer.ShimmerLayout
         android:id="@+id/shimmerLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-    </com.lolii.shimmer.ShimmerLayout>
+    </com.liabit.shimmer.ShimmerLayout>
 
 
 </LinearLayout>

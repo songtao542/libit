@@ -7,7 +7,7 @@
     android:background="@android:color/white"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.lolii.filter.FilterDialogFragment">
+    tools:context="com.liabit.filter.FilterDialogFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
         android:layout_height="1px"
         android:background="#dddddd" />
 
-    <com.lolii.filter.FilterLayout
+    <com.liabit.filter.FilterLayout
         android:id="@+id/filterLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

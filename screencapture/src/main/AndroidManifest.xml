@@ -1,16 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="cn.lolii.screencapture">
+    package="com.liabit.screencapture">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application>
         <activity
-                android:name="cn.lolii.screencapture.RequestMediaProjectionPermissionActivity"
-                android:configChanges="orientation|keyboardHidden|screenSize"
-                android:theme="@style/RequestScreenCapturePermissionTheme"
-                android:excludeFromRecents="true"
-                android:launchMode="singleTask"/>
+            android:name="com.liabit.screencapture.RequestMediaProjectionPermissionActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:theme="@style/RequestScreenCapturePermissionTheme" />
     </application>
 
 </manifest>

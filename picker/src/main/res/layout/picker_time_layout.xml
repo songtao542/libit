@@ -2,23 +2,23 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <cn.lolii.picker.NumberPickerView
+    <com.liabit.picker.NumberPickerView
         android:id="@+id/picker_amPm"
         android:layout_width="@dimen/number_picker_view_width"
         android:layout_height="wrap_content" />
 
-    <cn.lolii.picker.NumberPickerView
+    <com.liabit.picker.NumberPickerView
         android:id="@+id/picker_hour"
         android:layout_width="@dimen/number_picker_view_width"
         android:layout_height="wrap_content" />
 
-    <cn.lolii.picker.NumberPickerView
+    <com.liabit.picker.NumberPickerView
         android:id="@+id/picker_time_divider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:textArray="@array/time_divider" />
 
-    <cn.lolii.picker.NumberPickerView
+    <com.liabit.picker.NumberPickerView
         android:id="@+id/picker_min"
         android:layout_width="@dimen/number_picker_view_width"
         android:layout_height="wrap_content" />

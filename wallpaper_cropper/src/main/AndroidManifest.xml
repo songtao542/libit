@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.lolii.wallpapercropper">
+    package="com.liabit.wallpapercropper">
 
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
 
     <application>
         <activity
-            android:name="cn.lolii.cropper.WallpaperCropActivity"
+            android:name="com.liabit.cropper.WallpaperCropActivity"
             android:finishOnCloseSystemDialogs="true"
             android:label="@string/crop_wallpaper"
             android:theme="@style/NoActionBar">

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <cn.lolii.location.widget.NestedFrameLayout
+        <com.liabit.location.widget.NestedFrameLayout
             android:id="@+id/nestLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -54,7 +54,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="400dp"
                 android:background="@android:color/white" />
-        </cn.lolii.location.widget.NestedFrameLayout>
+        </com.liabit.location.widget.NestedFrameLayout>
 
     </FrameLayout>
 

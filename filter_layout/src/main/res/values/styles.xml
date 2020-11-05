@@ -28,8 +28,8 @@
     </style>
 
     <style name="TopSheetDialogAnimation" parent="Animation.AppCompat.Dialog">
-        <item name="android:windowEnterAnimation">@anim/anim_top_enter</item>
-        <item name="android:windowExitAnimation">@anim/anim_top_exit</item>
+        <item name="android:windowEnterAnimation">@anim/filter_anim_top_enter</item>
+        <item name="android:windowExitAnimation">@anim/filter_anim_top_exit</item>
     </style>
 
 </resources>

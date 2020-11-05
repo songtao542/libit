@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <cn.lolii.picker.datetime.DatePickerView
+        <com.liabit.picker.datetime.DatePickerView
             android:id="@+id/date_picker_view"
             android:layout_width="@dimen/date_picker_view_width"
             android:layout_height="wrap_content" />
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <cn.lolii.picker.datetime.TimePickerView
+        <com.liabit.picker.datetime.TimePickerView
             android:id="@+id/time_picker_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

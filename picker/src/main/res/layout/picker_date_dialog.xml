@@ -15,7 +15,7 @@
         android:paddingRight="@dimen/date_picker_dialog_content_padding"
         android:paddingBottom="@dimen/picker_dialog_content_padding">
 
-        <cn.lolii.picker.datetime.DatePickerView
+        <com.liabit.picker.datetime.DatePickerView
             android:id="@+id/date_picker_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

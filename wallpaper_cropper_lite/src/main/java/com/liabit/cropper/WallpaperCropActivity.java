@@ -42,7 +42,7 @@ import android.widget.Toast;
 import com.liabit.cropper.photos.BitmapRegionTileSource;
 import com.liabit.cropper.photos.BitmapRegionTileSource.BitmapSource;
 import com.liabit.cropper.util.Utils;
-import com.liabit.wallpapercropper.R;
+import com.liabit.cropper.R;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;

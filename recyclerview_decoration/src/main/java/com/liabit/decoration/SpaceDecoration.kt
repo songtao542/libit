@@ -1,4 +1,4 @@
-package com.liabit.util
+package com.liabit.decoration
 
 import android.graphics.Rect
 import android.util.TypedValue

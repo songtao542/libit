@@ -31,7 +31,6 @@ class SpaceDecoration(
 ) : RecyclerView.ItemDecoration() {
 
     private var mDrawable: Drawable? = null
-    private var mIsPaddingSet = false
 
     constructor(space: Float) : this(space, Direction.ALL, 0, Color.TRANSPARENT)
 

@@ -9,7 +9,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RecyclerViewDecorationTestActivity"></activity>
+        <activity
+            android:name=".RecyclerViewDecorationTestActivity"
+            android:label="Decoration" />
+
+        <activity
+            android:name=".RecyclerViewDecorationActivity"
+            android:label="Decoration">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".PopupMenuTestActivity"
             android:label="PopupMenu"
@@ -23,10 +35,14 @@
         </activity>
         <activity
             android:name=".TestFragmentVisible"
-            android:label="@string/test_fragment_visible"></activity>
+            android:label="@string/test_fragment_visible">
+
+        </activity>
         <activity
             android:name=".AddAndSubTextActivity"
-            android:label="@string/add_and_sub"></activity>
+            android:label="@string/add_and_sub">
+
+        </activity>
         <activity
             android:name=".PickerActivity"
             android:label="@string/picker">

@@ -37,6 +37,8 @@ dependencies {
     implementation project(':addsub')
     implementation project(':popup')
     implementation project(':recyclerview_decoration')
+    implementation project(':tablayout')
+    implementation project(':ext')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.2.0'

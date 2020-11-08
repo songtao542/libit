@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="TabLayout">
+        <attr name="tabMode">
+            <enum name="scrollable" value="0" />
+            <enum name="fixed" value="1" />
+        </attr>
+        <attr name="indicatorMode">
+            <enum name="matchTabWidth" value="0" />
+            <enum name="matchTabContent" value="1" />
+        </attr>
+    </declare-styleable>
+
+</resources>

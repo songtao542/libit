@@ -1,4 +1,4 @@
-package com.liabit.test
+package com.liabit.util
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -7,7 +7,7 @@ import android.content.IntentFilter
 import android.os.PatternMatcher
 import android.util.Log
 import com.liabit.extension.TAG
-import com.liabit.test.MainThreadInitializedObject.ObjectProvider
+import com.liabit.util.MainThreadInitializedObject.ObjectProvider
 import java.util.*
 
 /**

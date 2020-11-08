@@ -5,6 +5,7 @@ import android.view.animation.Interpolator
 import android.view.animation.LinearInterpolator
 import com.liabit.tablayout.indicator.LineTabIndicator
 
+@Suppress("unused")
 open class DefaultTabAdapter : TabAdapter {
 
     private val mStartInterpolator: Interpolator = LinearInterpolator()

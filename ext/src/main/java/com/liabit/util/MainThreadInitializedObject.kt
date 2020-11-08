@@ -1,8 +1,8 @@
-package com.liabit.test
+package com.liabit.util
 
 import android.content.Context
 import android.os.Looper
-import com.liabit.test.Executors.MAIN_EXECUTOR
+import com.liabit.util.Executors.MAIN_EXECUTOR
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutionException
 

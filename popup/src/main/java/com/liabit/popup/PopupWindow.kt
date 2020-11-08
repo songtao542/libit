@@ -164,7 +164,6 @@ class PopupWindow(context: Context) {
     /**
      * @param anchor  the view on which to pin the DripDownListView
      * @param gravity [Gravity] just Gravity.LEFT,Gravity.RIGHT has effect ,other will be as Gravity.CENTER;
-     * @see PopupWindow.show
      */
     fun show(anchor: View, gravity: Int) {
         show(anchor, gravity, 0)

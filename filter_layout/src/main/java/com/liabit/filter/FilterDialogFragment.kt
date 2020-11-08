@@ -3,9 +3,7 @@ package com.liabit.filter
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
@@ -16,34 +14,15 @@ import androidx.fragment.app.FragmentActivity
  * CreateDate:     2020/9/12 16:32
  */
 @Suppress("unused")
-class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinationResultListener,
-        FilterLayout.OnResultListener {
+class FilterDialogFragment : AppCompatDialogFragment(), FilterController by FilterControllerImpl() {
 
     companion object {
         const val TAG = "FilterDialogFragment"
         const val FILTER_TAG = "filter"
     }
 
-    private var mFilterLayout: FilterLayout? = null
-    private var mPopHeight = 0
-
-    private var mLeftPageClickToReturn: Boolean = false
-    private var mRightPageClickToReturn: Boolean = false
-    private var mLeftPageTitle: String? = null
-    private var mRightPageTitle: String? = null
-    private var mLeftPageListPadding: Rect? = null
-    private var mRightPageListPadding: Rect? = null
-    private var mOnResultListener: FilterLayout.OnResultListener? = null
-    private var mOnCombinationResultListener: FilterLayout.OnCombinationResultListener? = null
-    private var mOnResetListener: FilterLayout.OnResetListener? = null
-    private var mOnConfirmListener: FilterLayout.OnConfirmListener? = null
-
-    private var mLeftFilterData: List<FilterItem>? = null
-    private var mRightFilterData: List<FilterItem>? = null
-    private var mLeftFilterConfigurator: FilterAdapter? = null
-    private var mRightFilterConfigurator: FilterAdapter? = null
-
     private var mShowAsDialog: Boolean = true
+    private var mPopHeight = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.filter_dialog_fragment, container, false)?.apply {
@@ -97,28 +76,12 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
         view.findViewById<View>(R.id.backButton).setOnClickListener {
             back()
         }
-        mFilterLayout = view.findViewById(R.id.filterLayout)
-        mFilterLayout?.setOnResultListener(this)
-        mFilterLayout?.setOnCombinationResultListener(this)
-        mLeftPageListPadding?.let {
-            mFilterLayout?.setLeftPageListPadding(it.left, it.top, it.right, it.bottom)
-        }
-        mRightPageListPadding?.let {
-            mFilterLayout?.setRightPageListPadding(it.left, it.top, it.right, it.bottom)
-        }
-        mFilterLayout?.setTabTitle(mLeftPageTitle, mRightPageTitle)
-        mLeftFilterData?.let {
-            mFilterLayout?.setLeftPageFilter(it, mLeftFilterConfigurator)
-        }
-        mRightFilterData?.let {
-            mFilterLayout?.setRightPageFilter(it, mRightFilterConfigurator)
-        }
-        mFilterLayout?.setClickToReturnMode(mLeftPageClickToReturn, mRightPageClickToReturn)
-        mOnResetListener?.let { mFilterLayout?.setOnResetListener(it) }
-        mFilterLayout?.setOnConfirmListener(object : FilterLayout.OnConfirmListener {
+        val filterLayout: FilterLayout = view.findViewById(R.id.filterLayout) ?: return
+        setup(filterLayout)
+        filterLayout.setOnConfirmListener(object : FilterLayout.OnConfirmListener {
             override fun onConfirm(view: View) {
                 back()
-                mOnConfirmListener?.onConfirm(view)
+                getOnConfirmListener()?.onConfirm(view)
             }
         })
     }
@@ -182,83 +145,4 @@ class FilterDialogFragment : AppCompatDialogFragment(), FilterLayout.OnCombinati
     fun setShowAsDialog(showAsDialog: Boolean) {
         mShowAsDialog = showAsDialog
     }
-
-    fun setOnResultListener(listener: FilterLayout.OnResultListener) {
-        if (listener == this) {
-            Log.e(TAG, "Can't set FilterDialogFragment it self as listener.")
-            return
-        }
-        mOnResultListener = listener
-    }
-
-    fun setOnCombinationResultListener(listener: FilterLayout.OnCombinationResultListener) {
-        if (listener == this) {
-            Log.e(TAG, "Can't set FilterDialogFragment it self as listener.")
-            return
-        }
-        mOnCombinationResultListener = listener
-    }
-
-    fun setLeftPageListPadding(left: Int, top: Int, right: Int, bottom: Int) {
-        if (mLeftPageListPadding == null) {
-            mLeftPageListPadding = Rect()
-        }
-        mLeftPageListPadding?.set(left, top, right, bottom)
-        mFilterLayout?.setLeftPageListPadding(left, top, right, bottom)
-    }
-
-    fun setRightPageListPadding(left: Int, top: Int, right: Int, bottom: Int) {
-        if (mRightPageListPadding == null) {
-            mRightPageListPadding = Rect()
-        }
-        mRightPageListPadding?.set(left, top, right, bottom)
-        mFilterLayout?.setRightPageListPadding(left, top, right, bottom)
-    }
-
-    fun setClickToReturnMode(leftPageClickToReturn: Boolean, rightPageClickToReturn: Boolean = false) {
-        mLeftPageClickToReturn = leftPageClickToReturn
-        mRightPageClickToReturn = rightPageClickToReturn
-        mFilterLayout?.setClickToReturnMode(leftPageClickToReturn, rightPageClickToReturn)
-    }
-
-    fun setTab(leftPageTitle: String, rightPageTitle: String) {
-        mLeftPageTitle = leftPageTitle
-        mRightPageTitle = rightPageTitle
-        mFilterLayout?.setTabTitle(leftPageTitle, rightPageTitle)
-    }
-
-    fun setFilter(items: List<FilterItem>, configurator: FilterAdapter? = null) {
-        setLeftPageFilter(items, configurator)
-    }
-
-    fun setLeftPageFilter(items: List<FilterItem>, configurator: FilterAdapter? = null) {
-        mLeftFilterData = items
-        mLeftFilterConfigurator = configurator
-        mFilterLayout?.setLeftPageFilter(items, configurator)
-    }
-
-    fun setRightPageFilter(items: List<FilterItem>, configurator: FilterAdapter? = null) {
-        mRightFilterData = items
-        mRightFilterConfigurator = configurator
-        mFilterLayout?.setRightPageFilter(items, configurator)
-    }
-
-    override fun onResult(pageLeftResult: List<Filter>?, pageRightResult: List<Filter>?) {
-        mOnCombinationResultListener?.onResult(pageLeftResult, pageRightResult)
-        back()
-    }
-
-    override fun onResult(result: List<Filter>) {
-        mOnResultListener?.onResult(result)
-        back()
-    }
-
-    fun setOnResetListener(listener: FilterLayout.OnResetListener) {
-        mOnResetListener = listener
-    }
-
-    fun setOnConfirmListener(listener: FilterLayout.OnConfirmListener) {
-        mOnConfirmListener = listener
-    }
-
 }

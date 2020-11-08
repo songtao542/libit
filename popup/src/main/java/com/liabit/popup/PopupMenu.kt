@@ -48,7 +48,7 @@ class PopupMenu {
     }
 
     private val mContext: Context
-    private var mPopupWindow: PopupWindow? = null
+    private var mPopupWindow: android.widget.PopupWindow? = null
     private var mHeight = ViewGroup.LayoutParams.WRAP_CONTENT
 
     /**

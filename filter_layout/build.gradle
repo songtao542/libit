@@ -31,6 +31,7 @@ dependencies {
     //implementation 'com.google.android:flexbox:2.0.1'
     implementation files('libs/flexbox-release.aar')
     implementation project(':picker')
+    implementation project(':popup')
 
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

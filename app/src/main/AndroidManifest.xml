@@ -12,11 +12,11 @@
         <activity
             android:name=".TestTabLayoutActivity"
             android:label="TabLayout">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".TestTabLayoutFixModeActivity"
@@ -29,31 +29,47 @@
         <activity
             android:name=".RecyclerViewDecorationActivity"
             android:label="Decoration">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".PopupMenuTestActivity"
             android:label="PopupMenu"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
+
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".TestFragmentVisible"
+            android:label="@string/test_fragment_visible">
+
+        </activity>
+        <activity
+            android:name=".AddAndSubTextActivity"
+            android:label="@string/add_and_sub">
+
+        </activity>
+
+        <activity
+            android:name=".FilterTestActivity"
+            android:label="Filter"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".TestFragmentVisible"
-            android:label="@string/test_fragment_visible"></activity>
-        <activity
-            android:name=".AddAndSubTextActivity"
-            android:label="@string/add_and_sub"></activity>
-        <activity
-            android:name=".PickerActivity"
+            android:name=".PickerTestActivity"
             android:label="@string/picker">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

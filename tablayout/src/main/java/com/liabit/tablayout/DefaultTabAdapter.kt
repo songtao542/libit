@@ -9,12 +9,35 @@ open class DefaultTabAdapter : TabAdapter {
 
     private val mStartInterpolator: Interpolator = LinearInterpolator()
     private val mEndInterpolator: Interpolator = LinearInterpolator()
+    private var mSelectColor = 0xff007cee.toInt()
+    private var mNormalColor = 0xff000000.toInt()
+    private var mSelectTextSize = 16f
+    private var mNormalTextSize = 16f
 
     override fun onCreateTabView(context: Context, index: Int, title: CharSequence?): TextTabView {
-        val simpleTabView = TextTabView(context)
-        simpleTabView.setSelectTextSize(16f)
-        simpleTabView.text = title
-        return simpleTabView
+        return TextTabView(context).apply {
+            setSelectTextSize(mSelectTextSize)
+            setNormalTextSize(mNormalTextSize)
+            setNormalTextColor(mNormalColor)
+            setSelectTextColor(mSelectColor)
+            text = title
+        }
+    }
+
+    fun setSelectTextColor(color: Int) {
+        mSelectColor = color
+    }
+
+    fun setNormalTextColor(color: Int) {
+        mNormalColor = color
+    }
+
+    fun setSelectTextSize(textSize: Float) {
+        mSelectTextSize = textSize
+    }
+
+    fun setNormalTextSize(textSize: Float) {
+        mNormalTextSize = textSize
     }
 
     override fun getTabWeight(context: Context, index: Int): Float {

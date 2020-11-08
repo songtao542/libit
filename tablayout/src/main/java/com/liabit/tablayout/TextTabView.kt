@@ -52,6 +52,8 @@ class TextTabView : AppCompatTextView, TabView {
     }
 
     override fun onPageScrolled(positionOffset: Float) {
+        val color = mArgbEvaluator.evaluate(positionOffset, mSelectColor, mNormalColor) as Int
+        super.setTextColor(color)
         if (mSelectTextSize != 0f) {
             if (mNormalTextSize == 0f) {
                 mNormalTextSize = textSize
@@ -59,13 +61,14 @@ class TextTabView : AppCompatTextView, TabView {
             val textSize = mNormalTextSize + (mSelectTextSize - mNormalTextSize) * (1f - positionOffset)
             super.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
         }
-
-        val color = mArgbEvaluator.evaluate(positionOffset, mSelectColor, mNormalColor) as Int
-        super.setTextColor(color)
     }
 
     fun setSelectTextColor(color: Int) {
         mSelectColor = color
+    }
+
+    fun setNormalTextColor(color: Int) {
+        setTextColor(color)
     }
 
     override fun setTextColor(color: Int) {
@@ -87,6 +90,10 @@ class TextTabView : AppCompatTextView, TabView {
         }
         mSelectTextSize = textSize
         measureMinWidth()
+    }
+
+    fun setNormalTextSize(size: Float) {
+        setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
     }
 
     override fun setTextSize(unit: Int, size: Float) {

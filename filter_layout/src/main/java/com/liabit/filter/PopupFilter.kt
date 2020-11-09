@@ -6,7 +6,7 @@ import android.view.ViewGroup
 
 class PopupFilter(context: Context) : FilterController by FilterControllerImpl() {
 
-    private var mPopupWindow: com.liabit.popup.PopupWindow = com.liabit.popup.PopupWindow(context)
+    private var mPopupWindow: PopupWindowCompat = PopupWindowCompat(context)
     private var mFilterLayout: FilterLayout = FilterLayout(context)
     private var mPopHeight: Int = 0
 

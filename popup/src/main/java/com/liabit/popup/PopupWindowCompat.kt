@@ -17,7 +17,7 @@ import android.widget.PopupWindow
 
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class PopupWindow(context: Context) {
+class PopupWindowCompat(context: Context) {
 
     private val mContext: Context = context
     private var mPopupWindow: PopupWindow? = null
@@ -246,7 +246,7 @@ class PopupWindow(context: Context) {
          *
          * If the view later scrolls to move anchor to a different location, the popup will be moved correspondingly.
          */
-        fun show(popupList: com.liabit.popup.PopupWindow) {
+        fun show(popupList: com.liabit.popup.PopupWindowCompat) {
             popupList.mMaskView.visibility = View.GONE
             var rlp = popupList.mRootView.layoutParams
             if (rlp == null) {

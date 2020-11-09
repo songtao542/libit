@@ -1,4 +1,4 @@
-package com.liabit.filter;
+package com.liabit.picker;
 
 import android.content.Context
 import android.content.DialogInterface
@@ -6,7 +6,6 @@ import com.liabit.picker.PickerDialog
 import com.liabit.picker.address.Address
 import com.liabit.picker.address.AddressPickerDialog
 import com.liabit.picker.datetime.DateTimePickerDialog
-import java.lang.IllegalStateException
 import java.util.*
 
 /**
@@ -64,6 +63,7 @@ object Picker {
                 .show()
     }
 
+    @JvmStatic
     fun pickAddress(context: Context, address: Address?, listener: OnAddressSelectListener) {
         AddressPickerDialog.Builder(context)
                 .setDefaultAddress(address)
@@ -75,6 +75,7 @@ object Picker {
                 .show()
     }
 
+    @JvmStatic
     fun pickNumber(context: Context, number: Int?, from: Int, to: Int, listener: OnNumberSelectListener) {
         PickerDialog.Builder(context)
                 .setDefaultValue(number)
@@ -99,6 +100,5 @@ object Picker {
     interface OnNumberSelectListener {
         fun onNumberSelect(number: Int)
     }
-
 
 }

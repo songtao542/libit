@@ -17,6 +17,7 @@
         <attr name="pageCount" format="integer" />
         <attr name="leftTabTitle" format="string|reference" />
         <attr name="rightTabTitle" format="string|reference" />
+        <attr name="picker" format="string" />
     </declare-styleable>
 
 </resources>

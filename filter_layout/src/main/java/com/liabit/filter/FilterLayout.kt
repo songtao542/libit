@@ -21,7 +21,6 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.flexbox.*
 import com.google.android.material.tabs.TabLayout
-import com.liabit.picker.address.Address
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -62,24 +61,40 @@ class FilterLayout : LinearLayout {
     private var mOnResetListener: OnResetListener? = null
     private var mOnConfirmListener: OnConfirmListener? = null
 
+    private var mFilterPicker: FilterPicker? = null
+
     constructor(context: Context) : super(context) {
-        init(context)
+        init(context, null, 0, 0)
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        init(context)
+        init(context, attrs, 0, 0)
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init(context)
+        init(context, attrs, defStyleAttr, 0)
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
-        init(context)
+        init(context, attrs, defStyleAttr, defStyleRes)
     }
 
-    private fun init(context: Context) {
+    private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         orientation = VERTICAL
+
+        if (attrs != null) {
+            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FilterLayout, defStyleAttr, defStyleRes)
+            val pickerClass = typedArray.getString(R.styleable.FilterLayout_picker)
+            if (pickerClass != null) {
+                try {
+                    mFilterPicker = Class.forName(pickerClass).newInstance() as? FilterPicker
+                } catch (e: Throwable) {
+                    Log.d(TAG, "init picker error: ", e)
+                }
+            }
+            typedArray.recycle()
+        }
+
         setBackgroundColor(ResourcesCompat.getColor(context.resources, android.R.color.white, null))
         LayoutInflater.from(context).inflate(R.layout.filter_layout, this, true)
         mTabLayout = findViewById(R.id.tabLayout)
@@ -95,6 +110,7 @@ class FilterLayout : LinearLayout {
         } else {
             if (mRightPageFilterAdapter == null) {
                 mRightPageFilterAdapter = FilterViewAdapter()
+                mRightPageFilterAdapter?.setFilterPicker(mFilterPicker)
             }
             initRightPage(context)
         }
@@ -150,6 +166,9 @@ class FilterLayout : LinearLayout {
                     mRightPageFilterAdapter?.mOriginData)
             mOnConfirmListener?.onConfirm(it)
         }
+
+        mLeftPageFilterAdapter.setFilterPicker(mFilterPicker)
+        mRightPageFilterAdapter?.setFilterPicker(mFilterPicker)
 
         configFooter()
     }
@@ -231,6 +250,10 @@ class FilterLayout : LinearLayout {
         fun onConfirm(view: View)
     }
 
+    fun setFilterPicker(filterPicker: FilterPicker?) {
+        mFilterPicker = filterPicker
+    }
+
     fun setOnResultListener(listener: OnResultListener) {
         mOnResultListener = listener
     }
@@ -272,6 +295,7 @@ class FilterLayout : LinearLayout {
         if (rightPageClickToReturn) {
             if (mRightPageFilterAdapter == null) {
                 mRightPageFilterAdapter = FilterViewAdapter()
+                mRightPageFilterAdapter?.setFilterPicker(mFilterPicker)
             }
             mRightPageFilterAdapter?.setClickToReturnListener {
                 mOnCombinationResultListener?.onResult(null, arrayListOf(it))
@@ -298,6 +322,7 @@ class FilterLayout : LinearLayout {
     fun setRightPageFilter(items: List<FilterItem>, adapter: FilterAdapter? = null) {
         if (mRightPageFilterAdapter == null) {
             mRightPageFilterAdapter = FilterViewAdapter()
+            mRightPageFilterAdapter?.setFilterPicker(mFilterPicker)
             context?.let { initRightPage(it) }
         }
         mRightPageFilterAdapter?.mFilterAdapter = adapter
@@ -314,6 +339,12 @@ class FilterLayout : LinearLayout {
         var mFilterAdapter: FilterAdapter? = null
 
         var mClickToBackListener: ((item: Filter) -> Unit)? = null
+
+        var mFilterPicker: FilterPicker? = null
+
+        fun setFilterPicker(filterPicker: FilterPicker?) {
+            mFilterPicker = filterPicker
+        }
 
         fun reset() {
             for (item in mData) {
@@ -553,7 +584,7 @@ class FilterLayout : LinearLayout {
                             if (!end) filterItem.getStartDate() else filterItem.getEndDate()
                     )
                     textView.setOnClickListener {
-                        val listener = object : Picker.OnDateSelectListener {
+                        val listener = object : FilterPicker.OnDateSelectListener {
                             override fun onDateSelect(date: Date) {
                                 if (!end) {
                                     filterItem.setStartDate(date)
@@ -578,7 +609,7 @@ class FilterLayout : LinearLayout {
                         } else {
                             filterItem.getEndDate() ?: filterItem.getMax()
                         }
-                        Picker.pickDate(textView.context, currentDate, minDate, maxData, listener)
+                        mFilterPicker?.pickDate(textView.context, currentDate, minDate, maxData, listener)
                     }
                 } else if (filterItem is DateFilterItem) {
                     textView.hint = filterItem.getHint()
@@ -588,14 +619,14 @@ class FilterLayout : LinearLayout {
                     }
                     textView.text = format(text, filterItem.getDate())
                     textView.setOnClickListener {
-                        val listener = object : Picker.OnDateSelectListener {
+                        val listener = object : FilterPicker.OnDateSelectListener {
                             override fun onDateSelect(date: Date) {
                                 filterItem.setDate(date)
                                 notifyDataSetChanged()
                             }
                         }
                         val currentDate = filterItem.getDate() ?: Date()
-                        Picker.pickDate(textView.context, currentDate, filterItem.getMin(), filterItem.getMax(), listener)
+                        mFilterPicker?.pickDate(textView.context, currentDate, filterItem.getMin(), filterItem.getMax(), listener)
                     }
                 }
             }
@@ -623,8 +654,8 @@ class FilterLayout : LinearLayout {
                         textView.text = address.formattedAddress
                     }
                     textView.setOnClickListener {
-                        Picker.pickAddress(textView.context, address, object : Picker.OnAddressSelectListener {
-                            override fun onAddressSelect(address: Address) {
+                        mFilterPicker?.pickAddress(textView.context, address, object : FilterPicker.OnAddressSelectListener {
+                            override fun onAddressSelect(address: FilterPicker.Address) {
                                 filterItem.setAddress(address)
                                 notifyDataSetChanged()
                             }
@@ -653,7 +684,7 @@ class FilterLayout : LinearLayout {
                     }
                     textView.text = if (!end) startText else endText
                     textView.setOnClickListener {
-                        val listener = object : Picker.OnNumberSelectListener {
+                        val listener = object : FilterPicker.OnNumberSelectListener {
                             override fun onNumberSelect(number: Int) {
                                 if (!end) {
                                     filterItem.setStartNumber(number)
@@ -678,7 +709,7 @@ class FilterLayout : LinearLayout {
                         } else {
                             filterItem.getEndNumber() ?: filterItem.getMax()
                         }
-                        Picker.pickNumber(textView.context, currentNumber, minNumber, maxNumber, listener)
+                        mFilterPicker?.pickNumber(textView.context, currentNumber, minNumber, maxNumber, listener)
                     }
                 } else if (filterItem is NumberFilterItem) {
                     textView.hint = filterItem.getHint()
@@ -691,14 +722,14 @@ class FilterLayout : LinearLayout {
                     }
                     textView.text = text
                     textView.setOnClickListener {
-                        val listener = object : Picker.OnNumberSelectListener {
+                        val listener = object : FilterPicker.OnNumberSelectListener {
                             override fun onNumberSelect(number: Int) {
                                 filterItem.setNumber(number)
                                 notifyDataSetChanged()
                             }
                         }
                         val currentNumber = filterItem.getNumber()
-                        Picker.pickNumber(textView.context, currentNumber, filterItem.getMin(), filterItem.getMax(), listener)
+                        mFilterPicker?.pickNumber(textView.context, currentNumber, filterItem.getMin(), filterItem.getMax(), listener)
                     }
                 }
             }

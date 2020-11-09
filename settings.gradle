@@ -1,3 +1,4 @@
+include ':tagview'
 include ':recyclerview_decoration'
 include ':popup'
 include ':addsub'

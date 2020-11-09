@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="TagView">
+        <attr name="tagColor" format="color|reference" />
         <attr name="tagRadius" format="dimension|reference" />
         <attr name="tagPadding" format="dimension|reference" />
+        <attr name="tagSeparator" format="string|reference" />
         <attr name="tagUppercase" format="boolean" />
     </declare-styleable>
 </resources>

@@ -20,6 +20,7 @@ class TagView : AppCompatTextView {
         private const val DEFAULT_PADDING = 8f
         private const val DEFAULT_RADIUS = 6f
         private const val DEFAULT_UPPERCASE = false
+        private const val DEFAULT_COLOR = 0xff888888.toInt()
     }
 
     private var mTagPadding = 0
@@ -49,6 +50,8 @@ class TagView : AppCompatTextView {
             mTagRadius = typedArray.getDimensionPixelSize(R.styleable.TagView_tagRadius, dp2px(DEFAULT_RADIUS))
             mTagPadding = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPadding, dp2px(DEFAULT_PADDING))
             mTagUppercase = typedArray.getBoolean(R.styleable.TagView_tagUppercase, DEFAULT_UPPERCASE)
+            mTagColor = typedArray.getColor(R.styleable.TagView_tagColor, DEFAULT_COLOR)
+            mTagSeparator = typedArray.getString(R.styleable.TagView_tagSeparator)
             typedArray.recycle()
         }
     }

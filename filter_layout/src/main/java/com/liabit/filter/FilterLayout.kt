@@ -252,6 +252,8 @@ class FilterLayout : LinearLayout {
 
     fun setFilterPicker(filterPicker: FilterPicker?) {
         mFilterPicker = filterPicker
+        mLeftPageFilterAdapter.setFilterPicker(mFilterPicker)
+        mRightPageFilterAdapter?.setFilterPicker(mFilterPicker)
     }
 
     fun setOnResultListener(listener: OnResultListener) {
@@ -651,11 +653,11 @@ class FilterLayout : LinearLayout {
                             textView.text = filterItem.getText()
                         }
                     } else {
-                        textView.text = address.formattedAddress
+                        textView.text = address.formatted
                     }
                     textView.setOnClickListener {
                         mFilterPicker?.pickAddress(textView.context, address, object : FilterPicker.OnAddressSelectListener {
-                            override fun onAddressSelect(address: FilterPicker.Address) {
+                            override fun onAddressSelect(address: FilterPicker.PickerAddress) {
                                 filterItem.setAddress(address)
                                 notifyDataSetChanged()
                             }

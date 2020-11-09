@@ -3,7 +3,6 @@
 package com.liabit.filter
 
 import android.text.InputType
-import com.liabit.picker.address.Address
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -350,13 +349,13 @@ open class SimpleNumberRangeFilterItem(private val startHint: String, private va
 
 open class SimpleAddressFilterItem(private val hint: String) : AddressFilterItem {
 
-    private var mAddress: Address? = null
+    private var mAddress: FilterPicker.PickerAddress? = null
 
-    override fun setAddress(address: Address?) {
+    override fun setAddress(address: FilterPicker.PickerAddress?) {
         mAddress = address
     }
 
-    override fun getAddress(): Address? {
+    override fun getAddress(): FilterPicker.PickerAddress? {
         return mAddress
     }
 

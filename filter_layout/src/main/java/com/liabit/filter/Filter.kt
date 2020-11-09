@@ -4,7 +4,6 @@ import android.text.InputType
 import android.util.ArrayMap
 import android.view.View
 import androidx.annotation.IntDef
-import com.liabit.picker.address.Address
 import java.util.*
 
 /**
@@ -191,9 +190,9 @@ interface EditableRangeFilterItem : RangeFilterItem {
 
 interface AddressFilterItem : FilterItem {
 
-    fun getAddress(): Address?
+    fun getAddress(): FilterPicker.PickerAddress?
 
-    fun setAddress(address: Address?)
+    fun setAddress(address: FilterPicker.PickerAddress?)
 
     override fun getType(): Int {
         return Filter.TYPE_ADDRESS

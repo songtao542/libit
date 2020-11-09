@@ -24,8 +24,11 @@ class FilterControllerImpl : FilterController {
     private var mLeftFilterConfigurator: FilterAdapter? = null
     private var mRightFilterConfigurator: FilterAdapter? = null
 
+    private var mFilterPicker: FilterPicker? = null
+
     override fun setup(filterLayout: FilterLayout) {
         mFilterLayout = filterLayout
+        mFilterLayout?.setFilterPicker(mFilterPicker)
         mFilterLayout?.setOnResultListener(this)
         mFilterLayout?.setOnCombinationResultListener(this)
         mLeftPageListPadding?.let {
@@ -124,6 +127,10 @@ class FilterControllerImpl : FilterController {
 
     override fun setOnConfirmListener(listener: FilterLayout.OnConfirmListener) {
         mOnConfirmListener = listener
+    }
+
+    override fun setFilterPicker(picker: FilterPicker) {
+        mFilterPicker = picker
     }
 
     override fun getOnResultListener(): FilterLayout.OnResultListener? {

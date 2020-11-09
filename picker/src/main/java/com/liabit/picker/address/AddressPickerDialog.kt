@@ -42,7 +42,7 @@ class AddressPickerDialog private constructor(private val mContext: Context,
     private var mAddress: Address? = null
 
     private fun updateTitle(address: Address) {
-        mAddressStr = address.formattedAddress
+        mAddressStr = address.formatted
         updateTitle(mAddressStr)
     }
 

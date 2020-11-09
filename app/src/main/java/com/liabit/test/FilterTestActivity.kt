@@ -30,12 +30,14 @@ class FilterTestActivity : AppCompatActivity() {
 
     private fun getPopupFilter(): PopupFilter {
         val p = PopupFilter(this)
+        p.setFilterPicker(FPicker())
         p.setFilter(getFilterData())
         return p
     }
 
     private fun getFilterDialogFragment(): FilterDialogFragment {
         val f = FilterDialogFragment()
+        f.setFilterPicker(FPicker())
         f.setFilter(getFilterData())
         return f
     }

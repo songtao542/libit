@@ -17,9 +17,8 @@ import android.view.animation.*
 import android.widget.FrameLayout
 import android.widget.PopupWindow
 
-
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class PopupWindowCompat(context: Context) {
+internal class PopupWindowCompat(context: Context) {
 
     private val mContext: Context = context
     private var mPopupWindow: PopupWindow? = null
@@ -127,7 +126,7 @@ class PopupWindowCompat(context: Context) {
             it.setBackgroundDrawable(if (mShowMask) ColorDrawable(0x88000000.toInt()) else ColorDrawable(Color.WHITE))
             it.isOutsideTouchable = true
             it.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-            it.animationStyle = R.style.PopupMenuAnimation
+            it.animationStyle = R.style.PopupWindowAnimation
             it.elevation = if (mShowMask) 0f else dp2px(20).toFloat()
             it.setOnDismissListener {
                 mOnDismissListener?.onDismiss()

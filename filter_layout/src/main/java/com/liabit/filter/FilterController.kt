@@ -26,6 +26,8 @@ interface FilterController : FilterLayout.OnCombinationResultListener, FilterLay
 
     fun setOnConfirmListener(listener: FilterLayout.OnConfirmListener)
 
+    fun setFilterPicker(picker: FilterPicker)
+
     fun getOnResultListener(): FilterLayout.OnResultListener?
 
     fun getOnCombinationResultListener(): FilterLayout.OnCombinationResultListener?

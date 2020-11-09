@@ -96,12 +96,10 @@ data class Address(val provinceCode: String,
                    val cityName: String,
                    val districtCode: String,
                    val districtName: String) {
-    val formattedAddress: String
+
+    val formatted: String
         get() {
-            return if (provinceName == cityName) {
-                "$provinceName$districtName"
-            } else {
-                "$provinceName$cityName$districtName"
-            }
+            return if (provinceName == cityName) "$provinceName$districtName" else "$provinceName$cityName$districtName"
         }
+
 }

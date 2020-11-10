@@ -1,0 +1,31 @@
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'maven'
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+
+    compileOnly 'com.android.tools.build:gradle:3.4.1'
+}
+
+repositories {
+    jcenter()
+}
+
+// 上传到本地的代码仓
+uploadArchives {
+    repositories.mavenDeployer {
+        // 本地仓库路径
+        repository(url: uri('../repo'))
+
+        // 设置 groupId
+        pom.groupId = 'com.liabit.repackage'
+
+        // 设置 artifactId
+        pom.artifactId = 'repackage'
+
+        // 设置 插件版本号
+        pom.version = '1.0.0'
+    }
+}

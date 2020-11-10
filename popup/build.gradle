@@ -3,12 +3,6 @@ plugins {
     id 'kotlin-android'
 }
 
-apply from: 'jcenter.gradle'
-
-if (file('internal.gradle').exists()) {
-    apply from: 'internal.gradle'
-}
-
 android {
     compileSdkVersion 29
 
@@ -44,4 +38,10 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
     testImplementation 'androidx.test:runner:1.3.0'
     testImplementation 'androidx.test:monitor:1.3.0'
+}
+
+apply from: 'jcenter.gradle'
+
+if (file('internal.gradle').exists()) {
+    apply from: 'internal.gradle'
 }

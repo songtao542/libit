@@ -12,6 +12,7 @@ import android.util.TypedValue
 import androidx.appcompat.widget.AppCompatTextView
 import java.util.*
 import kotlin.collections.ArrayList
+import com.liabit.tagview.R
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class TagView : AppCompatTextView {

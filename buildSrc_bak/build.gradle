@@ -1,0 +1,47 @@
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'java-gradle-plugin'
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+
+    implementation 'com.android.tools.build:gradle:3.4.1'
+
+    implementation('com.quinn.hunter:hunter-transform:0.9.2') { //使用hunter框架
+        exclude group: 'com.android.tools.build' //排除hunter带来的gradle传递依赖，以便自定义应用的gradle版本
+    }
+}
+
+gradlePlugin {
+    plugins {
+        repackage { //transform task的名字
+            id = 'repackage' //插件的id，与应用插件时写的 apply plugin: 'repackage' 名字要一致
+            implementationClass = 'com.liabit.repackage.RepackagePlugin' //插件具体实现类的类名
+        }
+    }
+}
+
+repositories {
+    google()
+    jcenter()
+    mavenCentral()
+}
+
+// 上传到本地的代码仓
+uploadArchives {
+    repositories.mavenDeployer {
+        // 本地仓库路径
+        repository(url: uri('../repo'))
+
+        // 设置 groupId
+        pom.groupId = 'com.liabit.repackage'
+
+        // 设置 artifactId
+        pom.artifactId = 'repackage'
+
+        // 设置 插件版本号
+        pom.version = '1.0.0'
+    }
+}

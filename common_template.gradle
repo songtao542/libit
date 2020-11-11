@@ -1,0 +1,96 @@
+artifactory {
+    contextUrl = 'yoururl'
+    publish {
+        repository {
+            repoKey = 'yourkey'
+            username = "yourname"
+            password = "yourpassword"
+        }
+
+        defaults {
+            publications('aar')
+            publishArtifacts = true
+            properties = ['qa.level': 'basic', 'dev.team': 'core']
+            publishPom = true
+        }
+    }
+}
+
+// 以下代码作用是: 发布 aar 时替换包名
+
+def replaceAll(File file, String replace, String replacement) {
+    if (file.isDirectory()) {
+        File[] files = file.listFiles()
+        for (File f : files) {
+            replaceAll(f, replace, replacement)
+        }
+    } else if (file.exists()) {
+        System.out.println("file: " + file)
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))
+        CharArrayWriter caw = new CharArrayWriter();
+        String line
+        while ((line = br.readLine()) != null) {
+            line = line.replaceAll(replace, replacement)
+            caw.write(line)
+            caw.append(System.getProperty("line.separator"))
+        }
+        br.close()
+        FileWriter fw = new FileWriter(file)
+        caw.writeTo(fw)
+        fw.close()
+    }
+}
+
+def repackage() {
+    File sourceDir = project.projectDir
+    File liabit = new File(sourceDir, "src/main/java/com/liabit")
+    File your_rename_to = new File(sourceDir, "src/main/java/com/your-rename-to")
+    if (liabit.exists()) {
+        System.out.println("-------------liabit -> your_rename_to-------------")
+        System.out.println("liabit: " + liabit)
+        System.out.println("your_rename_to  : " + your_rename_to)
+        liabit.renameTo(your_rename_to)
+    }
+    System.out.println("-------------com.liabit. -> com.your_rename_to.-------------")
+    String oldStr = "com.liabit."
+    String newStr = "com.your_rename_to."
+    File main = new File(sourceDir, "src/main/")
+    replaceAll(main, oldStr, newStr)
+}
+
+def repackageBack() {
+    File sourceDir = project.projectDir
+    File your_rename_to = new File(sourceDir, "src/main/java/com/your_rename_to")
+    File liabit = new File(sourceDir, "src/main/java/com/liabit")
+    if (your_rename_to.exists()) {
+        System.out.println("-------------your_rename_to -> liabit-------------")
+        System.out.println("your_rename_to  : " + your_rename_to)
+        System.out.println("liabit: " + liabit)
+        your_rename_to.renameTo(liabit)
+    }
+    System.out.println("-------------com.your_rename_to. -> com.liabit.-------------")
+    String newStr = "com.liabit."
+    String oldStr = "com.your_rename_to."
+    File main = new File(sourceDir, "src/main/")
+    replaceAll(main, oldStr, newStr)
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'preReleaseBuild') {
+        task.doFirst {
+            repackage()
+        }
+    }
+}
+
+task repackage(dependsOn: 'assembleRelease') {
+    doLast {
+        repackageBack()
+    }
+}
+
+tasks.generateMetadataFileForAarPublication.dependsOn(repackage)
+
+tasks.artifactoryPublish.dependsOn(tasks.generatePomFileForAarPublication)
+
+tasks.generatePomFileForAarPublication.dependsOn(tasks.generateMetadataFileForAarPublication)

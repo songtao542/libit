@@ -1,0 +1,26 @@
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId "com.liabit.your_lib_name"
+            version = "1.0.0"
+            artifactId "your_lib_name"
+            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+            pom.withXml {
+                def dependencies = asNode().appendNode('dependencies')
+                configurations.compile.allDependencies.each {
+                    if (it.group != null) {
+                        def dependency = dependencies.appendNode('dependency')
+                        dependency.appendNode('groupId', it.group)
+                        dependency.appendNode('artifactId', it.name)
+                        dependency.appendNode('version', it.version)
+                    }
+                }
+            }
+        }
+    }
+}
+
+apply from: 'common_template.gradle'

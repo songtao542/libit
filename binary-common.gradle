@@ -8,39 +8,31 @@ project.archivesBaseName = PROJ_ARTIFACTID
 
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'org.jetbrains.dokka'
 
-task sourcesJar(type: Jar) {
+dokkaHtml.configure {
+    dokkaSourceSets {
+        named("main") {
+            noAndroidSdkLink.set(false)
+        }
+    }
+}
+
+task generateSourcesJar(type: Jar) {
+    group = 'jar'
     from android.sourceSets.main.java.srcDirs
     archiveClassifier.set("sources")
 }
 
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += configurations.compile
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    // 忽略注释语法错误,如果用jdk1.8你的注释写的不规范就编译不过
-    failOnError false
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
+task generateJavadoc(type: Jar, dependsOn: dokkaJavadoc) {
+    group = 'jar'
     archiveClassifier.set("javadoc")
-    from javadoc.destinationDir
-}
-
-javadoc {
-    options {
-        encoding "UTF-8"
-        charSet 'UTF-8'
-        author true
-        version true
-        //links "https://androiddoc.qiniudn.com/reference/"
-        title "$PROJ_NAME $PROJ_VERSION"
-    }
+    from "$buildDir/dokka"
 }
 
 artifacts {
-    archives sourcesJar
-    archives javadocJar
+    archives generateJavadoc
+    archives generateSourcesJar
 }
 
 install {
@@ -77,10 +69,20 @@ install {
         }
     }
 }
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : BINTRAY_USER
-    key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : BINTRAY_KEY
+    // Bintray的用户名
+    user = properties.getProperty("bintray.user")
+    // Bintray的ApiKey
+    key = properties.getProperty("bintray.apikey")
+    if (user == null || user.isEmpty()) {
+        user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : BINTRAY_USER
+    }
+    if (key == null || key.isEmpty()) {
+        key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : BINTRAY_KEY
+    }
 
     configurations = ['archives']
 
@@ -88,13 +90,16 @@ bintray {
     publish = true
 
     pkg {
-        repo = 'maven'   //仓库名
+        repo = BINTRAY_REPO   //仓库名
         name = PROJ_NAME
+        userOrg = BINTRAY_USER_ORG
         licenses = ['Apache-2.0']
         vcsUrl = PROJ_VCSURL
         websiteUrl = PROJ_WEBSITEURL
         issueTrackerUrl = PROJ_ISSUETRACKERURL
         publicDownloadNumbers = true
+        override = true // 覆盖已有版本
+        publish = true // 是否是公开项目
         version {
             name = PROJ_VERSION
             desc = PROJ_DESCRIPTION
@@ -109,25 +114,26 @@ bintray {
 
 //以下内容用于发布SNAPSHOT版本，如果不需要可以移除。
 //参考自：https://www.jfrog.com/confluence/display/RTF/Gradle+Artifactory+Plugin
-
-apply plugin: "com.jfrog.artifactory"
-artifactory {
-    contextUrl = CONTEXT_URL
-    resolve {
-        repository {
-            repoKey = 'libs-release'
+if (!CONTEXT_URL.isEmpty()) {
+    apply plugin: "com.jfrog.artifactory"
+    artifactory {
+        contextUrl = CONTEXT_URL
+        resolve {
+            repository {
+                repoKey = 'libs-release'
+            }
         }
-    }
-    publish {
-        repository {
-            repoKey = REPOKEY //The Artifactory repository key to publish to
-            username = ARTIFACTORY_USERNAME
-            password = ARTIFACTORY_PASSWORD
-            maven = true
-        }
-        defaults {
-            //这里的名字和前面bintray.configurations的值一致即可，会将其包含的输出上传到jfrog上去
-            publishConfigs('archives')
+        publish {
+            repository {
+                repoKey = REPOKEY //The Artifactory repository key to publish to
+                username = ARTIFACTORY_USERNAME
+                password = ARTIFACTORY_PASSWORD
+                maven = true
+            }
+            defaults {
+                //这里的名字和前面bintray.configurations的值一致即可，会将其包含的输出上传到jfrog上去
+                publishConfigs('archives')
+            }
         }
     }
 }

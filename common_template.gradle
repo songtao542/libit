@@ -1,21 +1,3 @@
-artifactory {
-    contextUrl = 'yoururl'
-    publish {
-        repository {
-            repoKey = 'yourkey'
-            username = "yourname"
-            password = "yourpassword"
-        }
-
-        defaults {
-            publications('aar')
-            publishArtifacts = true
-            properties = ['qa.level': 'basic', 'dev.team': 'core']
-            publishPom = true
-        }
-    }
-}
-
 // 以下代码作用是: 发布 aar 时替换包名
 
 def replaceAll(File file, String replace, String replacement) {
@@ -89,8 +71,7 @@ task repackage(dependsOn: 'assembleRelease') {
     }
 }
 
-tasks.generateMetadataFileForAarPublication.dependsOn(repackage)
-
-tasks.artifactoryPublish.dependsOn(tasks.generatePomFileForAarPublication)
-
-tasks.generatePomFileForAarPublication.dependsOn(tasks.generateMetadataFileForAarPublication)
+tasks.artifactoryPublish.dependsOn(repackage)
+//tasks.generateMetadataFileForAarPublication.dependsOn(repackage)
+//tasks.generatePomFileForAarPublication.dependsOn(tasks.generateMetadataFileForAarPublication)
+//tasks.artifactoryPublish.dependsOn(tasks.generatePomFileForAarPublication)

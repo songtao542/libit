@@ -7,6 +7,8 @@ project.ext {
 
     BINTRAY_USER = "xxxx"
     BINTRAY_KEY = "xxxx"
+    BINTRAY_REPO = "xxxx"
+    BINTRAY_USER_ORG = "xxxx"
 
     CONTEXT_URL = "http://xxxx/xxxx"
     REPOKEY = "xxxx"

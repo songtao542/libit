@@ -33,6 +33,8 @@ class TagView : AppCompatTextView {
     private var mTagSeparator: String = " "
     private var mTags: MutableList<Tag> = ArrayList()
 
+    private var mScrollable = false
+
     private var mOnTagClickListener: OnTagClickListener? = null
 
     constructor(context: Context) : super(context) {
@@ -48,8 +50,8 @@ class TagView : AppCompatTextView {
     }
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
-        mTagPaddingLeft = dp2px(8f)
-        mTagPaddingTop = dp2px(4f)
+        mTagPaddingLeft = dp2px(10f)
+        mTagPaddingTop = dp2px(5f)
         mTagPaddingRight = mTagPaddingLeft
         mTagPaddingBottom = mTagPaddingTop
         if (attrs != null) {
@@ -92,6 +94,22 @@ class TagView : AppCompatTextView {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, context.resources.displayMetrics).toInt()
     }
 
+    override fun scrollTo(x: Int, y: Int) {
+        if (mScrollable) {
+            super.scrollTo(x, y)
+        }
+    }
+
+    override fun scrollBy(x: Int, y: Int) {
+        if (mScrollable) {
+            super.scrollBy(x, y)
+        }
+    }
+
+    fun setScrollable(scrollable: Boolean) {
+        mScrollable = scrollable
+    }
+
     fun setTagColor(color: Int) {
         mTagColor = color
         updateText()
@@ -129,9 +147,6 @@ class TagView : AppCompatTextView {
     }
 
     private fun updateText() {
-        if (movementMethod !is ClickableMovementMethod) {
-            movementMethod = ClickableMovementMethod.instance
-        }
         if (mTags.isEmpty()) return
         val sb = SpannableStringBuilder()
         val iterator = mTags.iterator()
@@ -152,12 +167,15 @@ class TagView : AppCompatTextView {
         return TagSpan(tag, textColor, color)
     }
 
-    fun setOnTagClickListener(listener: OnTagClickListener) {
+    fun setOnTagClickListener(listener: OnTagClickListener?) {
         mOnTagClickListener = listener
+        if (movementMethod !is ClickableMovementMethod) {
+            movementMethod = ClickableMovementMethod.instance
+        }
     }
 
     fun setOnTagClickListener(listener: ((tag: Tag) -> Unit)?) {
-        mOnTagClickListener = if (listener != null) {
+        val clickListener: OnTagClickListener? = if (listener != null) {
             object : OnTagClickListener {
                 override fun onTagClick(tag: Tag) {
                     listener.invoke(tag)
@@ -166,6 +184,7 @@ class TagView : AppCompatTextView {
         } else {
             null
         }
+        setOnTagClickListener(clickListener)
     }
 
     interface OnTagClickListener {

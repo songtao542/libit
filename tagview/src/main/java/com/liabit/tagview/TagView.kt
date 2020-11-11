@@ -7,6 +7,7 @@ import android.text.Selection
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
+import android.text.method.BaseMovementMethod
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ImageSpan
@@ -90,10 +91,7 @@ class TagView : AppCompatTextView {
 
             typedArray.recycle()
         }
-
-        movementMethod = ClickableMovementMethod.instance
     }
-
 
     private fun dp2px(dip: Float): Int {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, context.resources.displayMetrics).toInt()
@@ -136,7 +134,7 @@ class TagView : AppCompatTextView {
     }
 
     private fun updateText() {
-        if (movementMethod == null) {
+        if (movementMethod !is ClickableMovementMethod) {
             movementMethod = ClickableMovementMethod.instance
         }
         if (mTags.isEmpty()) return
@@ -328,7 +326,7 @@ class TagView : AppCompatTextView {
         abstract fun onClick(view: View)
     }
 
-    class ClickableMovementMethod : LinkMovementMethod() {
+    class ClickableMovementMethod : BaseMovementMethod() {
         companion object {
             val instance: ClickableMovementMethod by lazy { ClickableMovementMethod() }
         }
@@ -373,7 +371,7 @@ class TagView : AppCompatTextView {
                     }
                 }
             }
-            return false
+            return true
         }
     }
 }

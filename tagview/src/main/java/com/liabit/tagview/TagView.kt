@@ -3,12 +3,18 @@ package com.liabit.tagview
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.text.Selection
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.text.style.ImageSpan
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.MotionEvent
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import java.util.*
 import kotlin.collections.ArrayList
@@ -19,9 +25,6 @@ class TagView : AppCompatTextView {
 
     companion object {
         private const val DEFAULT_PADDING = 8f
-        private const val DEFAULT_RADIUS = 6f
-        private const val DEFAULT_UPPERCASE = false
-        private const val DEFAULT_COLOR = 0xff888888.toInt()
     }
 
     private var mTagPaddingLeft = 0
@@ -29,10 +32,12 @@ class TagView : AppCompatTextView {
     private var mTagPaddingRight = 0
     private var mTagPaddingBottom = 0
     private var mTagRadius = 0
-    private var mTagUppercase = DEFAULT_UPPERCASE
-    private var mTagColor: Int? = null
+    private var mTagUppercase = false
+    private var mTagColor: Int = Color.TRANSPARENT
     private var mTagSeparator: String = " "
     private var mTags: MutableList<Tag> = ArrayList()
+
+    private var mOnTagClickListener: OnTagClickListener? = null
 
     constructor(context: Context) : super(context) {
         init(context, null, 0)
@@ -47,17 +52,13 @@ class TagView : AppCompatTextView {
     }
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
-        mTagRadius = dp2px(DEFAULT_RADIUS)
         mTagPaddingLeft = dp2px(DEFAULT_PADDING)
         mTagPaddingTop = mTagPaddingLeft
         mTagPaddingRight = mTagPaddingLeft
         mTagPaddingBottom = mTagPaddingLeft
         if (attrs != null) {
             val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.TagView, defStyleAttr, 0)
-            mTagRadius = typedArray.getDimensionPixelSize(R.styleable.TagView_tagRadius, dp2px(DEFAULT_RADIUS))
-            typedArray.getTextArray(R.styleable.TagView_tags)?.let { tags ->
-                setStringList(MutableList(tags.size) { tags[it].toString() })
-            }
+            mTagRadius = typedArray.getDimensionPixelSize(R.styleable.TagView_tagRadius, 0)
             mTagPaddingLeft = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingLeft, mTagPaddingLeft)
             mTagPaddingTop = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingTop, mTagPaddingTop)
             mTagPaddingRight = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingRight, mTagPaddingRight)
@@ -79,12 +80,20 @@ class TagView : AppCompatTextView {
                 mTagPaddingTop = paddingVertical
                 mTagPaddingBottom = paddingVertical
             }
-            mTagUppercase = typedArray.getBoolean(R.styleable.TagView_tagUppercase, DEFAULT_UPPERCASE)
-            mTagColor = typedArray.getColor(R.styleable.TagView_tagColor, DEFAULT_COLOR)
+            mTagUppercase = typedArray.getBoolean(R.styleable.TagView_tagUppercase, false)
+            mTagColor = typedArray.getColor(R.styleable.TagView_tagColor, Color.TRANSPARENT)
             mTagSeparator = typedArray.getString(R.styleable.TagView_tagSeparator) ?: mTagSeparator
+
+            typedArray.getTextArray(R.styleable.TagView_tags)?.let { tags ->
+                setStringList(MutableList(tags.size) { tags[it].toString() })
+            }
+
             typedArray.recycle()
         }
+
+        movementMethod = ClickableMovementMethod.instance
     }
+
 
     private fun dp2px(dip: Float): Int {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, context.resources.displayMetrics).toInt()
@@ -110,6 +119,14 @@ class TagView : AppCompatTextView {
         updateText()
     }
 
+    fun setStringArray(tags: Array<String>) {
+        mTags.clear()
+        for (tag in tags) {
+            mTags.add(Tag(tag))
+        }
+        updateText()
+    }
+
     fun setStringList(tags: List<String>) {
         mTags.clear()
         for (tag in tags) {
@@ -119,18 +136,18 @@ class TagView : AppCompatTextView {
     }
 
     private fun updateText() {
+        if (movementMethod == null) {
+            movementMethod = ClickableMovementMethod.instance
+        }
         if (mTags.isEmpty()) return
         val sb = SpannableStringBuilder()
         val iterator = mTags.iterator()
         while (iterator.hasNext()) {
             val tag = iterator.next()
             val text = if (mTagUppercase) tag.tag.toUpperCase(Locale.ROOT) else tag.tag
-            if (tag.color == Color.TRANSPARENT) {
-                mTagColor?.let {
-                    tag.color = it
-                }
-            }
-            sb.append(text).setSpan(createSpan(text, tag.color), sb.length - text.length, sb.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            val tagColor = tag.color ?: mTagColor
+            val tagTextColor = tag.textColor ?: currentTextColor
+            sb.append(text).setSpan(createSpan(tag, tagTextColor, tagColor), sb.length - text.length, sb.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             if (iterator.hasNext() && mTagSeparator.isNotEmpty()) {
                 sb.append(mTagSeparator)
             }
@@ -138,46 +155,57 @@ class TagView : AppCompatTextView {
         text = sb
     }
 
-    private fun createSpan(text: String, color: Int): TagSpan {
-        return TagSpan(
-                text = text,
-                textSize = textSize,
-                textColor = currentTextColor,
-                bold = typeface === Typeface.DEFAULT_BOLD,
-                tagColor = color,
-                tagPaddingLeft = mTagPaddingLeft,
-                tagPaddingTop = mTagPaddingTop,
-                tagPaddingRight = mTagPaddingRight,
-                tagPaddingBottom = mTagPaddingBottom,
-                tagRadius = mTagRadius.toFloat()
-        )
+    private fun createSpan(tag: Tag, textColor: Int, color: Int): TagSpan {
+        return TagSpan(tag, textColor, color)
     }
 
-    class Tag(val tag: String, var color: Int = Color.TRANSPARENT)
+    fun setOnTagClickListener(listener: OnTagClickListener) {
+        mOnTagClickListener = listener
+    }
 
-    private class TagSpan(text: String,
-                          textSize: Float,
-                          textColor: Int,
-                          bold: Boolean,
-                          tagColor: Int,
-                          tagPaddingLeft: Int,
-                          tagPaddingTop: Int,
-                          tagPaddingRight: Int,
-                          tagPaddingBottom: Int,
-                          tagRadius: Float) :
-            ImageSpan(
-                    TagDrawable(
-                            text,
-                            textSize,
-                            textColor,
-                            bold,
-                            tagColor,
-                            tagPaddingLeft,
-                            tagPaddingTop,
-                            tagPaddingRight,
-                            tagPaddingBottom,
-                            tagRadius)
-            )
+    fun setOnTagClickListener(listener: ((tag: Tag) -> Unit)?) {
+        mOnTagClickListener = if (listener != null) {
+            object : OnTagClickListener {
+                override fun onTagClick(tag: Tag) {
+                    listener.invoke(tag)
+                }
+            }
+        } else {
+            null
+        }
+    }
+
+    interface OnTagClickListener {
+        fun onTagClick(tag: Tag)
+    }
+
+    data class Tag(
+            val tag: String,
+            var color: Int? = null,
+            val textColor: Int? = null) {
+        constructor(tag: String, color: Int) : this(tag, color, null)
+
+        override fun toString(): String {
+            return "Tag(tag=$tag, color=${Integer.toHexString(color ?: 0)}, textColor=${Integer.toHexString(textColor ?: 0)})"
+        }
+    }
+
+    private inner class TagSpan(private val mTag: Tag, textColor: Int, tagColor: Int)
+        : ClickableImageSpan(TagDrawable(
+            mTag.tag,
+            textSize,
+            textColor,
+            typeface === Typeface.DEFAULT_BOLD,
+            tagColor,
+            mTagPaddingLeft,
+            mTagPaddingTop,
+            mTagPaddingRight,
+            mTagPaddingBottom,
+            mTagRadius.toFloat())) {
+        override fun onClick(view: View) {
+            mOnTagClickListener?.onTagClick(mTag)
+        }
+    }
 
     @Suppress("CanBeParameter")
     private class TagDrawable(
@@ -294,5 +322,58 @@ class TagView : AppCompatTextView {
             }
         }*/
 
+    }
+
+    private abstract class ClickableImageSpan(drawable: Drawable) : ImageSpan(drawable) {
+        abstract fun onClick(view: View)
+    }
+
+    class ClickableMovementMethod : LinkMovementMethod() {
+        companion object {
+            val instance: ClickableMovementMethod by lazy { ClickableMovementMethod() }
+        }
+
+        override fun onTouchEvent(widget: TextView, buffer: Spannable, event: MotionEvent): Boolean {
+            val action = event.action
+            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
+                var x = event.x.toInt()
+                var y = event.y.toInt()
+                x -= widget.totalPaddingLeft
+                y -= widget.totalPaddingTop
+                x += widget.scrollX
+                y += widget.scrollY
+                val layout = widget.layout
+                val line = layout.getLineForVertical(y)
+                val off = layout.getOffsetForHorizontal(line, x.toFloat())
+                val link = buffer.getSpans(off, off, ClickableSpan::class.java)
+                val imageSpans: Array<ClickableImageSpan> = buffer.getSpans(off, off, ClickableImageSpan::class.java)
+                when {
+                    link.isNotEmpty() -> {
+                        if (action == MotionEvent.ACTION_UP) {
+                            link[0].onClick(widget)
+                        } else if (action == MotionEvent.ACTION_DOWN) {
+                            Selection.setSelection(buffer,
+                                    buffer.getSpanStart(link[0]),
+                                    buffer.getSpanEnd(link[0]))
+                        }
+                        return true
+                    }
+                    imageSpans.isNotEmpty() -> {
+                        if (action == MotionEvent.ACTION_UP) {
+                            imageSpans[0].onClick(widget)
+                        } else if (action == MotionEvent.ACTION_DOWN) {
+                            Selection.setSelection(buffer,
+                                    buffer.getSpanStart(imageSpans[0]),
+                                    buffer.getSpanEnd(imageSpans[0]))
+                        }
+                        return true
+                    }
+                    else -> {
+                        Selection.removeSelection(buffer)
+                    }
+                }
+            }
+            return false
+        }
     }
 }

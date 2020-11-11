@@ -29,4 +29,29 @@
         <item>香气悠久</item>
     </string-array>
 
+    <string-array name="words">
+        <item>狭隘</item>
+        <item>干涸</item>
+        <item>笨拙</item>
+        <item>牢固</item>
+        <item>好看</item>
+        <item>不好看</item>
+        <item>一时一刻</item>
+        <item>尖酸刻薄</item>
+        <item>刻板</item>
+        <item>刻不容缓</item>
+        <item>刻苦</item>
+        <item>天赋</item>
+        <item>不成器</item>
+        <item>瘦削</item>
+        <item>面黄肌瘦</item>
+        <item>孱弱</item>
+        <item>做作</item>
+        <item>水灵</item>
+        <item>丧尽天良</item>
+        <item>良种</item>
+        <item>各种各样</item>
+    </string-array>
+
+
 </resources>

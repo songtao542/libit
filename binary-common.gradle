@@ -121,8 +121,8 @@ artifactory {
     publish {
         repository {
             repoKey = REPOKEY //The Artifactory repository key to publish to
-            username = bintray.user
-            password = bintray.key
+            username = ARTIFACTORY_USERNAME
+            password = ARTIFACTORY_PASSWORD
             maven = true
         }
         defaults {

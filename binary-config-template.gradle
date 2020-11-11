@@ -1,0 +1,24 @@
+project.ext {
+    PROJ_NAME = "xxxx"
+
+    PROJ_GROUP = "xxxx.xxxx.xxxx"
+    PROJ_ARTIFACTID = "xxxx"
+    PROJ_VERSION = "1.0.0"
+
+    BINTRAY_USER = "xxxx"
+    BINTRAY_KEY = "xxxx"
+
+    CONTEXT_URL = "http://xxxx/xxxx"
+    REPOKEY = "xxxx"
+    ARTIFACTORY_USERNAME = "xxxx"
+    ARTIFACTORY_PASSWORD = "xxxx"
+
+    PROJ_WEBSITEURL = ""
+    PROJ_ISSUETRACKERURL = ""
+    PROJ_VCSURL = ""
+    PROJ_DESCRIPTION = "The description of the project."
+
+    DEVELOPER_ID = ""
+    DEVELOPER_NAME = ""
+    DEVELOPER_EMAIL = ""
+}

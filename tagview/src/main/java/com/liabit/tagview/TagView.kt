@@ -8,7 +8,6 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.method.BaseMovementMethod
-import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ImageSpan
 import android.util.AttributeSet
@@ -23,10 +22,6 @@ import kotlin.collections.ArrayList
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class TagView : AppCompatTextView {
-
-    companion object {
-        private const val DEFAULT_PADDING = 8f
-    }
 
     private var mTagPaddingLeft = 0
     private var mTagPaddingTop = 0
@@ -53,10 +48,10 @@ class TagView : AppCompatTextView {
     }
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
-        mTagPaddingLeft = dp2px(DEFAULT_PADDING)
-        mTagPaddingTop = mTagPaddingLeft
+        mTagPaddingLeft = dp2px(8f)
+        mTagPaddingTop = dp2px(4f)
         mTagPaddingRight = mTagPaddingLeft
-        mTagPaddingBottom = mTagPaddingLeft
+        mTagPaddingBottom = mTagPaddingTop
         if (attrs != null) {
             val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.TagView, defStyleAttr, 0)
             mTagRadius = typedArray.getDimensionPixelSize(R.styleable.TagView_tagRadius, 0)

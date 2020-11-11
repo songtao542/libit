@@ -40,8 +40,8 @@ dependencies {
     testImplementation 'androidx.test:monitor:1.3.0'
 }
 
-apply from: 'jcenter.gradle'
+//apply from: 'jcenter.gradle'
 
-if (file('internal.gradle').exists()) {
-    apply from: 'internal.gradle'
+if (file('internal-config.gradle').exists() && file('../binary-common.gradle').exists()) {
+    apply from: '../binary-common.gradle'
 }

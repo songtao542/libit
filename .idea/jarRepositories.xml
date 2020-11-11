@@ -131,5 +131,10 @@
       <option name="name" value="maven" />
       <option name="url" value="file:/$PROJECT_DIR$/recyclerview_decoration/repo" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="artifactory-maven-resolver" />
+      <option name="name" value="artifactory-maven-resolver" />
+      <option name="url" value="http://172.28.20.39:8081/artifactory/libs-release" />
+    </remote-repository>
   </component>
 </project>

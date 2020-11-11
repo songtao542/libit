@@ -3,10 +3,6 @@ plugins {
     id 'kotlin-android'
 }
 
-if (file('internal.gradle').exists()) {
-    apply from: 'internal.gradle'
-}
-
 android {
     compileSdkVersion 29
 
@@ -44,4 +40,10 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}
+
+//apply from: 'jcenter.gradle'
+
+if (file('internal-config.gradle').exists() && file('../binary-common.gradle').exists()) {
+    apply from: '../binary-common.gradle'
 }

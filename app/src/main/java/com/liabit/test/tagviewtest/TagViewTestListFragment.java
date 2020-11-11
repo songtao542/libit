@@ -45,9 +45,25 @@ public class TagViewTestListFragment extends ListFragment {
         }
 
         @Override
+        public int getViewTypeCount() {
+            return 3;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position % 3;
+        }
+
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.activity_tagview_test_list_item, parent, false);
+                if (getItemViewType(position) == 0) {
+                    convertView = inflater.inflate(R.layout.activity_tagview_test_list_item, parent, false);
+                } else if (getItemViewType(position) == 1) {
+                    convertView = inflater.inflate(R.layout.activity_tagview_test_list_item_2, parent, false);
+                } else {
+                    convertView = inflater.inflate(R.layout.activity_tagview_test_list_item_3, parent, false);
+                }
                 ((TagView) convertView).setTagSeparator(" ");
                 ((TagView) convertView).setTagList(getItem(position));
             }

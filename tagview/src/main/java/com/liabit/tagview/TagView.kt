@@ -1,6 +1,5 @@
 package com.liabit.tagview
 
-import android.R.attr.textColor
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
@@ -9,7 +8,6 @@ import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.style.ImageSpan
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import androidx.appcompat.widget.AppCompatTextView
 import java.util.*
@@ -33,7 +31,7 @@ class TagView : AppCompatTextView {
     private var mTagRadius = 0
     private var mTagUppercase = DEFAULT_UPPERCASE
     private var mTagColor: Int? = null
-    private var mTagSeparator: String? = null
+    private var mTagSeparator: String = " "
     private var mTags: MutableList<Tag> = ArrayList()
 
     constructor(context: Context) : super(context) {
@@ -83,7 +81,7 @@ class TagView : AppCompatTextView {
             }
             mTagUppercase = typedArray.getBoolean(R.styleable.TagView_tagUppercase, DEFAULT_UPPERCASE)
             mTagColor = typedArray.getColor(R.styleable.TagView_tagColor, DEFAULT_COLOR)
-            mTagSeparator = typedArray.getString(R.styleable.TagView_tagSeparator)
+            mTagSeparator = typedArray.getString(R.styleable.TagView_tagSeparator) ?: mTagSeparator
             typedArray.recycle()
         }
     }
@@ -133,7 +131,7 @@ class TagView : AppCompatTextView {
                 }
             }
             sb.append(text).setSpan(createSpan(text, tag.color), sb.length - text.length, sb.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            if (iterator.hasNext() && mTagSeparator != null) {
+            if (iterator.hasNext() && mTagSeparator.isNotEmpty()) {
                 sb.append(mTagSeparator)
             }
         }
@@ -181,6 +179,7 @@ class TagView : AppCompatTextView {
                             tagRadius)
             )
 
+    @Suppress("CanBeParameter")
     private class TagDrawable(
             private val mText: String,
             private val mTextSize: Float,

@@ -1,4 +1,4 @@
-package com.liabit.test
+package com.liabit.test.filtertest
 
 import android.content.Context
 import com.liabit.filter.FilterPicker

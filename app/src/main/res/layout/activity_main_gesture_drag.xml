@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.liabit.test.gesture.TestSwipeActivity">
+    tools:context="com.liabit.test.gesturetest.TestSwipeActivity">
 
-    <com.liabit.test.gesture.CustomViewPager
+    <com.liabit.test.gesturetest.CustomViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="250dp"
@@ -16,7 +16,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    </com.liabit.test.gesture.CustomViewPager>
+    </com.liabit.test.gesturetest.CustomViewPager>
 
 
     <View
@@ -28,7 +28,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/viewPager" />
 
-    <com.liabit.test.gesture.TestDragLayout
+    <com.liabit.test.gesturetest.TestDragLayout
         android:id="@+id/testLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider">
 
-        <com.liabit.test.gesture.TestButton
+        <com.liabit.test.gesturetest.TestButton
             android:id="@+id/text11"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -50,10 +50,10 @@
                 android:background="#ff4444"
                 android:text="drag text11" />
 
-        </com.liabit.test.gesture.TestButton>
+        </com.liabit.test.gesturetest.TestButton>
 
 
-        <com.liabit.test.gesture.TestButton
+        <com.liabit.test.gesturetest.TestButton
             android:id="@+id/text22"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -65,9 +65,9 @@
                 android:layout_gravity="center"
                 android:background="#ffff44"
                 android:text="drag text22" />
-        </com.liabit.test.gesture.TestButton>
+        </com.liabit.test.gesturetest.TestButton>
 
-        <com.liabit.test.gesture.TestButton
+        <com.liabit.test.gesturetest.TestButton
             android:id="@+id/text33"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -79,9 +79,9 @@
                 android:layout_gravity="center"
                 android:background="#ff8844"
                 android:text="drag text33" />
-        </com.liabit.test.gesture.TestButton>
+        </com.liabit.test.gesturetest.TestButton>
 
-    </com.liabit.test.gesture.TestDragLayout>
+    </com.liabit.test.gesturetest.TestDragLayout>
 
     <View
         android:id="@+id/divider1"
@@ -92,7 +92,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/viewPager" />
 
-    <com.liabit.test.gesture.TestSwipeLayout
+    <com.liabit.test.gesturetest.TestSwipeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -101,7 +101,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider">
 
-        <com.liabit.test.gesture.TestButton
+        <com.liabit.test.gesturetest.TestButton
             android:id="@+id/text111"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -113,9 +113,9 @@
                 android:layout_gravity="center"
                 android:background="#ff8844"
                 android:text="swipe text111" />
-        </com.liabit.test.gesture.TestButton>
+        </com.liabit.test.gesturetest.TestButton>
 
-        <com.liabit.test.gesture.TestButton
+        <com.liabit.test.gesturetest.TestButton
             android:id="@+id/text112"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -127,9 +127,9 @@
                 android:layout_gravity="center"
                 android:background="#ff5699"
                 android:text="swipe text112" />
-        </com.liabit.test.gesture.TestButton>
+        </com.liabit.test.gesturetest.TestButton>
 
-        <com.liabit.test.gesture.TestButton
+        <com.liabit.test.gesturetest.TestButton
             android:id="@+id/text113"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -141,7 +141,7 @@
                 android:layout_gravity="center"
                 android:background="#ff5699"
                 android:text="swipe text113" />
-        </com.liabit.test.gesture.TestButton>
-    </com.liabit.test.gesture.TestSwipeLayout>
+        </com.liabit.test.gesturetest.TestButton>
+    </com.liabit.test.gesturetest.TestSwipeLayout>
 
 </LinearLayout>

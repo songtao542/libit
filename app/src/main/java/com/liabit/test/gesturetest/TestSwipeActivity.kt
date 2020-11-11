@@ -1,4 +1,4 @@
-package com.liabit.test.gesture
+package com.liabit.test.gesturetest
 
 import android.os.Bundle
 import android.view.LayoutInflater

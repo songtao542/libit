@@ -1,4 +1,4 @@
-package com.liabit.test
+package com.liabit.test.tablayouttest
 
 import android.content.Context
 import android.content.Intent
@@ -11,12 +11,11 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.PagerAdapter
-import com.liabit.extension.dip
 import com.liabit.extension.dp
 import com.liabit.tablayout.*
 import com.liabit.tablayout.indicator.*
+import com.liabit.test.R
 import kotlinx.android.synthetic.main.activity_test_tab_layout.*
 import java.lang.StringBuilder
 import kotlin.random.Random

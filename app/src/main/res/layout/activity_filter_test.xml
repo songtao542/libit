@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    tools:context="com.liabit.test.FilterTestActivity">
+    tools:context="com.liabit.test.filtertest.TestFilterActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

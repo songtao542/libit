@@ -6,12 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context="com.liabit.test.AddAndSubTextActivity">
+    tools:context="com.liabit.test.TestAddSubViewActivity">
 
     <com.liabit.widget.AddSubView
         android:id="@+id/addAndSubView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         app:editHeight="70dp"
         app:editWidth="50dp"
         app:iconColor="@color/add_sub_color"
@@ -25,6 +26,10 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:background="#eeffdd"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         tools:listitem="@layout/activity_add_and_sub_test_item" />
 
 </LinearLayout>

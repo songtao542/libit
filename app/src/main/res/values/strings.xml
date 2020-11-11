@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">StateButton</string>
-    <string name="shimmer">Shimmer</string>
+    <string name="app_name">LibTest</string>
     <string name="text_test">既有格局，又有布局；既有大气，更有静气。精谨细腻，笔笔有章法，这样一幅“工笔画”，怎能不让人期待？</string>
-    <string name="picker">Picker</string>
-
+    <!--    <string name="shimmer">Shimmer</string>-->
+    <!--    <string name="picker">Picker</string>-->
+    <!--    <string name="add_and_sub">AddAndSub</string>-->
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
-    <string name="add_and_sub">AddAndSub</string>
-    <string name="test_fragment_visible">Fragment可见性</string>
     <string name="refresh">刷新</string>
+
+    <string-array name="tags">
+        <item>油城墨香</item>
+        <item>香气扑鼻</item>
+        <item>芳香</item>
+        <item>清新</item>
+        <item>洋溢</item>
+        <item>沁人心腑</item>
+        <item>香飘十里,</item>
+        <item>馥郁</item>
+        <item>稀香</item>
+        <item>淡雅</item>
+        <item>浓艳</item>
+        <item>芬芳</item>
+        <item>馨香馥郁</item>
+        <item>清香四溢</item>
+        <item>丹桂飘香</item>
+        <item>香气袭人</item>
+        <item>香气悠久</item>
+    </string-array>
 
 </resources>

@@ -10,7 +10,7 @@ import com.liabit.picker.datetime.DateTimePickerDialog
 import kotlinx.android.synthetic.main.activity_picker_test.*
 import java.util.*
 
-class PickerTestActivity : AppCompatActivity() {
+class TestPickerActivity : AppCompatActivity() {
 
     private var mAddress: Address? = null
 

@@ -3,4 +3,17 @@
     <color name="colorPrimary">#2D3547</color>
     <color name="colorPrimaryDark">#2D3547</color>
     <color name="colorAccent">#2D3547</color>
+
+    <array name="colors">
+        <item>#0099CC</item>
+        <item>#9933CC</item>
+        <item>#669900</item>
+        <item>#FF8800</item>
+        <item>#CC0000</item>
+        <item>#34495e</item>
+        <item>#1abc9c</item>
+        <item>#c0392b</item>
+        <item>#7f8c8d</item>
+    </array>
+
 </resources>

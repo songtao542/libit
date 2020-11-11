@@ -1,4 +1,4 @@
-package com.liabit.test.gesture
+package com.liabit.test.gesturetest
 
 import android.animation.LayoutTransition
 import android.content.Context

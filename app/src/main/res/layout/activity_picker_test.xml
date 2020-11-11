@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.liabit.test.PickerTestActivity">
+    tools:context="com.liabit.test.TestPickerActivity">
 
     <Button
         android:id="@+id/datePicker"

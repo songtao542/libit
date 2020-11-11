@@ -1,5 +1,6 @@
 package com.liabit.tagview
 
+import android.R.attr.textColor
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
@@ -8,11 +9,12 @@ import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.style.ImageSpan
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import androidx.appcompat.widget.AppCompatTextView
 import java.util.*
 import kotlin.collections.ArrayList
-import com.liabit.tagview.R
+
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class TagView : AppCompatTextView {
@@ -24,7 +26,10 @@ class TagView : AppCompatTextView {
         private const val DEFAULT_COLOR = 0xff888888.toInt()
     }
 
-    private var mTagPadding = 0
+    private var mTagPaddingLeft = 0
+    private var mTagPaddingTop = 0
+    private var mTagPaddingRight = 0
+    private var mTagPaddingBottom = 0
     private var mTagRadius = 0
     private var mTagUppercase = DEFAULT_UPPERCASE
     private var mTagColor: Int? = null
@@ -45,11 +50,37 @@ class TagView : AppCompatTextView {
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
         mTagRadius = dp2px(DEFAULT_RADIUS)
-        mTagPadding = dp2px(DEFAULT_PADDING)
+        mTagPaddingLeft = dp2px(DEFAULT_PADDING)
+        mTagPaddingTop = mTagPaddingLeft
+        mTagPaddingRight = mTagPaddingLeft
+        mTagPaddingBottom = mTagPaddingLeft
         if (attrs != null) {
             val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.TagView, defStyleAttr, 0)
             mTagRadius = typedArray.getDimensionPixelSize(R.styleable.TagView_tagRadius, dp2px(DEFAULT_RADIUS))
-            mTagPadding = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPadding, dp2px(DEFAULT_PADDING))
+            typedArray.getTextArray(R.styleable.TagView_tags)?.let { tags ->
+                setStringList(MutableList(tags.size) { tags[it].toString() })
+            }
+            mTagPaddingLeft = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingLeft, mTagPaddingLeft)
+            mTagPaddingTop = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingTop, mTagPaddingTop)
+            mTagPaddingRight = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingRight, mTagPaddingRight)
+            mTagPaddingBottom = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingBottom, mTagPaddingBottom)
+            val padding = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPadding, 0)
+            if (padding > 0) {
+                mTagPaddingLeft = padding
+                mTagPaddingTop = padding
+                mTagPaddingRight = padding
+                mTagPaddingBottom = padding
+            }
+            val paddingHorizontal = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingHorizontal, 0)
+            if (paddingHorizontal > 0) {
+                mTagPaddingLeft = paddingHorizontal
+                mTagPaddingRight = paddingHorizontal
+            }
+            val paddingVertical = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingVertical, 0)
+            if (paddingVertical > 0) {
+                mTagPaddingTop = paddingVertical
+                mTagPaddingBottom = paddingVertical
+            }
             mTagUppercase = typedArray.getBoolean(R.styleable.TagView_tagUppercase, DEFAULT_UPPERCASE)
             mTagColor = typedArray.getColor(R.styleable.TagView_tagColor, DEFAULT_COLOR)
             mTagSeparator = typedArray.getString(R.styleable.TagView_tagSeparator)
@@ -96,8 +127,10 @@ class TagView : AppCompatTextView {
         while (iterator.hasNext()) {
             val tag = iterator.next()
             val text = if (mTagUppercase) tag.tag.toUpperCase(Locale.ROOT) else tag.tag
-            mTagColor?.let {
-                tag.color = it
+            if (tag.color == Color.TRANSPARENT) {
+                mTagColor?.let {
+                    tag.color = it
+                }
             }
             sb.append(text).setSpan(createSpan(text, tag.color), sb.length - text.length, sb.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             if (iterator.hasNext() && mTagSeparator != null) {
@@ -114,7 +147,10 @@ class TagView : AppCompatTextView {
                 textColor = currentTextColor,
                 bold = typeface === Typeface.DEFAULT_BOLD,
                 tagColor = color,
-                tagPadding = mTagPadding,
+                tagPaddingLeft = mTagPaddingLeft,
+                tagPaddingTop = mTagPaddingTop,
+                tagPaddingRight = mTagPaddingRight,
+                tagPaddingBottom = mTagPaddingBottom,
                 tagRadius = mTagRadius.toFloat()
         )
     }
@@ -126,59 +162,67 @@ class TagView : AppCompatTextView {
                           textColor: Int,
                           bold: Boolean,
                           tagColor: Int,
-                          tagPadding: Int,
+                          tagPaddingLeft: Int,
+                          tagPaddingTop: Int,
+                          tagPaddingRight: Int,
+                          tagPaddingBottom: Int,
                           tagRadius: Float) :
             ImageSpan(
                     TagDrawable(
-                            textSize = textSize,
-                            textColor = textColor,
-                            bold = bold,
-                            tagColor = tagColor,
                             text,
-                            tagPadding,
+                            textSize,
+                            textColor,
+                            bold,
+                            tagColor,
+                            tagPaddingLeft,
+                            tagPaddingTop,
+                            tagPaddingRight,
+                            tagPaddingBottom,
                             tagRadius)
             )
 
-    private class TagDrawable(textSize: Float,
-                              textColor: Int,
-                              bold: Boolean,
-                              tagColor: Int,
-                              private val mText: String,
-                              private val mTagPadding: Int,
-                              private val mTagRadius: Float) : Drawable() {
+    private class TagDrawable(
+            private val mText: String,
+            private val mTextSize: Float,
+            private val mTextColor: Int,
+            private val mBold: Boolean,
+            private val mTagColor: Int,
+            private val mTagPaddingLeft: Int,
+            private val mTagPaddingTop: Int,
+            private val mTagPaddingRight: Int,
+            private val mTagPaddingBottom: Int,
+            private val mTagRadius: Float) : Drawable() {
 
-        companion object {
-            private const val MAGIC_PADDING_LEFT = 0
-            private const val MAGIC_PADDING_BOTTOM = 3
-        }
-
-        private val mTextPaint: Paint
-        private val mTagPaint: Paint
+        private val mTextPaint: TextPaint = TextPaint(TextPaint.ANTI_ALIAS_FLAG)
+        private val mTagPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
         private val mTagBounds: RectF
 
         init {
-            mTextPaint = TextPaint()
-            mTextPaint.color = textColor
-            mTextPaint.textSize = textSize
-            mTextPaint.isAntiAlias = true
-            mTextPaint.isFakeBoldText = bold
+            mTextPaint.color = mTextColor
+            mTextPaint.textSize = mTextSize
+            mTextPaint.isFakeBoldText = mBold
             mTextPaint.style = Paint.Style.FILL
             mTextPaint.textAlign = Paint.Align.LEFT
 
-            mTagPaint = Paint()
-            mTagPaint.color = tagColor
+            mTagPaint.color = mTagColor
             mTagPaint.style = Paint.Style.FILL
-            mTagPaint.isAntiAlias = true
 
-            val textWidth = (mTextPaint.measureText(mText) + mTagPadding + mTagPadding).toInt()
-            val textHeight = (mTextPaint.textSize + mTagPadding + mTagPadding).toInt()
+            val textWidth = (mTextPaint.measureText(mText) + mTagPaddingLeft + mTagPaddingRight).toInt()
+            val textHeight = (mTextPaint.textSize + mTagPaddingTop + mTagPaddingBottom).toInt()
             setBounds(0, 0, textWidth, textHeight)
             mTagBounds = RectF(bounds)
         }
 
         override fun draw(canvas: Canvas) {
             canvas.drawRoundRect(mTagBounds, mTagRadius, mTagRadius, mTagPaint)
-            canvas.drawText(mText, (mTagPadding + MAGIC_PADDING_LEFT).toFloat(), mTextPaint.textSize + mTagPadding - MAGIC_PADDING_BOTTOM, mTextPaint)
+            val fm = mTextPaint.fontMetrics
+            val textWidth: Float = mTextPaint.measureText(mText)
+            val width = mTagBounds.width()
+            val height = mTagBounds.height()
+            val textCenterVerticalBaselineY: Float = height / 2f - fm.descent + (fm.descent - fm.ascent) / 2f
+            val x = (width - textWidth) / 2f
+            val y = textCenterVerticalBaselineY
+            canvas.drawText(mText, x, y + 2, mTextPaint)
         }
 
         override fun setAlpha(alpha: Int) {
@@ -193,5 +237,63 @@ class TagView : AppCompatTextView {
         override fun getOpacity(): Int {
             return PixelFormat.TRANSLUCENT
         }
+
+        /*
+        companion object {
+            const val TEXT_ALIGN_LEFT = 0x00000001
+            const val TEXT_ALIGN_RIGHT = 0x00000010
+            const val TEXT_ALIGN_CENTER_VERTICAL = 0x00000100
+            const val TEXT_ALIGN_CENTER_HORIZONTAL = 0x00001000
+            const val TEXT_ALIGN_TOP = 0x00010000
+            const val TEXT_ALIGN_BOTTOM = 0x00100000
+            const val TEXT_CENTER = TEXT_ALIGN_CENTER_HORIZONTAL or TEXT_ALIGN_CENTER_VERTICAL
+        }
+
+        private fun getTextLocation(text: String, textAlign: Int, paint: TextPaint, bound: RectF, location: FloatArray) {
+            val fm = paint.fontMetrics
+            val textWidth: Float = paint.measureText(text)
+            val width = bound.width()
+            val height = bound.height()
+            val textCenterVerticalBaselineY: Float = height / 2f - fm.descent + (fm.descent - fm.ascent) / 2f
+            when (textAlign) {
+                TEXT_ALIGN_CENTER_HORIZONTAL or TEXT_ALIGN_CENTER_VERTICAL -> {
+                    location[0] = (width - textWidth) / 2f
+                    location[1] = textCenterVerticalBaselineY
+                }
+                TEXT_ALIGN_LEFT or TEXT_ALIGN_CENTER_VERTICAL -> {
+                    location[0] = textWidth / 2f
+                    location[1] = textCenterVerticalBaselineY
+                }
+                TEXT_ALIGN_RIGHT or TEXT_ALIGN_CENTER_VERTICAL -> {
+                    location[0] = width - textWidth / 2
+                    location[1] = textCenterVerticalBaselineY
+                }
+                TEXT_ALIGN_BOTTOM or TEXT_ALIGN_CENTER_HORIZONTAL -> {
+                    location[0] = width / 2
+                    location[1] = height - fm.bottom
+                }
+                TEXT_ALIGN_TOP or TEXT_ALIGN_CENTER_HORIZONTAL -> {
+                    location[0] = width / 2
+                    location[1] = -fm.ascent
+                }
+                TEXT_ALIGN_TOP or TEXT_ALIGN_LEFT -> {
+                    location[0] = textWidth / 2
+                    location[1] = -fm.ascent
+                }
+                TEXT_ALIGN_BOTTOM or TEXT_ALIGN_LEFT -> {
+                    location[0] = textWidth / 2
+                    location[1] = height - fm.bottom
+                }
+                TEXT_ALIGN_TOP or TEXT_ALIGN_RIGHT -> {
+                    location[0] = width - textWidth / 2
+                    location[1] = -fm.ascent
+                }
+                TEXT_ALIGN_BOTTOM or TEXT_ALIGN_RIGHT -> {
+                    location[0] = width - textWidth / 2
+                    location[1] = height - fm.bottom
+                }
+            }
+        }*/
+
     }
 }

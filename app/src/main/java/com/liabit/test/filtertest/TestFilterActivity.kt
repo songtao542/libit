@@ -1,12 +1,13 @@
-package com.liabit.test
+package com.liabit.test.filtertest
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.liabit.filter.*
+import com.liabit.test.R
 import kotlinx.android.synthetic.main.activity_filter_test.*
 import java.util.*
 
-class FilterTestActivity : AppCompatActivity() {
+class TestFilterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.liabit.popup.PopupMenu
 import kotlinx.android.synthetic.main.activity_popup_menu_test.*
 
-class PopupMenuTestActivity : AppCompatActivity() {
+class TestPopupActivity : AppCompatActivity() {
 
     private val mMenus = arrayListOf(
             PopupMenu.MenuItem(R.drawable.ic_charge_black, "充电", R.drawable.menu_selector),

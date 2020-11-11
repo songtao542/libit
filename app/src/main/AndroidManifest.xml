@@ -9,116 +9,59 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".TestTabLayoutActivity"
-            android:label="TabLayout">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
-            android:name=".TestTabLayoutFixModeActivity"
-            android:label="TabLayout">
-
-        </activity>
+            android:name=".tagviewtest.TestTagViewActivity"
+            android:label="TagView" />
         <activity
-            android:name=".RecyclerViewDecorationTestActivity"
+            android:name=".tablayouttest.TestTabLayoutActivity"
+            android:label="TabLayout" />
+        <activity
+            android:name=".tablayouttest.TestTabLayoutFixModeActivity"
+            android:label="TabLayout" />
+        <activity
+            android:name=".decorationtest.ShowDecorationActivity"
             android:label="Decoration" />
         <activity
-            android:name=".RecyclerViewDecorationActivity"
-            android:label="Decoration">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
-        </activity>
+            android:name=".decorationtest.TestRecyclerViewDecorationActivity"
+            android:label="Decoration" />
         <activity
-            android:name=".PopupMenuTestActivity"
+            android:name=".TestPopupActivity"
             android:label="PopupMenu"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
-        </activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".TestFragmentVisible"
-            android:label="@string/test_fragment_visible">
-
-        </activity>
+            android:name=".TestAddSubViewActivity"
+            android:label="AddSubView" />
         <activity
-            android:name=".AddAndSubTextActivity"
-            android:label="@string/add_and_sub">
-
-        </activity>
-
-        <activity
-            android:name=".FilterTestActivity"
+            android:name=".filtertest.TestFilterActivity"
             android:label="Filter"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".TestPickerActivity"
+            android:label="Picker" />
+        <activity
+            android:name=".TestShimmerActivity"
+            android:label="Shimmer" />
+        <activity
+            android:name=".TestStateButtonActivity"
+            android:label="StateButton" />
+        <activity
+            android:name=".gesturetest.TestDragActivity"
+            android:label="TestDrag" />
+        <activity
+            android:name=".gesturetest.TestSwipeActivity"
+            android:label="TestSwipe" />
 
         <activity
-            android:name=".PickerTestActivity"
-            android:label="@string/picker">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ShimmerTestActivity"
-            android:label="@string/shimmer">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity android:name=".MainActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity
-            android:name=".gesture.TestDragActivity"
-            android:label="TestDrag">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity
-            android:name=".gesture.TestSwipeActivity"
-            android:label="TestSwipe">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
+            android:name=".TestFragmentVisibleActivity"
+            android:label="Fragment可见性" />
     </application>
 
 </manifest>

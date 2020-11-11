@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.liabit.shimmer.ShimmerLayout
 
 
-class ShimmerTestActivity : AppCompatActivity() {
+class TestShimmerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

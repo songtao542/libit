@@ -1,4 +1,4 @@
-package com.liabit.test
+package com.liabit.test.tablayouttest
 
 import android.content.Context
 import android.os.Bundle
@@ -16,6 +16,7 @@ import com.liabit.tablayout.indicator.BezierTabIndicator
 import com.liabit.tablayout.indicator.LineTabIndicator
 import com.liabit.tablayout.indicator.TriangularTabIndicator
 import com.liabit.tablayout.indicator.WrapTabIndicator
+import com.liabit.test.R
 import kotlinx.android.synthetic.main.activity_test_tablayout_fix_mode.*
 import java.lang.StringBuilder
 import kotlin.random.Random

@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.liabit.decoration.SpaceDecoration
 import kotlinx.android.synthetic.main.activity_add_and_sub_test.*
 import kotlinx.android.synthetic.main.activity_add_and_sub_test_item.view.*
 
-class AddAndSubTextActivity : AppCompatActivity() {
+class TestAddSubViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_and_sub_test)
@@ -27,10 +29,9 @@ class AddAndSubTextActivity : AppCompatActivity() {
         }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.addItemDecoration(SpaceDecoration(5f))
         recyclerView.adapter = TestAdapter()
-
     }
-
 
     class TestAdapter : RecyclerView.Adapter<TestAdapter.Holder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -38,22 +39,30 @@ class AddAndSubTextActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: Holder, position: Int) {
+            holder.setData(position)
         }
 
         override fun getItemCount(): Int = 100
 
 
         class Holder(private val view: View) : RecyclerView.ViewHolder(view) {
+            private var mPosition: Int = 0
+
             init {
                 view.addSubView.setOnValueChangedListener { view, value, edited ->
-
+                    itemView.text.text = "$mPosition: $value"
                 }
                 view.addSubView.setOnValueOutOfRangeListener { view, value ->
-
+                    itemView.text.text = "$mPosition: $value"
                 }
                 view.addSubView.setOnEmptyListener {
 
                 }
+            }
+
+            fun setData(position: Int) {
+                mPosition = position
+                itemView.text.text = "$mPosition: "
             }
 
         }

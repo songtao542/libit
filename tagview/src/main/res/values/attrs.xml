@@ -4,7 +4,14 @@
         <attr name="tagColor" format="color|reference" />
         <attr name="tagRadius" format="dimension|reference" />
         <attr name="tagPadding" format="dimension|reference" />
+        <attr name="tagPaddingLeft" format="dimension|reference" />
+        <attr name="tagPaddingRight" format="dimension|reference" />
+        <attr name="tagPaddingTop" format="dimension|reference" />
+        <attr name="tagPaddingBottom" format="dimension|reference" />
+        <attr name="tagPaddingHorizontal" format="dimension|reference" />
+        <attr name="tagPaddingVertical" format="dimension|reference" />
         <attr name="tagSeparator" format="string|reference" />
         <attr name="tagUppercase" format="boolean" />
+        <attr name="tags" format="reference" />
     </declare-styleable>
 </resources>

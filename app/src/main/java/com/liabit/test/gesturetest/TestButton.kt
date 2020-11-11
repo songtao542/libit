@@ -1,4 +1,4 @@
-package com.liabit.test.gesture
+package com.liabit.test.gesturetest
 
 import android.content.Context
 import android.os.Build

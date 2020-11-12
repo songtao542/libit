@@ -316,12 +316,12 @@ class FilterLayout : LinearLayout {
         mTabLayout?.setupWithViewPager(mViewPager)
     }
 
-    fun setLeftPageFilter(items: List<FilterItem>, adapter: FilterAdapter? = null) {
+    fun setLeftPageFilter(items: List<Filter>, adapter: FilterAdapter? = null) {
         mLeftPageFilterAdapter.mFilterAdapter = adapter
         mLeftPageFilterAdapter.setData(items, context != null)
     }
 
-    fun setRightPageFilter(items: List<FilterItem>, adapter: FilterAdapter? = null) {
+    fun setRightPageFilter(items: List<Filter>, adapter: FilterAdapter? = null) {
         if (mRightPageFilterAdapter == null) {
             mRightPageFilterAdapter = FilterViewAdapter()
             mRightPageFilterAdapter?.setFilterPicker(mFilterPicker)
@@ -335,7 +335,7 @@ class FilterLayout : LinearLayout {
 
         private val mDefaultLayoutId = R.layout.filter_text
 
-        var mOriginData: List<FilterItem>? = null
+        var mOriginData: List<Filter>? = null
         private val mData = ArrayList<Filter>()
 
         var mFilterAdapter: FilterAdapter? = null
@@ -374,7 +374,7 @@ class FilterLayout : LinearLayout {
             }
         }
 
-        fun setData(data: List<FilterItem>, notify: Boolean = true) {
+        fun setData(data: List<Filter>, notify: Boolean = true) {
             mOriginData = data
             mData.clear()
             for (item in data) {

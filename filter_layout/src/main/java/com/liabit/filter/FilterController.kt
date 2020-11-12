@@ -16,11 +16,11 @@ interface FilterController : FilterLayout.OnCombinationResultListener, FilterLay
 
     fun setTab(leftPageTitle: String, rightPageTitle: String)
 
-    fun setFilter(items: List<FilterItem>, configurator: FilterAdapter? = null)
+    fun setFilter(items: List<Filter>, configurator: FilterAdapter? = null)
 
-    fun setLeftPageFilter(items: List<FilterItem>, configurator: FilterAdapter? = null)
+    fun setLeftPageFilter(items: List<Filter>, configurator: FilterAdapter? = null)
 
-    fun setRightPageFilter(items: List<FilterItem>, configurator: FilterAdapter? = null)
+    fun setRightPageFilter(items: List<Filter>, configurator: FilterAdapter? = null)
 
     fun setOnResetListener(listener: FilterLayout.OnResetListener)
 

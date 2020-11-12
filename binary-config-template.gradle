@@ -11,7 +11,7 @@ project.ext {
     BINTRAY_USER_ORG = "xxxx"
 
     CONTEXT_URL = "http://xxxx/xxxx"
-    REPOKEY = "xxxx"
+    ARTIFACTORY_REPOKEY = "xxxx"
     ARTIFACTORY_USERNAME = "xxxx"
     ARTIFACTORY_PASSWORD = "xxxx"
 

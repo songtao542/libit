@@ -19,8 +19,8 @@ class FilterControllerImpl : FilterController {
     private var mOnResetListener: FilterLayout.OnResetListener? = null
     private var mOnConfirmListener: FilterLayout.OnConfirmListener? = null
 
-    private var mLeftFilterData: List<FilterItem>? = null
-    private var mRightFilterData: List<FilterItem>? = null
+    private var mLeftFilterData: List<Filter>? = null
+    private var mRightFilterData: List<Filter>? = null
     private var mLeftFilterConfigurator: FilterAdapter? = null
     private var mRightFilterConfigurator: FilterAdapter? = null
 
@@ -97,17 +97,17 @@ class FilterControllerImpl : FilterController {
         mFilterLayout?.setTabTitle(leftPageTitle, rightPageTitle)
     }
 
-    override fun setFilter(items: List<FilterItem>, configurator: FilterAdapter?) {
+    override fun setFilter(items: List<Filter>, configurator: FilterAdapter?) {
         setLeftPageFilter(items, configurator)
     }
 
-    override fun setLeftPageFilter(items: List<FilterItem>, configurator: FilterAdapter?) {
+    override fun setLeftPageFilter(items: List<Filter>, configurator: FilterAdapter?) {
         mLeftFilterData = items
         mLeftFilterConfigurator = configurator
         mFilterLayout?.setLeftPageFilter(items, configurator)
     }
 
-    override fun setRightPageFilter(items: List<FilterItem>, configurator: FilterAdapter?) {
+    override fun setRightPageFilter(items: List<Filter>, configurator: FilterAdapter?) {
         mRightFilterData = items
         mRightFilterConfigurator = configurator
         mFilterLayout?.setRightPageFilter(items, configurator)

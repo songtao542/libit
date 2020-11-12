@@ -12,7 +12,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_back"
+        app:navigationIcon="@drawable/filter_back_icon"
         app:title="标题栏" />
 
     <ImageView

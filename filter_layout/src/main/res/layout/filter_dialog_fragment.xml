@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_back" />
+            android:src="@drawable/filter_back_icon" />
 
         <TextView
             android:layout_width="match_parent"

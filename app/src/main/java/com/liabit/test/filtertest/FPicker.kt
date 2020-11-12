@@ -13,6 +13,10 @@ import java.util.*
 class FPicker : FilterPicker {
 
     companion object {
+
+        @JvmStatic
+        val instance: FPicker by lazy { FPicker() }
+
         @JvmStatic
         private fun filterAddressToPickerAddress(address: FilterPicker.PickerAddress?): Address? {
             if (address == null) return null

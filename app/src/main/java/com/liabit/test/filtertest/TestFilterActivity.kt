@@ -37,8 +37,7 @@ class TestFilterActivity : AppCompatActivity() {
     }
 
     private fun getFilterDialogFragment(): FilterDialogFragment {
-        val f = FilterDialogFragment()
-        f.setFilterPicker(FPicker())
+        val f = FilterDialogFragment(FPicker.instance)
         f.setFilter(getFilterData())
         return f
     }

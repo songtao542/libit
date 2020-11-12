@@ -14,11 +14,15 @@ import androidx.fragment.app.FragmentActivity
  * CreateDate:     2020/9/12 16:32
  */
 @Suppress("unused")
-class FilterDialogFragment : AppCompatDialogFragment(), FilterController by FilterControllerImpl() {
+class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by FilterControllerImpl() {
 
     companion object {
         const val TAG = "FilterDialogFragment"
         const val FILTER_TAG = "filter"
+    }
+
+    constructor(picker: FilterPicker) : this() {
+        setFilterPicker(picker)
     }
 
     private var mShowAsDialog: Boolean = true

@@ -9,6 +9,8 @@
     <string name="cancel">取消</string>
     <string name="refresh">刷新</string>
 
+    <string name="tag_test">天仙 花容月貌 如花似玉 仙女 柳腰花态</string>
+
     <string-array name="tags">
         <item>油城墨香</item>
         <item>香气扑鼻</item>
@@ -51,6 +53,38 @@
         <item>丧尽天良</item>
         <item>良种</item>
         <item>各种各样</item>
+    </string-array>
+
+    <string-array name="words1">
+        <item>红颜</item>
+        <item>小家碧玉</item>
+        <item>佳人</item>
+        <item>小鸟依人</item>
+        <item>天仙</item>
+        <item>花容月貌</item>
+        <item>如花似玉</item>
+        <item>仙女</item>
+        <item>柳腰花态</item>
+        <item>窈窕淑女</item>
+        <item>左家娇女</item>
+        <item>蛾眉</item>
+        <item>曲眉丰颊</item>
+        <item>朱唇皓齿</item>
+        <item>皓齿</item>
+        <item>杏脸桃腮</item>
+        <item>细肌嫩肤</item>
+        <item>香艳</item>
+        <item>兰质蕙心</item>
+        <item>明眸</item>
+        <item>绝代佳人</item>
+        <item>秀色可餐</item>
+        <item>秀外慧中</item>
+        <item>温玉</item>
+        <item>倾国倾城</item>
+        <item>国色天香</item>
+        <item>姹紫嫣红</item>
+        <item>惊艳</item>
+        <item>琪花瑶草</item>
     </string-array>
 
 

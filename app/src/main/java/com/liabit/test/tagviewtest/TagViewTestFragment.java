@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.liabit.tagview.TagView;
 import com.liabit.test.R;
@@ -33,11 +34,25 @@ public class TagViewTestFragment extends Fragment {
 
         tv.setOnTagClickListener(tag -> {
             Log.d("TTTT", "tag====" + tag);
+            Toast.makeText(getContext(), tag.getTag(), Toast.LENGTH_SHORT).show();
         });
 
         TagView tv2 = (TagView) getView().findViewById(R.id.tagView2);
         tv2.setOnTagClickListener(tag -> {
             Log.d("TTTT", "tag====" + tag);
+            Toast.makeText(getContext(), tag.getTag(), Toast.LENGTH_SHORT).show();
+        });
+
+        TagView tv3 = (TagView) getView().findViewById(R.id.tagView3);
+        tv3.setOnTagClickListener(tag -> {
+            Log.d("TTTT", "tag====" + tag);
+            Toast.makeText(getContext(), tag.getTag(), Toast.LENGTH_SHORT).show();
+        });
+
+        TagView tv4 = (TagView) getView().findViewById(R.id.tagView4);
+        tv4.setOnTagClickListener(tag -> {
+            Log.d("TTTT", "tag====" + tag);
+            Toast.makeText(getContext(), tag.getTag(), Toast.LENGTH_SHORT).show();
         });
     }
 }

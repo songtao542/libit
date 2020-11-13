@@ -11,6 +11,7 @@ import android.text.method.BaseMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ImageSpan
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
@@ -23,6 +24,10 @@ import kotlin.collections.ArrayList
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class TagView : AppCompatTextView {
 
+    companion object {
+        private const val DEFAULT_SEPARATOR = " "
+    }
+
     private var mTagPaddingLeft = 0
     private var mTagPaddingTop = 0
     private var mTagPaddingRight = 0
@@ -30,7 +35,7 @@ class TagView : AppCompatTextView {
     private var mTagRadius = 0
     private var mTagUppercase = false
     private var mTagColor: Int = Color.TRANSPARENT
-    private var mTagSeparator: String = " "
+    private var mTagSeparator: String = DEFAULT_SEPARATOR
     private var mTags: MutableList<Tag> = ArrayList()
 
     private var mScrollable = false
@@ -148,7 +153,7 @@ class TagView : AppCompatTextView {
 
     private fun updateText() {
         if (mTags.isEmpty()) return
-        val sb = SpannableStringBuilder()
+        val sb = InnerSpannableStringBuilder()
         val iterator = mTags.iterator()
         while (iterator.hasNext()) {
             val tag = iterator.next()
@@ -161,6 +166,24 @@ class TagView : AppCompatTextView {
             }
         }
         text = sb
+    }
+
+    @Suppress("SENSELESS_COMPARISON")
+    override fun setText(text: CharSequence?, type: BufferType?) {
+        if (text != null && text !is InnerSpannableStringBuilder) {
+            // 此处 mTagSeparator 虽然为不可空类型，但由于父类构造函数中调用setText方法时，
+            // mTagSeparator 还未被初始化，所以会报空指针异常
+            if (mTagSeparator == null) {
+                mTagSeparator = DEFAULT_SEPARATOR
+            }
+            // mTags 也可能由于构造函数的先后顺序问题而为null
+            if (mTags == null) {
+                mTags = ArrayList()
+            }
+            setStringList(text.split(mTagSeparator))
+        } else {
+            super.setText(text, type)
+        }
     }
 
     private fun createSpan(tag: Tag, textColor: Int, color: Int): TagSpan {
@@ -189,6 +212,12 @@ class TagView : AppCompatTextView {
 
     interface OnTagClickListener {
         fun onTagClick(tag: Tag)
+    }
+
+    private class InnerSpannableStringBuilder : SpannableStringBuilder {
+        constructor() : super()
+        constructor(text: CharSequence?) : super(text)
+        constructor(text: CharSequence?, start: Int, end: Int) : super(text, start, end)
     }
 
     data class Tag(
@@ -350,29 +379,52 @@ class TagView : AppCompatTextView {
             if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
                 var x = event.x.toInt()
                 var y = event.y.toInt()
+                if (x < widget.totalPaddingLeft || y < widget.totalPaddingTop
+                        || x > widget.width - widget.totalPaddingRight
+                        || y > widget.height - widget.totalPaddingBottom) return true
                 x -= widget.totalPaddingLeft
                 y -= widget.totalPaddingTop
                 x += widget.scrollX
                 y += widget.scrollY
+
                 val layout = widget.layout
                 val line = layout.getLineForVertical(y)
                 val off = layout.getOffsetForHorizontal(line, x.toFloat())
-                val link = buffer.getSpans(off, off, ClickableSpan::class.java)
+
+                val links: Array<ClickableSpan> = buffer.getSpans(off, off, ClickableSpan::class.java)
                 val imageSpans: Array<ClickableImageSpan> = buffer.getSpans(off, off, ClickableImageSpan::class.java)
                 when {
-                    link.isNotEmpty() -> {
+                    links.isNotEmpty() -> {
                         if (action == MotionEvent.ACTION_UP) {
-                            link[0].onClick(widget)
+                            val span = links[0]
+                            (widget.text as? Spannable)?.let {
+                                val start = it.getSpanStart(span)
+                                val end = it.getSpanEnd(span)
+                                val l = layout.getPrimaryHorizontal(start)
+                                val r = layout.getPrimaryHorizontal(end)
+                                if (x >= l && x <= r) {
+                                    span.onClick(widget)
+                                }
+                            }
                         } else if (action == MotionEvent.ACTION_DOWN) {
                             Selection.setSelection(buffer,
-                                    buffer.getSpanStart(link[0]),
-                                    buffer.getSpanEnd(link[0]))
+                                    buffer.getSpanStart(links[0]),
+                                    buffer.getSpanEnd(links[0]))
                         }
                         return true
                     }
                     imageSpans.isNotEmpty() -> {
                         if (action == MotionEvent.ACTION_UP) {
-                            imageSpans[0].onClick(widget)
+                            val span = imageSpans[0]
+                            (widget.text as? Spannable)?.let {
+                                val start = it.getSpanStart(span)
+                                val end = it.getSpanEnd(span)
+                                val l = layout.getPrimaryHorizontal(start)
+                                val r = layout.getPrimaryHorizontal(end)
+                                if (x >= l && x <= r) {
+                                    span.onClick(widget)
+                                }
+                            }
                         } else if (action == MotionEvent.ACTION_DOWN) {
                             Selection.setSelection(buffer,
                                     buffer.getSpanStart(imageSpans[0]),

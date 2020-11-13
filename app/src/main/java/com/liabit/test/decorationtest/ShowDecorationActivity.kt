@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.liabit.decoration.SpaceDecoration
+import com.liabit.extension.dip
+import com.liabit.extension.dp
 import com.liabit.test.R
 import kotlin.random.Random
 
@@ -93,8 +95,9 @@ class ShowDecorationActivity : AppCompatActivity() {
             }
         }
 
-        recyclerView.addItemDecoration(SpaceDecoration(10f,
-                SpaceDecoration.Direction.ALL, 3).apply {
+        val space = 10.dp(this)
+        recyclerView.addItemDecoration(SpaceDecoration(space,
+                SpaceDecoration.ALL or SpaceDecoration.IGNORE_CROSS_AXIS_START, 3f).apply {
             setDrawable(ColorDrawable(0xff888888.toInt()))
         })
         val isGrid = type.contains("Grid")

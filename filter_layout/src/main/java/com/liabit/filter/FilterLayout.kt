@@ -657,7 +657,7 @@ class FilterLayout : LinearLayout {
                     }
                     textView.setOnClickListener {
                         mFilterPicker?.pickAddress(textView.context, address, object : FilterPicker.OnAddressSelectListener {
-                            override fun onAddressSelect(address: FilterPicker.PickerAddress) {
+                            override fun onAddressSelect(address: FilterPicker.Address) {
                                 filterItem.setAddress(address)
                                 notifyDataSetChanged()
                             }

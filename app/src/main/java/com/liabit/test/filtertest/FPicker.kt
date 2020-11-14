@@ -18,7 +18,7 @@ class FPicker : FilterPicker {
         val instance: FPicker by lazy { FPicker() }
 
         @JvmStatic
-        private fun filterAddressToPickerAddress(address: FilterPicker.PickerAddress?): Address? {
+        private fun filterAddressToPickerAddress(address: FilterPicker.Address?): Address? {
             if (address == null) return null
             return Address(address.provinceCode,
                     address.provinceName,
@@ -29,8 +29,8 @@ class FPicker : FilterPicker {
         }
 
         @JvmStatic
-        private fun pickerAddressToFilterAddress(address: Address): FilterPicker.PickerAddress {
-            return FilterPicker.PickerAddress(address.provinceCode,
+        private fun pickerAddressToFilterAddress(address: Address): FilterPicker.Address {
+            return FilterPicker.Address(address.provinceCode,
                     address.provinceName,
                     address.cityCode,
                     address.cityName,
@@ -43,7 +43,7 @@ class FPicker : FilterPicker {
         Picker.pickDate(context, currentDate, startDate, endDate) { listener?.onDateSelect(it) }
     }
 
-    override fun pickAddress(context: Context, address: FilterPicker.PickerAddress?, listener: FilterPicker.OnAddressSelectListener?) {
+    override fun pickAddress(context: Context, address: FilterPicker.Address?, listener: FilterPicker.OnAddressSelectListener?) {
         Picker.pickAddress(context, filterAddressToPickerAddress(address)) { listener?.onAddressSelect(pickerAddressToFilterAddress(it)) }
     }
 

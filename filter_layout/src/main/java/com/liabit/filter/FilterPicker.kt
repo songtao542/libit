@@ -11,7 +11,7 @@ interface FilterPicker {
 
     fun pickDate(context: Context, currentDate: Date, startDate: Date, endDate: Date, listener: OnDateSelectListener? = null)
 
-    fun pickAddress(context: Context, address: PickerAddress?, listener: OnAddressSelectListener? = null)
+    fun pickAddress(context: Context, address: Address?, listener: OnAddressSelectListener? = null)
 
     fun pickNumber(context: Context, number: Int?, from: Int, to: Int, listener: OnNumberSelectListener? = null)
 
@@ -20,14 +20,14 @@ interface FilterPicker {
     }
 
     interface OnAddressSelectListener {
-        fun onAddressSelect(address: PickerAddress)
+        fun onAddressSelect(address: Address)
     }
 
     interface OnNumberSelectListener {
         fun onNumberSelect(number: Int)
     }
 
-    data class PickerAddress(
+    data class Address(
             val provinceCode: String,
             val provinceName: String,
             val cityCode: String,

@@ -4,11 +4,16 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 
+@Suppress("unused")
 class PopupFilter(context: Context) : FilterController by FilterControllerImpl() {
 
     private var mPopupWindow: PopupWindowCompat = PopupWindowCompat(context)
     private var mFilterLayout: FilterLayout = FilterLayout(context)
     private var mPopHeight: Int = 0
+
+    constructor(context: Context, picker: FilterPicker) : this(context) {
+        setFilterPicker(picker)
+    }
 
     init {
         val screenHeight = context.resources.displayMetrics.heightPixels

@@ -232,6 +232,10 @@ class PopupWindowCompat(context: Context) {
         mPopupWindow?.showAtLocation(parent, gravity, x, y)
     }
 
+    fun dismiss() {
+        mPopupWindow?.dismiss()
+    }
+
     private class PopupDialog(context: Context) : Dialog(context) {
 
         init {

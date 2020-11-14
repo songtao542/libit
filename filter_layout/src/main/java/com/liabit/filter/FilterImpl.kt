@@ -349,13 +349,13 @@ open class SimpleNumberRangeFilterItem(private val startHint: String, private va
 
 open class SimpleAddressFilterItem(private val hint: String) : AddressFilterItem {
 
-    private var mAddress: FilterPicker.PickerAddress? = null
+    private var mAddress: FilterPicker.Address? = null
 
-    override fun setAddress(address: FilterPicker.PickerAddress?) {
+    override fun setAddress(address: FilterPicker.Address?) {
         mAddress = address
     }
 
-    override fun getAddress(): FilterPicker.PickerAddress? {
+    override fun getAddress(): FilterPicker.Address? {
         return mAddress
     }
 

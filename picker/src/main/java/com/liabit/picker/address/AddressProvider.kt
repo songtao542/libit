@@ -1,8 +1,10 @@
 package com.liabit.picker.address
 
 import android.content.Context
+import android.os.Parcelable
 import com.liabit.picker.R
 import com.liabit.picker.cascade.Cascade
+import kotlinx.android.parcel.Parcelize
 import org.json.JSONArray
 import java.io.InputStream
 
@@ -90,12 +92,13 @@ data class Street(val code: String, val name: String) : Cascade {
     }
 }
 
+@Parcelize
 data class Address(val provinceCode: String,
                    val provinceName: String,
                    val cityCode: String,
                    val cityName: String,
                    val districtCode: String,
-                   val districtName: String) {
+                   val districtName: String) : Parcelable {
 
     val formatted: String
         get() {

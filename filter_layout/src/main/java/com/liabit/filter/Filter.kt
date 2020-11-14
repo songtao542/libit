@@ -190,9 +190,9 @@ interface EditableRangeFilterItem : RangeFilterItem {
 
 interface AddressFilterItem : FilterItem {
 
-    fun getAddress(): FilterPicker.Address?
+    fun getAddress(): Address?
 
-    fun setAddress(address: FilterPicker.Address?)
+    fun setAddress(address: Address?)
 
     override fun getType(): Int {
         return Filter.TYPE_ADDRESS

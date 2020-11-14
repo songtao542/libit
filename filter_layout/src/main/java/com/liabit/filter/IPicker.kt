@@ -7,7 +7,7 @@ import java.util.*
  * Author:         songtao
  * CreateDate:     2020/9/18 18:31
  */
-interface FilterPicker {
+interface IPicker {
 
     fun pickDate(context: Context, currentDate: Date, startDate: Date, endDate: Date, listener: OnDateSelectListener? = null)
 
@@ -26,19 +26,4 @@ interface FilterPicker {
     interface OnNumberSelectListener {
         fun onNumberSelect(number: Int)
     }
-
-    data class Address(
-            val provinceCode: String,
-            val provinceName: String,
-            val cityCode: String,
-            val cityName: String,
-            val districtCode: String,
-            val districtName: String) {
-
-        val formatted: String
-            get() {
-                return if (provinceName == cityName) "$provinceName$districtName" else "$provinceName$cityName$districtName"
-            }
-    }
-
 }

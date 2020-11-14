@@ -24,7 +24,7 @@ class FilterControllerImpl : FilterController {
     private var mLeftFilterConfigurator: FilterAdapter? = null
     private var mRightFilterConfigurator: FilterAdapter? = null
 
-    private var mFilterPicker: FilterPicker? = null
+    private var mFilterPicker: IPicker? = null
 
     override fun setup(filterLayout: FilterLayout) {
         mFilterLayout = filterLayout
@@ -129,7 +129,7 @@ class FilterControllerImpl : FilterController {
         mOnConfirmListener = listener
     }
 
-    override fun setFilterPicker(picker: FilterPicker) {
+    override fun setFilterPicker(picker: IPicker) {
         mFilterPicker = picker
     }
 

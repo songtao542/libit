@@ -21,7 +21,7 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
         const val FILTER_TAG = "filter"
     }
 
-    constructor(picker: FilterPicker) : this() {
+    constructor(picker: IPicker) : this() {
         setFilterPicker(picker)
     }
 

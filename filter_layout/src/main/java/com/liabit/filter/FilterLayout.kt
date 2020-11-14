@@ -61,7 +61,7 @@ class FilterLayout : LinearLayout {
     private var mOnResetListener: OnResetListener? = null
     private var mOnConfirmListener: OnConfirmListener? = null
 
-    private var mFilterPicker: FilterPicker? = null
+    private var mFilterPicker: IPicker? = null
 
     constructor(context: Context) : super(context) {
         init(context, null, 0, 0)
@@ -87,7 +87,7 @@ class FilterLayout : LinearLayout {
             val pickerClass = typedArray.getString(R.styleable.FilterLayout_picker)
             if (pickerClass != null) {
                 try {
-                    mFilterPicker = Class.forName(pickerClass).newInstance() as? FilterPicker
+                    mFilterPicker = Class.forName(pickerClass).newInstance() as? IPicker
                 } catch (e: Throwable) {
                     Log.d(TAG, "init picker error: ", e)
                 }
@@ -250,7 +250,7 @@ class FilterLayout : LinearLayout {
         fun onConfirm(view: View)
     }
 
-    fun setFilterPicker(filterPicker: FilterPicker?) {
+    fun setFilterPicker(filterPicker: IPicker?) {
         mFilterPicker = filterPicker
         mLeftPageFilterAdapter.setFilterPicker(mFilterPicker)
         mRightPageFilterAdapter?.setFilterPicker(mFilterPicker)
@@ -342,9 +342,9 @@ class FilterLayout : LinearLayout {
 
         var mClickToBackListener: ((item: Filter) -> Unit)? = null
 
-        var mFilterPicker: FilterPicker? = null
+        var mFilterPicker: IPicker? = null
 
-        fun setFilterPicker(filterPicker: FilterPicker?) {
+        fun setFilterPicker(filterPicker: IPicker?) {
             mFilterPicker = filterPicker
         }
 
@@ -586,7 +586,7 @@ class FilterLayout : LinearLayout {
                             if (!end) filterItem.getStartDate() else filterItem.getEndDate()
                     )
                     textView.setOnClickListener {
-                        val listener = object : FilterPicker.OnDateSelectListener {
+                        val listener = object : IPicker.OnDateSelectListener {
                             override fun onDateSelect(date: Date) {
                                 if (!end) {
                                     filterItem.setStartDate(date)
@@ -621,7 +621,7 @@ class FilterLayout : LinearLayout {
                     }
                     textView.text = format(text, filterItem.getDate())
                     textView.setOnClickListener {
-                        val listener = object : FilterPicker.OnDateSelectListener {
+                        val listener = object : IPicker.OnDateSelectListener {
                             override fun onDateSelect(date: Date) {
                                 filterItem.setDate(date)
                                 notifyDataSetChanged()
@@ -656,8 +656,8 @@ class FilterLayout : LinearLayout {
                         textView.text = address.formatted
                     }
                     textView.setOnClickListener {
-                        mFilterPicker?.pickAddress(textView.context, address, object : FilterPicker.OnAddressSelectListener {
-                            override fun onAddressSelect(address: FilterPicker.Address) {
+                        mFilterPicker?.pickAddress(textView.context, address, object : IPicker.OnAddressSelectListener {
+                            override fun onAddressSelect(address: Address) {
                                 filterItem.setAddress(address)
                                 notifyDataSetChanged()
                             }
@@ -686,7 +686,7 @@ class FilterLayout : LinearLayout {
                     }
                     textView.text = if (!end) startText else endText
                     textView.setOnClickListener {
-                        val listener = object : FilterPicker.OnNumberSelectListener {
+                        val listener = object : IPicker.OnNumberSelectListener {
                             override fun onNumberSelect(number: Int) {
                                 if (!end) {
                                     filterItem.setStartNumber(number)
@@ -724,7 +724,7 @@ class FilterLayout : LinearLayout {
                     }
                     textView.text = text
                     textView.setOnClickListener {
-                        val listener = object : FilterPicker.OnNumberSelectListener {
+                        val listener = object : IPicker.OnNumberSelectListener {
                             override fun onNumberSelect(number: Int) {
                                 filterItem.setNumber(number)
                                 notifyDataSetChanged()

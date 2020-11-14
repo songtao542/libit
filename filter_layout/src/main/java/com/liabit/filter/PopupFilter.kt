@@ -11,7 +11,7 @@ class PopupFilter(context: Context) : FilterController by FilterControllerImpl()
     private var mFilterLayout: FilterLayout = FilterLayout(context)
     private var mPopHeight: Int = 0
 
-    constructor(context: Context, picker: FilterPicker) : this(context) {
+    constructor(context: Context, picker: IPicker) : this(context) {
         setFilterPicker(picker)
     }
 

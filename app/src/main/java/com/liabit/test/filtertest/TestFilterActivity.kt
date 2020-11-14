@@ -31,13 +31,13 @@ class TestFilterActivity : AppCompatActivity() {
 
     private fun getPopupFilter(): PopupFilter {
         val p = PopupFilter(this)
-        p.setFilterPicker(FPicker())
+        p.setFilterPicker(FilterPicker())
         p.setFilter(getFilterData())
         return p
     }
 
     private fun getFilterDialogFragment(): FilterDialogFragment {
-        val f = FilterDialogFragment(FPicker.instance)
+        val f = FilterDialogFragment(FilterPicker.instance)
         f.setFilter(getFilterData())
         return f
     }

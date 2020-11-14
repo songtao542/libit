@@ -1,6 +1,6 @@
 package com.liabit.filter
 
-interface FilterController : FilterLayout.OnCombinationResultListener, FilterLayout.OnResultListener {
+internal interface FilterController : FilterLayout.OnCombinationResultListener, FilterLayout.OnResultListener {
 
     fun setup(filterLayout: FilterLayout)
 

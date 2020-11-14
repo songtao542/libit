@@ -4,7 +4,7 @@ import android.graphics.Rect
 import android.util.Log
 import android.view.View
 
-class FilterControllerImpl : FilterController {
+internal class FilterControllerImpl : FilterController {
 
     private var mFilterLayout: FilterLayout? = null
     private var mLeftPageClickToReturn: Boolean = false

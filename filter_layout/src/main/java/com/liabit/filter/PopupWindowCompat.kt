@@ -107,19 +107,7 @@ internal class PopupWindowCompat(context: Context) {
         val height = if (mShowMask) ViewGroup.LayoutParams.WRAP_CONTENT else mHeight
 
         if (mShowMask) {
-            val animation = AnimationSet(false)
-            val translate = TranslateAnimation(
-                    Animation.RELATIVE_TO_SELF, 0f,
-                    Animation.RELATIVE_TO_SELF, 0f,
-                    Animation.RELATIVE_TO_SELF, -1f,
-                    Animation.RELATIVE_TO_SELF, 0f
-            )
-            translate.interpolator = AccelerateDecelerateInterpolator()
-            val alpha = AlphaAnimation(0f, 1f)
-            animation.addAnimation(translate)
-            animation.addAnimation(alpha)
-            animation.duration = 230
-            mContentView?.animation = animation
+            mContentView?.animation = createContentAnimation()
         }
 
         mPopupWindow = PopupWindow(mRootView, mWidth, height, true).also {
@@ -131,32 +119,7 @@ internal class PopupWindowCompat(context: Context) {
             it.setOnDismissListener {
                 mOnDismissListener?.onDismiss()
             }
-            if (mShowMask && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                it.exitTransition = Fade(Fade.OUT).setDuration(150).addListener(object : Transition.TransitionListener {
-                    override fun onTransitionStart(transition: Transition?) {
-                        AnimatorSet().apply {
-                            mContentView?.let { contentView ->
-                                play(ObjectAnimator.ofFloat(contentView, View.ALPHA, 1f, 0f))
-                                play(ObjectAnimator.ofFloat(contentView, View.TRANSLATION_Y, 0f, (-contentView.height).toFloat()))
-                                interpolator = AccelerateInterpolator()
-                                duration = 150
-                            }
-                        }.start()
-                    }
-
-                    override fun onTransitionEnd(transition: Transition?) {
-                    }
-
-                    override fun onTransitionCancel(transition: Transition?) {
-                    }
-
-                    override fun onTransitionPause(transition: Transition?) {
-                    }
-
-                    override fun onTransitionResume(transition: Transition?) {
-                    }
-                })
-            }
+            setupExitTransition(it)
         }
 
         mMaskView.setOnClickListener { mPopupWindow?.dismiss() }
@@ -187,6 +150,11 @@ internal class PopupWindowCompat(context: Context) {
         val anchorWidth = anchor.width.toFloat()
         if (mPopupWindow == null) {
             createPopupWindow()
+        } else {
+            mPopupWindow?.let { setupExitTransition(it) }
+            if (mShowMask) {
+                mContentView?.animation = createContentAnimation()
+            }
         }
         val yOff = dp2px(yOffset)
         when (gravity) {
@@ -212,6 +180,11 @@ internal class PopupWindowCompat(context: Context) {
     fun show(anchor: View) {
         if (mPopupWindow == null) {
             createPopupWindow()
+        } else {
+            mPopupWindow?.let { setupExitTransition(it) }
+            if (mShowMask) {
+                mContentView?.animation = createContentAnimation()
+            }
         }
         mPopupWindow?.showAsDropDown(anchor)
     }
@@ -229,8 +202,73 @@ internal class PopupWindowCompat(context: Context) {
     fun showAtLocation(parent: View, gravity: Int, x: Int, y: Int) {
         if (mPopupWindow == null) {
             createPopupWindow()
+        } else {
+            mPopupWindow?.let { setupExitTransition(it) }
+            if (mShowMask) {
+                mContentView?.animation = createContentAnimation()
+            }
         }
         mPopupWindow?.showAtLocation(parent, gravity, x, y)
+    }
+
+    fun dismiss() {
+        mPopupWindow?.dismiss()
+    }
+
+    private fun setupExitTransition(popupWindow: PopupWindow) {
+        if (mShowMask && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            mContentView?.let {
+                popupWindow.exitTransition = PopupExitTransition(popupWindow, it)
+            }
+        }
+    }
+
+    private fun createContentAnimation(): Animation {
+        val animation = AnimationSet(false)
+        val translate = TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, -1f,
+                Animation.RELATIVE_TO_SELF, 0f
+        )
+        translate.interpolator = AccelerateDecelerateInterpolator()
+        val alpha = AlphaAnimation(0f, 1f)
+        animation.addAnimation(translate)
+        animation.addAnimation(alpha)
+        animation.duration = 230
+        return animation
+    }
+
+    class PopupExitTransition(
+            private val popupWindow: PopupWindow,
+            private val view: View) : Fade(), Transition.TransitionListener {
+
+        override fun onTransitionStart(transition: Transition?) {
+            AnimatorSet().apply {
+                play(ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0f))
+                play(ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0f, (-view.height).toFloat()))
+                interpolator = AccelerateInterpolator()
+                duration = 150
+            }.start()
+        }
+
+        override fun onTransitionEnd(transition: Transition?) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                popupWindow.exitTransition = null
+            }
+        }
+
+        override fun onTransitionCancel(transition: Transition?) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                popupWindow.exitTransition = null
+            }
+        }
+
+        override fun onTransitionPause(transition: Transition?) {
+        }
+
+        override fun onTransitionResume(transition: Transition?) {
+        }
     }
 
 }

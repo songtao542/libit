@@ -9,6 +9,8 @@ import java.util.*
 
 class TestFilterActivity : AppCompatActivity() {
 
+    private var mPopupFilter: PopupFilter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_filter_test)
@@ -30,10 +32,12 @@ class TestFilterActivity : AppCompatActivity() {
     }
 
     private fun getPopupFilter(): PopupFilter {
-        val p = PopupFilter(this)
-        p.setFilterPicker(FilterPicker())
-        p.setFilter(getFilterData())
-        return p
+        if (mPopupFilter == null) {
+            mPopupFilter = PopupFilter(this)
+        }
+        mPopupFilter?.setFilterPicker(FilterPicker())
+        mPopupFilter?.setFilter(getFilterData())
+        return mPopupFilter!!
     }
 
     private fun getFilterDialogFragment(): FilterDialogFragment {

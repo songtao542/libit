@@ -4,47 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context=".decorationtest.ShowDecorationActivity">
 
     <Button
         android:id="@+id/horizontalLinear"
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="横向LinearLayoutManager" />
 
     <Button
         android:id="@+id/verticalLinear"
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="纵向LinearLayoutManager" />
 
     <Button
         android:id="@+id/horizontalGrid"
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="横向GridLayoutManager" />
 
     <Button
         android:id="@+id/verticalGrid"
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="纵向GridLayoutManager" />
 
     <Button
         android:id="@+id/horizontalStaggered"
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="横向StaggeredGridLayoutManager" />
 
     <Button
         android:id="@+id/verticalStaggered"
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="纵向StaggeredGridLayoutManager" />

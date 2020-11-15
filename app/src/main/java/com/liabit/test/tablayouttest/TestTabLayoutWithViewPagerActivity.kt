@@ -4,41 +4,52 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.PagerAdapter
+import com.liabit.extension.dp
 import com.liabit.tablayout.DefaultTabAdapter
+import com.liabit.tablayout.TabAdapter
 import com.liabit.tablayout.TabIndicator
-import com.liabit.tablayout.indicator.BezierTabIndicator
-import com.liabit.tablayout.indicator.LineTabIndicator
-import com.liabit.tablayout.indicator.TriangularTabIndicator
-import com.liabit.tablayout.indicator.WrapTabIndicator
+import com.liabit.tablayout.indicator.*
 import com.liabit.test.R
-import kotlinx.android.synthetic.main.activity_test_tablayout_fix_mode.*
-import java.lang.StringBuilder
+import kotlinx.android.synthetic.main.activity_test_tab_layout_with_viewpager.*
 import kotlin.random.Random
 
-class TestTabLayoutFixModeActivity : AppCompatActivity() {
+class TestTabLayoutWithViewPagerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test_tablayout_fix_mode)
+        setContentView(R.layout.activity_test_tab_layout_with_viewpager)
 
-        val test = arrayOf(R.mipmap.test1, R.mipmap.test2, R.mipmap.test3)
+        val test = arrayOf(R.mipmap.test1, R.mipmap.test2, R.mipmap.test3, R.mipmap.test4, R.mipmap.test5)
 
         viewPager.adapter = object : PagerAdapter() {
+
+            val pageCount = 10
+
+            val titles = Array(pageCount) {
+                val randomLength = Random.nextInt(8)
+                val pad = StringBuilder()
+                for (i in 0 until randomLength + 1) {
+                    pad.append("P")
+                }
+                return@Array "Title$it-$pad"
+            }
+
             override fun isViewFromObject(view: View, obj: Any): Boolean {
                 return view == obj
             }
 
-            override fun getCount() = 3
+            override fun getCount() = pageCount
 
             override fun instantiateItem(container: ViewGroup, position: Int): Any {
-                val imageView = ImageView(this@TestTabLayoutFixModeActivity)
-                imageView.setImageResource(test[position % 3])
+                val imageView = ImageView(this@TestTabLayoutWithViewPagerActivity)
+                imageView.setImageResource(test[position % 5])
                 container.addView(imageView)
                 return imageView
             }
@@ -48,14 +59,11 @@ class TestTabLayoutFixModeActivity : AppCompatActivity() {
             }
 
             override fun getPageTitle(position: Int): CharSequence? {
-                val randomLength = Random.nextInt(8)
-                val pad = StringBuilder()
-                for (i in 0 until randomLength) {
-                    pad.append("P")
-                }
-                return "Title$pad$position"
+                return titles[position]
             }
         }
+
+        tab0.setupWithViewPager(viewPager)
 
         tab1.tabAdapter = object : DefaultTabAdapter() {
             override fun onCreateInterpolator(type: Int): Interpolator {
@@ -110,15 +118,23 @@ class TestTabLayoutFixModeActivity : AppCompatActivity() {
         }
         tab4.setupWith(viewPager)
 
-        tab5.tabAdapter = object : DefaultTabAdapter() {
+        tab5.tabAdapter = object : TabAdapter {
             override fun onCreateInterpolator(type: Int): Interpolator {
-                return AccelerateInterpolator()
+                return AccelerateDecelerateInterpolator()
             }
 
             override fun onCreateTabIndicator(context: Context, count: Int): TabIndicator {
-                return WrapTabIndicator(context)
+                val indicator = ScaleCircleIndicator(context)
+                indicator.setCount(count)
+                indicator.setFill(true)
+                indicator.setMaxRadius(5.dp(this@TestTabLayoutWithViewPagerActivity))
+                indicator.color = 0xff333333.toInt()
+                indicator.isClickable = true
+                indicator.selectColor = 0xffff0000.toInt()
+                return indicator
             }
         }
         tab5.setupWith(viewPager)
+
     }
 }

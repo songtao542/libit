@@ -17,14 +17,24 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".tablayouttest.TestTabLayoutActivity"
+            android:label="TestTabLayout" />
+        <activity
+            android:name=".tablayouttest.TestTabLayoutWithViewPagerActivity"
+            android:label="TabLayoutPager" />
+        <activity
+            android:name=".tablayouttest.TestTabLayoutFixModeWithViewPagerActivity"
+            android:label="TabLayoutFixModePager" />
+        <activity
+            android:name=".tablayouttest.TestTabLayoutWithViewPager2Activity"
+            android:label="TabLayoutPager2" />
+        <activity
+            android:name=".tablayouttest.TestTabLayoutFixModeWithViewPager2Activity"
+            android:label="TabLayoutFixModePager2" />
+
+        <activity
             android:name=".tagviewtest.TestTagViewActivity"
             android:label="TagView" />
-        <activity
-            android:name=".tablayouttest.TestTabLayoutActivity"
-            android:label="TabLayout" />
-        <activity
-            android:name=".tablayouttest.TestTabLayoutFixModeActivity"
-            android:label="TabLayout" />
         <activity
             android:name=".decorationtest.ShowDecorationActivity"
             android:label="Decoration" />
@@ -58,7 +68,6 @@
         <activity
             android:name=".gesturetest.TestSwipeActivity"
             android:label="TestSwipe" />
-
         <activity
             android:name=".TestFragmentVisibleActivity"
             android:label="Fragment可见性" />

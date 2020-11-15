@@ -43,6 +43,7 @@ class TestPickerActivity : AppCompatActivity() {
             val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(false)
                     .setWithTime(true)
+                    .set24HourFormat(false)
                     .setTitle("选择时间")
                     .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { _, _ -> })
                     .setPositiveButton(R.string.confirm, DialogInterface.OnClickListener { _, _ -> })
@@ -53,7 +54,7 @@ class TestPickerActivity : AppCompatActivity() {
             val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(false)
                     .setWithTime(true)
-                    .set24HourFormat(false)
+                    .set24HourFormat(true)
                     .setTitle("选择时间")
                     .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { _, _ -> })
                     .setPositiveButton(R.string.confirm, DialogInterface.OnClickListener { _, _ -> })
@@ -61,15 +62,6 @@ class TestPickerActivity : AppCompatActivity() {
             dialog.show()
         }
         dateTimePicker.setOnClickListener {
-            val dialog = DateTimePickerDialog.Builder(this)
-                    .setWithDate(true)
-                    .setWithTime(true)
-                    .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { _, _ -> })
-                    .setPositiveButton(R.string.confirm, DialogInterface.OnClickListener { _, _ -> })
-                    .create()
-            dialog.show()
-        }
-        lunarPicker.setOnClickListener {
             val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(true)
                     .setWithTime(true)

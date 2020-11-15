@@ -1,7 +1,8 @@
 package com.liabit.test;
 
-import com.liabit.decoration.SpaceDecoration;
 import com.liabit.popup.PopupMenu;
+
+import java.util.List;
 
 /**
  * Author:         songtao
@@ -11,8 +12,11 @@ class TestJava {
 
     PopupMenu.MenuItem mItem = new PopupMenu.MenuItem("");
 
-
     public void man(String[] args) {
+
+        List<? extends CharSequence> a;
+
+
 
     }
 }

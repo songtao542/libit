@@ -3,16 +3,12 @@ package com.liabit.tablayout
 import android.animation.ArgbEvaluator
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.RippleDrawable
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
-import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import kotlin.math.max
 import kotlin.math.min
@@ -51,7 +47,7 @@ class TextTabView : AppCompatTextView, TabView {
                 ColorDrawable(0x00ffffff), ColorDrawable(0xff000000.toInt()))
     }
 
-    override fun onPageScrolled(positionOffset: Float) {
+    override fun onPageScrolled(index: Int, positionOffset: Float) {
         val color = mArgbEvaluator.evaluate(positionOffset, mSelectColor, mNormalColor) as Int
         super.setTextColor(color)
         if (mSelectTextSize != 0f) {
@@ -61,6 +57,10 @@ class TextTabView : AppCompatTextView, TabView {
             val textSize = mNormalTextSize + (mSelectTextSize - mNormalTextSize) * (1f - positionOffset)
             super.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
         }
+    }
+
+    override fun onPageSelected(index: Int, position: Int) {
+        super.setTextColor(if (index == position) mSelectColor else mNormalColor)
     }
 
     fun setSelectTextColor(color: Int) {

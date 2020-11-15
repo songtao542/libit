@@ -4,73 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context=".tablayouttest.TestTabLayoutActivity">
 
     <Button
-        android:id="@+id/fixMode"
-        android:layout_width="200dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:text="Fix Mode" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <com.liabit.tablayout.TabLayout
-            android:id="@+id/tab1"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            app:tabMode="scrollable" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
-        <com.liabit.tablayout.TabLayout
-            android:id="@+id/tab2"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            app:tabMode="scrollable" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
-        <com.liabit.tablayout.TabLayout
-            android:id="@+id/tab3"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            app:tabMode="scrollable" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
-        <com.liabit.tablayout.TabLayout
-            android:id="@+id/tab4"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            app:tabMode="scrollable" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
-        <com.liabit.tablayout.TabLayout
-            android:id="@+id/tab5"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            app:tabMode="fixed" />
-
-    </LinearLayout>
-
-    <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:onClick="onClick"
+        android:text="ViewPager"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/viewPagerFixMode"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:onClick="onClick"
+        android:text="ViewPager Fix Mode"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/viewPager2"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:onClick="onClick"
+        android:text="ViewPager2"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/viewPager2FixMode"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:onClick="onClick"
+        android:text="ViewPager2 Fix Mode"
+        android:textAllCaps="false" />
 
 </LinearLayout>

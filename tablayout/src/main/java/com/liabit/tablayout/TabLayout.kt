@@ -11,11 +11,14 @@ import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.viewpager2.widget.ViewPager2
 import kotlin.math.min
 
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class TabLayout : FrameLayout, OnPageChangeListener, ViewPager.OnAdapterChangeListener {
 
     companion object {
@@ -23,7 +26,8 @@ class TabLayout : FrameLayout, OnPageChangeListener, ViewPager.OnAdapterChangeLi
         const val FIX = 1
     }
 
-    var viewPager: ViewPager? = null
+    var viewPager: ViewPagerProxy? = null
+    private var mClickTabToSetPosition = false
 
     private var mTabAdapter: TabAdapter = DefaultTabAdapter()
     private var mTabIndicator: TabIndicator? = null
@@ -93,22 +97,34 @@ class TabLayout : FrameLayout, OnPageChangeListener, ViewPager.OnAdapterChangeLi
         mTabIndicator?.onPageScrolled(this, position, positionOffset)
         val tabCount = mTabContainer.childCount
         if (tabCount > 0) {
-            val tabLeft = mTabContainer.getChildAt(position) as TabView
-            tabLeft.onPageScrolled(positionOffset)
+            val tabLeft = mTabContainer.getChildAt(position) as? TabView
+            tabLeft?.onPageScrolled(position, positionOffset)
             if (position + 1 < tabCount) {
-                val tabRight = mTabContainer.getChildAt(position + 1) as TabView
-                tabRight.onPageScrolled(1f - positionOffset)
+                val tabRight = mTabContainer.getChildAt(position + 1) as? TabView
+                tabRight?.onPageScrolled(position + 1, 1f - positionOffset)
             }
             mScrollView?.let {
-                if (position in 0 until tabCount) {
-                    val currentPosition = min(tabCount - 1, position)
-                    val nextPosition = min(tabCount - 1, position + 1)
-                    val current = getTabViewAt(currentPosition)
-                    val next = getTabViewAt(nextPosition)
-                    if (current != null && next != null) {
-                        val scrollTo = current.getView().left + current.getView().width / 2f - it.width * 0.5f
-                        val nextScrollTo = next.getView().left + next.getView().width / 2f - it.width * 0.5f
-                        it.scrollTo((scrollTo + (nextScrollTo - scrollTo) * positionOffset).toInt(), 0)
+                if (mClickTabToSetPosition) {
+                    val scrollPosition = viewPager?.currentItem ?: position
+                    if (scrollPosition in 0 until tabCount) {
+                        val currentPosition = min(tabCount - 1, scrollPosition)
+                        val current = getTabViewAt(currentPosition)
+                        if (current != null) {
+                            val scrollTo = current.getView().left + current.getView().width / 2f - it.width * 0.5f
+                            it.smoothScrollTo(scrollTo.toInt(), 0)
+                        }
+                    }
+                } else {
+                    if (position in 0 until tabCount) {
+                        val currentPosition = min(tabCount - 1, position)
+                        val nextPosition = min(tabCount - 1, position + 1)
+                        val current = getTabViewAt(currentPosition)
+                        val next = getTabViewAt(nextPosition)
+                        if (current != null && next != null) {
+                            val scrollTo = current.getView().left + current.getView().width / 2f - it.width * 0.5f
+                            val nextScrollTo = next.getView().left + next.getView().width / 2f - it.width * 0.5f
+                            it.scrollTo((scrollTo + (nextScrollTo - scrollTo) * positionOffset).toInt(), 0)
+                        }
                     }
                 }
             }
@@ -117,22 +133,66 @@ class TabLayout : FrameLayout, OnPageChangeListener, ViewPager.OnAdapterChangeLi
 
     override fun onPageSelected(position: Int) {
         mTabIndicator?.onPageSelected(this, position)
-        val count = mTabContainer.childCount
-        for (i in 0 until count) {
-            val tab = mTabContainer.getChildAt(i)
-            tab.isSelected = i == position
+        notifyTabViewPositionSelected(position)
+    }
+
+    override fun onPageScrollStateChanged(state: Int) {
+        val pager = viewPager
+        if (state == ViewPager.SCROLL_STATE_IDLE) {
+            mClickTabToSetPosition = false
+            if (pager != null) {
+                val position = pager.currentItem
+                notifyTabViewPositionSelected(position)
+            }
         }
     }
 
-    override fun onPageScrollStateChanged(state: Int) {}
+    private fun notifyTabViewPositionSelected(position: Int) {
+        val count = mTabContainer.childCount
+        for (i in 0 until count) {
+            val tabView = mTabContainer.getChildAt(i) as? TabView
+            tabView?.getView()?.isSelected = i == position
+            tabView?.onPageSelected(i, position)
+        }
+    }
 
     fun setupWith(viewPager: ViewPager) {
-        if (this.viewPager === viewPager) {
+        if (this.viewPager?.isSameWith(viewPager) == true) {
             return
         }
-        this.viewPager = viewPager
+        this.viewPager = ViewPagerProxy(viewPager)
         viewPager.addOnAdapterChangeListener(this)
         viewPager.addOnPageChangeListener(this)
+        initTabAndIndicator()
+    }
+
+    fun setupWith(viewPager: ViewPager2, titles: List<out CharSequence>?) {
+        setupWith(viewPager, titles?.toTypedArray())
+    }
+
+    fun setupWith(viewPager: ViewPager2, titles: Array<out CharSequence>?) {
+        if (this.viewPager?.isSameWith(viewPager) == true) {
+            return
+        }
+        this.viewPager = ViewPagerProxy(viewPager, titles)
+        viewPager.adapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                initTabAndIndicator()
+            }
+        })
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                this@TabLayout.onPageScrolled(position, positionOffset, positionOffsetPixels)
+            }
+
+            override fun onPageSelected(position: Int) {
+                this@TabLayout.onPageSelected(position)
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+                this@TabLayout.onPageScrollStateChanged(state)
+            }
+        })
         initTabAndIndicator()
     }
 
@@ -142,13 +202,13 @@ class TabLayout : FrameLayout, OnPageChangeListener, ViewPager.OnAdapterChangeLi
 
     private fun initTabAndIndicator() {
         val viewPager = viewPager ?: return
-        val viewPagerAdapter = viewPager.adapter ?: return
-        val count = viewPagerAdapter.count
+        // 先移除旧的 TabView
+        mTabContainer.removeAllViews()
+        val count = viewPager.itemCount
         for (i in 0 until count) {
-            val title = viewPagerAdapter.getPageTitle(i)
+            val title = viewPager.getPageTitle(i)
             val tab = tabAdapter.onCreateTabView(context, i, title)
             if (tab is View) {
-                val view = tab as View
                 var lp: LinearLayout.LayoutParams
                 if (mTabMode == FIX) {
                     lp = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -157,16 +217,21 @@ class TabLayout : FrameLayout, OnPageChangeListener, ViewPager.OnAdapterChangeLi
                     lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
                     val minWidth = tabAdapter.getTabMinWidth(context, i)
                     if (minWidth > 0) {
-                        view.minimumWidth = minWidth
+                        tab.minimumWidth = minWidth
                     }
                 }
-                (tab as View).setOnClickListener { viewPager.currentItem = i }
-                mTabContainer.addView(view, lp)
+                tab.setOnClickListener {
+                    mClickTabToSetPosition = true
+                    viewPager.currentItem = i
+                }
+                mTabContainer.addView(tab, lp)
             }
         }
         mTabIndicator = tabAdapter.onCreateTabIndicator(context, count)
         if (mTabIndicator is View) {
             val lp = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            // 先移除旧的 Indicator
+            mIndicatorContainer.removeAllViews()
             mIndicatorContainer.addView(mTabIndicator as View, lp)
             if (mTabIndicator?.isFront() != true) {
                 mTabContainer.bringToFront()

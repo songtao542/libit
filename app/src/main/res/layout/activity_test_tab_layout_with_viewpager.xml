@@ -5,18 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".tablayouttest.TestTabLayoutFixModeActivity">
+    tools:context=".tablayouttest.TestTabLayoutWithViewPagerActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab0"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            app:tabSelectedTextColor="@color/filter_light_blue"
+            app:tabMode="scrollable" />
+
         <com.liabit.tablayout.TabLayout
             android:id="@+id/tab1"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            app:tabMode="fixed" />
+            app:tabMode="scrollable" />
 
         <View
             android:layout_width="match_parent"
@@ -26,7 +33,7 @@
             android:id="@+id/tab2"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            app:tabMode="fixed" />
+            app:tabMode="scrollable" />
 
         <View
             android:layout_width="match_parent"
@@ -36,7 +43,7 @@
             android:id="@+id/tab3"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            app:tabMode="fixed" />
+            app:tabMode="scrollable" />
 
         <View
             android:layout_width="match_parent"
@@ -46,7 +53,7 @@
             android:id="@+id/tab4"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            app:tabMode="fixed" />
+            app:tabMode="scrollable" />
 
         <View
             android:layout_width="match_parent"
@@ -54,9 +61,8 @@
 
         <com.liabit.tablayout.TabLayout
             android:id="@+id/tab5"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
-            app:indicatorMode="matchTabContent"
             app:tabMode="fixed" />
 
     </LinearLayout>

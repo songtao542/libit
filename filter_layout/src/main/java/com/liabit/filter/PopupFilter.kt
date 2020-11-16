@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 
 @Suppress("unused")
-class PopupFilter(context: Context) : FilterController by FilterControllerImpl() {
+class PopupFilter(context: Context) : FilterController by FilterControllerImpl(), FilterLayout.OnConfirmListener {
 
     private var mPopupWindow: PopupWindowCompat = PopupWindowCompat(context)
     private var mFilterLayout: FilterLayout = FilterLayout(context)
@@ -23,8 +23,14 @@ class PopupFilter(context: Context) : FilterController by FilterControllerImpl()
         mFilterLayout.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mPopHeight)
     }
 
+    override fun onConfirm(view: View) {
+        mPopupWindow.dismiss()
+        getOnConfirmListener()?.onConfirm(view)
+    }
+
     fun show(anchor: View) {
         setup(mFilterLayout)
+        mFilterLayout.setOnConfirmListener(this)
         mPopupWindow.setContentView(mFilterLayout)
         mPopupWindow.setFullScreenWidth()
         mPopupWindow.setShowMask(true)

@@ -1,4 +1,4 @@
-package com.liabit.decoration
+package com.liabit.recyclerview.decoration
 
 import android.content.Intent
 import android.graphics.Canvas

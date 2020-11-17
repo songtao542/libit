@@ -1,5 +1,5 @@
 include ':tagview'
-include ':recyclerview_decoration'
+include ':smartrecyclerview'
 include ':popup'
 include ':addsub'
 include ':picker'

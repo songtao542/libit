@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.liabit.decoration.SpaceDecoration
-import com.liabit.extension.dip
+import com.liabit.recyclerview.decoration.SpaceDecoration
 import com.liabit.extension.dp
 import com.liabit.test.R
 import kotlin.random.Random

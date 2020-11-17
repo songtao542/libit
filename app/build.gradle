@@ -36,7 +36,7 @@ dependencies {
     implementation project(':filter_layout')
     implementation project(':addsub')
     implementation project(':popup')
-    implementation project(':recyclerview_decoration')
+    implementation project(':smartrecyclerview')
     implementation project(':tablayout')
     implementation project(':ext')
     implementation project(':tagview')

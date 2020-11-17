@@ -236,5 +236,10 @@
       <option name="name" value="maven" />
       <option name="url" value="file:$PROJECT_DIR$/recyclerview_decoration/repo" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="file:/$PROJECT_DIR$/smartrecyclerview/repo" />
+    </remote-repository>
   </component>
 </project>

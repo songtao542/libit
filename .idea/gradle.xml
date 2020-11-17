@@ -7,6 +7,7 @@
         <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleHome" value="D:/Gradle/gradle-6.7" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -19,10 +20,10 @@
             <option value="$PROJECT_DIR$/map_location_picker" />
             <option value="$PROJECT_DIR$/picker" />
             <option value="$PROJECT_DIR$/popup" />
-            <option value="$PROJECT_DIR$/recyclerview_decoration" />
             <option value="$PROJECT_DIR$/screencapture" />
             <option value="$PROJECT_DIR$/screenrecord" />
             <option value="$PROJECT_DIR$/shimmer" />
+            <option value="$PROJECT_DIR$/smartrecyclerview" />
             <option value="$PROJECT_DIR$/statebutton" />
             <option value="$PROJECT_DIR$/tablayout" />
             <option value="$PROJECT_DIR$/tagview" />

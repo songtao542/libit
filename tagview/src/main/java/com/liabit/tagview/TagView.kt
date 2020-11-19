@@ -152,7 +152,6 @@ class TagView : AppCompatTextView {
     }
 
     private fun updateText() {
-        if (mTags.isEmpty()) return
         val sb = InnerSpannableStringBuilder()
         val iterator = mTags.iterator()
         while (iterator.hasNext()) {

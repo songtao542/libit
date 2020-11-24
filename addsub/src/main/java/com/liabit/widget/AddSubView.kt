@@ -297,26 +297,17 @@ class AddSubView : RelativeLayout, TextWatcher {
         if (text.isNotBlank() && TextUtils.isDigitsOnly(text)) {
             // 最大输入长度限制为 Int.MAX_VALUE 的长度，即最多输入10个字符，所以这里转换成 Long 类型一定不会出错
             val num = text.toLong()
-            var number = if (num > Int.MAX_VALUE) Int.MAX_VALUE else num.toInt()
+            val number = if (num > Int.MAX_VALUE) Int.MAX_VALUE else num.toInt()
             val min = mMin
             val max = mMax
-            if (min != null && number < min) {
-                if (mValueOutOfRangeListener != null || mValueOutOfRangeListener != null) {
-                    mOnValueOutOfRangeListener?.invoke(this, number)
-                    mValueOutOfRangeListener?.onValueOutOfRange(this, number)
-                } else {
-                    if (number < min) number = min
-                    updateTextWithoutNotify(number.toString())
-                }
+            if (min != null && max != null && min <= max && number > min && number < max) {
+                notifyOutOfRangeOrUpdateText(number, if (number < min) min else max)
                 return
-            } else if (max != null && number > max) {
-                if (mValueOutOfRangeListener != null || mValueOutOfRangeListener != null) {
-                    mOnValueOutOfRangeListener?.invoke(this, number)
-                    mValueOutOfRangeListener?.onValueOutOfRange(this, number)
-                } else {
-                    if (number > max) number = max
-                    updateTextWithoutNotify(number.toString())
-                }
+            } else if (min != null && max == null && number < min) {
+                notifyOutOfRangeOrUpdateText(number, min)
+                return
+            } else if (min == null && max != null && number > max) {
+                notifyOutOfRangeOrUpdateText(number, max)
                 return
             }
 
@@ -342,6 +333,15 @@ class AddSubView : RelativeLayout, TextWatcher {
             mOnEmptyListener?.invoke(this)
             mEmptyListener?.onEmpty(this)
             mNumEditor?.hint = mValue.toString()
+        }
+    }
+
+    private fun notifyOutOfRangeOrUpdateText(number: Int, updateToNumber: Int) {
+        if (mValueOutOfRangeListener != null || mValueOutOfRangeListener != null) {
+            mOnValueOutOfRangeListener?.invoke(this, number)
+            mValueOutOfRangeListener?.onValueOutOfRange(this, number)
+        } else {
+            updateTextWithoutNotify(updateToNumber.toString())
         }
     }
 

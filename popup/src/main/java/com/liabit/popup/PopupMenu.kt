@@ -600,7 +600,7 @@ class PopupMenu {
         mPopupWindow?.showAtLocation(parent, gravity, x, y)
     }
 
-    class MenuItem {
+    open class MenuItem {
         private var mPosition = 0
         private var mIconResId = 0
         private var mTailIconResId = 0
@@ -766,7 +766,7 @@ class PopupMenu {
     }
 
     interface OnMenuItemClickListener {
-        fun onOptionsItemSelected(item: MenuItem?)
+        fun onOptionsItemSelected(item: MenuItem)
     }
 
     /**

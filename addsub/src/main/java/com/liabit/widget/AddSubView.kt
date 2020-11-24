@@ -11,6 +11,7 @@ import android.text.InputFilter
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -33,14 +34,18 @@ import com.liabit.addsub.R
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class AddSubView : RelativeLayout, TextWatcher {
 
+    companion object {
+        const val TAG = "AddSubView"
+    }
+
     private var mNotifyChangeWhenActionDone: Boolean = false
     private var mAddButton: ImageView? = null
     private var mSubButton: ImageView? = null
     private var mNumEditor: EditText? = null
     private val mEditorRect = Rect()
     private var mEditorMaskView: View? = null
-    private var mMin: Int = 0
-    private var mMax: Int = 0
+    private var mMin: Int? = null
+    private var mMax: Int? = null
     private var mValue: Int = 0
     private var mOnValueChangedListener: ((view: AddSubView, value: Int, causeByEdit: Boolean) -> Unit)? = null
     private var mOnValueOutOfRangeListener: ((view: AddSubView, value: Int) -> Unit)? = null
@@ -109,9 +114,15 @@ class AddSubView : RelativeLayout, TextWatcher {
                 addIcon?.setTintList(iconColorList)
                 subIcon?.setTintList(iconColorList)
             }
-            mMin = typedArray.getInt(R.styleable.AddSubView_minValue, 0)
-            mMax = typedArray.getInt(R.styleable.AddSubView_maxValue, 0)
-            value = typedArray.getInt(R.styleable.AddSubView_value, mMin)
+            if (typedArray.hasValue(R.styleable.AddSubView_minValue)) {
+                mMin = typedArray.getInt(R.styleable.AddSubView_minValue, 0)
+            }
+            if (typedArray.hasValue(R.styleable.AddSubView_maxValue)) {
+                mMax = typedArray.getInt(R.styleable.AddSubView_maxValue, 0)
+            }
+            if (typedArray.hasValue(R.styleable.AddSubView_value)) {
+                value = typedArray.getInt(R.styleable.AddSubView_value, 0)
+            }
             typedArray.recycle()
         }
 
@@ -123,11 +134,7 @@ class AddSubView : RelativeLayout, TextWatcher {
         mAddButton?.setImageDrawable(addIcon)
         mSubButton?.setImageDrawable(subIcon)
 
-        if (mMax != 0) {
-            setupEditorFilter(mMax)
-        } else {
-            setupEditorFilter(Int.MAX_VALUE)
-        }
+        setupEditorFilter(mMax ?: Int.MAX_VALUE)
 
         mNumEditor?.setText(value.toString())
         setValueInner(value)
@@ -194,17 +201,21 @@ class AddSubView : RelativeLayout, TextWatcher {
         }
 
         mAddButton?.setOnClickListener {
-            if (mValue < mMax) {
-                setValue(mValue + 1, false)
-                mOnValueChangedListener?.invoke(this, mValue, false)
-                mValueChangedListener?.onValueChanged(this, mValue, edited = false)
+            mMax?.let {
+                if (mValue < it) {
+                    setValue(mValue + 1, false)
+                    mOnValueChangedListener?.invoke(this, mValue, false)
+                    mValueChangedListener?.onValueChanged(this, mValue, edited = false)
+                }
             }
         }
         mSubButton?.setOnClickListener {
-            if (mValue > mMin) {
-                setValue(mValue - 1, false)
-                mOnValueChangedListener?.invoke(this, mValue, false)
-                mValueChangedListener?.onValueChanged(this, mValue, edited = false)
+            mMin?.let {
+                if (mValue > it) {
+                    setValue(mValue - 1, false)
+                    mOnValueChangedListener?.invoke(this, mValue, false)
+                    mValueChangedListener?.onValueChanged(this, mValue, edited = false)
+                }
             }
         }
         mNumEditor?.addTextChangedListener(this)
@@ -287,12 +298,23 @@ class AddSubView : RelativeLayout, TextWatcher {
             // 最大输入长度限制为 Int.MAX_VALUE 的长度，即最多输入10个字符，所以这里转换成 Long 类型一定不会出错
             val num = text.toLong()
             var number = if (num > Int.MAX_VALUE) Int.MAX_VALUE else num.toInt()
-            if (number < mMin || number > mMax) {
+            val min = mMin
+            val max = mMax
+            if (min != null && number < min) {
                 if (mValueOutOfRangeListener != null || mValueOutOfRangeListener != null) {
                     mOnValueOutOfRangeListener?.invoke(this, number)
                     mValueOutOfRangeListener?.onValueOutOfRange(this, number)
                 } else {
-                    number = if (number < mMin) mMin else mMax
+                    if (number < min) number = min
+                    updateTextWithoutNotify(number.toString())
+                }
+                return
+            } else if (max != null && number > max) {
+                if (mValueOutOfRangeListener != null || mValueOutOfRangeListener != null) {
+                    mOnValueOutOfRangeListener?.invoke(this, number)
+                    mValueOutOfRangeListener?.onValueOutOfRange(this, number)
+                } else {
+                    if (number > max) number = max
                     updateTextWithoutNotify(number.toString())
                 }
                 return
@@ -323,13 +345,16 @@ class AddSubView : RelativeLayout, TextWatcher {
         }
     }
 
-
     private fun updateTextWithoutNotify(text: String) {
         mNumEditor?.let {
             it.removeTextChangedListener(this)
             it.setText(text)
-            if (text.isNotBlank()) {
-                it.setSelection(text.length)
+            try {
+                if (text.isNotBlank()) {
+                    it.setSelection(text.length)
+                }
+            } catch (e: Throwable) {
+                Log.d(TAG, "updateTextWithoutNotify error: ", e)
             }
             it.addTextChangedListener(this)
         }
@@ -362,9 +387,24 @@ class AddSubView : RelativeLayout, TextWatcher {
         updateButtonState()
     }
 
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        if (!enabled) {
+            mAddButton?.isEnabled = false
+            mSubButton?.isEnabled = false
+        }
+    }
+
     private fun updateButtonState() {
-        mAddButton?.isEnabled = mValue < mMax
-        mSubButton?.isEnabled = mValue > mMin
+        if (!isEnabled) {
+            return
+        }
+        mMax?.let {
+            mAddButton?.isEnabled = mValue < it
+        }
+        mMin?.let {
+            mSubButton?.isEnabled = mValue > it
+        }
     }
 
     fun setValue(value: Int) {

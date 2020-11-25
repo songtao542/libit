@@ -300,7 +300,7 @@ class AddSubView : RelativeLayout, TextWatcher {
             val number = if (num > Int.MAX_VALUE) Int.MAX_VALUE else num.toInt()
             val min = mMin
             val max = mMax
-            if (min != null && max != null && min <= max && number > min && number < max) {
+            if (min != null && max != null && min <= max && (number < min || number > max)) {
                 notifyOutOfRangeOrUpdateText(number, if (number < min) min else max)
                 return
             } else if (min != null && max == null && number < min) {

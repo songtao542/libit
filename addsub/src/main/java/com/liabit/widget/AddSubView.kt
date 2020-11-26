@@ -250,9 +250,11 @@ class AddSubView : RelativeLayout, TextWatcher {
 
     private fun configEditDialog() {
         if (mShowEditDialog) {
-            mNumEditor?.isClickable = false
+            mNumEditor?.isEnabled = false
             mEditorMaskView?.setOnClickListener {
-                showDialog()
+                if (isEnabled) {
+                    showDialog()
+                }
             }
         }
     }

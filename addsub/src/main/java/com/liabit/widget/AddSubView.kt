@@ -212,6 +212,9 @@ class AddSubView : RelativeLayout, TextWatcher {
         }
 
         mAddButton?.setOnClickListener {
+            if (!isEnabled) {
+                return@setOnClickListener
+            }
             mMax?.let {
                 if (mValue < it) {
                     setValue(mValue + 1, false)
@@ -221,6 +224,9 @@ class AddSubView : RelativeLayout, TextWatcher {
             }
         }
         mSubButton?.setOnClickListener {
+            if (!isEnabled) {
+                return@setOnClickListener
+            }
             mMin?.let {
                 if (mValue > it) {
                     setValue(mValue - 1, false)
@@ -512,10 +518,9 @@ class AddSubView : RelativeLayout, TextWatcher {
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
-        if (!enabled) {
-            mAddButton?.isEnabled = false
-            mSubButton?.isEnabled = false
-        }
+        mNumEditor?.isEnabled = enabled
+        mAddButton?.isEnabled = enabled
+        mSubButton?.isEnabled = enabled
     }
 
     private fun updateButtonState() {

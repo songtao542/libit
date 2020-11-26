@@ -63,6 +63,8 @@ class AddSubView : RelativeLayout, TextWatcher {
     private var mAddIcon: Drawable? = null
     private var mSubIcon: Drawable? = null
 
+    private var mDialogTitle: CharSequence? = null
+
     private var mImm: InputMethodManager? = null
 
     constructor(context: Context) : super(context) {
@@ -106,6 +108,7 @@ class AddSubView : RelativeLayout, TextWatcher {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.AddSubView, defStyleAttr, defStyleRes)
             mShowEditDialog = typedArray.getBoolean(R.styleable.AddSubView_showEditDialog, false)
             mDialogTheme = typedArray.getResourceId(R.styleable.AddSubView_editDialogTheme, mDialogTheme)
+            mDialogTitle = typedArray.getString(R.styleable.AddSubView_editDialogTitle)
             mAddIcon = typedArray.getDrawable(R.styleable.AddSubView_addIcon) ?: mAddIcon
             mSubIcon = typedArray.getDrawable(R.styleable.AddSubView_subIcon) ?: mSubIcon
             editable = if (mShowEditDialog) false else typedArray.getBoolean(R.styleable.AddSubView_editable, true)
@@ -243,7 +246,7 @@ class AddSubView : RelativeLayout, TextWatcher {
         if (mShowEditDialog) {
             mNumEditor?.isClickable = false
             mEditorMaskView?.setOnClickListener {
-                showInputDialog()
+                showDialog()
             }
         }
     }
@@ -256,7 +259,17 @@ class AddSubView : RelativeLayout, TextWatcher {
         requestFocus()
     }
 
-    fun showInputDialog(): Dialog {
+    fun setDialogTitle(title: CharSequence) {
+        mDialogTitle = title
+    }
+
+    fun setDialogTitle(titleResId: Int) {
+        if (titleResId != 0) {
+            mDialogTitle = context.getString(titleResId)
+        }
+    }
+
+    fun showDialog(): Dialog {
         var dialog: AlertDialog? = mDialog
         if (dialog != null) {
             return dialog
@@ -361,7 +374,7 @@ class AddSubView : RelativeLayout, TextWatcher {
         }
         dialog = AlertDialog.Builder(context, mDialogTheme)
                 .setView(view)
-                .setTitle(R.string.add_sub_dialog_title)
+                .setTitle(mDialogTitle ?: context.getString(R.string.add_sub_dialog_title))
                 .setNegativeButton(R.string.add_sub_dialog_cancel) { d, _ ->
                     d.dismiss()
                 }

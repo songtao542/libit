@@ -7,6 +7,7 @@
         <attr name="editable" format="boolean" />
         <attr name="showEditDialog" format="boolean" />
         <attr name="editDialogTheme" format="reference" />
+        <attr name="editDialogTitle" format="reference|string" />
         <attr name="editBackground" format="reference" />
         <attr name="editHeight" format="dimension|reference" />
         <attr name="editWidth" format="dimension|reference" />

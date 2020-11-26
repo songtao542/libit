@@ -145,16 +145,14 @@ class AddSubView : RelativeLayout, TextWatcher {
         mAddIcon?.let { mAddButton?.setImageDrawable(it) }
         mSubIcon?.let { mSubButton?.setImageDrawable(it) }
 
-        mNumEditor?.let { setupEditTextFilter(mMax ?: Int.MAX_VALUE, it) }
-
-        mNumEditor?.setText(value.toString())
         setValueInner(value)
-        mNumEditor?.isEnabled = editable
-        editTextBackground?.let {
-            mNumEditor?.setBackground(it)
-        }
-
         mNumEditor?.let {
+            setupEditTextFilter(mMax ?: Int.MAX_VALUE, it)
+            it.setText(value.toString())
+            it.isEnabled = editable
+            editTextBackground?.let { drawable ->
+                it.background = drawable
+            }
             var lp = it.layoutParams
             if (lp != null) {
                 if (editTextWidth > 0) {
@@ -172,6 +170,17 @@ class AddSubView : RelativeLayout, TextWatcher {
                 }
             }
             it.layoutParams = lp
+
+            if (textColor != null) {
+                it.setTextColor(textColor)
+            }
+            if (textColorHint != null) {
+                it.setHintTextColor(textColorHint)
+            } else {
+                it.textColors?.let { textColors ->
+                    it.setHintTextColor(textColors)
+                }
+            }
         }
         if (iconSize > 0) {
             val size = iconSize.toInt()
@@ -200,15 +209,6 @@ class AddSubView : RelativeLayout, TextWatcher {
             val padding = iconPadding.toInt()
             mAddButton?.setPadding(padding, padding, padding, padding)
             mSubButton?.setPadding(padding, padding, padding, padding)
-        }
-
-        mNumEditor?.let {
-            if (textColor != null) {
-                it.setTextColor(textColor)
-            }
-            if (textColorHint != null) {
-                it.setHintTextColor(textColorHint)
-            }
         }
 
         mAddButton?.setOnClickListener {
@@ -564,8 +564,7 @@ class AddSubView : RelativeLayout, TextWatcher {
     }
 
     fun setHint(value: Int) {
-        setValueInner(value)
-        mNumEditor?.hint = "$value"
+        setHint(value, true)
     }
 
     /**
@@ -573,9 +572,14 @@ class AddSubView : RelativeLayout, TextWatcher {
      */
     fun setHint(value: Int, clear: Boolean) {
         setValueInner(value)
-        mNumEditor?.hint = "$value"
-        if (clear) {
-            mNumEditor?.let { updateTextWithoutNotify("", it) }
+        mNumEditor?.let {
+            it.textColors?.let { textColors ->
+                it.setHintTextColor(textColors)
+            }
+            it.hint = "$value"
+            if (clear) {
+                updateTextWithoutNotify("", it)
+            }
         }
     }
 

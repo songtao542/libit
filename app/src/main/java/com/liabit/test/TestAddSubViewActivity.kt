@@ -18,7 +18,7 @@ class TestAddSubViewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_and_sub_test)
 
         Log.d("TTTT", "addAndSubView dialog theme=${R.style.AlertDialogTheme}")
-
+        addAndSubView.setHint(3)
         addAndSubView.setOnValueChangedListener { view, value, edited ->
             Log.d("TTTT", "addAndSubView value=$value  edited=$edited")
         }

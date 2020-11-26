@@ -2,6 +2,7 @@ package com.liabit.picker
 
 import android.content.Context
 import android.content.DialogInterface
+import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -89,7 +90,7 @@ class PickerDialog private constructor(private val mContext: Context,
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    class Builder(private val mContext: Context, theme: Int = R.style.PickerDialog) {
+    class Builder(private val mContext: Context, private var theme: Int = R.style.PickerDialog) {
         private val mBuilder: AlertDialog.Builder = AlertDialog.Builder(mContext, theme)
 
         private var mIsAutoUpdateTitle = false
@@ -142,7 +143,7 @@ class PickerDialog private constructor(private val mContext: Context,
         }
 
         fun create(): PickerDialog {
-            val contentView = View.inflate(mContext, R.layout.picker_dialog, null)
+            val contentView = View.inflate(ContextThemeWrapper(mContext, theme), R.layout.picker_dialog, null)
             val pickerView: NumberPickerView = contentView.findViewById(R.id.picker_view)
 
             pickerView.displayedValues = resolveDisplayValues()

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -173,7 +174,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    class Builder(private val mContext: Context, theme: Int = R.style.PickerDialog) {
+    class Builder(private val mContext: Context, private var theme: Int = R.style.PickerDialog) {
 
         private val mCalendar: Calendar = Calendar.getInstance()
 
@@ -322,16 +323,17 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             var calendarView: DatePickerView? = null
             var timePickerView: TimePickerView? = null
             val title: CharSequence
+            val context = ContextThemeWrapper(mContext, theme)
             if (!mIsWithViewDate && mIsWithViewTime) {  // 只设置时间
                 title = mContext.getString(R.string.picker_select_time)
-                contentView = View.inflate(mContext, R.layout.picker_time_dialog, null)
+                contentView = View.inflate(context, R.layout.picker_time_dialog, null)
                 timePickerView = contentView.findViewById(R.id.time_picker_view)
                 if (mIs24HourFormat >= 0) {
                     timePickerView.set24HourFormat(mIs24HourFormat == 1)
                 }
             } else if (mIsWithViewDate && mIsWithViewTime) {    // 日期时间都设置
                 title = mContext.getString(R.string.picker_select_date_time)
-                contentView = View.inflate(mContext, R.layout.picker_date_time_dialog, null)
+                contentView = View.inflate(context, R.layout.picker_date_time_dialog, null)
                 calendarView = contentView.findViewById(R.id.date_picker_view)
                 timePickerView = contentView.findViewById(R.id.time_picker_view)
                 timePickerView.set24HourFormat(true) // UI设计日期时间同时显示时，只有24h
@@ -339,7 +341,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
                 timePickerView.setItemPadding(mContext.resources.getDimensionPixelSize(R.dimen.time_picker_item_padding))
             } else {    // 其他情况只设置日期，默认
                 title = mContext.getString(R.string.picker_select_date)
-                contentView = View.inflate(mContext, R.layout.picker_date_dialog, null)
+                contentView = View.inflate(context, R.layout.picker_date_dialog, null)
                 calendarView = contentView.findViewById(R.id.date_picker_view)
             }
 

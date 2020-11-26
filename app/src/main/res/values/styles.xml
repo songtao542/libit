@@ -6,7 +6,39 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
     </style>
+
+    <style name="ButtonStyle">
+        <!-- Set background drawable and text size of the buttons here -->
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/add_sub_light_blue</item>
+    </style>
+
+    <style name="ButtonBarStyle">
+        <!-- Define a background for the button bar and a divider between the buttons here -->
+        <item name="android:divider">#ff9900</item>
+        <item name="android:dividerPadding">30dp</item>
+        <item name="android:showDividers">middle</item>
+        <item name="android:background">#ffff99</item>
+    </style>
+
+    <style name="AlertDialogTitle">
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ff444444</item>
+        <item name="android:scrollHorizontally">true</item>
+    </style>
+
+    <style name="AlertDialogTheme">
+        <item name="android:windowBackground">@drawable/add_sub_dialog_background</item>
+        <item name="android:windowTitleStyle">@style/AlertDialogTitle</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:buttonBarStyle">@style/ButtonBarStyle</item>
+        <item name="android:buttonBarButtonStyle">@style/ButtonStyle</item>
+    </style>
+
 
 </resources>

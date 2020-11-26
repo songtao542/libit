@@ -3,4 +3,6 @@
     <color name="add_sub_light_blue">#007cee</color>
     <color name="add_sub_light_blue_pressed">#0372d9</color>
     <color name="add_sub_dialog_divider_color">#c9c9c9</color>
+    <color name="add_sub_editor_bg_color">#eee</color>
+    <color name="add_sub_dialog_content_bg_stroke_color">#ddd</color>
 </resources>

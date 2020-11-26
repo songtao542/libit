@@ -3,6 +3,7 @@ package com.liabit.picker.address
 import android.content.Context
 import android.content.DialogInterface
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -99,7 +100,7 @@ class AddressPickerDialog private constructor(private val mContext: Context,
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    class Builder(private val mContext: Context, theme: Int = R.style.BottomSheetPickerDialog) {
+    class Builder(private val mContext: Context, private var theme: Int = R.style.BottomSheetPickerDialog) {
         private val mBuilder: AlertDialog.Builder = AlertDialog.Builder(mContext, theme)
 
         private var mIsAutoUpdateTitle = true
@@ -144,7 +145,7 @@ class AddressPickerDialog private constructor(private val mContext: Context,
         }
 
         fun create(): AddressPickerDialog {
-            val contentView = View.inflate(mContext, R.layout.picker_dialog_cascade, null)
+            val contentView = View.inflate(ContextThemeWrapper(mContext, theme), R.layout.picker_dialog_cascade, null)
             val cascadePickerView: CascadePickerView = contentView.findViewById(R.id.cascade_picker_view)
             cascadePickerView.setTextSize(14f, 15f)
             val addressData: List<Province> = AddressProvider.getProvince(mContext)

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="@dimen/add_sub_dialog_content_bg_radius" />
+    <stroke
+        android:width="@dimen/add_sub_dialog_content_bg_stroke_width"
+        android:color="@color/add_sub_dialog_content_bg_stroke_color" />
+    <solid android:color="@android:color/transparent" />
+</shape>

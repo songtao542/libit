@@ -4,21 +4,59 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/add_sub_dialog_edit_view_height"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/add_sub_dialog_edit_text_background"
+    <include layout="@layout/add_sub_edit_dialog_title" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/add_sub_dialog_content_margin_top"
+        android:background="@drawable/add_sub_dialog_content_background"
         android:gravity="center"
-        android:imeOptions="actionDone"
-        android:inputType="numberSigned"
-        android:paddingLeft="@dimen/add_sub_dialog_edit_view_radius"
-        android:paddingRight="@dimen/add_sub_dialog_edit_view_radius"
-        android:textColor="@android:color/black" />
+        android:padding="@dimen/add_sub_dialog_content_bg_stroke_width">
+
+        <LinearLayout
+            android:id="@+id/addSubContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/subButton"
+                android:layout_width="40dp"
+                android:layout_height="34dp"
+                android:background="?attr/selectableItemBackground"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_num_sub" />
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/add_sub_editor_bg_color"
+                android:gravity="center"
+                android:imeOptions="actionDone"
+                android:inputType="numberSigned"
+                android:maxWidth="120dp"
+                android:minWidth="50dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/addButton"
+                android:layout_width="40dp"
+                android:layout_height="34dp"
+                android:background="?attr/selectableItemBackground"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_num_add" />
+        </LinearLayout>
+    </FrameLayout>
 
     <include layout="@layout/add_sub_edit_dialog_button_bar" />
 

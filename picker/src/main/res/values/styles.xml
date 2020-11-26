@@ -14,11 +14,16 @@
         <item name="itemPaddingVertical">@dimen/number_picker_item_space</item>
     </style>
 
+    <style name="DialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/picker_color_accent</item>
+    </style>
+
     <style name="PickerDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowMinWidthMajor">92%</item>
         <item name="android:windowMinWidthMinor">92%</item>
         <item name="android:windowBackground">@drawable/picker_inset_round_shape</item>
         <item name="android:windowAnimationStyle">@style/BottomSheetAnimation</item>
+        <item name="android:buttonBarButtonStyle">@style/DialogButtonStyle</item>
     </style>
 
     <!-- 宽度占满屏幕 -->
@@ -27,6 +32,7 @@
         <item name="android:windowMinWidthMinor">100%</item>
         <item name="android:windowBackground">@drawable/picker_top_round_shape</item>
         <item name="android:windowAnimationStyle">@style/BottomSheetAnimation</item>
+        <item name="android:buttonBarButtonStyle">@style/DialogButtonStyle</item>
     </style>
 
     <style name="BottomSheetAnimation">

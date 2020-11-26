@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Outline
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.text.Editable
@@ -13,9 +14,7 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -24,6 +23,7 @@ import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.widget.addTextChangedListener
 import com.liabit.addsub.R
 
 /**
@@ -42,8 +42,8 @@ class AddSubView : RelativeLayout, TextWatcher {
     private var mAddButton: ImageView? = null
     private var mSubButton: ImageView? = null
     private var mNumEditor: EditText? = null
-    private val mEditorRect = Rect()
     private var mEditorMaskView: View? = null
+    private val mEditorRect = Rect()
     private var mMin: Int? = null
     private var mMax: Int? = null
     private var mValue: Int = 0
@@ -56,6 +56,12 @@ class AddSubView : RelativeLayout, TextWatcher {
     private var mEmptyListener: OnEmptyListener? = null
     private var mTextClickListener: OnClickListener? = null
     private var mShowEditDialog = false
+
+    private var mDialogTheme = R.style.AddAndSubEditDialog
+    private var mDialog: AlertDialog? = null
+
+    private var mAddIcon: Drawable? = null
+    private var mSubIcon: Drawable? = null
 
     private var mImm: InputMethodManager? = null
 
@@ -83,8 +89,8 @@ class AddSubView : RelativeLayout, TextWatcher {
         isFocusableInTouchMode = true
         mImm = getSystemService(context, InputMethodManager::class.java)
 
-        var addIcon = ResourcesCompat.getDrawable(context.resources, R.drawable.ic_num_add, context.theme)
-        var subIcon = ResourcesCompat.getDrawable(context.resources, R.drawable.ic_num_sub, context.theme)
+        mAddIcon = ResourcesCompat.getDrawable(context.resources, R.drawable.ic_num_add, context.theme)
+        mSubIcon = ResourcesCompat.getDrawable(context.resources, R.drawable.ic_num_sub, context.theme)
         var editable = true
         var editTextBackground: Drawable? = null
         var editTextWidth = 0f
@@ -99,8 +105,9 @@ class AddSubView : RelativeLayout, TextWatcher {
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.AddSubView, defStyleAttr, defStyleRes)
             mShowEditDialog = typedArray.getBoolean(R.styleable.AddSubView_showEditDialog, false)
-            addIcon = typedArray.getDrawable(R.styleable.AddSubView_addIcon) ?: addIcon
-            subIcon = typedArray.getDrawable(R.styleable.AddSubView_subIcon) ?: subIcon
+            mDialogTheme = typedArray.getResourceId(R.styleable.AddSubView_editDialogTheme, mDialogTheme)
+            mAddIcon = typedArray.getDrawable(R.styleable.AddSubView_addIcon) ?: mAddIcon
+            mSubIcon = typedArray.getDrawable(R.styleable.AddSubView_subIcon) ?: mSubIcon
             editable = if (mShowEditDialog) false else typedArray.getBoolean(R.styleable.AddSubView_editable, true)
             editTextBackground = typedArray.getDrawable(R.styleable.AddSubView_editBackground)
             editTextWidth = typedArray.getDimension(R.styleable.AddSubView_editWidth, 0f)
@@ -110,9 +117,10 @@ class AddSubView : RelativeLayout, TextWatcher {
             iconSize = typedArray.getDimension(R.styleable.AddSubView_iconSize, 0f)
             iconPadding = typedArray.getDimension(R.styleable.AddSubView_iconPadding, 0f)
             val iconColorList = typedArray.getColorStateList(R.styleable.AddSubView_iconColor)
+                    ?: ResourcesCompat.getColorStateList(resources, R.color.add_sub_icon_color, context.theme)
             if (iconColorList != null) {
-                addIcon?.setTintList(iconColorList)
-                subIcon?.setTintList(iconColorList)
+                mAddIcon?.setTintList(iconColorList)
+                mSubIcon?.setTintList(iconColorList)
             }
             if (typedArray.hasValue(R.styleable.AddSubView_minValue)) {
                 mMin = typedArray.getInt(R.styleable.AddSubView_minValue, 0)
@@ -131,10 +139,10 @@ class AddSubView : RelativeLayout, TextWatcher {
         mNumEditor = findViewById(R.id.numEditor)
         mEditorMaskView = findViewById(R.id.editorMaskView)
 
-        mAddButton?.setImageDrawable(addIcon)
-        mSubButton?.setImageDrawable(subIcon)
+        mAddIcon?.let { mAddButton?.setImageDrawable(it) }
+        mSubIcon?.let { mSubButton?.setImageDrawable(it) }
 
-        setupEditorFilter(mMax ?: Int.MAX_VALUE)
+        mNumEditor?.let { setupEditTextFilter(mMax ?: Int.MAX_VALUE, it) }
 
         mNumEditor?.setText(value.toString())
         setValueInner(value)
@@ -249,18 +257,122 @@ class AddSubView : RelativeLayout, TextWatcher {
     }
 
     fun showInputDialog(): Dialog {
-        val view = LayoutInflater.from(context).inflate(R.layout.add_sub_edit_dialog, null)
-        val editText = view.findViewById<EditText>(R.id.editText)
-        val dialog = AlertDialog.Builder(context, R.style.AddAndSubEditDialog)
-                .setView(view)
-                .setNegativeButton(R.string.add_sub_dialog_cancel) { dialog, _ ->
-                    dialog.dismiss()
+        var dialog: AlertDialog? = mDialog
+        if (dialog != null) {
+            return dialog
+        }
+        val view = LayoutInflater.from(ContextThemeWrapper(context, mDialogTheme)).inflate(R.layout.add_sub_edit_dialog, null)
+        val contentView = view.findViewById<View>(R.id.addSubContent)
+        contentView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                contentView.clipToOutline = true
+                contentView.outlineProvider = object : ViewOutlineProvider() {
+                    override fun getOutline(view: View?, outline: Outline?) {
+                        view?.let {
+                            val context = it.context
+                            val radius = context.resources.getDimension(R.dimen.add_sub_dialog_content_bg_radius) - 1
+                            outline?.setRoundRect(0, 0, it.width, it.height, radius)
+                        }
+                    }
                 }
-                .setPositiveButton(R.string.add_sub_dialog_confirm) { dialog, _ ->
-                    dialog.dismiss()
+                contentView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+        })
+        val editText = view.findViewById<EditText>(R.id.editText)
+        val addButton = view.findViewById<ImageView>(R.id.addButton)
+        val subButton = view.findViewById<ImageView>(R.id.subButton)
+        setupEditTextFilter(mMax ?: Int.MAX_VALUE, editText)
+        var value = mValue
+        mMax?.let {
+            if (value > it) {
+                value = it
+            }
+        }
+        mMin?.let {
+            if (value < it) {
+                value = it
+            }
+        }
+        mMax?.let { max ->
+            addButton?.isEnabled = value < max
+        }
+        mMin?.let { min ->
+            subButton?.isEnabled = value > min
+        }
+        editText.setText(value.toString())
+        editText.addTextChangedListener(onTextChanged = { text: CharSequence?, _, _, _ ->
+            val txt = text?.toString() ?: return@addTextChangedListener
+            if (txt.isNotBlank() && TextUtils.isDigitsOnly(txt)) {
+                // 最大输入长度限制为 Int.MAX_VALUE 的长度，即最多输入10个字符，所以这里转换成 Long 类型一定不会出错
+                val num = txt.toLongOrNull() ?: return@addTextChangedListener
+                val number = if (num > Int.MAX_VALUE) Int.MAX_VALUE else num.toInt()
+                val min = mMin
+                val max = mMax
+                if (min != null && max != null && min <= max && (number < min || number > max)) {
+                    notifyOutOfRangeOrUpdateText(number, if (number < min) min else max, editText)
+                    return@addTextChangedListener
+                } else if (min != null && max == null && number < min) {
+                    notifyOutOfRangeOrUpdateText(number, min, editText)
+                    return@addTextChangedListener
+                } else if (min == null && max != null && number > max) {
+                    notifyOutOfRangeOrUpdateText(number, max, editText)
+                    return@addTextChangedListener
+                }
+                if (num > Int.MAX_VALUE) {
+                    updateTextWithoutNotify(number.toString(), editText)
+                }
+            }
+        })
+        mAddIcon?.let { addButton?.setImageDrawable(it) }
+        mSubIcon?.let { subButton?.setImageDrawable(it) }
+        addButton.setOnClickListener {
+            editText.text?.toString()?.toIntOrNull()?.let {
+                var newValue = it + 1
+                mMax?.let { max ->
+                    addButton?.isEnabled = newValue < max
+                    mMin?.let { min ->
+                        subButton?.isEnabled = newValue > min
+                    }
+                    if (newValue > max) {
+                        newValue = max
+                    }
+                }
+                val newText = newValue.toString()
+                editText.setText(newText)
+                editText.setSelection(newText.length)
+            }
+        }
+        subButton.setOnClickListener {
+            editText.text?.toString()?.toIntOrNull()?.let {
+                var newValue = it - 1
+                mMin?.let { min ->
+                    mMax?.let { max ->
+                        addButton?.isEnabled = newValue < max
+                    }
+                    subButton?.isEnabled = newValue > min
+                    if (newValue < min) {
+                        newValue = min
+                    }
+                }
+                val newText = newValue.toString()
+                editText.setText(newText)
+                editText.setSelection(newText.length)
+            }
+        }
+        dialog = AlertDialog.Builder(context, mDialogTheme)
+                .setView(view)
+                .setTitle(R.string.add_sub_dialog_title)
+                .setNegativeButton(R.string.add_sub_dialog_cancel) { d, _ ->
+                    d.dismiss()
+                }
+                .setPositiveButton(R.string.add_sub_dialog_confirm) { d, _ ->
+                    d.dismiss()
                     editText?.text?.let {
                         setAndCheckValue(it.toString(), updateTextView = true, actionDone = true)
                     }
+                }
+                .setOnDismissListener {
+                    mDialog = null
                 }
                 .create()
         editText.setOnEditorActionListener { v, actionId, _ ->
@@ -279,6 +391,7 @@ class AddSubView : RelativeLayout, TextWatcher {
             it.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
             it.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         }
+        mDialog = dialog
         return dialog
     }
 
@@ -294,32 +407,33 @@ class AddSubView : RelativeLayout, TextWatcher {
     }
 
     private fun setAndCheckValue(text: String, updateTextView: Boolean, actionDone: Boolean) {
+        val editText = mNumEditor ?: return
         if (text.isNotBlank() && TextUtils.isDigitsOnly(text)) {
             // 最大输入长度限制为 Int.MAX_VALUE 的长度，即最多输入10个字符，所以这里转换成 Long 类型一定不会出错
-            val num = text.toLong()
+            val num = text.toLongOrNull() ?: return
             val number = if (num > Int.MAX_VALUE) Int.MAX_VALUE else num.toInt()
             val min = mMin
             val max = mMax
             if (min != null && max != null && min <= max && (number < min || number > max)) {
-                notifyOutOfRangeOrUpdateText(number, if (number < min) min else max)
+                notifyOutOfRangeOrUpdateText(number, if (number < min) min else max, editText)
                 return
             } else if (min != null && max == null && number < min) {
-                notifyOutOfRangeOrUpdateText(number, min)
+                notifyOutOfRangeOrUpdateText(number, min, editText)
                 return
             } else if (min == null && max != null && number > max) {
-                notifyOutOfRangeOrUpdateText(number, max)
+                notifyOutOfRangeOrUpdateText(number, max, editText)
                 return
             }
 
             if (num > Int.MAX_VALUE) {
-                updateTextWithoutNotify(number.toString())
+                updateTextWithoutNotify(number.toString(), editText)
             }
 
             var notifyValueChange = if (mNotifyChangeWhenActionDone) actionDone else false
             if (number != mValue) {
                 setValueInner(number)
                 if (updateTextView) {
-                    updateTextWithoutNotify(number.toString())
+                    updateTextWithoutNotify(number.toString(), editText)
                 }
                 if (!mNotifyChangeWhenActionDone) {
                     notifyValueChange = true
@@ -336,28 +450,26 @@ class AddSubView : RelativeLayout, TextWatcher {
         }
     }
 
-    private fun notifyOutOfRangeOrUpdateText(number: Int, updateToNumber: Int) {
+    private fun notifyOutOfRangeOrUpdateText(number: Int, updateToNumber: Int, editText: EditText) {
         if (mValueOutOfRangeListener != null || mValueOutOfRangeListener != null) {
             mOnValueOutOfRangeListener?.invoke(this, number)
             mValueOutOfRangeListener?.onValueOutOfRange(this, number)
         } else {
-            updateTextWithoutNotify(updateToNumber.toString())
+            updateTextWithoutNotify(updateToNumber.toString(), editText)
         }
     }
 
-    private fun updateTextWithoutNotify(text: String) {
-        mNumEditor?.let {
-            it.removeTextChangedListener(this)
-            it.setText(text)
-            try {
-                if (text.isNotBlank()) {
-                    it.setSelection(text.length)
-                }
-            } catch (e: Throwable) {
-                Log.d(TAG, "updateTextWithoutNotify error: ", e)
+    private fun updateTextWithoutNotify(text: String, editText: EditText) {
+        editText.removeTextChangedListener(this)
+        editText.setText(text)
+        try {
+            if (text.isNotBlank()) {
+                editText.setSelection(text.length)
             }
-            it.addTextChangedListener(this)
+        } catch (e: Throwable) {
+            Log.d(TAG, "updateTextWithoutNotify error: ", e)
         }
+        editText.addTextChangedListener(this)
     }
 
     fun setMinValue(min: Int) {
@@ -367,18 +479,16 @@ class AddSubView : RelativeLayout, TextWatcher {
 
     fun setMaxValue(max: Int) {
         mMax = max
-        setupEditorFilter(max)
+        mNumEditor?.let { setupEditTextFilter(max, it) }
         updateButtonState()
     }
 
-    private fun setupEditorFilter(max: Int) {
-        mNumEditor?.let {
-            val filters = it.filters
-            if (!filters.isNullOrEmpty()) {
-                it.filters = arrayOf(*it.filters, InputFilter.LengthFilter(max.toString().length))
-            } else {
-                it.filters = arrayOf(InputFilter.LengthFilter(max.toString().length))
-            }
+    private fun setupEditTextFilter(max: Int, editText: EditText) {
+        val filters = editText.filters
+        if (!filters.isNullOrEmpty()) {
+            editText.filters = arrayOf(*editText.filters, InputFilter.LengthFilter(max.toString().length))
+        } else {
+            editText.filters = arrayOf(InputFilter.LengthFilter(max.toString().length))
         }
     }
 
@@ -417,7 +527,7 @@ class AddSubView : RelativeLayout, TextWatcher {
     fun setValue(value: Int, notify: Boolean) {
         setValueInner(value)
         if (!notify) {
-            updateTextWithoutNotify(value.toString())
+            mNumEditor?.let { updateTextWithoutNotify(value.toString(), it) }
         } else {
             mNumEditor?.setText(value.toString())
         }
@@ -445,7 +555,7 @@ class AddSubView : RelativeLayout, TextWatcher {
         setValueInner(value)
         mNumEditor?.hint = "$value"
         if (clear) {
-            updateTextWithoutNotify("")
+            mNumEditor?.let { updateTextWithoutNotify("", it) }
         }
     }
 

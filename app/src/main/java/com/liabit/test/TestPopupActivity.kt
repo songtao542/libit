@@ -31,7 +31,7 @@ class TestPopupActivity : AppCompatActivity() {
             popupMenu.setItemHeight(60)
             popupMenu.setDefaultCheckedPosition(2)
             popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
-                override fun onOptionsItemSelected(item: PopupMenu.MenuItem?) {
+                override fun onOptionsItemSelected(item: PopupMenu.MenuItem) {
                     Log.d("TTTT", "clicked: $item")
                 }
             })

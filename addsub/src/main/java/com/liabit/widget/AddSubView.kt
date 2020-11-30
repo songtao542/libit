@@ -277,7 +277,22 @@ class AddSubView : RelativeLayout, TextWatcher {
         }
     }
 
-    fun showDialog(): Dialog {
+    fun showDialog(): Dialog? {
+        try {
+            return showDialogUnsafe()
+        } catch (e: Throwable) {
+            Log.e(TAG, "showDialog error: ", e)
+        }
+        return null
+    }
+
+    private fun showDialogUnsafe(): Dialog? {
+        val context = context ?: return null
+        if (context is Activity) {
+            if (context.isFinishing || context.isDestroyed) {
+                return null
+            }
+        }
         var dialog: AlertDialog? = mDialog
         if (dialog != null) {
             return dialog

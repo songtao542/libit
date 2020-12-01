@@ -7,14 +7,28 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.liabit.location.databinding.MapLocationSheetFragmentBinding
+import com.liabit.location.databinding.MapLocationSheetItemBinding
 import com.liabit.location.model.PoiAddress
-import kotlinx.android.synthetic.main.fragment_location_sheet.*
-import kotlinx.android.synthetic.main.fragment_location_sheet_item.view.*
+import com.liabit.viewbinding.bind
 
 /**
  *
  */
 class LocationBottomSheetDialog : BottomSheetDialogFragment() {
+
+    companion object {
+        private const val POI_SEARCH_RESULT_LIST = "psrl"
+        private const val TITLE = "title"
+
+        @JvmStatic
+        fun newInstance(title: String, poiResultList: ArrayList<PoiAddress>) = LocationBottomSheetDialog().apply {
+            this.arguments = Bundle().apply {
+                putParcelableArrayList(POI_SEARCH_RESULT_LIST, poiResultList)
+                putString(TITLE, title)
+            }
+        }
+    }
 
     private var poiResult: List<PoiAddress>? = null
     private var title: String? = null
@@ -24,8 +38,8 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            poiResult = it.getParcelableArrayList(Constants.Extra.LIST)
-            title = it.getString(Constants.Extra.TITLE, null)
+            poiResult = it.getParcelableArrayList(POI_SEARCH_RESULT_LIST)
+            title = it.getString(TITLE, null)
         }
     }
 
@@ -33,19 +47,20 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
         this.onItemClickListener = listener
     }
 
+    private val binding by bind<MapLocationSheetFragmentBinding>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_location_sheet, container, false)
+        return inflater.inflate(R.layout.map_location_sheet_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         isCancelable = false
-        list.layoutManager = LinearLayoutManager(requireContext())
+        binding.list.layoutManager = LinearLayoutManager(requireContext())
         poiResult?.let {
-            list.adapter = SheetAdapter(it, onItemClickListener)
+            binding.list.adapter = SheetAdapter(it, onItemClickListener)
         }
-        close.setOnClickListener {
+        binding.close.setOnClickListener {
             dismiss()
         }
     }
@@ -65,7 +80,7 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
         override fun getItemCount(): Int = poiResult.size
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_location_sheet_item, parent, false))
+            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.map_location_sheet_item, parent, false))
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -75,13 +90,15 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
         inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view),
                 View.OnClickListener {
 
+            private val binding = MapLocationSheetItemBinding.bind(view)
+
             private var address: PoiAddress? = null
 
             fun setData(address: PoiAddress) {
                 this.address = address
-                view.title.text = address.title
-                view.address.text = address.formatAddress
-                view.checked.visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
+                binding.title.text = address.title
+                binding.address.text = address.formatAddress
+                binding.checked.visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
                 view.setOnClickListener(this)
             }
 
@@ -97,13 +114,17 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        list.adapter?.notifyDataSetChanged()
+        binding.list.adapter?.notifyDataSetChanged()
         setTitleInternal()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
     }
 
     fun setSearchResult(result: List<PoiAddress>) {
         this.poiResult = result
-        list.adapter?.notifyDataSetChanged()
+        binding.list.adapter?.notifyDataSetChanged()
     }
 
     fun setTitle(title: String) {
@@ -112,16 +133,7 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
     }
 
     private fun setTitleInternal() {
-        if (titleView != null) {
-            titleView.text = if (title != null) getString(R.string.search_result_templete, title) else getString(R.string.search_result)
-        }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(arguments: Bundle? = null) = LocationBottomSheetDialog().apply {
-            this.arguments = arguments
-        }
+        binding.titleView.text = if (title != null) getString(R.string.ml_search_result_templete, title) else getString(R.string.ml_search_result)
     }
 
     interface OnItemClickListener {

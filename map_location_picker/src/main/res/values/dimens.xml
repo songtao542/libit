@@ -1,20 +1,15 @@
 <resources>
 
-    <dimen name="textsize_largest">20sp</dimen>
-    <dimen name="textsize_larger">18sp</dimen>
-    <dimen name="textsize_large">16sp</dimen>
-    <dimen name="textsize_normal">14sp</dimen>
-    <dimen name="textsize_small">12sp</dimen>
-    <dimen name="textsize_smaller">11sp</dimen>
-    <dimen name="textsize_smallest">10sp</dimen>
+    <dimen name="ml_textsize_large">16sp</dimen>
+    <dimen name="ml_textsize_normal">14sp</dimen>
+    <dimen name="ml_textsize_small">12sp</dimen>
+    <dimen name="ml_textsize_smaller">11sp</dimen>
 
-    <dimen name="lp_search_height">32dp</dimen>
-    <dimen name="lp_search_radius">32dp</dimen>
-    <dimen name="lp_my_location_btn_size">46dp</dimen>
-    <dimen name="lp_my_location_btn_radius">46dp</dimen>
-    <dimen name="progress_dialog_size">120dp</dimen>
-    <dimen name="progress_dialog_bar_size">50dp</dimen>
+    <dimen name="ml_search_height">32dp</dimen>
+    <dimen name="ml_search_radius">32dp</dimen>
+    <dimen name="ml_my_location_btn_size">46dp</dimen>
+    <dimen name="ml_my_location_btn_radius">46dp</dimen>
+    <dimen name="ml_progress_dialog_size">120dp</dimen>
+    <dimen name="ml_progress_dialog_bar_size">50dp</dimen>
 
-    <dimen name="actionbar_padding_start">0dp</dimen>
-    <dimen name="underline">1px</dimen>
 </resources>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context=".TestMapLocationActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:title="MapLocation"
+        app:titleTextColor="@android:color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/locationPicker"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:onClick="onClick"
+            android:text="LocationPicker"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/locationPickerFragment"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:onClick="onClick"
+            android:text="LocationPickerFragment"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/locationBottomSheetDialog"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:onClick="onClick"
+            android:text="LocationBottomSheetDialog"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/locationViewer"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:onClick="onClick"
+            android:text="LocationViewer"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+
+</FrameLayout>

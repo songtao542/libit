@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toolbar"
+    style="@style/Toolbar"
+    android:elevation="1dp"
+    android:fitsSystemWindows="true"
+    android:translationZ="100dp"
+    tools:ignore="UnusedAttribute">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ml_search_height"
+        android:background="@drawable/map_location_picker_search_bar_bg"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            app:srcCompat="@drawable/map_location_search_icon" />
+
+        <EditText
+            android:id="@+id/searchBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:hint="@string/ml_query_location"
+            android:imeOptions="actionSearch"
+            android:padding="2dp"
+            android:singleLine="true"
+            android:textSize="@dimen/ml_textsize_small" />
+    </LinearLayout>
+
+</androidx.appcompat.widget.Toolbar>
+

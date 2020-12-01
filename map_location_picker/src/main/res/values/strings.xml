@@ -1,15 +1,15 @@
 <resources>
-    <string name="on_going_upload">正在上传...</string>
-    <string name="query_location">搜索</string>
-    <string name="confirm">确定</string>
-    <string name="cannot_get_location">无法获取位置</string>
-    <string name="location_picker_title">选择地点</string>
-    <string name="search_result_templete">搜索“%1$s”</string>
-    <string name="search_result">搜索结果</string>
-    <string name="baidu_map_not_install">手机未安装百度地图</string>
-    <string name="a_map_not_install">手机未安装高德地图</string>
-    <string name="tencent_map_not_install">手机未安装腾讯地图</string>
-    <string name="a_map_name">高德地图</string>
-    <string name="tencent_map_name">腾讯地图</string>
-    <string name="baidu_map_name">百度地图</string>
+    <string name="ml_loading">正在加载...</string>
+    <string name="ml_query_location">搜索</string>
+    <string name="ml_confirm">确定</string>
+    <string name="ml_cannot_get_location">无法获取位置</string>
+    <string name="ml_location_picker_title">选择地点</string>
+    <string name="ml_search_result_templete">搜索“%1$s”</string>
+    <string name="ml_search_result">搜索结果</string>
+    <string name="ml_baidu_map_not_install">手机未安装百度地图</string>
+    <string name="ml_a_map_not_install">手机未安装高德地图</string>
+    <string name="ml_tencent_map_not_install">手机未安装腾讯地图</string>
+    <string name="ml_a_map_name">高德地图</string>
+    <string name="ml_tencent_map_name">腾讯地图</string>
+    <string name="ml_baidu_map_name">百度地图</string>
 </resources>

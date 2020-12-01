@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.liabit.location.databinding.MapLocationSheetAddressItemBinding
+import com.liabit.location.databinding.MapLocationSheetItemBinding
 import com.liabit.location.model.AddressType
 import com.liabit.location.model.PoiAddress
-import kotlinx.android.synthetic.main.fragment_location_sheet_item.view.*
-import kotlinx.android.synthetic.main.fragment_location_sheet_item_address.view.*
 
 class LocationPickerRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -68,8 +68,8 @@ class LocationPickerRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.View
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (AddressType.from(viewType)) {
-            AddressType.ADDRESS -> AddressViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_location_sheet_item_address, parent, false))
-            AddressType.POI_ADDRESS -> ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_location_sheet_item, parent, false))
+            AddressType.ADDRESS -> AddressViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.map_location_sheet_address_item, parent, false))
+            AddressType.POI_ADDRESS -> ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.map_location_sheet_item, parent, false))
         }
     }
 
@@ -84,12 +84,13 @@ class LocationPickerRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.View
     inner class AddressViewHolder(private val view: View) : RecyclerView.ViewHolder(view),
             View.OnClickListener {
 
+        private val binding = MapLocationSheetAddressItemBinding.bind(view)
         private var address: PoiAddress? = null
 
         fun setData(address: PoiAddress) {
             this.address = address
-            view.selectAddress.text = address.address
-            view.checkedAddress.visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
+            binding.selectAddress.text = address.address
+            binding.checkedAddress.visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
             view.setOnClickListener(this)
         }
 
@@ -104,14 +105,14 @@ class LocationPickerRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.View
 
     inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view),
             View.OnClickListener {
-
+        private val binding = MapLocationSheetItemBinding.bind(view)
         private var address: PoiAddress? = null
 
         fun setData(address: PoiAddress) {
             this.address = address
-            view.title.text = address.title
-            view.address.text = address.formatAddress
-            view.checked.visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
+            binding.title.text = address.title
+            binding.address.text = address.formatAddress
+            binding.checked.visibility = if (address.selected) View.VISIBLE else View.INVISIBLE
             view.setOnClickListener(this)
         }
 

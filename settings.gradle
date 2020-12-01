@@ -1,3 +1,4 @@
+include ':viewbinding'
 include ':tagview'
 include ':smartrecyclerview'
 include ':popup'

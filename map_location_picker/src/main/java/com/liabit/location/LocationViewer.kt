@@ -12,22 +12,42 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.Observer
 import com.amap.api.maps2d.CoordinateConverter
 import com.amap.api.maps2d.model.LatLng
 import com.amap.api.maps2d.model.MyLocationStyle
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.liabit.location.databinding.MapLocationViewerFragmentBinding
 import com.liabit.location.extension.checkAndRequestPermission
 import com.liabit.location.extension.checkAppPermission
 import com.liabit.location.extension.location_permissions
 import com.liabit.location.model.Position
-import kotlinx.android.synthetic.main.fragment_location_viewer.*
-
+import com.liabit.viewbinding.bind
 
 /**
  *
  */
 class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
+
+    companion object {
+        const val EXTRA_TITLE = "TITLE"
+        const val EXTRA_SUB_TITLE = "SUB_TITLE"
+        const val EXTRA_LATITUDE = "LATITUDE"
+        const val EXTRA_LONGITUDE = "LONGITUDE"
+
+        private const val BAIDU_MAP = "com.baidu.BaiduMap"
+        private const val A_MAP = "com.autonavi.minimap"
+        private const val TENCENT_MAP = "com.tencent.map"
+
+        @JvmStatic
+        fun newInstance(title: String?, subTitle: String?, latitude: Double, longitude: Double) = LocationViewer().apply {
+            this.arguments = Bundle().apply {
+                putString(EXTRA_TITLE, title)
+                putString(EXTRA_SUB_TITLE, subTitle)
+                putDouble(EXTRA_LATITUDE, latitude)
+                putDouble(EXTRA_LONGITUDE, longitude)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,20 +74,23 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
 
     private var mapPickerDialog: BottomSheetDialog? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_location_viewer, container, false)
+    private val binding by bind<MapLocationViewerFragmentBinding>()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return inflater.inflate(R.layout.map_location_viewer_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         //enableOptionsMenu(toolbar, false, R.menu.location_picker)
         //toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
         //toolbar.setOnMenuItemClickListener(this)
         //titleTextView.setText(R.string.location_picker_title)
 
-        backButton.setOnClickListener { activity?.onBackPressed() }
+        binding.backButton.setOnClickListener { activity?.onBackPressed() }
 
-        mapProxy = MapLocationFactory.create(requireContext(), mapView = mapView)
+        mapProxy = MapLocationFactory.create(requireContext(), mapView = binding.mapView)
 
         mapProxy.onCreate(savedInstanceState)
 
@@ -75,19 +98,19 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE)
         myLocationStyle.showMyLocation(false)
 
-        mapView.map.setMyLocationStyle(myLocationStyle)
-        mapView.map.isMyLocationEnabled = true
+        binding.mapView.map.setMyLocationStyle(myLocationStyle)
+        binding.mapView.map.isMyLocationEnabled = true
 
         adapter = LocationPickerRecyclerViewAdapter()
         adapter.setOnItemClickListener {
             mapProxy.setCenter(it.location, 20f)
         }
 
-        viewModel?.location?.observe(viewLifecycleOwner, Observer {
+        viewModel?.location?.observe(viewLifecycleOwner, {
             setMyLocation(Position(it), 16f)
         })
 
-        myLocationButton.setOnClickListener {
+        binding.myLocationButton.setOnClickListener {
             getMyLocation()
         }
 
@@ -100,16 +123,16 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
                 activity?.finish()
             } else {
                 targetLocationTitle?.let { title ->
-                    locationTitle.text = title
+                    binding.locationTitle.text = title
                 }
                 targetLocationSubTitle?.let { subTitle ->
-                    locationSubTitle.text = subTitle
+                    binding.locationSubTitle.text = subTitle
                 }
 
                 setTargetLocation(Position(targetLocationLatitude, targetLocationLongitude),
                         16f)
 
-                openNavigation.setOnClickListener {
+                binding.openNavigation.setOnClickListener {
                     showMapPicker()
                 }
             }
@@ -129,7 +152,7 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
         }
         context?.let {
             mapPickerDialog = BottomSheetDialog(it, R.style.MapPickerStyle)
-            val view: View = LayoutInflater.from(it).inflate(R.layout.map_picker_menu_dialog, null)
+            val view: View = LayoutInflater.from(it).inflate(R.layout.map_location_picker_menu_dialog, null)
             val cancel = view.findViewById<TextView>(R.id.cancel)
             cancel.setOnClickListener { mapPickerDialog?.dismiss() }
             val baiduMap = view.findViewById<TextView>(R.id.baiduMap)
@@ -180,12 +203,12 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
     private fun getAppName(): String {
         context?.let {
             try {
-                val packageManager = it.packageManager;
+                val packageManager = it.packageManager
                 val packageInfo = packageManager.getPackageInfo(it.packageName, 0)
                 val labelRes = packageInfo.applicationInfo.labelRes
-                return it.resources.getString(labelRes);
+                return it.resources.getString(labelRes)
             } catch (e: Throwable) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return ""
@@ -202,13 +225,13 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
                         .convert()
                 when (packageName) {
                     BAIDU_MAP -> {
-                        toast = R.string.baidu_map_not_install
+                        toast = R.string.ml_baidu_map_not_install
                         val intent = Intent()
                         intent.data = Uri.parse("baidumap://map/direction?destination=latlng:$targetLocationLatitude,$targetLocationLongitude|name:$targetLocationTitle&coord_type=bd09ll&mode=driving")
                         it.startActivity(intent)
                     }
                     A_MAP -> {
-                        toast = R.string.a_map_not_install
+                        toast = R.string.ml_a_map_not_install
                         val intent = Intent()
                         intent.setPackage("com.autonavi.minimap")
                         intent.action = Intent.ACTION_VIEW
@@ -217,7 +240,7 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
                         it.startActivity(intent)
                     }
                     TENCENT_MAP -> {
-                        toast = R.string.tencent_map_not_install
+                        toast = R.string.ml_tencent_map_not_install
                         val intent = Intent()
                         intent.data = Uri.parse("qqmap://map/routeplan?type=walk&to=$targetLocationTitle&tocoord=${bd.latitude},${bd.longitude}&policy=1&referer=$appName")
                         it.startActivity(intent)
@@ -246,7 +269,7 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
         myLocationMarker?.let {
             mapProxy.removeMarker(it)
         }
-        myLocationMarker = Marker(location, true, imageBitmap = Marker.createBitmap(requireContext(), R.drawable.ic_double_circle, "00"))
+        myLocationMarker = Marker(location, true, imageBitmap = Marker.createBitmap(requireContext(), R.drawable.map_location_double_circle_icon, "00"))
         mapProxy.addMarker(myLocationMarker!!, zoomLevel)
     }
 
@@ -254,7 +277,7 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
         targetLocationMarker?.let {
             mapProxy.removeMarker(it)
         }
-        targetLocationMarker = Marker(location, true, imageBitmap = Marker.createBitmap(requireContext(), R.drawable.ic_double_circle, "00"))
+        targetLocationMarker = Marker(location, true, imageBitmap = Marker.createBitmap(requireContext(), R.drawable.map_location_double_circle_icon, "00"))
         mapProxy.addMarker(targetLocationMarker!!, zoomLevel)
     }
 
@@ -276,27 +299,6 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (checkAppPermission(*location_permissions)) {
             viewModel?.getMyLocation()
-        }
-    }
-
-    companion object {
-        const val EXTRA_TITLE = "TITLE"
-        const val EXTRA_SUB_TITLE = "SUB_TITLE"
-        const val EXTRA_LATITUDE = "LATITUDE"
-        const val EXTRA_LONGITUDE = "LONGITUDE"
-
-        private const val BAIDU_MAP = "com.baidu.BaiduMap"
-        private const val A_MAP = "com.autonavi.minimap"
-        private const val TENCENT_MAP = "com.tencent.map"
-
-        @JvmStatic
-        fun newInstance(title: String?, subTitle: String?, latitude: Double, longitude: Double) = LocationViewer().apply {
-            this.arguments = Bundle().apply {
-                putString(EXTRA_TITLE, title)
-                putString(EXTRA_SUB_TITLE, subTitle)
-                putDouble(EXTRA_LATITUDE, latitude)
-                putDouble(EXTRA_LONGITUDE, longitude)
-            }
         }
     }
 }

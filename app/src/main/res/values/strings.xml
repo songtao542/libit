@@ -5,7 +5,7 @@
     <!--    <string name="shimmer">Shimmer</string>-->
     <!--    <string name="picker">Picker</string>-->
     <!--    <string name="add_and_sub">AddAndSub</string>-->
-    <string name="confirm">确定</string>
+    <string name="ml_confirm">确定</string>
     <string name="cancel">取消</string>
     <string name="refresh">刷新</string>
 

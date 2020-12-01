@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/ml_my_location_btn_radius" />
+            <stroke android:width="1dp" android:color="@color/ml_my_location_btn_pressed_color" />
+            <solid android:color="@color/ml_my_location_btn_pressed_color" />
+        </shape>
+    </item>
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/ml_my_location_btn_radius" />
+            <stroke android:width="1dp" android:color="@color/ml_my_location_btn_pressed_color" />
+            <solid android:color="@color/ml_my_location_btn_pressed_color" />
+        </shape>
+    </item>
+
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/ml_my_location_btn_radius" />
+            <stroke android:width="1dp" android:color="@color/ml_my_location_btn_pressed_color" />
+            <solid android:color="@color/ml_my_location_btn_pressed_color" />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/ml_my_location_btn_radius" />
+            <stroke android:width="1dp" android:color="@color/ml_my_location_btn_color" />
+            <solid android:color="@color/ml_my_location_btn_color" />
+        </shape>
+    </item>
+
+</selector>

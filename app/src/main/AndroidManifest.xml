@@ -9,6 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".TestMapLocationActivity"
+            android:label="MapLocation"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +35,6 @@
         <activity
             android:name=".tablayouttest.TestTabLayoutFixModeWithViewPager2Activity"
             android:label="TabLayoutFixModePager2" />
-
         <activity
             android:name=".tagviewtest.TestTagViewActivity"
             android:label="TagView" />
@@ -68,6 +71,9 @@
         <activity
             android:name=".gesturetest.TestSwipeActivity"
             android:label="TestSwipe" />
+        <activity
+            android:name=".TestViewBinding"
+            android:label="ViewBinding" />
         <activity
             android:name=".TestFragmentVisibleActivity"
             android:label="Fragment可见性" />

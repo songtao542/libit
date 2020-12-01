@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="dark_gray">#888888</color>
-    <color name="underline">#999999</color>
-    <color name="gray_underline">#e5e5e7</color>
-    <color name="darker">#444444</color>
-    <color name="menu_text_color">#2196F3</color>
-    <color name="menu_text_pressed_color">#1976D2</color>
-    <color name="lp_toolbar_bg_color">#aeffffff</color>
-    <color name="lp_search_bg_color">#88dddddd</color>
-    <color name="lp_my_location_btn_color">#eeffffff</color>
-    <color name="lp_my_location_btn_pressed_color">#eedddddd</color>
+    <color name="ml_dark_gray">#888888</color>
+    <color name="ml_gray_underline">#e5e5e7</color>
+    <color name="ml_darker">#444444</color>
+    <color name="ml_menu_text_color">#2196F3</color>
+    <color name="ml_menu_text_pressed_color">#1976D2</color>
+    <color name="ml_toolbar_bg_color">#aeffffff</color>
+    <color name="ml_search_bg_color">#88dddddd</color>
+    <color name="ml_my_location_btn_color">#eeffffff</color>
+    <color name="ml_my_location_btn_pressed_color">#eedddddd</color>
 </resources>

@@ -14,7 +14,7 @@ import io.nlopez.smartlocation.location.config.LocationAccuracy
 import io.nlopez.smartlocation.location.config.LocationParams
 import io.nlopez.smartlocation.utils.Logger
 
-private const val LOCATIONMANAGERPROVIDER_ID = "ALMP"
+private const val LOCATION_MANAGER_PROVIDER_ID = "ALMP"
 
 class AMapLocationProvider(val context: Context) : LocationProvider, AMapLocationListener {
 
@@ -80,7 +80,7 @@ class AMapLocationProvider(val context: Context) : LocationProvider, AMapLocatio
                 return location
             }
         }
-        return locationStore.get(LOCATIONMANAGERPROVIDER_ID)
+        return locationStore.get(LOCATION_MANAGER_PROVIDER_ID)
     }
 
     private fun getClientOption(params: LocationParams): AMapLocationClientOption {
@@ -115,7 +115,7 @@ class AMapLocationProvider(val context: Context) : LocationProvider, AMapLocatio
 
             locationStore.let {
                 logger?.d("Stored in SharedPreferences", emptyArray<String>())
-                locationStore.put(LOCATIONMANAGERPROVIDER_ID, location)
+                locationStore.put(LOCATION_MANAGER_PROVIDER_ID, location)
             }
         }
     }

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps2d.model.LatLng
 import com.amap.api.maps2d.model.MyLocationStyle
+import com.liabit.location.databinding.MapLocationNestedPickerFragmentBinding
 import com.liabit.location.extension.checkAndRequestPermission
 import com.liabit.location.extension.checkAppPermission
 import com.liabit.location.extension.location_permissions
@@ -20,13 +21,19 @@ import com.liabit.location.model.PoiAddress
 import com.liabit.location.model.Position
 import com.liabit.location.util.dip
 import com.liabit.location.util.hideSoftKeyboard
-import kotlinx.android.synthetic.main.fragment_location_nested_picker.*
-import kotlinx.android.synthetic.main.picker_toolbar.*
+import com.liabit.viewbinding.bind
 
 /**
  *
  */
 class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
+
+    companion object {
+        @JvmStatic
+        fun newInstance(arguments: Bundle? = null) = LocationPicker().apply {
+            this.arguments = arguments
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,19 +58,20 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
     private var hasMove = false
     private var lastMotionEvent: MotionEvent? = null
 
+    private val binding by bind<MapLocationNestedPickerFragmentBinding>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_location_nested_picker, container, false)
+        return inflater.inflate(R.layout.map_location_nested_picker_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        enableOptionsMenu(toolbar, false, R.menu.location_picker)
-        toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
-        toolbar.setOnMenuItemClickListener(this)
+        enableOptionsMenu(binding.appbar.toolbar, false, R.menu.map_location_picker_menu)
+        binding.appbar.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
+        binding.appbar.toolbar.setOnMenuItemClickListener(this)
         //titleTextView.setText(R.string.location_picker_title)
 
-        mapProxy = MapLocationFactory.create(requireContext(), mapView = mapView)
+        mapProxy = MapLocationFactory.create(requireContext(), mapView = binding.mapView)
 
         mapProxy.onCreate(savedInstanceState)
 
@@ -71,10 +79,10 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE)
         myLocationStyle.showMyLocation(false)
 
-        mapView.map.setMyLocationStyle(myLocationStyle)
-        mapView.map.isMyLocationEnabled = true
+        binding.mapView.map.setMyLocationStyle(myLocationStyle)
+        binding.mapView.map.isMyLocationEnabled = true
 
-        mapView.map.setOnMapTouchListener { event ->
+        binding.mapView.map.setOnMapTouchListener { event ->
             if (event.action == MotionEvent.ACTION_MOVE) {
                 if (lastMotionEvent == null) {
                     lastMotionEvent = event
@@ -85,7 +93,7 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
             if (event.action == MotionEvent.ACTION_UP) {
                 if (hasMove) {
                     playJumpAnimation()
-                    search(latLng = mapView.getCenter())
+                    search(latLng = binding.mapView.getCenter())
                 }
                 lastMotionEvent = null
                 hasMove = false
@@ -96,17 +104,17 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
             }
         }
 
-        nestLayout.setMinHeight(dip(150))
+        binding.nestLayout.setMinHeight(dip(150))
 
-        list.layoutManager = LinearLayoutManager(requireContext())
+        binding.list.layoutManager = LinearLayoutManager(requireContext())
         adapter = LocationPickerRecyclerViewAdapter()
         adapter.setOnItemClickListener {
             mapProxy.setCenter(it.location, 20f)
         }
-        list.adapter = adapter
+        binding.list.adapter = adapter
 
 
-        searchBox.setOnEditorActionListener { textView, actionId, _ ->
+        binding.appbar.searchBox.setOnEditorActionListener { textView, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_SEARCH -> {
                     val keyword = textView.text?.toString() ?: ""
@@ -126,7 +134,7 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
             setMyLocation(Position(it), 16f)
         })
 
-        myLocationButton.setOnClickListener {
+        binding.myLocationButton.setOnClickListener {
             search()
         }
 
@@ -159,7 +167,7 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
     }
 
     private fun playJumpAnimation() {
-        val downAnimator = ObjectAnimator.ofFloat(centerLocation, "translationY", 0f, dip(10).toFloat())
+        val downAnimator = ObjectAnimator.ofFloat(binding.centerLocation, "translationY", 0f, dip(10).toFloat())
         val set = AnimatorSet()
         set.playSequentially(downAnimator)
         set.interpolator = CycleInterpolator(2f)
@@ -222,7 +230,7 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
         myLocationMarker?.let {
             mapProxy.removeMarker(it)
         }
-        myLocationMarker = Marker(location, true, imageBitmap = Marker.createBitmap(requireContext(), R.drawable.ic_double_circle, "00"))
+        myLocationMarker = Marker(location, true, imageBitmap = Marker.createBitmap(requireContext(), R.drawable.map_location_double_circle_icon, "00"))
         mapProxy.addMarker(myLocationMarker!!, zoomLevel)
     }
 
@@ -244,13 +252,6 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (checkAppPermission(*location_permissions)) {
             search()
-        }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(arguments: Bundle? = null) = LocationPicker().apply {
-            this.arguments = arguments
         }
     }
 }

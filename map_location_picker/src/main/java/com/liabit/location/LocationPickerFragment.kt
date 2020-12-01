@@ -13,17 +13,24 @@ import androidx.lifecycle.Observer
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.LatLng
 import com.amap.api.maps2d.model.MyLocationStyle
+import com.liabit.location.databinding.MapLocationPickerFragmentBinding
 import com.liabit.location.extension.checkAndRequestPermission
 import com.liabit.location.extension.checkAppPermission
 import com.liabit.location.extension.location_permissions
 import com.liabit.location.model.PoiAddress
-import kotlinx.android.synthetic.main.fragment_location_picker.*
-import kotlinx.android.synthetic.main.picker_toolbar.*
+import com.liabit.viewbinding.bind
 
 /**
  *
  */
 class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemClickListener, Toolbar.OnMenuItemClickListener {
+
+    companion object {
+        @JvmStatic
+        fun newInstance(arguments: Bundle? = null) = LocationPickerFragment().apply {
+            this.arguments = arguments
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,20 +50,22 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
 
     private lateinit var mapProxy: MapProxy
 
+    private val binding by bind<MapLocationPickerFragmentBinding>()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_location_picker, container, false)
+        return inflater.inflate(R.layout.map_location_picker_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity == null) return
-        enableOptionsMenu(toolbar, false, R.menu.location_picker)
-        toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
-        toolbar.setOnMenuItemClickListener(this)
+        enableOptionsMenu(binding.appbar.toolbar, false, R.menu.map_location_picker_menu)
+        binding.appbar.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
+        binding.appbar.toolbar.setOnMenuItemClickListener(this)
 
         activity?.let { poiSearcher = PoiSearcher(it) }
 
-        mapView.onCreate(savedInstanceState)
+        binding.mapView.onCreate(savedInstanceState)
         if (!checkPermission()) {
             checkAndRequestPermission(*location_permissions)
         }
@@ -67,12 +76,12 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE)
         myLocationStyle.showMyLocation(true)
 
-        mapView.map.setMyLocationStyle(myLocationStyle)
-        mapView.map.isMyLocationEnabled = true
+        binding.mapView.map.setMyLocationStyle(myLocationStyle)
+        binding.mapView.map.isMyLocationEnabled = true
 
-        mapProxy = MapLocationFactory.create(requireContext(), mapView = mapView)
+        mapProxy = MapLocationFactory.create(requireContext(), mapView = binding.mapView)
 
-        searchBox.setOnEditorActionListener { textView, actionId, _ ->
+        binding.appbar.searchBox.setOnEditorActionListener { textView, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_SEARCH -> {
                     val keyword = textView.text?.toString() ?: ""
@@ -92,7 +101,7 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
             setMyLocation(it, 18f)
         })
 
-        myLocationButton.setOnClickListener {
+        binding.myLocationButton.setOnClickListener {
             getMyLocation()
         }
     }
@@ -100,7 +109,7 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.confirm -> {
-                searchBox.text?.toString()?.let {
+                binding.appbar.searchBox.text?.toString()?.let {
                     search(it)
                 }
                 true
@@ -135,10 +144,7 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
             sheet.setSearchResult(result)
             sheet.setTitle(title)
         } else {
-            LocationBottomSheetDialog.newInstance(Bundle().apply {
-                putParcelableArrayList(Constants.Extra.LIST, list)
-                putString(Constants.Extra.TITLE, title)
-            }).apply {
+            LocationBottomSheetDialog.newInstance(title, list).apply {
                 setOnItemClickListener(this@LocationPickerFragment)
             }.show(childFragmentManager, "poi_result")
         }
@@ -159,25 +165,25 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
             //使用高德定位之后，国内默认是GCJ02
             val latLng = LatLng(location.latitude, location.longitude)
             if (zoomLevel != null) {
-                mapView.map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel))
+                binding.mapView.map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel))
             } else {
-                mapView.map.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+                binding.mapView.map.animateCamera(CameraUpdateFactory.newLatLng(latLng))
             }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
+        binding.mapView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView.onPause()
+        binding.mapView.onPause()
     }
 
     override fun onDestroyView() {
-        mapView.onDestroy()
+        binding.mapView.onDestroy()
         super.onDestroyView()
     }
 
@@ -191,13 +197,4 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
 
         }
     }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(arguments: Bundle? = null) = LocationPickerFragment().apply {
-            this.arguments = arguments
-        }
-    }
-
-
 }

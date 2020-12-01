@@ -35,7 +35,7 @@ class TestPickerActivity : AppCompatActivity() {
                     .setMinDate(2020, 9, 10)
                     .setMaxDate(2030, 10, 10)
                     .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { _, _ -> })
-                    .setPositiveButton(R.string.confirm, DialogInterface.OnClickListener { _, _ -> })
+                    .setPositiveButton(R.string.ml_confirm, DialogInterface.OnClickListener { _, _ -> })
                     .create()
             dialog.show()
         }
@@ -46,7 +46,7 @@ class TestPickerActivity : AppCompatActivity() {
                     .set24HourFormat(false)
                     .setTitle("选择时间")
                     .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { _, _ -> })
-                    .setPositiveButton(R.string.confirm, DialogInterface.OnClickListener { _, _ -> })
+                    .setPositiveButton(R.string.ml_confirm, DialogInterface.OnClickListener { _, _ -> })
                     .create()
             dialog.show()
         }
@@ -57,7 +57,7 @@ class TestPickerActivity : AppCompatActivity() {
                     .set24HourFormat(true)
                     .setTitle("选择时间")
                     .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { _, _ -> })
-                    .setPositiveButton(R.string.confirm, DialogInterface.OnClickListener { _, _ -> })
+                    .setPositiveButton(R.string.ml_confirm, DialogInterface.OnClickListener { _, _ -> })
                     .create()
             dialog.show()
         }
@@ -66,7 +66,7 @@ class TestPickerActivity : AppCompatActivity() {
                     .setWithDate(true)
                     .setWithTime(true)
                     .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { _, _ -> })
-                    .setPositiveButton(R.string.confirm, DialogInterface.OnClickListener { _, _ -> })
+                    .setPositiveButton(R.string.ml_confirm, DialogInterface.OnClickListener { _, _ -> })
                     .create()
             dialog.show()
         }
@@ -81,7 +81,7 @@ class TestPickerActivity : AppCompatActivity() {
                         }
                     })
                     .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { _, _ -> })
-                    .setPositiveButton(R.string.confirm, DialogInterface.OnClickListener { _, _ -> })
+                    .setPositiveButton(R.string.ml_confirm, DialogInterface.OnClickListener { _, _ -> })
                     .create()
             dialog.show()
         }

@@ -58,7 +58,7 @@ class LocationViewModel constructor(private var context: Context) : ViewModel() 
                         },
                         onError = {
                             locating = false
-                            error.value = context.getString(R.string.cannot_get_location)
+                            error.value = context.getString(R.string.ml_cannot_get_location)
                         }
                 ).disposedBy(disposeBag)
     }

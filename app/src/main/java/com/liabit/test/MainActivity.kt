@@ -64,6 +64,14 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, TestPopupActivity::class.java))
             }
 
+            R.id.viewBinding -> {
+                startActivity(Intent(this, TestViewBinding::class.java))
+            }
+
+            R.id.mapLocation -> {
+                startActivity(Intent(this, TestMapLocationActivity::class.java))
+            }
+
             R.id.otherTest -> {
                 startActivity(Intent(this, TestFragmentVisibleActivity::class.java))
             }

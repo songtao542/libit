@@ -1,6 +1,7 @@
 package com.liabit.location.widget;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.Scroller;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 
 public class NestedFrameLayout extends FrameLayout {
@@ -42,6 +44,7 @@ public class NestedFrameLayout extends FrameLayout {
         init(context);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @SuppressWarnings("unused")
     public NestedFrameLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);

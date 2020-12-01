@@ -3,8 +3,13 @@ package com.liabit.location
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 
 abstract class BaseFragment : Fragment() {
+
+    companion object {
+        private const val MAP_LOCATION_TAG = "map_location"
+    }
 
     private var progressDialog: ProgressDialog? = null
 
@@ -41,6 +46,30 @@ abstract class BaseFragment : Fragment() {
     fun dismissProgress() {
         progressDialog?.dismiss()
         progressDialog = null
+    }
+
+    fun show(activity: FragmentActivity) {
+        if (activity.supportFragmentManager.findFragmentByTag(MAP_LOCATION_TAG) == null) {
+            activity.supportFragmentManager
+                    .beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.map_location_anim_right_enter, R.anim.map_location_anim_right_exit,
+                            R.anim.map_location_anim_right_enter, R.anim.map_location_anim_right_exit
+                    )
+                    .add(android.R.id.content, this, MAP_LOCATION_TAG)
+                    .addToBackStack(MAP_LOCATION_TAG)
+                    .commitAllowingStateLoss()
+        } else {
+            activity.supportFragmentManager
+                    .beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.map_location_anim_right_enter, R.anim.map_location_anim_right_exit,
+                            R.anim.map_location_anim_right_enter, R.anim.map_location_anim_right_exit
+                    )
+                    .addToBackStack(MAP_LOCATION_TAG)
+                    .show(this)
+                    .commitAllowingStateLoss()
+        }
     }
 
 }

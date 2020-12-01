@@ -41,7 +41,7 @@ inline fun <reified VB : ViewBinding> Fragment.bind(): ReadOnlyProperty<Any, VB>
  * 需要保证 Fragment 的 view 已经创建
  */
 inline fun <reified VB : ViewBinding> Fragment.bind(viewId: Int): ReadOnlyProperty<Any, VB> {
-    return ViewBindingProperty(requireView().findViewById(viewId), VB::class.java)
+    return ViewBindingProperty({ requireView().findViewById(viewId) }, VB::class.java)
 }
 
 inline fun <reified VB : ViewBinding> RecyclerView.ViewHolder.bind(): ReadOnlyProperty<Any, VB> {
@@ -107,7 +107,7 @@ class ViewBindingProperty<VB : ViewBinding>(private val viewProvider: (() -> Vie
         }
 
         val view = viewProvider?.invoke()
-        Log.d("ViewBindingProperty", "view: $view  thisRef: $thisRef", Throwable())
+        Log.d("ViewBindingProperty", "view: $view  thisRef: $thisRef"/*, Throwable()*/)
         return if (view != null) {
             bind(view).also { viewBinding = it }
         } else {

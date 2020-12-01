@@ -8,7 +8,6 @@ import com.liabit.location.LocationPicker
 import com.liabit.location.LocationPickerFragment
 import com.liabit.location.LocationViewer
 import com.liabit.location.model.PoiAddress
-import com.liabit.viewbinding.inflate
 
 class TestMapLocationActivity : AppCompatActivity() {
 

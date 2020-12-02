@@ -18,12 +18,17 @@
         <item name="android:textColor">@color/picker_color_accent</item>
     </style>
 
-    <style name="PickerDialog" parent="Theme.AppCompat.Dialog">
+    <style name="DialogTitleStyle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/picker_color_accent</item>
+    </style>
+
+    <style name="PickerDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowMinWidthMajor">92%</item>
         <item name="android:windowMinWidthMinor">92%</item>
         <item name="android:windowBackground">@drawable/picker_inset_round_shape</item>
         <item name="android:windowAnimationStyle">@style/BottomSheetAnimation</item>
         <item name="android:buttonBarButtonStyle">@style/DialogButtonStyle</item>
+        <item name="android:windowTitleStyle">@style/DialogTitleStyle</item>
     </style>
 
     <!-- 宽度占满屏幕 -->

@@ -2,10 +2,16 @@
 <resources>
     <string name="time_divider" translatable="false">:</string>
 
-    <string-array name="time_divider" translatable="false">
+    <string-array name="hour_time_divider" translatable="false">
         <item>:</item>
         <item>:</item>
         <item>:</item>
+    </string-array>
+
+    <string-array name="hour_time_limit_divider" translatable="false">
+        <item> </item>
+        <item>:</item>
+        <item> </item>
     </string-array>
 
     <string name="year">/</string>

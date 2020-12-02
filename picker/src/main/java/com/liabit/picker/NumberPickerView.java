@@ -802,8 +802,12 @@ public class NumberPickerView extends View {
         return getPickedIndexRelativeToRaw() + mMinValue;
     }
 
-    public CharSequence getContentByCurrValue() {
+    public CharSequence getDisplayValue() {
         return mDisplayedValues.get(getValue() - mMinValue);
+    }
+
+    public int getIndex() {
+        return getValue() - mMinValue;
     }
 
     public boolean getWrapSelectorWheel() {

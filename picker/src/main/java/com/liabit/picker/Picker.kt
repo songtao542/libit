@@ -52,8 +52,8 @@ object Picker {
                 .setWithDate(true)
                 .setWithTime(false)
                 .setDefaultDate(current)
-                .setMinDate(start)
-                .setMaxDate(end)
+                .setMinDateTime(start)
+                .setMaxDateTime(end)
                 .setActionListener(object : DateTimePickerDialog.OnActionListener {
                     override fun onAction(dialog: DialogInterface, which: Int, date: com.liabit.picker.datetime.Date) {
                         listener?.invoke(date.calendar.time)

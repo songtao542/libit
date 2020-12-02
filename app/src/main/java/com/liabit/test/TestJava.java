@@ -1,5 +1,7 @@
 package com.liabit.test;
 
+import android.view.View;
+
 import com.liabit.popup.PopupMenu;
 
 import java.util.List;
@@ -12,11 +14,15 @@ class TestJava {
 
     PopupMenu.MenuItem mItem = new PopupMenu.MenuItem("");
 
-    public void man(String[] args) {
+    public void main(String[] args) {
 
         List<? extends CharSequence> a;
 
+        // View.MeasureSpec
 
 
     }
+
+
+
 }

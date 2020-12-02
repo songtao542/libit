@@ -26,8 +26,8 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         private const val DAY_COUNT = DAY_STOP - DAY_START + 1
     }
 
-    private var mYearStart = 1901
-    private var mYearStop = 2036
+    private var mYearStart = 1900
+    private var mYearStop = 2100
     private var mYearCount = mYearStop - mYearStart + 1
     private var mMonthStart = 0
     private var mDayStart = 1
@@ -87,7 +87,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         val calendar = Calendar.getInstance()
         mYearStop = calendar.get(Calendar.YEAR) + 30
         mYearCount = mYearStop - mYearStart + 1
-        reset(calendar)
+        setupWithCalendar(calendar)
     }
 
     fun setMinValue(minValue: Calendar) {
@@ -133,7 +133,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         }
     }
 
-    fun reset(calendar: Calendar) {
+    fun setupWithCalendar(calendar: Calendar) {
         if (!checkCalendarAvailable(calendar)) {
             adjustCalendarByLimit(calendar, mYearStart, mYearStop)
         }
@@ -431,9 +431,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         }
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    val value: Date
-        get() = Date(mYearPickerView.value, mMonthPickerView.value - 1, mDayPickerView.value)
+    val value: Date get() = Date(mYearPickerView.value, mMonthPickerView.value - 1, mDayPickerView.value)
 
     fun setOnDateChangedListener(listener: OnDateChangedListener?) {
         mOnDateChangedListener = listener

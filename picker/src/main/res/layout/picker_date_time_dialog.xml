@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/time_picker_dialog_content_padding"
         android:paddingBottom="@dimen/picker_dialog_content_padding">
 
         <Space

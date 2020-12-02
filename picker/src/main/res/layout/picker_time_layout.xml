@@ -16,7 +16,7 @@
         android:id="@+id/picker_time_divider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:textArray="@array/time_divider" />
+        app:textArray="@array/hour_time_divider" />
 
     <com.liabit.picker.NumberPickerView
         android:id="@+id/picker_min"

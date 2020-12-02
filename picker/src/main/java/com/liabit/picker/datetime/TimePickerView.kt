@@ -25,15 +25,26 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     private lateinit var mTimeDividerView: NumberPickerView
     private lateinit var mHourPickerView: NumberPickerView
     private lateinit var mMinutePickerView: NumberPickerView
+    private lateinit var mDividerView: NumberPickerView
 
     private var mCalendar: Calendar = Calendar.getInstance()
-    private var mIs24HourFormat = false
+    private var mIs24HourFormat = true
+    private var mLastIs24HourFormat: Boolean? = null
     private var mAuto24Hour = true //自动根据系统24小时显示不同view
-    private var mDisplayHour24: List<String> = emptyList()
-    private var mDisplayHour12: List<String> = emptyList()
-    private var mDisplayMinute: List<String> = emptyList()
+    private var mDisplayHour: List<Hour> = emptyList()
+
+    private var mDisplayMinute: List<CharSequence> = emptyList()
+
+    private var mDisplayStartMinute: List<CharSequence> = emptyList()
+    private var mDisplayEndMinute: List<CharSequence> = emptyList()
+
     private var mOnTimeChangeListener: OnTimeChangedListener? = null
     private var mOnWindowFocusChangeListener: ViewTreeObserver.OnWindowFocusChangeListener? = null
+
+    private var mHourStart = 0
+    private var mHourEnd = 23
+    private var mMinuteStart = 0
+    private var mMinuteEnd = 59
 
     @JvmOverloads
     constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
@@ -51,6 +62,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         mTimeDividerView = inflate.findViewById(R.id.picker_time_divider)
         mHourPickerView = inflate.findViewById(R.id.picker_hour)
         mMinutePickerView = inflate.findViewById(R.id.picker_min)
+        mDividerView = inflate.findViewById(R.id.picker_time_divider)
         mAmPmPickerView.setOnValueChangedListener(this)
         mHourPickerView.setOnValueChangedListener(this)
         mMinutePickerView.setOnValueChangedListener(this)
@@ -58,7 +70,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         mTimeDividerView.isEnabled = false
         mTimeDividerView.setOffsetY(6)
         mIs24HourFormat = DateFormat.is24HourFormat(context)
-        initDisplayTime()
+        setupWithCalendar(mCalendar)
     }
 
     fun setItemWrapContent() {
@@ -87,7 +99,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
                     Log.d(TAG, "onWindowFocusChanged() hasFocus is24Hour:$is24Hour")
                     if (mIs24HourFormat != is24Hour) {
                         mIs24HourFormat = is24Hour
-                        initDisplayTime()
+                        setupWithCalendar(mCalendar)
                     }
                 }
                 viewTreeObserver.addOnWindowFocusChangeListener(mOnWindowFocusChangeListener)
@@ -98,7 +110,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     fun setTime(hour: Int, minute: Int) {
         mCalendar[Calendar.HOUR_OF_DAY] = hour
         mCalendar[Calendar.MINUTE] = minute
-        initDisplayTime()
+        setupWithCalendar(mCalendar)
     }
 
     /**
@@ -111,7 +123,25 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         if (amPm == Calendar.AM || amPm == Calendar.PM) {
             mCalendar[Calendar.AM_PM] = amPm
         }
-        initDisplayTime()
+        setupWithCalendar(mCalendar)
+    }
+
+    /**
+     * @param hour 0-23
+     * @param minute 0-59
+     */
+    fun setMin(hour: Int, minute: Int) {
+        mHourStart = if (hour in 0..mHourEnd) hour else 0
+        mMinuteStart = if (minute in 0..mMinuteEnd) minute else 0
+    }
+
+    /**
+     * @param hour 0-23
+     * @param minute 0-59
+     */
+    fun setMax(hour: Int, minute: Int) {
+        mHourEnd = if (hour in mHourStart..23) hour else 23
+        mMinuteEnd = if (minute in mMinuteStart..59) minute else 59
     }
 
     fun set24HourFormat(is24HourFormat: Boolean) {
@@ -120,43 +150,64 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
             return
         }
         mIs24HourFormat = is24HourFormat
-        initDisplayTime()
+        setupWithCalendar(mCalendar)
     }
 
     fun is24HourFormat(): Boolean {
         return mIs24HourFormat
     }
 
-    private fun initDisplayTime() {
-        initDisplayTime(mCalendar)
-    }
-
-    fun initDisplayTime(calendar: Calendar) {
+    fun setupWithCalendar(calendar: Calendar) {
         if (mIs24HourFormat) {
+            // 24小时制
             mAmPmPickerView.visibility = GONE
             mTimeDividerView.visibility = VISIBLE
         } else {
-            mTimeDividerView.visibility = GONE
+            // 12小时制
             mAmPmPickerView.visibility = VISIBLE
+            mTimeDividerView.visibility = GONE
             val apm = context.resources.getStringArray(R.array.picker_am_pm_entries)
             mAmPmPickerView.setDisplayedValues(arrayListOf(*apm), false)
-            initPickerViewData(mAmPmPickerView, 0, 1, calendar[Calendar.AM_PM])
+            initPickerViewValue(mAmPmPickerView, 0, 1, calendar[Calendar.AM_PM])
         }
+
+        if (mHourEnd < mHourStart) {
+            val start = mHourStart
+            mHourStart = mHourEnd
+            mHourEnd = start
+        }
+
+        if (mMinuteEnd < mMinuteStart) {
+            val start = mMinuteStart
+            mMinuteStart = mMinuteEnd
+            mMinuteEnd = start
+        }
+
+        val isHourNoLimited = (mHourStart == 0 && mHourEnd == 23 && mMinuteStart == 0 && mMinuteEnd == 59)
+        if (isHourNoLimited) {
+            mDividerView.displayedValues = resources.getStringArray(R.array.hour_time_divider).toList()
+        } else {
+            mDividerView.displayedValues = resources.getStringArray(R.array.hour_time_limit_divider).toList()
+        }
+        initPickerViewValue(mDividerView, 0, 2, 1)
+
+        mHourPickerView.wrapSelectorWheel = isHourNoLimited
+        mMinutePickerView.wrapSelectorWheel = isHourNoLimited
+        mAmPmPickerView.isEnabled = isHourNoLimited
+
         // hour
-        if (mIs24HourFormat && mDisplayHour24.isEmpty()) {
-            mDisplayHour24 = MutableList(24) {
-                String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, it)
+        if (mLastIs24HourFormat != mIs24HourFormat || mDisplayHour.size != (mHourEnd - mHourStart + 1)) {
+            // 24小时制
+            mLastIs24HourFormat = mIs24HourFormat
+            mDisplayHour = MutableList(mHourEnd - mHourStart + 1) {
+                Hour(mIs24HourFormat, mHourStart + it)
             }
         }
-        if (!mIs24HourFormat && mDisplayHour12.isEmpty()) {
-            mDisplayHour12 = MutableList(12) {
-                if (it == 0) 12.toString() else it.toString()
-            }
-        }
-        val displayHour = if (mIs24HourFormat) mDisplayHour24 else mDisplayHour12
-        mHourPickerView.setDisplayedValues(displayHour, false)
-        val hour = if (mIs24HourFormat) calendar[Calendar.HOUR_OF_DAY] else calendar[Calendar.HOUR]
-        initPickerViewData(mHourPickerView, 0, displayHour.size - 1, hour)
+
+        mHourPickerView.setDisplayedValues(mDisplayHour, false)
+        val currentHour = calendar[Calendar.HOUR_OF_DAY]
+        val selectHour = if (currentHour in mHourStart..mHourEnd) currentHour else mHourStart
+        setDisplayedValuesForPickerView(mHourPickerView, selectHour, mHourStart, mHourEnd, mDisplayHour)
 
         // minute
         if (mDisplayMinute.isEmpty()) {
@@ -164,39 +215,129 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
                 String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, it)
             }
         }
-        mMinutePickerView.setDisplayedValues(mDisplayMinute, false)
-        initPickerViewData(mMinutePickerView, 0, 59, calendar[Calendar.MINUTE])
+
+        mDisplayStartMinute = if (mMinuteStart != 0 || mDisplayStartMinute.size != 60 - mMinuteStart) {
+            MutableList(60 - mMinuteStart) {
+                String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, (mMinuteStart + it))
+            }
+        } else {
+            mDisplayMinute
+        }
+
+        mDisplayEndMinute = if (mMinuteEnd != 59 || mDisplayEndMinute.size != mMinuteEnd + 1) {
+            MutableList(mMinuteEnd + 1) {
+                String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, it)
+            }
+        } else {
+            mDisplayMinute
+        }
+
+        passiveUpdateAmPm()
+
+        val currentMinute = calendar[Calendar.MINUTE]
+        val selectMinute = if (currentMinute in mMinuteStart..mMinuteEnd) currentMinute else mMinuteStart
+        passiveUpdateMinute(selectHour, selectMinute)
+
         mOnTimeChangeListener?.onTimeChanged(value)
     }
 
-    private fun initPickerViewData(picker: NumberPickerView, minValue: Int, maxValue: Int, value: Int) {
+    private fun passiveUpdateMinute(newHour: Int, newMinute: Int) {
+        when (newHour) {
+            mHourStart -> {
+                val newMinuteValue = if (newMinute < mMinuteStart) mMinuteStart else newMinute
+                setDisplayedValuesForPickerView(mMinutePickerView, newMinuteValue, mMinuteStart, 59, mDisplayStartMinute)
+            }
+            mHourEnd -> {
+                val newMinuteValue = if (newMinute > mMinuteEnd) mMinuteEnd else newMinute
+                setDisplayedValuesForPickerView(mMinutePickerView, newMinuteValue, 0, mMinuteEnd, mDisplayEndMinute)
+            }
+            else -> {
+                setDisplayedValuesForPickerView(mMinutePickerView, newMinute, 0, 59, mDisplayMinute)
+            }
+        }
+    }
+
+    private fun passiveUpdateAmPm() {
+        if (!mAmPmPickerView.isEnabled) {
+            val value = mHourPickerView.displayValue
+            if (value is Hour) {
+                val apm = if (value.hour < 12) 0 else 1
+                mCalendar[Calendar.AM_PM] = apm
+                initPickerViewValue(mAmPmPickerView, 0, 1, apm)
+            }
+        }
+    }
+
+    private fun setDisplayedValuesForPickerView(pickerView: NumberPickerView,
+                                                newValue: Int,
+                                                newStart: Int,
+                                                newStop: Int,
+                                                newDisplayedVales: List<CharSequence>,
+                                                needRespond: Boolean = true,
+                                                anim: Boolean = true) {
+        if (newStart > newStop) { //规避一些错误
+            Log.w(TAG, "setValuesForPickerView() newStart > newStop")
+            return
+        }
+        require(newDisplayedVales.isNotEmpty()) { "newDisplayedVales's length should not be 0." }
+        val newCount = newStop - newStart + 1
+        require(newDisplayedVales.size >= newCount) { "newDisplayedVales's length should not be less than newCount." }
+        val oldStart = pickerView.minValue
+        val oldStop = pickerView.maxValue
+        val oldCount = oldStop - oldStart + 1
+        var fromValue = pickerView.value
+        if (newCount > oldCount) {
+            pickerView.displayedValues = newDisplayedVales
+            pickerView.minValue = newStart
+            pickerView.maxValue = newStop
+        } else {
+            pickerView.minValue = newStart
+            pickerView.maxValue = newStop
+            pickerView.displayedValues = newDisplayedVales
+        }
+        if (anim) {
+            if (fromValue < newStart) {
+                fromValue = newStart
+            }
+            pickerView.smoothScrollToValue(fromValue, newValue, needRespond)
+        } else {
+            pickerView.value = newValue
+        }
+    }
+
+    private fun initPickerViewValue(picker: NumberPickerView, minValue: Int, maxValue: Int, value: Int) {
         picker.minValue = minValue
         picker.maxValue = maxValue
         picker.value = value
     }
 
     override fun onValueChange(picker: NumberPickerView, oldVal: Int, newVal: Int) {
-        Log.d(TAG, "onValueChange() picker new:$newVal")
-        if (picker === mAmPmPickerView) {
-            mCalendar[Calendar.AM_PM] = newVal
-        } else if (picker === mHourPickerView) {
-            if (mIs24HourFormat) {
-                mCalendar[Calendar.HOUR_OF_DAY] = newVal
-            } else {
-                mCalendar[Calendar.HOUR] = newVal
+        Log.d(TAG, "onValueChange()  $picker  newVal:$newVal")
+        when {
+            picker === mAmPmPickerView -> {
+                mCalendar[Calendar.AM_PM] = newVal
             }
-        } else if (picker === mMinutePickerView) {
-            mCalendar[Calendar.MINUTE] = newVal
+            picker === mHourPickerView -> {
+                if (mIs24HourFormat) {
+                    mCalendar[Calendar.HOUR_OF_DAY] = newVal
+                } else {
+                    mCalendar[Calendar.HOUR] = newVal
+                    passiveUpdateAmPm()
+                }
+                passiveUpdateMinute(newVal, mMinutePickerView.value)
+            }
+            picker === mMinutePickerView -> {
+                mCalendar[Calendar.MINUTE] = newVal
+            }
         }
         mOnTimeChangeListener?.onTimeChanged(value)
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
     val value: Time
         get() {
-            var hour = mHourPickerView.value
-            hour = if (!mIs24HourFormat && hour == 0) 12 else hour
-            return Time(hour, mMinutePickerView.value, mAmPmPickerView.value, mIs24HourFormat)
+            val hour = mCalendar.get(Calendar.HOUR_OF_DAY)
+            val minute = mCalendar.get(Calendar.MINUTE)
+            return Time(hour, minute).apply { is24HourFormat = mIs24HourFormat }
         }
 
     fun setOnTimeChangedListener(onTimeChangeListener: OnTimeChangedListener?) {
@@ -205,5 +346,37 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
 
     interface OnTimeChangedListener {
         fun onTimeChanged(time: Time)
+    }
+
+    /**
+     * @param is24HourFormat 是否24小时制
+     * @param hour 24小时制的小时
+     */
+    private class Hour(val is24HourFormat: Boolean, val hour: Int) : CharSequence {
+
+        private val mHour: String = if (is24HourFormat) {
+            String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, hour)
+        } else {
+            when {
+                hour == 0 -> 12  // 00点是午夜(即上午12点)
+                hour <= 12 -> hour  // 小于12的是上午, 12点是中午(即下午12点)
+                else -> hour - 12 // 大于12的是下午
+            }.toString()
+        }
+
+        override val length: Int
+            get() = mHour.length
+
+        override fun get(index: Int): Char {
+            return mHour[index]
+        }
+
+        override fun subSequence(startIndex: Int, endIndex: Int): CharSequence {
+            return mHour.subSequence(startIndex, endIndex)
+        }
+
+        override fun toString(): String {
+            return mHour
+        }
     }
 }

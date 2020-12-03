@@ -14,11 +14,11 @@ import java.util.*
 object Picker {
     @JvmStatic
     fun pickTime(context: Context, listener: ((hourOfDay: Int, minute: Int) -> Unit)? = null) {
-        pickDate(context, Date(), null, null, listener)
+        pickTime(context, Date(), null, null, listener)
     }
 
     @JvmStatic
-    fun pickDate(context: Context, currentTime: Date, startTime: Date?, endTime: Date?, listener: ((hourOfDay: Int, minute: Int) -> Unit)? = null) {
+    fun pickTime(context: Context, currentTime: Date, startTime: Date?, endTime: Date?, listener: ((hourOfDay: Int, minute: Int) -> Unit)? = null) {
         val current: Calendar = Calendar.getInstance(TimeZone.getDefault()).apply { this.time = currentTime }
         val start: Calendar? = if (startTime != null) {
             Calendar.getInstance(TimeZone.getDefault()).apply { this.time = startTime }

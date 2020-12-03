@@ -56,6 +56,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
     private var mOnDateTimeChangeListener: OnDateTimeChangeListener? = null
     private var mOnDateChangeListener: OnDateChangeListener? = null
     private var mOnTimeChangeListener: OnTimeChangeListener? = null
+    private var mReady = false
 
     private var mDataTime: DateTime? = null
 
@@ -67,6 +68,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
 
     private val mDateChangeListener = object : DatePickerView.OnDateChangedListener {
         override fun onDateChanged(date: Date) {
+            if (!mReady) return
             if (mIsAutoUpdateTitle) {
                 updateTitle(date)
             }
@@ -80,6 +82,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
 
     private val mTimeChangeListener = object : TimePickerView.OnTimeChangedListener {
         override fun onTimeChanged(time: Time) {
+            if (!mReady) return
             if (mIsAutoUpdateTitle) {
                 updateTitle(time)
             }
@@ -134,6 +137,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
         mOnDateChangeListener = onDateChangeListener
         mOnTimeChangeListener = onTimeChangeListener
         mOnDateTimeChangeListener = onDateTimeChangeListener
+        mReady = true
     }
 
     private fun getTimeString(time: Time): String {
@@ -494,7 +498,6 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             dialog.setCanceledOnTouchOutside(mCanceledOnTouchOutside)
             //先创建pickerDialog实例，后续设置数据回调onChange
             val pickerDialog = DateTimePickerDialog(mContext, dialog, datePickerView, timePickerView)
-            pickerDialog.setListener(mDateChangeListener, mTimeChangeListener, mDateTimeChangeListener)
             pickerDialog.setAutoUpdateTitle(mIsAutoUpdateTitle)
             pickerDialog.setWithView(mIsWithViewDate, mIsWithViewTime)
 
@@ -525,6 +528,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             Log.d(TAG, "show() isAutoUpdateTitle:$mIsAutoUpdateTitle, withDate:$mIsWithViewDate, withTime:$mIsWithViewTime, autoUpdateTitle:$mIsAutoUpdateTitle")
             wrapPositiveListener?.setPickerDialog(pickerDialog)
             wrapNegativeListener?.setPickerDialog(pickerDialog)
+            pickerDialog.setListener(mDateChangeListener, mTimeChangeListener, mDateTimeChangeListener)
             return pickerDialog
         }
 

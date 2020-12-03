@@ -100,9 +100,5 @@ data class Address(val provinceCode: String,
                    val districtCode: String,
                    val districtName: String) : Parcelable {
 
-    val formatted: String
-        get() {
-            return if (provinceName == cityName) "$provinceName$districtName" else "$provinceName$cityName$districtName"
-        }
-
+    val formatted: String get() = if (provinceName == cityName) "$provinceName$districtName" else "$provinceName$cityName$districtName"
 }

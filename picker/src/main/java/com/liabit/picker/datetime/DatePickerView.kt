@@ -66,8 +66,15 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
 
     private var mOnDateChangedListener: OnDateChangedListener? = null
 
-    @JvmOverloads
-    constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context) : super(context) {
+        initInternal(context)
+    }
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        initInternal(context)
+    }
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         initInternal(context)
     }
 
@@ -85,7 +92,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         mMonthPickerView.setOnValueChangedListener(this)
         mDayPickerView.setOnValueChangedListener(this)
         val calendar = Calendar.getInstance()
-        mYearStop = calendar.get(Calendar.YEAR) + 30
+        mYearStop = calendar.get(Calendar.YEAR) + 100
         mYearCount = mYearStop - mYearStart + 1
         setupWithCalendar(calendar)
     }
@@ -241,7 +248,7 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
 
     @SuppressLint("WrongConstant")
     private fun initValuesForY(calendar: Calendar, anim: Boolean): Int {
-        mYearPickerView.wrapSelectorWheel = false
+        //mYearPickerView.wrapSelectorWheel = false
         val yearSway: Int = calendar[Calendar.YEAR]
         setDisplayedValuesForPickerView(mYearPickerView, yearSway, mYearStart, mYearStop, mDisplayYears, false, anim)
         return yearSway

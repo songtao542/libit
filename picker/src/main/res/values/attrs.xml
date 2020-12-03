@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr name="autoTextSize" format="reference|boolean" />
+
+    <declare-styleable name="CascadePickerView">
+        <attr name="autoTextSize" />
+    </declare-styleable>
+
     <declare-styleable name="NumberPickerView">
         <!--set number of item displayed, default is 3-->
         <attr name="showCount" format="reference|integer" />
@@ -30,6 +36,7 @@
         <attr name="itemPaddingVertical" format="reference|dimension" />
         <attr name="respondChangeInMainThread" format="reference|boolean" />
         <attr name="textEllipsize" format="reference|string" />
+        <attr name="autoTextSize" />
 
         <!--just used to measure maxWidth for wrap_content without hint,
             the string array will never be displayed.

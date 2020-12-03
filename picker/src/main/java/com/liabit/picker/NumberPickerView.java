@@ -13,8 +13,12 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextDirectionHeuristics;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -24,6 +28,8 @@ import android.view.ViewConfiguration;
 import android.widget.Scroller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -177,12 +183,16 @@ public class NumberPickerView extends View {
     private VelocityTracker mVelocityTracker;
 
     private final Paint mPaintDivider = new Paint();
-    private final TextPaint mPaintText = new TextPaint();
+    private final TextPaint mTextPaint = new TextPaint();
     private final Paint mPaintHint = new Paint();
 
     private List<? extends CharSequence> mDisplayedValues;
     private List<? extends CharSequence> mAlterTextArrayWithMeasureHint;
     private List<? extends CharSequence> mAlterTextArrayWithoutMeasureHint;
+
+    private boolean mAutoTextSize = false;
+    // 记录 mDisplayedValues 中文字的字体大小
+    private final ArrayMap<CharSequence, Integer> mDisplayedValueTextSizeMap = new ArrayMap<>();
 
     private HandlerThread mHandlerThread;
     private Handler mHandlerInNewThread;
@@ -217,6 +227,8 @@ public class NumberPickerView extends View {
     private OnValueChangeListener mOnValueChangeListener; //compatible for NumberPicker
     private OnScrollListener mOnScrollListener;//compatible for NumberPicker
     private OnValueChangeListenerInScrolling mOnValueChangeListenerInScrolling;//response onValueChanged in scrolling
+
+    private AutoTextSizeHelper mAutoTextSizeHelper;
 
     // The current scroll state of the NumberPickerView.
     private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
@@ -271,11 +283,11 @@ public class NumberPickerView extends View {
             } else if (attr == R.styleable.NumberPickerView_textColorHint) {
                 mTextColorHint = a.getColor(attr, DEFAULT_TEXT_COLOR_SELECTED);
             } else if (attr == R.styleable.NumberPickerView_textSizeNormal) {
-                mTextSizeNormal = a.getDimensionPixelSize(attr, sp2px(context, DEFAULT_TEXT_SIZE_NORMAL_SP));
+                mTextSizeNormal = a.getDimensionPixelSize(attr, sp2px(DEFAULT_TEXT_SIZE_NORMAL_SP));
             } else if (attr == R.styleable.NumberPickerView_textSizeSelected) {
-                mTextSizeSelected = a.getDimensionPixelSize(attr, sp2px(context, DEFAULT_TEXT_SIZE_SELECTED_SP));
+                mTextSizeSelected = a.getDimensionPixelSize(attr, sp2px(DEFAULT_TEXT_SIZE_SELECTED_SP));
             } else if (attr == R.styleable.NumberPickerView_textSizeHint) {
-                mTextSizeHint = a.getDimensionPixelSize(attr, sp2px(context, DEFAULT_TEXT_SIZE_HINT_SP));
+                mTextSizeHint = a.getDimensionPixelSize(attr, sp2px(DEFAULT_TEXT_SIZE_HINT_SP));
             } else if (attr == R.styleable.NumberPickerView_minValue) {
                 mMinShowIndex = a.getInteger(attr, 0);
             } else if (attr == R.styleable.NumberPickerView_maxValue) {
@@ -291,13 +303,13 @@ public class NumberPickerView extends View {
             } else if (attr == R.styleable.NumberPickerView_emptyItemHint) {
                 mEmptyItemHint = a.getString(attr);
             } else if (attr == R.styleable.NumberPickerView_marginStartOfHint) {
-                mMarginStartOfHint = a.getDimensionPixelSize(attr, dp2px(context, DEFAULT_MARGIN_START_OF_HINT_DP));
+                mMarginStartOfHint = a.getDimensionPixelSize(attr, dp2px(DEFAULT_MARGIN_START_OF_HINT_DP));
             } else if (attr == R.styleable.NumberPickerView_marginEndOfHint) {
-                mMarginEndOfHint = a.getDimensionPixelSize(attr, dp2px(context, DEFAULT_MARGIN_END_OF_HINT_DP));
+                mMarginEndOfHint = a.getDimensionPixelSize(attr, dp2px(DEFAULT_MARGIN_END_OF_HINT_DP));
             } else if (attr == R.styleable.NumberPickerView_itemPaddingVertical) {
-                mItemPaddingVertical = a.getDimensionPixelSize(attr, dp2px(context, DEFAULT_ITEM_PADDING_DP_V));
+                mItemPaddingVertical = a.getDimensionPixelSize(attr, dp2px(DEFAULT_ITEM_PADDING_DP_V));
             } else if (attr == R.styleable.NumberPickerView_itemPaddingHorizontal) {
-                mItemPaddingHorizontal = a.getDimensionPixelSize(attr, dp2px(context, DEFAULT_ITEM_PADDING_DP_H));
+                mItemPaddingHorizontal = a.getDimensionPixelSize(attr, dp2px(DEFAULT_ITEM_PADDING_DP_H));
             } else if (attr == R.styleable.NumberPickerView_alternativeTextArrayWithMeasureHint) {
                 mAlterTextArrayWithMeasureHint = convertCharSequenceArrayToList(a.getTextArray(attr));
             } else if (attr == R.styleable.NumberPickerView_alternativeTextArrayWithoutMeasureHint) {
@@ -308,6 +320,8 @@ public class NumberPickerView extends View {
                 mRespondChangeInMainThread = a.getBoolean(attr, DEFAULT_RESPOND_CHANGE_IN_MAIN_THREAD);
             } else if (attr == R.styleable.NumberPickerView_textEllipsize) {
                 mTextEllipsize = a.getString(attr);
+            } else if (attr == R.styleable.NumberPickerView_autoTextSize) {
+                mAutoTextSize = a.getBoolean(attr, false);
             }
         }
         a.recycle();
@@ -315,31 +329,32 @@ public class NumberPickerView extends View {
 
     private void init(Context context) {
         mScroller = new Scroller(context);
+        mAutoTextSizeHelper = new AutoTextSizeHelper();
         mMiniVelocityFling = ViewConfiguration.get(getContext()).getScaledMinimumFlingVelocity();
         mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
         if (mTextSizeNormal == 0) {
-            mTextSizeNormal = sp2px(context, DEFAULT_TEXT_SIZE_NORMAL_SP);
+            mTextSizeNormal = sp2px(DEFAULT_TEXT_SIZE_NORMAL_SP);
         }
         if (mTextSizeSelected == 0) {
-            mTextSizeSelected = sp2px(context, DEFAULT_TEXT_SIZE_SELECTED_SP);
+            mTextSizeSelected = sp2px(DEFAULT_TEXT_SIZE_SELECTED_SP);
         }
         if (mTextSizeHint == 0) {
-            mTextSizeHint = sp2px(context, DEFAULT_TEXT_SIZE_HINT_SP);
+            mTextSizeHint = sp2px(DEFAULT_TEXT_SIZE_HINT_SP);
         }
         if (mMarginStartOfHint == 0) {
-            mMarginStartOfHint = dp2px(context, DEFAULT_MARGIN_START_OF_HINT_DP);
+            mMarginStartOfHint = dp2px(DEFAULT_MARGIN_START_OF_HINT_DP);
         }
         if (mMarginEndOfHint == 0) {
-            mMarginEndOfHint = dp2px(context, DEFAULT_MARGIN_END_OF_HINT_DP);
+            mMarginEndOfHint = dp2px(DEFAULT_MARGIN_END_OF_HINT_DP);
         }
         mPaintDivider.setColor(mDividerColor);
         mPaintDivider.setAntiAlias(true);
         mPaintDivider.setStyle(Paint.Style.STROKE);
         mPaintDivider.setStrokeWidth(mDividerHeight);
 
-        mPaintText.setColor(mTextColorNormal);
-        mPaintText.setAntiAlias(true);
-        mPaintText.setTextAlign(Align.CENTER);
+        mTextPaint.setColor(mTextColorNormal);
+        mTextPaint.setAntiAlias(true);
+        mTextPaint.setTextAlign(Align.CENTER);
 
         mPaintHint.setColor(mTextColorHint);
         mPaintHint.setAntiAlias(true);
@@ -517,7 +532,6 @@ public class NumberPickerView extends View {
 
     public int getRawContentSize() {
         if (mDisplayedValues != null) {
-            //return mDisplayedValues.length;
             return mDisplayedValues.size();
         }
         return 0;
@@ -979,7 +993,7 @@ public class NumberPickerView extends View {
     }
 
     public void setContentTextTypeface(Typeface typeface) {
-        mPaintText.setTypeface(typeface);
+        mTextPaint.setTypeface(typeface);
     }
 
     public void setHintTextTypeface(Typeface typeface) {
@@ -1058,10 +1072,10 @@ public class NumberPickerView extends View {
         mTextSizeHintCenterYOffset = getTextCenterYOffset(mPaintHint.getFontMetrics());
         mWidthOfHintText = getTextWidth(mHintText, mPaintHint);
 
-        mPaintText.setTextSize(mTextSizeSelected);
-        mTextSizeSelectedCenterYOffset = getTextCenterYOffset(mPaintText.getFontMetrics());
-        mPaintText.setTextSize(mTextSizeNormal);
-        mTextSizeNormalCenterYOffset = getTextCenterYOffset(mPaintText.getFontMetrics());
+        mTextPaint.setTextSize(mTextSizeSelected);
+        mTextSizeSelectedCenterYOffset = getTextCenterYOffset(mTextPaint.getFontMetrics());
+        mTextPaint.setTextSize(mTextSizeNormal);
+        mTextSizeNormalCenterYOffset = getTextCenterYOffset(mTextPaint.getFontMetrics());
     }
 
     private void updateNotWrapYLimit() {
@@ -1322,45 +1336,94 @@ public class NumberPickerView extends View {
         float textSize;
         float fraction = 0f;// fraction of the item in state between normal and selected, in[0, 1]
         float textSizeCenterYOffset;
+        int availableWidth = getWidth() - 2 * mItemPaddingHorizontal;
 
         for (int i = 0; i < mShownCount + 1; i++) {
             float y = mCurrDrawFirstItemY + mItemHeight * i;
             index = getIndexByRawIndex(mCurrDrawFirstItemIndex + i, getOneRecycleSize(), mWrapSelectorWheel && mWrapSelectorWheelCheck);
+            CharSequence text = null;
+            boolean autoTextSize = mAutoTextSize;
+            if (0 <= index && index < getOneRecycleSize()) {
+                text = mDisplayedValues.get(index + mMinShowIndex);
+                if (mTextEllipsize != null) {
+                    autoTextSize = false;
+                    text = TextUtils.ellipsize(text, mTextPaint, availableWidth, getEllipsizeType());
+                }
+            } else if (!TextUtils.isEmpty(mEmptyItemHint)) {
+                text = mEmptyItemHint;
+            }
+            if (text == null) {
+                continue;
+            }
+
             if (i == mShownCount / 2) {//this will be picked
                 fraction = (float) (mItemHeight + mCurrDrawFirstItemY) / mItemHeight;
                 textColor = getEvaluateColor(fraction, mTextColorNormal, mTextColorSelected);
-                textSize = getEvaluateSize(fraction, mTextSizeNormal, mTextSizeSelected);
+
+                if (autoTextSize) {
+                    int selectTextSize = getTextSize(text, availableWidth);
+                    int normalTextSize = getNormalTextSize(selectTextSize);
+                    textSize = getEvaluateSize(fraction, normalTextSize, selectTextSize);
+                } else {
+                    textSize = getEvaluateSize(fraction, mTextSizeNormal, mTextSizeSelected);
+                }
+
+                //textSize = getEvaluateSize(fraction, mTextSizeNormal, mTextSizeSelected);
                 textSizeCenterYOffset = getEvaluateSize(fraction, mTextSizeNormalCenterYOffset,
                         mTextSizeSelectedCenterYOffset);
             } else if (i == mShownCount / 2 + 1) {
                 textColor = getEvaluateColor(1 - fraction, mTextColorNormal, mTextColorSelected);
-                textSize = getEvaluateSize(1 - fraction, mTextSizeNormal, mTextSizeSelected);
+
+                if (autoTextSize) {
+                    int selectTextSize = getTextSize(text, availableWidth);
+                    int normalTextSize = getNormalTextSize(selectTextSize);
+                    textSize = getEvaluateSize(1 - fraction, normalTextSize, selectTextSize);
+                } else {
+                    textSize = getEvaluateSize(1 - fraction, mTextSizeNormal, mTextSizeSelected);
+                }
+
+                //textSize = getEvaluateSize(1 - fraction, mTextSizeNormal, mTextSizeSelected);
                 textSizeCenterYOffset = getEvaluateSize(1 - fraction, mTextSizeNormalCenterYOffset,
                         mTextSizeSelectedCenterYOffset);
             } else {
                 textColor = mTextColorNormal;
-                textSize = mTextSizeNormal;
+
+                if (autoTextSize) {
+                    int selectTextSize = getTextSize(text, availableWidth);
+                    textSize = getNormalTextSize(selectTextSize);
+                } else {
+                    textSize = mTextSizeNormal;
+                }
+
+                //textSize = mTextSizeNormal;
                 textSizeCenterYOffset = mTextSizeNormalCenterYOffset;
             }
-            mPaintText.setColor(textColor);
-            mPaintText.setTextSize(textSize);
+            mTextPaint.setColor(textColor);
+            mTextPaint.setTextSize(textSize);
 
             /*String familyName = "sans-serif-light";
             Typeface tf = Typeface.create(familyName, Typeface.NORMAL);
             mPaintText.setTypeface(tf);*/
 
-            if (0 <= index && index < getOneRecycleSize()) {
-                CharSequence str = mDisplayedValues.get(index + mMinShowIndex);
-                if (mTextEllipsize != null) {
-                    str = TextUtils.ellipsize(str, mPaintText, getWidth() - 2 * mItemPaddingHorizontal, getEllipsizeType());
-                }
-                canvas.drawText(str.toString(), mViewCenterX,
-                        y + mItemHeight / 2f + textSizeCenterYOffset, mPaintText);
-            } else if (!TextUtils.isEmpty(mEmptyItemHint)) {
-                canvas.drawText(mEmptyItemHint, mViewCenterX,
-                        y + mItemHeight / 2f + textSizeCenterYOffset, mPaintText);
-            }
+            canvas.drawText(text.toString(), mViewCenterX, y + mItemHeight / 2f + textSizeCenterYOffset, mTextPaint);
         }
+    }
+
+    private int getTextSize(CharSequence text, int availableWidth) {
+        Integer cacheTextSize = mDisplayedValueTextSizeMap.get(text);
+        if (cacheTextSize != null) {
+            return cacheTextSize;
+        }
+        int selectTextSize = mAutoTextSizeHelper.findLargestTextSizeWhichFits(text, availableWidth);
+        if (selectTextSize > mTextSizeSelected) {
+            selectTextSize = mTextSizeSelected;
+        }
+        mDisplayedValueTextSizeMap.put(text, selectTextSize);
+        return selectTextSize;
+    }
+
+    private int getNormalTextSize(int selectTextSize) {
+        return selectTextSize - (mTextSizeSelected - mTextSizeNormal);
     }
 
     private TextUtils.TruncateAt getEllipsizeType() {
@@ -1409,14 +1472,14 @@ public class NumberPickerView extends View {
     }
 
     private void updateMaxWidthOfDisplayedValues() {
-        float savedTextSize = mPaintText.getTextSize();
-        mPaintText.setTextSize(mTextSizeSelected);
-        mMaxWidthOfDisplayedValues = getMaxWidthOfTextArray(mDisplayedValues, mPaintText);
-        mMaxWidthOfAlterArrayWithMeasureHint = getMaxWidthOfTextArray(mAlterTextArrayWithMeasureHint, mPaintText);
-        mMaxWidthOfAlterArrayWithoutMeasureHint = getMaxWidthOfTextArray(mAlterTextArrayWithoutMeasureHint, mPaintText);
-        mPaintText.setTextSize(mTextSizeHint);
-        mWidthOfAlterHint = getTextWidth(mAlterHint, mPaintText);
-        mPaintText.setTextSize(savedTextSize);
+        float savedTextSize = mTextPaint.getTextSize();
+        mTextPaint.setTextSize(mTextSizeSelected);
+        mMaxWidthOfDisplayedValues = getMaxWidthOfTextArray(mDisplayedValues, mTextPaint);
+        mMaxWidthOfAlterArrayWithMeasureHint = getMaxWidthOfTextArray(mAlterTextArrayWithMeasureHint, mTextPaint);
+        mMaxWidthOfAlterArrayWithoutMeasureHint = getMaxWidthOfTextArray(mAlterTextArrayWithoutMeasureHint, mTextPaint);
+        mTextPaint.setTextSize(mTextSizeHint);
+        mWidthOfAlterHint = getTextWidth(mAlterHint, mTextPaint);
+        mTextPaint.setTextSize(savedTextSize);
     }
 
     private int getMaxWidthOfTextArray(List<? extends CharSequence> array, Paint paint) {
@@ -1452,12 +1515,12 @@ public class NumberPickerView extends View {
     }
 
     private void updateMaxHeightOfDisplayedValues() {
-        float savedTextSize = mPaintText.getTextSize();
-        mPaintText.setTextSize(mTextSizeSelected);
-        mMaxHeightOfDisplayedValues = (int) (mPaintText.getFontMetrics().bottom - mPaintText.getFontMetrics().top + 0.5);
-        mPaintText.setTextSize(mTextSizeNormal);
-        mNormalHeightOfDisplayedValues = (int) (mPaintText.getFontMetrics().bottom - mPaintText.getFontMetrics().top + 0.5);
-        mPaintText.setTextSize(savedTextSize);
+        float savedTextSize = mTextPaint.getTextSize();
+        mTextPaint.setTextSize(mTextSizeSelected);
+        mMaxHeightOfDisplayedValues = (int) (mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top + 0.5);
+        mTextPaint.setTextSize(mTextSizeNormal);
+        mNormalHeightOfDisplayedValues = (int) (mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top + 0.5);
+        mTextPaint.setTextSize(savedTextSize);
     }
 
     private void updateContentAndIndex(List<CharSequence> newDisplayedValues) {
@@ -1567,14 +1630,16 @@ public class NumberPickerView extends View {
         }
     }
 
-    private int sp2px(Context context, float spValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (spValue * fontScale + 0.5f);
+    private int sp2px(float spValue) {
+        //final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        //return (int) (spValue * fontScale + 0.5f);
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spValue, getResources().getDisplayMetrics());
     }
 
-    private int dp2px(Context context, float dpValue) {
-        final float densityScale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * densityScale + 0.5f);
+    private int dp2px(float dpValue) {
+        //final float densityScale = context.getResources().getDisplayMetrics().density;
+        //return (int) (dpValue * densityScale + 0.5f);
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, getResources().getDisplayMetrics());
     }
 
     private int getEvaluateColor(float fraction, int startColor, int endColor) {
@@ -1608,18 +1673,155 @@ public class NumberPickerView extends View {
             return null;
         }
         List<CharSequence> ret = new ArrayList<>(charSequences.length);
-        for (int i = 0; i < charSequences.length; i++) {
-            ret.add(charSequences[i].toString());
+        for (CharSequence charSequence : charSequences) {
+            ret.add(charSequence.toString());
         }
         return ret;
     }
 
+    public void setAutoTextSize(boolean autoTextSize) {
+        mAutoTextSize = autoTextSize;
+    }
+
+    public boolean getAutoTextSize() {
+        return mAutoTextSize;
+    }
 
     public void setNormalTextSize(float textSize) {
-        mTextSizeNormal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSize, getResources().getDisplayMetrics());
+        mTextSizeNormal = sp2px(textSize);
     }
 
     public void setSelectTextSize(float textSize) {
-        mTextSizeSelected = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSize, getResources().getDisplayMetrics());
+        mTextSizeSelected = sp2px(textSize);
+    }
+
+    private class AutoTextSizeHelper {
+        private TextPaint mTempTextPaint;
+        private int[] mAutoSizeTextSizesInPx = new int[0];
+
+        AutoTextSizeHelper() {
+            setupAutoSizeText();
+        }
+
+        private void setupAutoSizeText() {
+            int maxTextSizeInPx = mTextSizeSelected;
+            int minTextSizeInPx = mTextSizeSelected / 2;
+            float stepInPx = 20;
+            // Calculate sizes to choose from based on the current auto-size configuration.
+            final int autoSizeValuesLength = (int) (Math.floor((maxTextSizeInPx - minTextSizeInPx) / stepInPx)) + 1;
+            final int[] autoSizeTextSizesInPx = new int[autoSizeValuesLength];
+            for (int i = 0; i < autoSizeValuesLength; i++) {
+                autoSizeTextSizesInPx[i] = Math.round(minTextSizeInPx + (i * stepInPx));
+            }
+            mAutoSizeTextSizesInPx = cleanupAutoSizePresetSizes(autoSizeTextSizesInPx);
+        }
+
+        private int[] cleanupAutoSizePresetSizes(int[] presetValues) {
+            final int presetValuesLength = presetValues.length;
+            if (presetValuesLength == 0) {
+                return presetValues;
+            }
+            Arrays.sort(presetValues);
+
+            final List<Integer> uniqueValidSizes = new ArrayList<>();
+            for (final int currentPresetValue : presetValues) {
+                if (currentPresetValue > 0
+                        && Collections.binarySearch(uniqueValidSizes, currentPresetValue) < 0) {
+                    uniqueValidSizes.add(currentPresetValue);
+                }
+            }
+
+            if (presetValuesLength == uniqueValidSizes.size()) {
+                return presetValues;
+            } else {
+                final int uniqueValidSizesLength = uniqueValidSizes.size();
+                final int[] cleanedUpSizes = new int[uniqueValidSizesLength];
+                for (int i = 0; i < uniqueValidSizesLength; i++) {
+                    cleanedUpSizes[i] = uniqueValidSizes.get(i);
+                }
+                return cleanedUpSizes;
+            }
+        }
+
+        private int findLargestTextSizeWhichFits(CharSequence text, int availableWidth) {
+            final int sizesCount = mAutoSizeTextSizesInPx.length;
+            if (sizesCount == 0) {
+                throw new IllegalStateException("No available text sizes to choose from.");
+            }
+
+            int bestSizeIndex = 0;
+            int lowIndex = bestSizeIndex + 1;
+            int highIndex = sizesCount - 1;
+            int sizeToTryIndex;
+            while (lowIndex <= highIndex) {
+                sizeToTryIndex = (lowIndex + highIndex) / 2;
+                if (suggestedSizeFitsInSpace(text, mAutoSizeTextSizesInPx[sizeToTryIndex], availableWidth)) {
+                    bestSizeIndex = lowIndex;
+                    lowIndex = sizeToTryIndex + 1;
+                } else {
+                    highIndex = sizeToTryIndex - 1;
+                    bestSizeIndex = highIndex;
+                }
+            }
+            return Math.min(mTextSizeSelected, mAutoSizeTextSizesInPx[bestSizeIndex]);
+        }
+
+        private boolean suggestedSizeFitsInSpace(CharSequence text, int suggestedSizeInPx, int availableWidth) {
+            final int maxLines = 1;
+            initTempTextPaint(suggestedSizeInPx);
+            final StaticLayout layout = createLayout(text, Math.round(availableWidth));
+            // Lines overflow.
+            return layout.getLineCount() <= 1 && layout.getLineEnd(layout.getLineCount() - 1) == text.length();
+        }
+
+        @SuppressLint("ObsoleteSdkInt")
+        StaticLayout createLayout(CharSequence text, int availableWidth) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                return createStaticLayoutForMeasuring(text, availableWidth);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                return createStaticLayoutForMeasuringPre23(text, availableWidth);
+            } else {
+                return createStaticLayoutForMeasuringPre16(text, availableWidth);
+            }
+        }
+
+        @SuppressLint("WrongConstant")
+        @RequiresApi(23)
+        private StaticLayout createStaticLayoutForMeasuring(CharSequence text, int availableWidth) {
+            final StaticLayout.Builder layoutBuilder = StaticLayout.Builder.obtain(
+                    text, 0, text.length(), mTempTextPaint, availableWidth);
+
+            layoutBuilder.setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setLineSpacing(0, 1)
+                    .setIncludePad(false)
+                    .setBreakStrategy(Layout.BREAK_STRATEGY_SIMPLE)
+                    .setHyphenationFrequency(Layout.HYPHENATION_FREQUENCY_NONE)
+                    .setMaxLines(1);
+
+            layoutBuilder.setTextDirection(TextDirectionHeuristics.LTR);
+            return layoutBuilder.build();
+        }
+
+        @RequiresApi(16)
+        private StaticLayout createStaticLayoutForMeasuringPre23(CharSequence text, int availableWidth) {
+            // The layout could not be constructed using the builder so fall back to the
+            // most broad constructor.
+            return new StaticLayout(text, mTempTextPaint, availableWidth, Layout.Alignment.ALIGN_CENTER, 1, 0, false);
+        }
+
+        private StaticLayout createStaticLayoutForMeasuringPre16(CharSequence text, int availableWidth) {
+            // The default values have been inlined with the StaticLayout defaults.
+            return new StaticLayout(text, mTempTextPaint, availableWidth, Layout.Alignment.ALIGN_CENTER, 1, 0, false);
+        }
+
+        void initTempTextPaint(final int suggestedSizeInPx) {
+            if (mTempTextPaint == null) {
+                mTempTextPaint = new TextPaint();
+            } else {
+                mTempTextPaint.reset();
+            }
+            mTempTextPaint.set(mTextPaint);
+            mTempTextPaint.setTextSize(suggestedSizeInPx);
+        }
     }
 }

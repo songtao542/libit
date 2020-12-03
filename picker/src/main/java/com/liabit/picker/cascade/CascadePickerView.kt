@@ -44,21 +44,40 @@ class CascadePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
 
     private var mOnValueChangeListener: OnValueChangeListener? = null
 
-    @JvmOverloads
-    constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
-        initInternal(context)
+    constructor(context: Context) : super(context) {
+        initInternal(context, null, 0, 0)
+    }
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        initInternal(context, attrs, 0, 0)
+    }
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        initInternal(context, attrs, defStyleAttr, 0)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
-        initInternal(context)
+        initInternal(context, attrs, defStyleAttr, defStyleRes)
     }
 
-    private fun initInternal(context: Context) {
+    private fun initInternal(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val inflate = inflate(context, R.layout.picker_cascade_layout, this)
+
+        var autoTextSize = false
+        if (attrs != null) {
+            val a = context.obtainStyledAttributes(attrs, R.styleable.CascadePickerView, defStyleAttr, defStyleRes)
+            autoTextSize = a.getBoolean(R.styleable.CascadePickerView_autoTextSize, false)
+            a.recycle()
+        }
+
         mFirstPickerView = inflate.findViewById(R.id.picker_first)
         mSecondPickerView = inflate.findViewById(R.id.picker_second)
         mThirdPickerView = inflate.findViewById(R.id.picker_third)
+
+        mFirstPickerView.autoTextSize = autoTextSize
+        mSecondPickerView.autoTextSize = autoTextSize
+        mThirdPickerView.autoTextSize = autoTextSize
 
         mFirstPickerView.wrapSelectorWheel = false
         mSecondPickerView.wrapSelectorWheel = false

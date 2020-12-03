@@ -45,8 +45,15 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     private var mMinuteStart = 0
     private var mMinuteEnd = 59
 
-    @JvmOverloads
-    constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context) : super(context) {
+        initInternal(context)
+    }
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        initInternal(context)
+    }
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         initInternal(context)
     }
 

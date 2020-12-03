@@ -2,7 +2,6 @@ package com.liabit.picker
 
 import android.content.Context
 import android.content.DialogInterface
-import android.widget.TimePicker
 import com.liabit.picker.address.Address
 import com.liabit.picker.address.AddressPickerDialog
 import com.liabit.picker.datetime.DateTimePickerDialog
@@ -39,7 +38,7 @@ object Picker {
                 .setMaxDateTime(end)
                 .setActionListener(object : DateTimePickerDialog.OnActionListener {
                     override fun onAction(dialog: DialogInterface, which: Int, time: com.liabit.picker.datetime.Time) {
-                        listener?.invoke(time.hour, time.minute)
+                        listener?.invoke(time.hourOfDay, time.minute)
                     }
                 })
                 .show()

@@ -11,7 +11,7 @@ data class Time(
         /**
          * 24小时制(0,23)
          */
-        val hour: Int,
+        val hourOfDay: Int,
         /**
          * 分钟
          */
@@ -20,7 +20,7 @@ data class Time(
 
     val calendar: Calendar
         get() = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.HOUR_OF_DAY, hourOfDay)
             set(Calendar.MINUTE, minute)
         }
 
@@ -34,7 +34,7 @@ data class Time(
      */
     val isAm: Boolean
         get() {
-            return hour < 12
+            return hourOfDay < 12
         }
 
     /**

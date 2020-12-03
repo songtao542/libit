@@ -139,10 +139,10 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
     private fun getTimeString(time: Time): String {
         val builder = StringBuilder()
         if (time.is24HourFormat) {
-            builder.append(String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, time.hour))
+            builder.append(String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, time.hourOfDay))
         } else {
             builder.append(mContext.resources.getStringArray(R.array.picker_am_pm_entries)[time.apm])
-            builder.append(time.hour)
+            builder.append(time.hourOfDay)
         }
         builder.append(mContext.resources.getString(R.string.time_divider))
         builder.append(String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, time.minute))

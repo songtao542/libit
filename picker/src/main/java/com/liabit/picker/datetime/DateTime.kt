@@ -14,7 +14,7 @@ data class DateTime(val year: Int, val month: Int, val day: Int, val hourOfDay: 
 
     companion object {
         internal fun from(date: Date, time: Time): DateTime {
-            return DateTime(date.year, date.month, date.day, time.hour, time.minute)
+            return DateTime(date.year, date.month, date.day, time.hourOfDay, time.minute)
         }
     }
 }

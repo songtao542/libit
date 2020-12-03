@@ -45,8 +45,49 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
          * 获取星期几的显示字符
          * @param dayOfWeek 范围 [1, 7]
          */
-        fun getNameOfWeek(dayOfWeek: Int): String {
+        private fun getNameOfWeek(dayOfWeek: Int): String {
             return if (dayOfWeek > 7 || dayOfWeek < 1) NON_VALUE else WEEK_ENTRIES[dayOfWeek - 1]
+        }
+
+        private fun getTitle(context: Context, date: Date?, time: Time?): String {
+            val dateStr = getDateString(context, date)
+            val timeStr = getTimeString(context, time)
+            return if (dateStr.isNotBlank() && timeStr.isNotBlank()) {
+                "$dateStr  $timeStr"
+            } else if (dateStr.isNotBlank()) {
+                dateStr
+            } else if (timeStr.isNotBlank()) {
+                timeStr
+            } else {
+                ""
+            }
+        }
+
+        private fun getTimeString(context: Context, time: Time?): String {
+            if (time == null) return ""
+            val builder = StringBuilder()
+            if (time.is24HourFormat) {
+                builder.append(String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, time.hourOfDay))
+            } else {
+                builder.append(context.resources.getStringArray(R.array.picker_am_pm_entries)[time.apm])
+                builder.append(time.hourOfDay)
+            }
+            builder.append(context.resources.getString(R.string.time_divider))
+            builder.append(String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, time.minute))
+            return builder.toString()
+        }
+
+        @SuppressLint("WrongConstant")
+        private fun getDateString(context: Context, date: Date?): String {
+            if (date == null) return ""
+            val calendar = date.calendar
+            val builder = StringBuilder()
+            builder.append(calendar[Calendar.YEAR]).append(context.getString(R.string.year))
+            builder.append(calendar[Calendar.MONTH] + 1).append(context.getString(R.string.month))
+            builder.append(calendar[Calendar.DAY_OF_MONTH]).append(context.getString(R.string.day))
+            builder.append("  ")
+            builder.append(getNameOfWeek(calendar[Calendar.DAY_OF_WEEK]))
+            return builder.toString()
         }
     }
 
@@ -69,11 +110,11 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
     private val mDateChangeListener = object : DatePickerView.OnDateChangedListener {
         override fun onDateChanged(date: Date) {
             if (!mReady) return
+            val time = time
             if (mIsAutoUpdateTitle) {
-                updateTitle(date)
+                updateTitle(date, time)
             }
             mOnDateChangeListener?.onDateChanged(this@DateTimePickerDialog, date)
-            val time = time
             if (time != null) {
                 mOnDateTimeChangeListener?.onDateTimeChanged(this@DateTimePickerDialog, DateTime.from(date, time))
             }
@@ -83,11 +124,11 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
     private val mTimeChangeListener = object : TimePickerView.OnTimeChangedListener {
         override fun onTimeChanged(time: Time) {
             if (!mReady) return
+            val date = date
             if (mIsAutoUpdateTitle) {
-                updateTitle(time)
+                updateTitle(date, time)
             }
             mOnTimeChangeListener?.onTimeChanged(this@DateTimePickerDialog, time)
-            val date = date
             if (date != null) {
                 mOnDateTimeChangeListener?.onDateTimeChanged(this@DateTimePickerDialog, DateTime.from(date, time))
             }
@@ -99,30 +140,14 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
         timePickerView?.setOnTimeChangedListener(mTimeChangeListener)
     }
 
-
-    private fun updateTitle(dateValue: Date) {
-        mDateStr = getDateString(dateValue)
-        var title = mDateStr
-        if (mIsWithViewTime) {
-            title = "$mDateStr  $mTimeStr"
+    private fun updateTitle(date: Date?, time: Time?) {
+        val title = getTitle(mContext, date, time)
+        if (title.isNotBlank()) {
+            dialog.setTitle(title)
         }
-        updateTitle(title)
     }
 
-    private fun updateTitle(timeData: Time) {
-        mTimeStr = getTimeString(timeData)
-        var title = mTimeStr
-        if (mIsWithViewDate) {
-            title = "$mDateStr  $mTimeStr"
-        }
-        updateTitle(title)
-    }
-
-    private fun updateTitle(title: CharSequence?) {
-        dialog.setTitle(title)
-    }
-
-    fun setAutoUpdateTitle(enable: Boolean) {
+    private fun setAutoUpdateTitle(enable: Boolean) {
         mIsAutoUpdateTitle = enable
     }
 
@@ -139,32 +164,6 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
         mOnDateTimeChangeListener = onDateTimeChangeListener
         mReady = true
     }
-
-    private fun getTimeString(time: Time): String {
-        val builder = StringBuilder()
-        if (time.is24HourFormat) {
-            builder.append(String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, time.hourOfDay))
-        } else {
-            builder.append(mContext.resources.getStringArray(R.array.picker_am_pm_entries)[time.apm])
-            builder.append(time.hourOfDay)
-        }
-        builder.append(mContext.resources.getString(R.string.time_divider))
-        builder.append(String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, time.minute))
-        return builder.toString()
-    }
-
-    @SuppressLint("WrongConstant")
-    private fun getDateString(date: Date): String {
-        val calendar = date.calendar
-        val builder = StringBuilder()
-        builder.append(calendar[Calendar.YEAR]).append(mContext.getString(R.string.year))
-        builder.append(calendar[Calendar.MONTH] + 1).append(mContext.getString(R.string.month))
-        builder.append(calendar[Calendar.DAY_OF_MONTH]).append(mContext.getString(R.string.day))
-        builder.append("  ")
-        builder.append(getNameOfWeek(calendar[Calendar.DAY_OF_WEEK]))
-        return builder.toString()
-    }
-
 
     interface OnDateTimeChangeListener {
         fun onDateTimeChanged(dialog: DateTimePickerDialog, date: DateTime) {}
@@ -441,13 +440,33 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             var timePickerView: TimePickerView? = null
             val title: CharSequence
             val context = ContextThemeWrapper(mContext, theme)
+
+            val currentTime = mCalendar.time.time
+            mMinCalendar?.time?.let {
+                if (currentTime < it.time) {
+                    mCalendar.time = it
+                }
+            }
+            mMaxCalendar?.time?.let {
+                if (currentTime > it.time) {
+                    mCalendar.time = it
+                }
+            }
             if (!mIsWithViewDate && mIsWithViewTime) { // 只设置时间
-                title = mContext.getString(R.string.picker_select_time)
+                title = if (mIsAutoUpdateTitle) {
+                    getTitle(mContext, null, Time.from(mCalendar).apply { is24HourFormat = mIs24HourFormat })
+                } else {
+                    mContext.getString(R.string.picker_select_time)
+                }
                 contentView = View.inflate(context, R.layout.picker_time_dialog, null)
                 timePickerView = contentView.findViewById(R.id.time_picker_view)
                 timePickerView.set24HourFormat(mIs24HourFormat)
             } else if (mIsWithViewDate && mIsWithViewTime) { // 日期时间都设置
-                title = mContext.getString(R.string.picker_select_date_time)
+                title = if (mIsAutoUpdateTitle) {
+                    getTitle(mContext, Date.from(mCalendar), Time.from(mCalendar).apply { is24HourFormat = mIs24HourFormat })
+                } else {
+                    mContext.getString(R.string.picker_select_date_time)
+                }
                 contentView = View.inflate(context, R.layout.picker_date_time_dialog, null)
                 datePickerView = contentView.findViewById(R.id.date_picker_view)
                 timePickerView = contentView.findViewById(R.id.time_picker_view)
@@ -455,7 +474,11 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
                 timePickerView.setItemWrapContent()
                 timePickerView.setItemPadding(mContext.resources.getDimensionPixelSize(R.dimen.time_picker_item_padding))
             } else { // 其他情况只设置日期，默认
-                title = mContext.getString(R.string.picker_select_date)
+                title = if (mIsAutoUpdateTitle) {
+                    getTitle(mContext, Date.from(mCalendar), null)
+                } else {
+                    mContext.getString(R.string.picker_select_date)
+                }
                 contentView = View.inflate(context, R.layout.picker_date_dialog, null)
                 datePickerView = contentView.findViewById(R.id.date_picker_view)
             }

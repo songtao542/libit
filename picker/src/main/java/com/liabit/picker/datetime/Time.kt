@@ -8,15 +8,16 @@ import java.util.*
  */
 @Suppress("MemberVisibilityCanBePrivate")
 data class Time(
-        /**
-         * 24小时制(0,23)
-         */
+        /** 24小时制(0,23) */
         val hourOfDay: Int,
-        /**
-         * 分钟
-         */
-        val minute: Int
-) {
+        /** 分钟 */
+        val minute: Int) {
+
+    companion object {
+        internal fun from(calendar: Calendar): Time {
+            return Time(calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE])
+        }
+    }
 
     val calendar: Calendar
         get() = Calendar.getInstance().apply {

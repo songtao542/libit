@@ -163,6 +163,9 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     }
 
     fun setupWithCalendar(calendar: Calendar) {
+        Log.d("TTTT","---------------------------------------")
+        Log.d("TTTT", "set dt: ${calendar[Calendar.HOUR_OF_DAY]}:${calendar[Calendar.MINUTE]}")
+        mCalendar.time = calendar.time
         if (mIs24HourFormat) {
             // 24小时制
             mAmPmPickerView.visibility = GONE
@@ -212,6 +215,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         mHourPickerView.setDisplayedValues(mDisplayHour, false)
         val currentHour = calendar[Calendar.HOUR_OF_DAY]
         val selectHour = if (currentHour in mHourStart..mHourEnd) currentHour else mHourStart
+        Log.d("TTTT", "selectHour==>$selectHour")
         setDisplayedValuesForPickerView(mHourPickerView, selectHour, mHourStart, mHourEnd, mDisplayHour)
 
         // minute
@@ -241,7 +245,19 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
 
         val currentMinute = calendar[Calendar.MINUTE]
         val selectMinute = if (currentMinute in mMinuteStart..mMinuteEnd) currentMinute else mMinuteStart
+        Log.d("TTTT", "selectMinute==>$selectMinute")
         passiveUpdateMinute(selectHour, selectMinute)
+
+        // 更新日历使其与选择器显示的时间一直
+        if (mIs24HourFormat) {
+            Log.d("TTTT", "mHourPickerView.value==>${mHourPickerView.value}")
+            mCalendar[Calendar.HOUR_OF_DAY] = mHourPickerView.value
+        } else {
+            Log.d("TTTT", "Hour.getHour(mAmPmPickerView.value, mHourPickerView.value)==>${Hour.getHour(mAmPmPickerView.value, mHourPickerView.value)}")
+            mCalendar[Calendar.HOUR_OF_DAY] = Hour.getHour(mAmPmPickerView.value, mHourPickerView.value)
+        }
+
+        Log.d("TTTT", "dt: ${mCalendar[Calendar.HOUR_OF_DAY]}:${mCalendar[Calendar.MINUTE]}")
 
         mOnTimeChangeListener?.onTimeChanged(value)
     }

@@ -355,7 +355,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
         /**
          * @param calendar [Calendar.time]
          */
-        fun setMinDateTime(calendar: Calendar): Builder {
+        fun setMinDateTime(calendar: Calendar?): Builder {
             mMinCalendar = calendar
             return this
         }
@@ -399,7 +399,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
         /**
          * @param calendar [Calendar.time]
          */
-        fun setMaxDateTime(calendar: Calendar): Builder {
+        fun setMaxDateTime(calendar: Calendar?): Builder {
             mMaxCalendar = calendar
             return this
         }

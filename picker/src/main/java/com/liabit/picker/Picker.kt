@@ -2,6 +2,7 @@ package com.liabit.picker
 
 import android.content.Context
 import android.content.DialogInterface
+import android.widget.TimePicker
 import com.liabit.picker.address.Address
 import com.liabit.picker.address.AddressPickerDialog
 import com.liabit.picker.datetime.DateTimePickerDialog
@@ -12,6 +13,37 @@ import java.util.*
  * CreateDate:     2020/9/18 18:31
  */
 object Picker {
+    @JvmStatic
+    fun pickTime(context: Context, listener: ((hourOfDay: Int, minute: Int) -> Unit)? = null) {
+        pickDate(context, Date(), null, null, listener)
+    }
+
+    @JvmStatic
+    fun pickDate(context: Context, currentTime: Date, startTime: Date?, endTime: Date?, listener: ((hourOfDay: Int, minute: Int) -> Unit)? = null) {
+        val current: Calendar = Calendar.getInstance(TimeZone.getDefault()).apply { this.time = currentTime }
+        val start: Calendar? = if (startTime != null) {
+            Calendar.getInstance(TimeZone.getDefault()).apply { this.time = startTime }
+        } else {
+            null
+        }
+        val end: Calendar? = if (endTime != null) {
+            Calendar.getInstance(TimeZone.getDefault()).apply { this.time = endTime }
+        } else {
+            null
+        }
+        DateTimePickerDialog.Builder(context)
+                .setWithDate(true)
+                .setWithTime(false)
+                .setDefaultDate(current)
+                .setMinDateTime(start)
+                .setMaxDateTime(end)
+                .setActionListener(object : DateTimePickerDialog.OnActionListener {
+                    override fun onAction(dialog: DialogInterface, which: Int, time: com.liabit.picker.datetime.Time) {
+                        listener?.invoke(time.hour, time.minute)
+                    }
+                })
+                .show()
+    }
 
     @JvmStatic
     fun pickDate(context: Context, listener: ((date: Date) -> Unit)? = null) {

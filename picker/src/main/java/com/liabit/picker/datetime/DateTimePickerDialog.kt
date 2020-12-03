@@ -97,7 +97,6 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
     private var mOnDateTimeChangeListener: OnDateTimeChangeListener? = null
     private var mOnDateChangeListener: OnDateChangeListener? = null
     private var mOnTimeChangeListener: OnTimeChangeListener? = null
-    private var mReady = false
 
     private var mDataTime: DateTime? = null
 
@@ -109,7 +108,6 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
 
     private val mDateChangeListener = object : DatePickerView.OnDateChangedListener {
         override fun onDateChanged(date: Date) {
-            if (!mReady) return
             val time = time
             if (mIsAutoUpdateTitle) {
                 updateTitle(date, time)
@@ -123,7 +121,6 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
 
     private val mTimeChangeListener = object : TimePickerView.OnTimeChangedListener {
         override fun onTimeChanged(time: Time) {
-            if (!mReady) return
             val date = date
             if (mIsAutoUpdateTitle) {
                 updateTitle(date, time)
@@ -133,11 +130,6 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
                 mOnDateTimeChangeListener?.onDateTimeChanged(this@DateTimePickerDialog, DateTime.from(date, time))
             }
         }
-    }
-
-    init {
-        datePickerView?.setOnDateChangedListener(mDateChangeListener)
-        timePickerView?.setOnTimeChangedListener(mTimeChangeListener)
     }
 
     private fun updateTitle(date: Date?, time: Time?) {
@@ -162,7 +154,8 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
         mOnDateChangeListener = onDateChangeListener
         mOnTimeChangeListener = onTimeChangeListener
         mOnDateTimeChangeListener = onDateTimeChangeListener
-        mReady = true
+        datePickerView?.setOnDateChangedListener(mDateChangeListener)
+        timePickerView?.setOnTimeChangedListener(mTimeChangeListener)
     }
 
     interface OnDateTimeChangeListener {
@@ -434,6 +427,53 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             return this
         }
 
+        private fun fixCalendarTime() {
+            val currentTime = mCalendar.time.time
+            val currentYear = mCalendar[Calendar.YEAR]
+            val currentMonth = mCalendar[Calendar.MONTH]
+            val currentDay = mCalendar[Calendar.DAY_OF_MONTH]
+            mMinCalendar?.let {
+                // 使年月日保持一致，进而比较时间
+                it[Calendar.YEAR] = currentYear
+                it[Calendar.MONTH] = currentMonth
+                it[Calendar.DAY_OF_MONTH] = currentDay
+                if (currentTime < it.time.time) {
+                    mCalendar.time = it.time
+                }
+            }
+            mMaxCalendar?.let {
+                // 使年月日保持一致，进而比较时间
+                it[Calendar.YEAR] = currentYear
+                it[Calendar.MONTH] = currentMonth
+                it[Calendar.DAY_OF_MONTH] = currentDay
+                if (currentTime > it.time.time) {
+                    mCalendar.time = it.time
+                }
+            }
+        }
+
+        private fun fixCalendarDate() {
+            val currentTime = mCalendar.time.time
+            mCalendar[Calendar.HOUR_OF_DAY] = 0
+            mCalendar[Calendar.MINUTE] = 0
+            mMinCalendar?.let {
+                // 使时间保持一致，进而比较年月日
+                it[Calendar.HOUR_OF_DAY] = 0
+                it[Calendar.MINUTE] = 0
+                if (currentTime < it.time.time) {
+                    mCalendar.time = it.time
+                }
+            }
+            mMaxCalendar?.let {
+                // 使时间保持一致，进而比较年月日
+                it[Calendar.HOUR_OF_DAY] = 0
+                it[Calendar.MINUTE] = 0
+                if (currentTime > it.time.time) {
+                    mCalendar.time = it.time
+                }
+            }
+        }
+
         fun create(): DateTimePickerDialog {
             val contentView: View
             var datePickerView: DatePickerView? = null
@@ -441,18 +481,8 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             val title: CharSequence
             val context = ContextThemeWrapper(mContext, theme)
 
-            val currentTime = mCalendar.time.time
-            mMinCalendar?.time?.let {
-                if (currentTime < it.time) {
-                    mCalendar.time = it
-                }
-            }
-            mMaxCalendar?.time?.let {
-                if (currentTime > it.time) {
-                    mCalendar.time = it
-                }
-            }
             if (!mIsWithViewDate && mIsWithViewTime) { // 只设置时间
+                fixCalendarTime()
                 title = if (mIsAutoUpdateTitle) {
                     getTitle(mContext, null, Time.from(mCalendar).apply { is24HourFormat = mIs24HourFormat })
                 } else {
@@ -474,6 +504,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
                 timePickerView.setItemWrapContent()
                 timePickerView.setItemPadding(mContext.resources.getDimensionPixelSize(R.dimen.time_picker_item_padding))
             } else { // 其他情况只设置日期，默认
+                fixCalendarDate()
                 title = if (mIsAutoUpdateTitle) {
                     getTitle(mContext, Date.from(mCalendar), null)
                 } else {

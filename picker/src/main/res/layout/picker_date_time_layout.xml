@@ -6,10 +6,33 @@
     android:orientation="horizontal"
     tools:parentTag="android.widget.LinearLayout">
 
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
     <com.liabit.picker.NumberPickerView
-        android:id="@+id/picker_amPm"
-        android:layout_width="@dimen/number_picker_view_width"
-        android:layout_height="wrap_content" />
+        android:id="@+id/picker_year"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <com.liabit.picker.NumberPickerView
+        android:id="@+id/picker_month"
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <com.liabit.picker.NumberPickerView
+        android:id="@+id/picker_day"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <com.liabit.picker.NumberPickerView
         android:id="@+id/picker_hour"
@@ -26,5 +49,10 @@
         android:id="@+id/picker_min"
         android:layout_width="@dimen/number_picker_view_width"
         android:layout_height="wrap_content" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </merge>

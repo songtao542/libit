@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import com.liabit.picker.NumberPickerView
 import com.liabit.picker.R
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Suppress("unused")
@@ -161,10 +162,10 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     fun is24HourFormat(): Boolean {
         return mIs24HourFormat
     }
-
+val ff = SimpleDateFormat("yyyy-MM-dd HH:mm")
     fun setupWithCalendar(calendar: Calendar) {
-        Log.d("TTTT","---------------------------------------")
-        Log.d("TTTT", "set dt: ${calendar[Calendar.HOUR_OF_DAY]}:${calendar[Calendar.MINUTE]}")
+        Log.d("TTTT", "---------------------------------------")
+        Log.d("TTTT", "set dt: ${ff.format(calendar.time)}    $mHourStart-$mHourEnd   $mMinuteStart-$mMinuteEnd")
         mCalendar.time = calendar.time
         if (mIs24HourFormat) {
             // 24小时制
@@ -216,7 +217,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         val currentHour = calendar[Calendar.HOUR_OF_DAY]
         val selectHour = if (currentHour in mHourStart..mHourEnd) currentHour else mHourStart
         Log.d("TTTT", "selectHour==>$selectHour")
-        setDisplayedValuesForPickerView(mHourPickerView, selectHour, mHourStart, mHourEnd, mDisplayHour)
+        setDisplayedValuesForPickerView(mHourPickerView, selectHour, mHourStart, mHourEnd, mDisplayHour, anim = false)
 
         // minute
         if (mDisplayMinute.isEmpty()) {
@@ -266,14 +267,14 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         when (newHour) {
             mHourStart -> {
                 val newMinuteValue = if (newMinute < mMinuteStart) mMinuteStart else newMinute
-                setDisplayedValuesForPickerView(mMinutePickerView, newMinuteValue, mMinuteStart, 59, mDisplayStartMinute)
+                setDisplayedValuesForPickerView(mMinutePickerView, newMinuteValue, mMinuteStart, 59, mDisplayStartMinute, anim = false)
             }
             mHourEnd -> {
                 val newMinuteValue = if (newMinute > mMinuteEnd) mMinuteEnd else newMinute
-                setDisplayedValuesForPickerView(mMinutePickerView, newMinuteValue, 0, mMinuteEnd, mDisplayEndMinute)
+                setDisplayedValuesForPickerView(mMinutePickerView, newMinuteValue, 0, mMinuteEnd, mDisplayEndMinute, anim = false)
             }
             else -> {
-                setDisplayedValuesForPickerView(mMinutePickerView, newMinute, 0, 59, mDisplayMinute)
+                setDisplayedValuesForPickerView(mMinutePickerView, newMinute, 0, 59, mDisplayMinute, anim = false)
             }
         }
         // 更新日历

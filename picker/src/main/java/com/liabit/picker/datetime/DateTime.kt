@@ -7,11 +7,12 @@ import java.util.Calendar
  * Author:         songtao
  * CreateDate:     2020/10/10 17:20
  */
-data class DateTimeImpl(override val year: Int,
-                        override val month: Int,
-                        override val dayOfMonth: Int,
-                        override val hourOfDay: Int,
-                        override val minute: Int) : DateTime {
+data class DateTimeImpl(
+        override val year: Int,
+        override val month: Int,
+        override val dayOfMonth: Int,
+        override val hourOfDay: Int,
+        override val minute: Int) : DateTime {
 
     override val date: Date = DateImpl(year, month, dayOfMonth)
     override val time: Time = TimeImpl(hourOfDay, minute)

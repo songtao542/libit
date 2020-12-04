@@ -56,12 +56,5 @@ interface Time {
         internal fun from(calendar: Calendar): Time {
             return TimeImpl(calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE])
         }
-
-        /**
-         * [Calendar.AM] or [Calendar.PM]
-         */
-        internal fun getApm(time: Time): Int {
-            return if (time.isAm) Calendar.AM else Calendar.PM
-        }
     }
 }

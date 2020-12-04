@@ -173,7 +173,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
     }
 
     interface OnDateTimeChangeListener {
-        fun onDateTimeChanged(dialog: DateTimePickerDialog, date: DateTime) {}
+        fun onDateTimeChanged(dialog: DateTimePickerDialog, dateTime: DateTime) {}
     }
 
     interface OnDateChangeListener {

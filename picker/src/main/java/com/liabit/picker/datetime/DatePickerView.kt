@@ -1,6 +1,5 @@
 package com.liabit.picker.datetime
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
@@ -10,7 +9,6 @@ import androidx.annotation.RequiresApi
 import com.liabit.picker.NumberPickerView
 import com.liabit.picker.R
 import java.util.*
-import kotlin.math.min
 
 @Suppress("unused")
 class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
@@ -30,9 +28,9 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     private var mYearStop = 2100
     private var mYearCount = mYearStop - mYearStart + 1
     private var mMonthStart = 0
+    private var mMonthStop = 11
     private var mDayStart = 1
-    private var mMonthEnd = 11
-    private var mDayEnd = 31
+    private var mDayStop = 31
     private lateinit var mYearPickerView: NumberPickerView
     private lateinit var mMonthPickerView: NumberPickerView
     private lateinit var mDayPickerView: NumberPickerView
@@ -64,6 +62,8 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
      */
     private var mDisplayEndDays: List<String> = emptyList()
 
+    private var mCalendar = Calendar.getInstance(TimeZone.getDefault())
+
     private var mOnDateChangedListener: OnDateChangedListener? = null
 
     constructor(context: Context) : super(context) {
@@ -91,10 +91,9 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         mYearPickerView.setOnValueChangedListener(this)
         mMonthPickerView.setOnValueChangedListener(this)
         mDayPickerView.setOnValueChangedListener(this)
-        val calendar = Calendar.getInstance()
-        mYearStop = calendar.get(Calendar.YEAR) + 100
+        mYearStop = mCalendar.get(Calendar.YEAR) + 100
         mYearCount = mYearStop - mYearStart + 1
-        setupWithCalendar(calendar)
+        setupWithCalendarInternal(mCalendar)
     }
 
     fun setMinValue(minValue: Calendar) {
@@ -118,71 +117,82 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         }
         mYearStop = year
         mYearCount = mYearStop - mYearStart + 1
-        mMonthEnd = maxValue[Calendar.MONTH]
-        mDayEnd = maxValue[Calendar.DATE]
+        mMonthStop = maxValue[Calendar.MONTH]
+        mDayStop = maxValue[Calendar.DATE]
         mYearPickerView.wrapSelectorWheel = false
         mMonthPickerView.wrapSelectorWheel = false
         mDayPickerView.wrapSelectorWheel = false
     }
 
-    override fun onValueChange(picker: NumberPickerView, oldVal: Int, newVal: Int) {
-        when {
-            picker === mYearPickerView -> {
-                passiveUpdateMonthAndDay(oldVal, newVal)
-            }
-            picker === mMonthPickerView -> {
-                val fixYear = mYearPickerView.value
-                passiveUpdateDay(fixYear, fixYear, oldVal, newVal)
-            }
-            picker === mDayPickerView -> {
-                mOnDateChangedListener?.onDateChanged(value)
-            }
-        }
-    }
-
     fun setupWithCalendar(calendar: Calendar) {
-        if (!checkCalendarAvailable(calendar)) {
-            adjustCalendarByLimit(calendar, mYearStart, mYearStop)
-        }
-        setDisplayValuesForAll(calendar, false)
+        mCalendar.time = calendar.time
+        setupWithCalendarInternal(mCalendar)
     }
 
-    private fun checkCalendarAvailable(calendar: Calendar): Boolean {
+    private fun setupWithCalendarInternal(calendar: Calendar) {
+        adjustCalendarByLimit(calendar)
+        setDisplayValuesForAll(calendar)
+    }
+
+    private fun fixLimitIfNeeded() {
         if (mYearStart > mYearStop) {
             val temp = mYearStart
             mYearStart = mYearStop
             mYearStop = temp
             mYearCount = mYearStop - mYearStart + 1
         }
-        val year = calendar[Calendar.YEAR]
-        return year in mYearStart..mYearStop
+        if (mMonthStart > mMonthStop) {
+            val temp = mMonthStart
+            mMonthStart = mMonthStop
+            mMonthStop = temp
+        }
+        if (mDayStart > mDayStop) {
+            val temp = mDayStart
+            mDayStart = mDayStop
+            mDayStop = temp
+        }
     }
 
-    private fun adjustCalendarByLimit(calendar: Calendar, yearStart: Int, yearStop: Int): Calendar {
-        val yearSet = calendar[Calendar.YEAR]
-        Log.w(TAG, "adjustCalendarByLimit() Calendar year:$yearSet")
-        if (yearSet < yearStart) {
-            calendar[Calendar.YEAR] = yearStart
-            calendar[Calendar.MONTH] = MONTH_START
-            calendar[Calendar.DAY_OF_MONTH] = DAY_START
+    private fun adjustCalendarByLimit(calendar: Calendar): Calendar {
+        fixLimitIfNeeded()
+        val year = calendar[Calendar.YEAR]
+        val month = calendar[Calendar.MONTH]
+        val day = calendar[Calendar.DAY_OF_MONTH]
+        if (year < mYearStart) {
+            calendar[Calendar.YEAR] = mYearStart
         }
-        if (yearSet > yearStop) {
-            calendar[Calendar.YEAR] = yearStop
-            calendar[Calendar.MONTH] = MONTH_STOP - 1
-            calendar[Calendar.DAY_OF_MONTH] = DAY_STOP
+        if (year > mYearStop) {
+            calendar[Calendar.YEAR] = mYearStop
+        }
+        if (month < mMonthStart) {
+            calendar[Calendar.MONTH] = mMonthStart
+        }
+        if (month > mMonthStop) {
+            calendar[Calendar.MONTH] = mMonthStop
+        }
+        if (day < mDayStart) {
+            calendar[Calendar.DAY_OF_MONTH] = mDayStart
+        }
+        if (day > mMonthStop) {
+            calendar[Calendar.DAY_OF_MONTH] = mDayStop
         }
         return calendar
     }
 
-    @Suppress("SameParameterValue")
-    private fun setDisplayValuesForAll(calendar: Calendar, anim: Boolean) {
+    private fun setDisplayValuesForAll(calendar: Calendar) {
         initDisplayData()
-        val year = initValuesForY(calendar, anim)
-        val month = initValuesForM(calendar, anim)
-        initValuesForD(calendar, anim)
 
-        passiveUpdateMonthAndDay(year, year)
-        passiveUpdateDay(year, year, month, month)
+        val year: Int = calendar[Calendar.YEAR]
+        var month: Int = calendar[Calendar.MONTH]
+        month = if (month in mMonthStart..mMonthStop) month else mMonthStart
+        var day: Int = calendar[Calendar.DAY_OF_MONTH]
+        day = if (day in mDayStart..mDayStop) day else mDayStart
+
+        setupDisplayedValues(mYearPickerView, year, mYearStart, mYearStop, mDisplayYears, false, anim = false)
+
+        passiveUpdateMonth(year)
+        passiveUpdateDay(year, month + 1)
+        mDayPickerView.value = day
 
         mOnDateChangedListener?.onDateChanged(value)
     }
@@ -193,41 +203,43 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
                 (mYearStart + it).toString()
             }
         }
+        // 满 月 数组
         if (mDisplayMonths.isEmpty()) {
             mDisplayMonths = MutableList(MONTH_COUNT) {
                 String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, MONTH_START + it)
             }
         }
+        // 满 天 数组
         if (mDisplayDays.isEmpty()) {
             mDisplayDays = MutableList(DAY_COUNT) {
                 String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, DAY_START + it)
             }
         }
 
-        mDisplayStartMonths = if (mMonthStart != 0 ||
-                mDisplayStartMonths.isEmpty() ||
-                mDisplayStartMonths.size != MONTH_STOP - mMonthStart) {
+        // 开始临界点 月份 数组
+        mDisplayStartMonths = if (mMonthStart != 0 || mDisplayStartMonths.size != MONTH_STOP - mMonthStart) {
             MutableList(MONTH_STOP - mMonthStart) { mDisplayMonths[mMonthStart + it] }
         } else {
             mDisplayMonths
         }
 
-        mDisplayStartDays = if (mDayStart != 1 ||
-                mDisplayStartDays.isEmpty() ||
-                mDisplayStartDays.size != DAY_STOP - mDayStart + 1) {
+        // 开始临界点 天 数组
+        mDisplayStartDays = if (mDayStart != 1 || mDisplayStartDays.size != DAY_STOP - mDayStart + 1) {
             MutableList(DAY_STOP - mDayStart + 1) { mDisplayDays[mDayStart - 1 + it] }
         } else {
             mDisplayDays
         }
 
-        mDisplayEndMonths = if (mMonthEnd != 11 || mDisplayEndMonths.isEmpty() || mDisplayEndMonths.size != mMonthEnd + 1) {
-            MutableList(mMonthEnd + 1) { mDisplayMonths[it] }
+        // 截止临界点 月份 数组
+        mDisplayEndMonths = if (mMonthStop != 11 || mDisplayEndMonths.size != mMonthStop + 1) {
+            MutableList(mMonthStop + 1) { mDisplayMonths[it] }
         } else {
             mDisplayMonths
         }
 
-        mDisplayEndDays = if (mDayEnd != 31 || mDisplayEndDays.isEmpty() || mDisplayEndDays.size != mDayEnd) {
-            MutableList(mDayEnd) { mDisplayDays[it] }
+        // 截止临界点 天 数组
+        mDisplayEndDays = if (mDayStop != 31 || mDisplayEndDays.size != mDayStop) {
+            MutableList(mDayStop) { mDisplayDays[it] }
         } else {
             mDisplayDays
         }
@@ -238,48 +250,24 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
             return true
         }
         if (displayYears[0] == mYearStart.toString() && displayYears[displayYears.size - 1] == mYearStop.toString()) {
-            Log.d(TAG, "needResetDisplayYears() return false")
+            Log.d(TAG, "needResetDisplayYears: false")
             return false
         }
-        Log.d(TAG, "needResetDisplayYears() mYearStart:" + mYearStart + "," + displayYears[0]
-                + " mYearStop:" + mYearStop + "," + displayYears[displayYears.size - 1])
+        Log.d(TAG, "needResetDisplayYears mYearStart:$mYearStart ${displayYears[0]} mYearStop:$mYearStop ${displayYears[displayYears.size - 1]}")
         return true
-    }
-
-    @SuppressLint("WrongConstant")
-    private fun initValuesForY(calendar: Calendar, anim: Boolean): Int {
-        //mYearPickerView.wrapSelectorWheel = false
-        val yearSway: Int = calendar[Calendar.YEAR]
-        setDisplayedValuesForPickerView(mYearPickerView, yearSway, mYearStart, mYearStop, mDisplayYears, false, anim)
-        return yearSway
-    }
-
-    @SuppressLint("WrongConstant")
-    private fun initValuesForM(calendar: Calendar, anim: Boolean): Int {
-        val monthStop = MONTH_STOP
-        val monthSway: Int = calendar[Calendar.MONTH] + 1
-        setDisplayedValuesForPickerView(mMonthPickerView, monthSway, MONTH_START, monthStop, mDisplayMonths, false, anim)
-        return monthSway
     }
 
     private fun getDaysInMonth(year: Int, month: Int): Int {
         return GregorianCalendar(year, month, 0)[Calendar.DATE]
     }
 
-    private fun initValuesForD(calendar: Calendar, anim: Boolean): Int {
-        val dayStop: Int = getDaysInMonth(calendar[Calendar.YEAR], calendar[Calendar.MONTH] + 1)
-        val daySway: Int = calendar[Calendar.DAY_OF_MONTH]
-        setDisplayedValuesForPickerView(mDayPickerView, daySway, DAY_START, dayStop, mDisplayDays, false, anim)
-        return daySway
-    }
-
-    private fun setDisplayedValuesForPickerView(pickerView: NumberPickerView,
-                                                newValue: Int,
-                                                newStart: Int,
-                                                newStop: Int,
-                                                newDisplayedVales: List<String>,
-                                                needRespond: Boolean = true,
-                                                anim: Boolean = true) {
+    private fun setupDisplayedValues(pickerView: NumberPickerView,
+                                     newValue: Int,
+                                     newStart: Int,
+                                     newStop: Int,
+                                     newDisplayedVales: List<String>,
+                                     needRespond: Boolean = true,
+                                     anim: Boolean = true) {
         if (newStart > newStop) { //规避一些错误
             Log.w(TAG, "setValuesForPickerView() newStart > newStop")
             return
@@ -310,76 +298,66 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    private fun passiveUpdateMonthAndDay(oldYear: Int, newYear: Int) {
-        val oldMonthValue = mMonthPickerView.value
-        val oldDayValue = mDayPickerView.value
-        var newDayValue = oldDayValue
-        var newMonthValue = oldMonthValue
-        var shouldUpdateDays = false
-        if (newYear == mYearStart) {
-            if (oldMonthValue < mMonthStart + 1) {
-                newMonthValue = mMonthStart + 1
+    override fun onValueChange(picker: NumberPickerView, oldVal: Int, newVal: Int) {
+        Log.d(TAG, "onValueChange() ${ViewId.getViewId(picker)}  $oldVal -> $newVal")
+        when {
+            picker === mYearPickerView -> {
+                mCalendar[Calendar.YEAR] = newVal
+                passiveUpdateMonth(newVal)
             }
-            setDisplayedValuesForPickerView(mMonthPickerView, newMonthValue, mMonthStart + 1, MONTH_STOP, mDisplayStartMonths)
-            if (newMonthValue == mMonthStart + 1) {
-                if (oldDayValue < mDayStart) {
-                    newDayValue = mDayStart
-                }
-                val newDayStop = getDaysInMonth(newYear, newMonthValue)
-                setDisplayedValuesForPickerView(mDayPickerView, newDayValue, mDayStart, newDayStop, mDisplayStartDays)
-            } else {
-                shouldUpdateDays = true
+            picker === mMonthPickerView -> {
+                mCalendar[Calendar.MONTH] = newVal - 1
+                passiveUpdateDay(mYearPickerView.value, newVal)
             }
-        } else if (newYear == mYearStop) {
-            if (oldMonthValue > mMonthEnd + 1) {
-                newMonthValue = mMonthEnd + 1
+            picker === mDayPickerView -> {
+                mCalendar[Calendar.DAY_OF_MONTH] = newVal
             }
-            setDisplayedValuesForPickerView(mMonthPickerView, newMonthValue, MONTH_START, mMonthEnd + 1, mDisplayEndMonths)
-            if (newMonthValue == mMonthEnd + 1) {
-                if (oldDayValue > mDayEnd) {
-                    newDayValue = mDayEnd
-                }
-                setDisplayedValuesForPickerView(mDayPickerView, newDayValue, DAY_START, mDayEnd, mDisplayEndDays)
-            } else {
-                shouldUpdateDays = true
-            }
-        } else {
-            setDisplayedValuesForPickerView(mMonthPickerView, newMonthValue, MONTH_START, MONTH_STOP, mDisplayMonths)
-            shouldUpdateDays = true
         }
-        if (shouldUpdateDays) {
-            val newDayStop = getDaysInMonth(newYear, oldMonthValue)
-            newDayValue = min(oldDayValue, newDayStop)
-            setDisplayedValuesForPickerView(mDayPickerView, newDayValue, DAY_START, newDayStop, mDisplayDays)
-        }
-        mOnDateChangedListener?.onDateChanged(Date(newYear, newMonthValue - 1, newDayValue))
+        mOnDateChangedListener?.onDateChanged(value)
     }
 
-    private fun passiveUpdateDay(oldYear: Int, newYear: Int, oldMonthSway: Int, newMonthValue: Int) {
-        val oldDayStop = getDaysInMonth(oldYear, oldMonthSway)
-        var newDayStop = getDaysInMonth(newYear, newMonthValue)
-        if (newDayStop == -1) {
-            return
-        }
-        val oldDayValue = mDayPickerView.value
-        var newDayValue = oldDayValue
-        if (newYear == mYearStart && newMonthValue == mMonthStart + 1) {
-            if (oldDayValue < mDayStart) {
-                newDayValue = mDayStart
+    private fun passiveUpdateMonth(year: Int) {
+        val month = mMonthPickerView.value
+        var updatedMonth = month
+        when (year) {
+            mYearStart -> {
+                if (month < mMonthStart + 1) {
+                    updatedMonth = mMonthStart + 1
+                }
+                setupDisplayedValues(mMonthPickerView, updatedMonth, mMonthStart + 1, MONTH_STOP, mDisplayStartMonths)
             }
-            newDayStop = getDaysInMonth(newYear, newMonthValue)
-            setDisplayedValuesForPickerView(mDayPickerView, newDayValue, mDayStart, newDayStop, mDisplayStartDays)
-        } else if (newYear == mYearStop && newMonthValue == mMonthEnd + 1) {
-            if (oldDayValue > mDayEnd) {
-                newDayValue = mDayEnd
+            mYearStop -> {
+                if (month > mMonthStop + 1) {
+                    updatedMonth = mMonthStop + 1
+                }
+                setupDisplayedValues(mMonthPickerView, updatedMonth, MONTH_START, mMonthStop + 1, mDisplayEndMonths)
             }
-            setDisplayedValuesForPickerView(mDayPickerView, newDayValue, DAY_START, mDayEnd, mDisplayEndDays)
-        } else if (oldDayStop != newDayStop || newYear == mYearStart || newYear == mYearStop) {
-            newDayValue = min(oldDayValue, newDayStop)
-            setDisplayedValuesForPickerView(mDayPickerView, newDayValue, DAY_START, newDayStop, mDisplayDays)
+            else -> {
+                setupDisplayedValues(mMonthPickerView, updatedMonth, MONTH_START, MONTH_STOP, mDisplayMonths)
+            }
         }
-        mOnDateChangedListener?.onDateChanged(Date(newYear, newMonthValue - 1, newDayValue))
+        mCalendar[Calendar.MONTH] = updatedMonth - 1
+        passiveUpdateDay(year, updatedMonth)
+    }
+
+    private fun passiveUpdateDay(year: Int, month: Int) {
+        val day = mDayPickerView.value
+        var updatedDay = day
+        if (year == mYearStart && month == mMonthStart + 1) {
+            if (day < mDayStart) {
+                updatedDay = mDayStart
+            }
+            val newDayStop = getDaysInMonth(year, month)
+            setupDisplayedValues(mDayPickerView, updatedDay, mDayStart, newDayStop, mDisplayStartDays, anim = false)
+        } else if (year == mYearStop && month == mMonthStop + 1) {
+            if (day > mDayStop) {
+                updatedDay = mDayStop
+            }
+            setupDisplayedValues(mDayPickerView, updatedDay, DAY_START, mDayStop, mDisplayEndDays, anim = false)
+        } else {
+            setupDisplayedValues(mDayPickerView, updatedDay, DAY_START, DAY_STOP, mDisplayDays, anim = false)
+        }
+        mCalendar[Calendar.DAY_OF_MONTH] = updatedDay
     }
 
     fun setTextColor(selectedColor: Int, normalColor: Int) {
@@ -408,37 +386,13 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         mDayPickerView.setDividerColor(dividerColor)
     }
 
-    val yearPickerView: NumberPickerView
-        get() = mYearPickerView
+    val yearPickerView: NumberPickerView get() = mYearPickerView
 
-    val monthPickerView: NumberPickerView
-        get() = mMonthPickerView
+    val monthPickerView: NumberPickerView get() = mMonthPickerView
 
-    val dayPickerView: NumberPickerView
-        get() = mDayPickerView
+    val dayPickerView: NumberPickerView get() = mDayPickerView
 
-    fun setYearPickerViewVisibility(visibility: Int) {
-        setPickerViewVisibility(mYearPickerView, visibility)
-    }
-
-    fun setMonthPickerViewVisibility(visibility: Int) {
-        setPickerViewVisibility(mMonthPickerView, visibility)
-    }
-
-    fun setDayPickerViewVisibility(visibility: Int) {
-        setPickerViewVisibility(mDayPickerView, visibility)
-    }
-
-    private fun setPickerViewVisibility(view: NumberPickerView, visibility: Int) {
-        if (view.visibility == visibility) {
-            return
-        }
-        if (visibility == GONE || visibility == VISIBLE || visibility == INVISIBLE) {
-            view.visibility = visibility
-        }
-    }
-
-    val value: Date get() = Date(mYearPickerView.value, mMonthPickerView.value - 1, mDayPickerView.value)
+    val value: Date get() = Date.from(mCalendar)
 
     fun setOnDateChangedListener(listener: OnDateChangedListener?) {
         mOnDateChangedListener = listener

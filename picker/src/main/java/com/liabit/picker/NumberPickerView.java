@@ -641,10 +641,8 @@ public class NumberPickerView extends View {
      */
     public void smoothScrollToValue(int fromValue, int toValue, boolean needRespond) {
         int deltaIndex;
-        fromValue = refineValueByLimit(fromValue, mMinValue, mMaxValue,
-                mWrapSelectorWheel && mWrapSelectorWheelCheck);
-        toValue = refineValueByLimit(toValue, mMinValue, mMaxValue,
-                mWrapSelectorWheel && mWrapSelectorWheelCheck);
+        fromValue = refineValueByLimit(fromValue, mMinValue, mMaxValue, mWrapSelectorWheel && mWrapSelectorWheelCheck);
+        toValue = refineValueByLimit(toValue, mMinValue, mMaxValue, mWrapSelectorWheel && mWrapSelectorWheelCheck);
         if (mWrapSelectorWheel && mWrapSelectorWheelCheck) {
             deltaIndex = toValue - fromValue;
             int halfOneRecycleSize = getOneRecycleSize() / 2;

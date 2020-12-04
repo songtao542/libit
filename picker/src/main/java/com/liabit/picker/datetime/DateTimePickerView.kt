@@ -1,6 +1,5 @@
 package com.liabit.picker.datetime
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
@@ -10,29 +9,41 @@ import androidx.annotation.RequiresApi
 import com.liabit.picker.NumberPickerView
 import com.liabit.picker.R
 import java.util.*
-import kotlin.math.min
 
 @Suppress("unused")
 class DateTimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
 
     companion object {
-        private const val TAG = "DatePickerView"
+        private const val TAG = "DateTimePickerView"
         private const val FORMAT_TWO_NUMBER = "%02d"
+
+        // 此处定义的值都是显示时的值
         private const val MONTH_START = 1
         private const val MONTH_STOP = 12
         private const val MONTH_COUNT = MONTH_STOP - MONTH_START + 1
         private const val DAY_START = 1
         private const val DAY_STOP = 31
         private const val DAY_COUNT = DAY_STOP - DAY_START + 1
+        private const val HOUR_START = 0
+        private const val HOUR_STOP = 23
+        private const val HOUR_COUNT = HOUR_STOP - HOUR_START + 1
+        private const val MINUTE_START = 0
+        private const val MINUTE_STOP = 59
+        private const val MINUTE_COUNT = MINUTE_STOP - MINUTE_START + 1
     }
 
     private var mYearStart = 1900
     private var mYearStop = 2100
     private var mYearCount = mYearStop - mYearStart + 1
     private var mMonthStart = 0
+    private var mMonthStop = 11
     private var mDayStart = 1
-    private var mMonthEnd = 11
-    private var mDayEnd = 31
+    private var mDayStop = 31
+    private var mHourStart = 0
+    private var mHourStop = 23
+    private var mMinuteStart = 0
+    private var mMinuteStop = 59
+
     private lateinit var mYearPickerView: NumberPickerView
     private lateinit var mMonthPickerView: NumberPickerView
     private lateinit var mDayPickerView: NumberPickerView
@@ -46,28 +57,36 @@ class DateTimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener 
     private var mDisplayYears: List<String> = emptyList()
     private var mDisplayMonths: List<String> = emptyList()
     private var mDisplayDays: List<String> = emptyList()
+    private var mDisplayHours: List<String> = emptyList()
+    private var mDisplayMinutes: List<String> = emptyList()
 
-    /**
-     * 起始年-起始月
-     */
+    /** 起始年-起始月 */
     private var mDisplayStartMonths: List<String> = emptyList()
 
-    /**
-     * 起始年-起始月-起始日
-     */
+    /** 起始年-起始月-起始日 */
     private var mDisplayStartDays: List<String> = emptyList()
 
-    /**
-     * 截止年-截止月
-     */
-    private var mDisplayEndMonths: List<String> = emptyList()
+    /** 起始年-起始月-起始日-起始小时 */
+    private var mDisplayStartHours: List<String> = emptyList()
 
-    /**
-     * 截止年-截止月-截止日
-     */
-    private var mDisplayEndDays: List<String> = emptyList()
+    /** 起始年-起始月-起始日-起始小时-起始分钟 */
+    private var mDisplayStartMinutes: List<String> = emptyList()
 
-    private var mOnDateChangedListener: OnDateChangedListener? = null
+    /** 截止年-截止月 */
+    private var mDisplayStopMonths: List<String> = emptyList()
+
+    /** 截止年-截止月-截止日 */
+    private var mDisplayStopDays: List<String> = emptyList()
+
+    /** 截止年-截止月-截止日-截止小时 */
+    private var mDisplayStopHours: List<String> = emptyList()
+
+    /** 截止年-截止月-截止日-截止小时-截止分钟 */
+    private var mDisplayStopMinutes: List<String> = emptyList()
+
+    private var mOnDateTimeChangedListener: OnDateTimeChangedListener? = null
+
+    private val mCalendar = Calendar.getInstance(TimeZone.getDefault())
 
     constructor(context: Context) : super(context) {
         initInternal(context)
@@ -99,100 +118,147 @@ class DateTimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener 
         mYearPickerView.setOnValueChangedListener(this)
         mMonthPickerView.setOnValueChangedListener(this)
         mDayPickerView.setOnValueChangedListener(this)
-        val calendar = Calendar.getInstance()
-        mYearStop = calendar.get(Calendar.YEAR) + 100
+        mHourPickerView.setOnValueChangedListener(this)
+        mMinutePickerView.setOnValueChangedListener(this)
+
+        mTimeDividerView.setPickedIndexRelativeToMin(1)
+        mTimeDividerView.isEnabled = false
+        mTimeDividerView.setOffsetY(6)
+
+        mYearStop = mCalendar.get(Calendar.YEAR) + 100
         mYearCount = mYearStop - mYearStart + 1
-        setupWithCalendar(calendar)
+        setupWithCalendarInternal(mCalendar)
     }
 
     fun setMinValue(minValue: Calendar) {
-        val year = minValue[Calendar.YEAR]
-        if (mYearStart == year) {
-            return
-        }
-        mYearStart = year
-        mYearCount = mYearStop - mYearStart + 1
+        mYearStart = minValue[Calendar.YEAR]
         mMonthStart = minValue[Calendar.MONTH]
         mDayStart = minValue[Calendar.DATE]
+        mHourStart = minValue[Calendar.HOUR_OF_DAY]
+        mMinuteStart = minValue[Calendar.MINUTE]
         mYearPickerView.wrapSelectorWheel = false
         mMonthPickerView.wrapSelectorWheel = false
         mDayPickerView.wrapSelectorWheel = false
+        mHourPickerView.wrapSelectorWheel = false
+        mMinutePickerView.wrapSelectorWheel = false
+
+        configTimeDividerView()
     }
 
     fun setMaxValue(maxValue: Calendar) {
-        val year = maxValue[Calendar.YEAR]
-        if (mYearStop == year) {
-            return
-        }
-        mYearStop = year
-        mYearCount = mYearStop - mYearStart + 1
-        mMonthEnd = maxValue[Calendar.MONTH]
-        mDayEnd = maxValue[Calendar.DATE]
+        mYearStop = maxValue[Calendar.YEAR]
+        mMonthStop = maxValue[Calendar.MONTH]
+        mDayStop = maxValue[Calendar.DATE]
+        mHourStop = maxValue[Calendar.HOUR_OF_DAY]
+        mMinuteStop = maxValue[Calendar.MINUTE]
         mYearPickerView.wrapSelectorWheel = false
         mMonthPickerView.wrapSelectorWheel = false
         mDayPickerView.wrapSelectorWheel = false
+        mHourPickerView.wrapSelectorWheel = false
+        mMinutePickerView.wrapSelectorWheel = false
+
+        configTimeDividerView()
     }
 
-    override fun onValueChange(picker: NumberPickerView, oldVal: Int, newVal: Int) {
-        when {
-            picker === mYearPickerView -> {
-                passiveUpdateMonthAndDay(oldVal, newVal)
-            }
-            picker === mMonthPickerView -> {
-                val fixYear = mYearPickerView.value
-                passiveUpdateDay(fixYear, fixYear, oldVal, newVal)
-            }
-            picker === mDayPickerView -> {
-                mOnDateChangedListener?.onDateChanged(value)
-            }
-        }
+    private fun configTimeDividerView() {
+        mTimeDividerView.displayedValues = resources.getStringArray(R.array.hour_time_limit_divider).toList()
+        mTimeDividerView.minValue = 0
+        mTimeDividerView.maxValue = 2
+        mTimeDividerView.value = 1
+    }
+
+    private fun setupWithCalendarInternal(calendar: Calendar) {
+        adjustCalendarByLimit(calendar)
+        setDisplayValuesForAll(calendar)
     }
 
     fun setupWithCalendar(calendar: Calendar) {
-        if (!checkCalendarAvailable(calendar)) {
-            adjustCalendarByLimit(calendar, mYearStart, mYearStop)
-        }
-        setDisplayValuesForAll(calendar, false)
+        mCalendar.time = calendar.time
+        setupWithCalendarInternal(mCalendar)
     }
 
-    private fun checkCalendarAvailable(calendar: Calendar): Boolean {
+    private fun fixLimitIfNeeded() {
         if (mYearStart > mYearStop) {
             val temp = mYearStart
             mYearStart = mYearStop
             mYearStop = temp
             mYearCount = mYearStop - mYearStart + 1
         }
-        val year = calendar[Calendar.YEAR]
-        return year in mYearStart..mYearStop
+        if (mMonthStart > mMonthStop) {
+            val temp = mMonthStart
+            mMonthStart = mMonthStop
+            mMonthStop = temp
+        }
+        if (mDayStart > mDayStop) {
+            val temp = mDayStart
+            mDayStart = mDayStop
+            mDayStop = temp
+        }
+        if (mHourStart > mHourStop) {
+            val temp = mHourStart
+            mHourStart = mHourStop
+            mHourStop = temp
+        }
+        if (mMinuteStart > mMinuteStop) {
+            val temp = mMinuteStart
+            mMinuteStart = mMinuteStop
+            mMinuteStop = temp
+        }
     }
 
-    private fun adjustCalendarByLimit(calendar: Calendar, yearStart: Int, yearStop: Int): Calendar {
-        val yearSet = calendar[Calendar.YEAR]
-        Log.w(TAG, "adjustCalendarByLimit() Calendar year:$yearSet")
-        if (yearSet < yearStart) {
-            calendar[Calendar.YEAR] = yearStart
-            calendar[Calendar.MONTH] = MONTH_START
-            calendar[Calendar.DAY_OF_MONTH] = DAY_START
+    private fun adjustCalendarByLimit(calendar: Calendar): Calendar {
+        fixLimitIfNeeded()
+        val year = calendar[Calendar.YEAR]
+        val month = calendar[Calendar.MONTH]
+        val day = calendar[Calendar.DAY_OF_MONTH]
+        if (year < mYearStart) {
+            calendar[Calendar.YEAR] = mYearStart
         }
-        if (yearSet > yearStop) {
-            calendar[Calendar.YEAR] = yearStop
-            calendar[Calendar.MONTH] = MONTH_STOP - 1
-            calendar[Calendar.DAY_OF_MONTH] = DAY_STOP
+        if (year > mYearStop) {
+            calendar[Calendar.YEAR] = mYearStop
+        }
+        if (month < mMonthStart) {
+            calendar[Calendar.MONTH] = mMonthStart
+        }
+        if (month > mMonthStop) {
+            calendar[Calendar.MONTH] = mMonthStop
+        }
+        if (day < mDayStart) {
+            calendar[Calendar.DAY_OF_MONTH] = mDayStart
+        }
+        if (day > mMonthStop) {
+            calendar[Calendar.DAY_OF_MONTH] = mDayStop
         }
         return calendar
     }
 
-    @Suppress("SameParameterValue")
-    private fun setDisplayValuesForAll(calendar: Calendar, anim: Boolean) {
+    private fun setDisplayValuesForAll(calendar: Calendar) {
         initDisplayData()
-        val year = initValuesForY(calendar, anim)
-        val month = initValuesForM(calendar, anim)
-        initValuesForD(calendar, anim)
 
-        passiveUpdateMonthAndDay(year, year)
-        passiveUpdateDay(year, year, month, month)
+        val year: Int = calendar[Calendar.YEAR]
 
-        mOnDateChangedListener?.onDateChanged(value)
+        var month: Int = calendar[Calendar.MONTH]
+        month = if (month in mMonthStart..mMonthStop) month else mMonthStart
+
+        var dayOfMonth: Int = calendar[Calendar.DAY_OF_MONTH]
+        dayOfMonth = if (dayOfMonth in mDayStart..mDayStop) dayOfMonth else mDayStart
+
+        var hourOfDay: Int = calendar[Calendar.HOUR_OF_DAY]
+        hourOfDay = if (hourOfDay in mHourStart..mHourStop) hourOfDay else mHourStart
+
+        var minute: Int = calendar[Calendar.MINUTE]
+        minute = if (minute in mMinuteStart..mMinuteStop) minute else mMinuteStart
+
+        // 设置 年 选择器数据
+        setupDisplayedValues(mYearPickerView, year, mYearStart, mYearStop, mDisplayYears, false, anim = false)
+
+        passiveUpdateMonth(year)
+        passiveUpdateDay(year, month + 1)
+        passiveUpdateHour(year, month + 1, dayOfMonth)
+        passiveUpdateMinute(year, month + 1, dayOfMonth, hourOfDay)
+        mMinutePickerView.value = minute
+
+        mOnDateTimeChangedListener?.onDateTimeChanged(value)
     }
 
     private fun initDisplayData() {
@@ -201,43 +267,79 @@ class DateTimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener 
                 (mYearStart + it).toString()
             }
         }
+        // 满 月 数组
         if (mDisplayMonths.isEmpty()) {
             mDisplayMonths = MutableList(MONTH_COUNT) {
                 String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, MONTH_START + it)
             }
         }
+        // 满 天 数组
         if (mDisplayDays.isEmpty()) {
             mDisplayDays = MutableList(DAY_COUNT) {
                 String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, DAY_START + it)
             }
         }
+        // 满 小时 数组
+        if (mDisplayHours.isEmpty()) {
+            mDisplayHours = MutableList(HOUR_COUNT) {
+                String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, HOUR_START + it)
+            }
+        }
+        // 满 分钟 数组
+        if (mDisplayMinutes.isEmpty()) {
+            mDisplayMinutes = MutableList(MINUTE_COUNT) {
+                String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, MINUTE_START + it)
+            }
+        }
 
-        mDisplayStartMonths = if (mMonthStart != 0 ||
-                mDisplayStartMonths.isEmpty() ||
-                mDisplayStartMonths.size != MONTH_STOP - mMonthStart) {
+        // 开始临界点 月份 数组
+        mDisplayStartMonths = if (mMonthStart != 0 || mDisplayStartMonths.size != MONTH_STOP - mMonthStart) {
             MutableList(MONTH_STOP - mMonthStart) { mDisplayMonths[mMonthStart + it] }
         } else {
             mDisplayMonths
         }
-
-        mDisplayStartDays = if (mDayStart != 1 ||
-                mDisplayStartDays.isEmpty() ||
-                mDisplayStartDays.size != DAY_STOP - mDayStart + 1) {
+        // 开始临界点 天 数组
+        mDisplayStartDays = if (mDayStart != 1 || mDisplayStartDays.size != DAY_STOP - mDayStart + 1) {
             MutableList(DAY_STOP - mDayStart + 1) { mDisplayDays[mDayStart - 1 + it] }
         } else {
             mDisplayDays
         }
+        // 开始临界点 小时 数组
+        mDisplayStartHours = if (mHourStart != 0 || mDisplayStartHours.size != HOUR_STOP - mHourStart + 1) {
+            MutableList(HOUR_STOP - mHourStart + 1) { mDisplayHours[mHourStart + it] }
+        } else {
+            mDisplayHours
+        }
+        // 开始临界点 分钟 数组
+        mDisplayStartMinutes = if (mMinuteStart != 0 || mDisplayStartMinutes.size != HOUR_STOP - mMinuteStart + 1) {
+            MutableList(MINUTE_STOP - mMinuteStart + 1) { mDisplayMinutes[mMinuteStart + it] }
+        } else {
+            mDisplayMinutes
+        }
 
-        mDisplayEndMonths = if (mMonthEnd != 11 || mDisplayEndMonths.isEmpty() || mDisplayEndMonths.size != mMonthEnd + 1) {
-            MutableList(mMonthEnd + 1) { mDisplayMonths[it] }
+        // 截止临界点 月份 数组
+        mDisplayStopMonths = if (mMonthStop != 11 || mDisplayStopMonths.size != mMonthStop + 1) {
+            MutableList(mMonthStop + 1) { mDisplayMonths[it] }
         } else {
             mDisplayMonths
         }
-
-        mDisplayEndDays = if (mDayEnd != 31 || mDisplayEndDays.isEmpty() || mDisplayEndDays.size != mDayEnd) {
-            MutableList(mDayEnd) { mDisplayDays[it] }
+        // 截止临界点 天 数组
+        mDisplayStopDays = if (mDayStop != 31 || mDisplayStopDays.size != mDayStop) {
+            MutableList(mDayStop) { mDisplayDays[it] }
         } else {
             mDisplayDays
+        }
+        // 截止临界点 小时 数组
+        mDisplayStopHours = if (mHourStop != 23 || mDisplayStopHours.size != mHourStop + 1) {
+            MutableList(mHourStop + 1) { mDisplayHours[it] }
+        } else {
+            mDisplayHours
+        }
+        // 截止临界点 分钟 数组
+        mDisplayStopMinutes = if (mMinuteStop != 31 || mDisplayStopMinutes.size != mMinuteStop + 1) {
+            MutableList(mMinuteStop + 1) { mDisplayMinutes[it] }
+        } else {
+            mDisplayMinutes
         }
     }
 
@@ -246,48 +348,24 @@ class DateTimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener 
             return true
         }
         if (displayYears[0] == mYearStart.toString() && displayYears[displayYears.size - 1] == mYearStop.toString()) {
-            Log.d(TAG, "needResetDisplayYears() return false")
+            Log.d(TAG, "needResetDisplayYears: false")
             return false
         }
-        Log.d(TAG, "needResetDisplayYears() mYearStart:" + mYearStart + "," + displayYears[0]
-                + " mYearStop:" + mYearStop + "," + displayYears[displayYears.size - 1])
+        Log.d(TAG, "needResetDisplayYears mYearStart:$mYearStart ${displayYears[0]} mYearStop:$mYearStop ${displayYears[displayYears.size - 1]}")
         return true
-    }
-
-    @SuppressLint("WrongConstant")
-    private fun initValuesForY(calendar: Calendar, anim: Boolean): Int {
-        //mYearPickerView.wrapSelectorWheel = false
-        val yearSway: Int = calendar[Calendar.YEAR]
-        setDisplayedValuesForPickerView(mYearPickerView, yearSway, mYearStart, mYearStop, mDisplayYears, false, anim)
-        return yearSway
-    }
-
-    @SuppressLint("WrongConstant")
-    private fun initValuesForM(calendar: Calendar, anim: Boolean): Int {
-        val monthStop = MONTH_STOP
-        val monthSway: Int = calendar[Calendar.MONTH] + 1
-        setDisplayedValuesForPickerView(mMonthPickerView, monthSway, MONTH_START, monthStop, mDisplayMonths, false, anim)
-        return monthSway
     }
 
     private fun getDaysInMonth(year: Int, month: Int): Int {
         return GregorianCalendar(year, month, 0)[Calendar.DATE]
     }
 
-    private fun initValuesForD(calendar: Calendar, anim: Boolean): Int {
-        val dayStop: Int = getDaysInMonth(calendar[Calendar.YEAR], calendar[Calendar.MONTH] + 1)
-        val daySway: Int = calendar[Calendar.DAY_OF_MONTH]
-        setDisplayedValuesForPickerView(mDayPickerView, daySway, DAY_START, dayStop, mDisplayDays, false, anim)
-        return daySway
-    }
-
-    private fun setDisplayedValuesForPickerView(pickerView: NumberPickerView,
-                                                newValue: Int,
-                                                newStart: Int,
-                                                newStop: Int,
-                                                newDisplayedVales: List<String>,
-                                                needRespond: Boolean = true,
-                                                anim: Boolean = true) {
+    private fun setupDisplayedValues(pickerView: NumberPickerView,
+                                     newValue: Int,
+                                     newStart: Int,
+                                     newStop: Int,
+                                     newDisplayedVales: List<String>,
+                                     needRespond: Boolean = true,
+                                     anim: Boolean = true) {
         if (newStart > newStop) { //规避一些错误
             Log.w(TAG, "setValuesForPickerView() newStart > newStop")
             return
@@ -318,76 +396,117 @@ class DateTimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener 
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    private fun passiveUpdateMonthAndDay(oldYear: Int, newYear: Int) {
-        val oldMonthValue = mMonthPickerView.value
-        val oldDayValue = mDayPickerView.value
-        var newDayValue = oldDayValue
-        var newMonthValue = oldMonthValue
-        var shouldUpdateDays = false
-        if (newYear == mYearStart) {
-            if (oldMonthValue < mMonthStart + 1) {
-                newMonthValue = mMonthStart + 1
+    //private val mFormat by lazy { SimpleDateFormat("yyyy-MM-dd HH:mm") }
+
+    override fun onValueChange(picker: NumberPickerView, oldVal: Int, newVal: Int) {
+        Log.d(TAG, "onValueChange() ${ViewId.getViewId(picker)}  $oldVal -> $newVal")
+        when {
+            picker === mYearPickerView -> {
+                mCalendar[Calendar.YEAR] = newVal
+                passiveUpdateMonth(newVal)
             }
-            setDisplayedValuesForPickerView(mMonthPickerView, newMonthValue, mMonthStart + 1, MONTH_STOP, mDisplayStartMonths)
-            if (newMonthValue == mMonthStart + 1) {
-                if (oldDayValue < mDayStart) {
-                    newDayValue = mDayStart
-                }
-                val newDayStop = getDaysInMonth(newYear, newMonthValue)
-                setDisplayedValuesForPickerView(mDayPickerView, newDayValue, mDayStart, newDayStop, mDisplayStartDays)
-            } else {
-                shouldUpdateDays = true
+            picker === mMonthPickerView -> {
+                mCalendar[Calendar.MONTH] = newVal - 1
+                passiveUpdateDay(mYearPickerView.value, newVal)
             }
-        } else if (newYear == mYearStop) {
-            if (oldMonthValue > mMonthEnd + 1) {
-                newMonthValue = mMonthEnd + 1
+            picker === mDayPickerView -> {
+                mCalendar[Calendar.DAY_OF_MONTH] = newVal
+                passiveUpdateHour(mYearPickerView.value, mMonthPickerView.value, newVal)
             }
-            setDisplayedValuesForPickerView(mMonthPickerView, newMonthValue, MONTH_START, mMonthEnd + 1, mDisplayEndMonths)
-            if (newMonthValue == mMonthEnd + 1) {
-                if (oldDayValue > mDayEnd) {
-                    newDayValue = mDayEnd
-                }
-                setDisplayedValuesForPickerView(mDayPickerView, newDayValue, DAY_START, mDayEnd, mDisplayEndDays)
-            } else {
-                shouldUpdateDays = true
+            picker === mHourPickerView -> {
+                mCalendar[Calendar.HOUR_OF_DAY] = newVal
+                passiveUpdateMinute(mYearPickerView.value, mMonthPickerView.value, mDayPickerView.value, newVal)
             }
-        } else {
-            setDisplayedValuesForPickerView(mMonthPickerView, newMonthValue, MONTH_START, MONTH_STOP, mDisplayMonths)
-            shouldUpdateDays = true
+            picker === mMinutePickerView -> {
+                mCalendar[Calendar.MINUTE] = newVal
+            }
         }
-        if (shouldUpdateDays) {
-            val newDayStop = getDaysInMonth(newYear, oldMonthValue)
-            newDayValue = min(oldDayValue, newDayStop)
-            setDisplayedValuesForPickerView(mDayPickerView, newDayValue, DAY_START, newDayStop, mDisplayDays)
-        }
-        mOnDateChangedListener?.onDateChanged(Date(newYear, newMonthValue - 1, newDayValue))
+        //Log.d(TAG, "datetime: ${mFormat.format(mCalendar.time)}    ${mFormat.format(value.calendar.time)}")
+        mOnDateTimeChangedListener?.onDateTimeChanged(value)
     }
 
-    private fun passiveUpdateDay(oldYear: Int, newYear: Int, oldMonthSway: Int, newMonthValue: Int) {
-        val oldDayStop = getDaysInMonth(oldYear, oldMonthSway)
-        var newDayStop = getDaysInMonth(newYear, newMonthValue)
-        if (newDayStop == -1) {
-            return
-        }
-        val oldDayValue = mDayPickerView.value
-        var newDayValue = oldDayValue
-        if (newYear == mYearStart && newMonthValue == mMonthStart + 1) {
-            if (oldDayValue < mDayStart) {
-                newDayValue = mDayStart
+    private fun passiveUpdateMinute(year: Int, month: Int, day: Int, hour: Int) {
+        val minute = mMinutePickerView.value
+        var updatedMinute = minute
+        if (year == mYearStart && month == mMonthStart + 1 && day == mDayStart && hour == mHourStart) {
+            if (minute < mMinuteStart) {
+                updatedMinute = mMinuteStart
             }
-            newDayStop = getDaysInMonth(newYear, newMonthValue)
-            setDisplayedValuesForPickerView(mDayPickerView, newDayValue, mDayStart, newDayStop, mDisplayStartDays)
-        } else if (newYear == mYearStop && newMonthValue == mMonthEnd + 1) {
-            if (oldDayValue > mDayEnd) {
-                newDayValue = mDayEnd
+            setupDisplayedValues(mMinutePickerView, updatedMinute, mMinuteStart, MINUTE_STOP, mDisplayStartMinutes)
+        } else if (year == mYearStop && month == mMonthStop + 1 && day == mDayStop && hour == mHourStop) {
+            if (minute > mMinuteStop) {
+                updatedMinute = mMinuteStop
             }
-            setDisplayedValuesForPickerView(mDayPickerView, newDayValue, DAY_START, mDayEnd, mDisplayEndDays)
-        } else if (oldDayStop != newDayStop || newYear == mYearStart || newYear == mYearStop) {
-            newDayValue = min(oldDayValue, newDayStop)
-            setDisplayedValuesForPickerView(mDayPickerView, newDayValue, DAY_START, newDayStop, mDisplayDays)
+            setupDisplayedValues(mMinutePickerView, updatedMinute, MINUTE_START, mMinuteStop, mDisplayStopMinutes)
+        } else {
+            setupDisplayedValues(mMinutePickerView, updatedMinute, MINUTE_START, MINUTE_STOP, mDisplayMinutes)
         }
-        mOnDateChangedListener?.onDateChanged(Date(newYear, newMonthValue - 1, newDayValue))
+        mCalendar[Calendar.MINUTE] = updatedMinute
+    }
+
+    private fun passiveUpdateHour(year: Int, month: Int, day: Int) {
+        val hour = mHourPickerView.value
+        var updatedHour = hour
+        if (year == mYearStart && month == mMonthStart + 1 && day == mDayStart) {
+            if (hour < mHourStart) {
+                updatedHour = mHourStart
+            }
+            setupDisplayedValues(mHourPickerView, updatedHour, mHourStart, HOUR_STOP, mDisplayStartHours)
+        } else if (year == mYearStop && month == mMonthStop + 1 && day == mDayStop) {
+            if (hour > mHourStop) {
+                updatedHour = mHourStop
+            }
+            setupDisplayedValues(mHourPickerView, updatedHour, HOUR_START, mHourStop, mDisplayStopHours)
+        } else {
+            setupDisplayedValues(mHourPickerView, updatedHour, HOUR_START, HOUR_STOP, mDisplayHours)
+        }
+        mCalendar[Calendar.HOUR_OF_DAY] = updatedHour
+        passiveUpdateMinute(year, month, day, updatedHour)
+    }
+
+    private fun passiveUpdateDay(year: Int, month: Int) {
+        val day = mDayPickerView.value
+        var updatedDay = day
+        if (year == mYearStart && month == mMonthStart + 1) {
+            if (day < mDayStart) {
+                updatedDay = mDayStart
+            }
+            val newDayStop = getDaysInMonth(year, month)
+            setupDisplayedValues(mDayPickerView, updatedDay, mDayStart, newDayStop, mDisplayStartDays)
+        } else if (year == mYearStop && month == mMonthStop + 1) {
+            if (day > mDayStop) {
+                updatedDay = mDayStop
+            }
+            setupDisplayedValues(mDayPickerView, updatedDay, DAY_START, mDayStop, mDisplayStopDays)
+        } else {
+            setupDisplayedValues(mDayPickerView, updatedDay, DAY_START, DAY_STOP, mDisplayDays)
+        }
+        mCalendar[Calendar.DAY_OF_MONTH] = updatedDay
+        passiveUpdateHour(year, month, updatedDay)
+    }
+
+    private fun passiveUpdateMonth(year: Int) {
+        val month = mMonthPickerView.value
+        var updatedMonth = month
+        when (year) {
+            mYearStart -> {
+                if (month < mMonthStart + 1) {
+                    updatedMonth = mMonthStart + 1
+                }
+                setupDisplayedValues(mMonthPickerView, updatedMonth, mMonthStart + 1, MONTH_STOP, mDisplayStartMonths, anim = false)
+            }
+            mYearStop -> {
+                if (month > mMonthStop + 1) {
+                    updatedMonth = mMonthStop + 1
+                }
+                setupDisplayedValues(mMonthPickerView, updatedMonth, MONTH_START, mMonthStop + 1, mDisplayStopMonths, anim = false)
+            }
+            else -> {
+                setupDisplayedValues(mMonthPickerView, updatedMonth, MONTH_START, MONTH_STOP, mDisplayMonths, anim = false)
+            }
+        }
+        mCalendar[Calendar.MONTH] = updatedMonth - 1
+        passiveUpdateDay(year, updatedMonth)
     }
 
     fun setTextColor(selectedColor: Int, normalColor: Int) {
@@ -402,57 +521,45 @@ class DateTimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener 
         mMonthPickerView.setHintTextColor(selectedColor)
         mDayPickerView.setSelectedTextColor(selectedColor)
         mDayPickerView.setHintTextColor(selectedColor)
+        mHourPickerView.setSelectedTextColor(selectedColor)
+        mHourPickerView.setHintTextColor(selectedColor)
+        mMinutePickerView.setSelectedTextColor(selectedColor)
+        mMinutePickerView.setHintTextColor(selectedColor)
     }
 
     private fun setNormalColor(normalColor: Int) {
         mYearPickerView.setNormalTextColor(normalColor)
         mMonthPickerView.setNormalTextColor(normalColor)
         mDayPickerView.setNormalTextColor(normalColor)
+        mHourPickerView.setNormalTextColor(normalColor)
+        mMinutePickerView.setNormalTextColor(normalColor)
     }
 
     fun setDividerColor(dividerColor: Int) {
         mYearPickerView.setDividerColor(dividerColor)
         mMonthPickerView.setDividerColor(dividerColor)
         mDayPickerView.setDividerColor(dividerColor)
+        mHourPickerView.setDividerColor(dividerColor)
+        mMinutePickerView.setDividerColor(dividerColor)
     }
 
-    val yearPickerView: NumberPickerView
-        get() = mYearPickerView
+    val yearPickerView: NumberPickerView get() = mYearPickerView
 
-    val monthPickerView: NumberPickerView
-        get() = mMonthPickerView
+    val monthPickerView: NumberPickerView get() = mMonthPickerView
 
-    val dayPickerView: NumberPickerView
-        get() = mDayPickerView
+    val dayPickerView: NumberPickerView get() = mDayPickerView
 
-    fun setYearPickerViewVisibility(visibility: Int) {
-        setPickerViewVisibility(mYearPickerView, visibility)
+    val hourPickerView: NumberPickerView get() = mHourPickerView
+
+    val minutePickerView: NumberPickerView get() = mMinutePickerView
+
+    val value: DateTime get() = DateTime.from(mCalendar)
+
+    fun setOnDateTimeChangedListener(listener: OnDateTimeChangedListener?) {
+        mOnDateTimeChangedListener = listener
     }
 
-    fun setMonthPickerViewVisibility(visibility: Int) {
-        setPickerViewVisibility(mMonthPickerView, visibility)
-    }
-
-    fun setDayPickerViewVisibility(visibility: Int) {
-        setPickerViewVisibility(mDayPickerView, visibility)
-    }
-
-    private fun setPickerViewVisibility(view: NumberPickerView, visibility: Int) {
-        if (view.visibility == visibility) {
-            return
-        }
-        if (visibility == GONE || visibility == VISIBLE || visibility == INVISIBLE) {
-            view.visibility = visibility
-        }
-    }
-
-    val value: Date get() = Date(mYearPickerView.value, mMonthPickerView.value - 1, mDayPickerView.value)
-
-    fun setOnDateChangedListener(listener: OnDateChangedListener?) {
-        mOnDateChangedListener = listener
-    }
-
-    interface OnDateChangedListener {
-        fun onDateChanged(date: Date)
+    interface OnDateTimeChangedListener {
+        fun onDateTimeChanged(dateTime: DateTime)
     }
 }

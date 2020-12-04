@@ -1,46 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <include layout="@layout/picker_dialog_title" />
 
-    <LinearLayout
+    <com.liabit.picker.datetime.DateTimePickerView
+        android:id="@+id/date_time_picker_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/time_picker_dialog_content_padding"
-        android:paddingBottom="@dimen/picker_dialog_content_padding">
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <com.liabit.picker.datetime.DatePickerView
-            android:id="@+id/date_picker_view"
-            android:layout_width="@dimen/date_picker_view_width"
-            android:layout_height="wrap_content" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <com.liabit.picker.datetime.TimePickerView
-            android:id="@+id/time_picker_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-    </LinearLayout>
+        android:paddingBottom="@dimen/picker_dialog_content_padding" />
 
     <include layout="@layout/picker_dialog_button_bar" />
 

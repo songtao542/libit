@@ -28,7 +28,7 @@ data class Time(
     /**
      * 是否是24小时制
      */
-    internal var is24HourFormat: Boolean = false
+    internal var is24HourFormat: Boolean = true
 
     /**
      * 是否是上午

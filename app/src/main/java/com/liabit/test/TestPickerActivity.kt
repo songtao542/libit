@@ -19,9 +19,6 @@ class TestPickerActivity : AppCompatActivity() {
 
     private var mAddress: Address? = null
 
-    private lateinit var mMinDate: Calendar
-    private lateinit var mMaxDate: Calendar
-
     private val mDateFormat = SimpleDateFormat("yyyy-MM-dd")
     private val mTimeFormat = SimpleDateFormat("HH:mm")
     private val mDateTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
@@ -29,12 +26,6 @@ class TestPickerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_picker_test)
-
-        mMinDate = Calendar.getInstance()
-        mMaxDate = Calendar.getInstance()
-
-        mMinDate.set(2020, 9, 10)
-        mMinDate.set(2030, 12, 30)
 
         time12Picker.setOnClickListener {
             val dialog = DateTimePickerDialog.Builder(this)
@@ -57,8 +48,8 @@ class TestPickerActivity : AppCompatActivity() {
                     .setWithDate(false)
                     .setWithTime(true)
                     .set24HourFormat(false)
-                    .setMinTime(8, 9)
-                    .setMaxTime(15, 35)
+                    .setMinTime(8, 23)
+                    .setMaxTime(20, 40)
                     .setTitle("选择时间")
                     .setNegativeButton(R.string.cancel) { _, _ -> }
                     .setPositiveButton(R.string.ml_confirm) { _, _ -> }
@@ -91,8 +82,8 @@ class TestPickerActivity : AppCompatActivity() {
                     .setWithDate(false)
                     .setWithTime(true)
                     .set24HourFormat(true)
-                    .setMinTime(8, 9)
-                    .setMaxTime(15, 45)
+                    .setMinTime(8, 23)
+                    .setMaxTime(20, 40)
                     .setTitle("选择时间")
                     .setNegativeButton(R.string.cancel) { _, _ -> }
                     .setPositiveButton(R.string.ml_confirm) { _, _ -> }
@@ -124,8 +115,8 @@ class TestPickerActivity : AppCompatActivity() {
                     .setWithDate(true)
                     .setWithTime(false)
                     .setTitle("选择日期")
-                    .setMinDate(2020, 9, 10)
-                    .setMaxDate(2030, 10, 10)
+                    .setMinDate(2008, 9, 12)
+                    .setMaxDate(2030, 10, 20)
                     .setNegativeButton(R.string.cancel) { _, _ -> }
                     .setPositiveButton(R.string.ml_confirm) { _, _ -> }
                     .setOnDateChangedListener(object : DateTimePickerDialog.OnDateChangeListener {

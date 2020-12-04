@@ -12,7 +12,6 @@ import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import com.liabit.picker.NumberPickerView
 import com.liabit.picker.R
-import java.text.SimpleDateFormat
 import java.util.*
 
 @Suppress("unused")
@@ -36,15 +35,15 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     private var mDisplayMinute: List<CharSequence> = emptyList()
 
     private var mDisplayStartMinute: List<CharSequence> = emptyList()
-    private var mDisplayEndMinute: List<CharSequence> = emptyList()
+    private var mDisplayStopMinute: List<CharSequence> = emptyList()
 
     private var mOnTimeChangeListener: OnTimeChangedListener? = null
     private var mOnWindowFocusChangeListener: ViewTreeObserver.OnWindowFocusChangeListener? = null
 
     private var mHourStart = 0
-    private var mHourEnd = 23
+    private var mHourStop = 23
     private var mMinuteStart = 0
-    private var mMinuteEnd = 59
+    private var mMinuteStop = 59
 
     constructor(context: Context) : super(context) {
         initInternal(context)
@@ -76,7 +75,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         mTimeDividerView.isEnabled = false
         mTimeDividerView.setOffsetY(6)
         mIs24HourFormat = DateFormat.is24HourFormat(context)
-        setupWithCalendar(mCalendar)
+        setupWithCalendarInternal(mCalendar)
     }
 
     fun setItemWrapContent() {
@@ -105,7 +104,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
                     Log.d(TAG, "onWindowFocusChanged() hasFocus is24Hour:$is24Hour")
                     if (mIs24HourFormat != is24Hour) {
                         mIs24HourFormat = is24Hour
-                        setupWithCalendar(mCalendar)
+                        setupWithCalendarInternal(mCalendar)
                     }
                 }
                 viewTreeObserver.addOnWindowFocusChangeListener(mOnWindowFocusChangeListener)
@@ -116,7 +115,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     fun setTime(hour: Int, minute: Int) {
         mCalendar[Calendar.HOUR_OF_DAY] = hour
         mCalendar[Calendar.MINUTE] = minute
-        setupWithCalendar(mCalendar)
+        setupWithCalendarInternal(mCalendar)
     }
 
     /**
@@ -129,25 +128,25 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         if (amPm == Calendar.AM || amPm == Calendar.PM) {
             mCalendar[Calendar.AM_PM] = amPm
         }
-        setupWithCalendar(mCalendar)
+        setupWithCalendarInternal(mCalendar)
     }
 
     /**
-     * @param hour 0-23
+     * @param hourOfDay 0-23
      * @param minute 0-59
      */
-    fun setMin(hour: Int, minute: Int) {
-        mHourStart = if (hour in 0..mHourEnd) hour else 0
-        mMinuteStart = if (minute in 0..mMinuteEnd) minute else 0
+    fun setMin(hourOfDay: Int, minute: Int) {
+        mHourStart = if (hourOfDay in 0..mHourStop) hourOfDay else 0
+        mMinuteStart = if (minute in 0..mMinuteStop) minute else 0
     }
 
     /**
-     * @param hour 0-23
+     * @param hourOfDay 0-23
      * @param minute 0-59
      */
-    fun setMax(hour: Int, minute: Int) {
-        mHourEnd = if (hour in mHourStart..23) hour else 23
-        mMinuteEnd = if (minute in mMinuteStart..59) minute else 59
+    fun setMax(hourOfDay: Int, minute: Int) {
+        mHourStop = if (hourOfDay in mHourStart..23) hourOfDay else 23
+        mMinuteStop = if (minute in mMinuteStart..59) minute else 59
     }
 
     fun set24HourFormat(is24HourFormat: Boolean) {
@@ -156,17 +155,91 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
             return
         }
         mIs24HourFormat = is24HourFormat
-        setupWithCalendar(mCalendar)
+        setupWithCalendarInternal(mCalendar)
     }
 
     fun is24HourFormat(): Boolean {
         return mIs24HourFormat
     }
-val ff = SimpleDateFormat("yyyy-MM-dd HH:mm")
+
     fun setupWithCalendar(calendar: Calendar) {
-        Log.d("TTTT", "---------------------------------------")
-        Log.d("TTTT", "set dt: ${ff.format(calendar.time)}    $mHourStart-$mHourEnd   $mMinuteStart-$mMinuteEnd")
         mCalendar.time = calendar.time
+        setupWithCalendarInternal(mCalendar)
+    }
+
+    private fun setupWithCalendarInternal(calendar: Calendar) {
+        adjustCalendarByLimit(calendar)
+        setDisplayValuesForAll(calendar)
+    }
+
+    private fun fixLimitIfNeeded() {
+        if (mHourStop < mHourStart) {
+            val start = mHourStart
+            mHourStart = mHourStop
+            mHourStop = start
+        }
+        if (mMinuteStop < mMinuteStart) {
+            val start = mMinuteStart
+            mMinuteStart = mMinuteStop
+            mMinuteStop = start
+        }
+    }
+
+    private fun adjustCalendarByLimit(calendar: Calendar): Calendar {
+        fixLimitIfNeeded()
+        val hour = calendar[Calendar.HOUR_OF_DAY]
+        val minute = calendar[Calendar.MINUTE]
+        if (hour < mHourStart) {
+            calendar[Calendar.HOUR_OF_DAY] = mHourStart
+        }
+        if (hour > mHourStop) {
+            calendar[Calendar.HOUR_OF_DAY] = mHourStop
+        }
+        if (minute < mMinuteStart) {
+            calendar[Calendar.MINUTE] = mMinuteStart
+        }
+        if (minute > mMinuteStop) {
+            calendar[Calendar.MINUTE] = mMinuteStop
+        }
+        return calendar
+    }
+
+    private fun initDisplayData() {
+        // 满 小时 数组
+        if (mLastIs24HourFormat != mIs24HourFormat || mDisplayHour.size != (mHourStop - mHourStart + 1)) {
+            // 24小时制
+            mLastIs24HourFormat = mIs24HourFormat
+            mDisplayHour = MutableList(mHourStop - mHourStart + 1) {
+                Hour(mIs24HourFormat, mHourStart + it)
+            }
+        }
+        // 满 分钟 数组
+        if (mDisplayMinute.isEmpty()) {
+            mDisplayMinute = MutableList(60) {
+                String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, it)
+            }
+        }
+
+        // 开始临界点 分钟 数组
+        mDisplayStartMinute = if (mMinuteStart != 0 || mDisplayStartMinute.size != 60 - mMinuteStart) {
+            MutableList(60 - mMinuteStart) {
+                String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, (mMinuteStart + it))
+            }
+        } else {
+            mDisplayMinute
+        }
+        // 截止临界点 分钟 数组
+        mDisplayStopMinute = if (mMinuteStop != 59 || mDisplayStopMinute.size != mMinuteStop + 1) {
+            MutableList(mMinuteStop + 1) {
+                String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, it)
+            }
+        } else {
+            mDisplayMinute
+        }
+    }
+
+    private fun setDisplayValuesForAll(calendar: Calendar) {
+        initDisplayData()
         if (mIs24HourFormat) {
             // 24小时制
             mAmPmPickerView.visibility = GONE
@@ -180,19 +253,8 @@ val ff = SimpleDateFormat("yyyy-MM-dd HH:mm")
             initPickerViewValue(mAmPmPickerView, 0, 1, calendar[Calendar.AM_PM])
         }
 
-        if (mHourEnd < mHourStart) {
-            val start = mHourStart
-            mHourStart = mHourEnd
-            mHourEnd = start
-        }
-
-        if (mMinuteEnd < mMinuteStart) {
-            val start = mMinuteStart
-            mMinuteStart = mMinuteEnd
-            mMinuteEnd = start
-        }
-
-        val isHourNoLimited = (mHourStart == 0 && mHourEnd == 23 && mMinuteStart == 0 && mMinuteEnd == 59)
+        // 小时 分钟 分割符
+        val isHourNoLimited = (mHourStart == 0 && mHourStop == 23 && mMinuteStart == 0 && mMinuteStop == 59)
         if (isHourNoLimited) {
             mTimeDividerView.displayedValues = resources.getStringArray(R.array.hour_time_divider).toList()
         } else {
@@ -200,65 +262,26 @@ val ff = SimpleDateFormat("yyyy-MM-dd HH:mm")
         }
         initPickerViewValue(mTimeDividerView, 0, 2, 1)
 
+        // 设置是否可以循环滚动
         mHourPickerView.wrapSelectorWheel = isHourNoLimited
         mMinutePickerView.wrapSelectorWheel = isHourNoLimited
         mAmPmPickerView.isEnabled = isHourNoLimited
 
-        // hour
-        if (mLastIs24HourFormat != mIs24HourFormat || mDisplayHour.size != (mHourEnd - mHourStart + 1)) {
-            // 24小时制
-            mLastIs24HourFormat = mIs24HourFormat
-            mDisplayHour = MutableList(mHourEnd - mHourStart + 1) {
-                Hour(mIs24HourFormat, mHourStart + it)
-            }
-        }
-
-        mHourPickerView.setDisplayedValues(mDisplayHour, false)
-        val currentHour = calendar[Calendar.HOUR_OF_DAY]
-        val selectHour = if (currentHour in mHourStart..mHourEnd) currentHour else mHourStart
-        Log.d("TTTT", "selectHour==>$selectHour")
-        setDisplayedValuesForPickerView(mHourPickerView, selectHour, mHourStart, mHourEnd, mDisplayHour, anim = false)
-
-        // minute
-        if (mDisplayMinute.isEmpty()) {
-            mDisplayMinute = MutableList(60) {
-                String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, it)
-            }
-        }
-
-        mDisplayStartMinute = if (mMinuteStart != 0 || mDisplayStartMinute.size != 60 - mMinuteStart) {
-            MutableList(60 - mMinuteStart) {
-                String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, (mMinuteStart + it))
-            }
-        } else {
-            mDisplayMinute
-        }
-
-        mDisplayEndMinute = if (mMinuteEnd != 59 || mDisplayEndMinute.size != mMinuteEnd + 1) {
-            MutableList(mMinuteEnd + 1) {
-                String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, it)
-            }
-        } else {
-            mDisplayMinute
-        }
-
+        var hour = calendar[Calendar.HOUR_OF_DAY]
+        hour = if (hour in mHourStart..mHourStop) hour else mHourStart
+        var minute = calendar[Calendar.MINUTE]
+        minute = if (minute in mMinuteStart..mMinuteStop) minute else mMinuteStart
+        setupDisplayedValues(mHourPickerView, hour, mHourStart, mHourStop, mDisplayHour, anim = false)
+        // 更新上午下午
         passiveUpdateAmPm()
-
-        val currentMinute = calendar[Calendar.MINUTE]
-        val selectMinute = if (currentMinute in mMinuteStart..mMinuteEnd) currentMinute else mMinuteStart
-        Log.d("TTTT", "selectMinute==>$selectMinute")
-        passiveUpdateMinute(selectHour, selectMinute)
-
+        // 更新分钟
+        passiveUpdateMinute(hour, minute)
         // 更新日历使其与选择器显示的时间一直
         if (mIs24HourFormat) {
-            Log.d("TTTT", "mHourPickerView.value==>${mHourPickerView.value}")
             mCalendar[Calendar.HOUR_OF_DAY] = mHourPickerView.value
         } else {
-            Log.d("TTTT", "Hour.getHour(mAmPmPickerView.value, mHourPickerView.value)==>${Hour.getHour(mAmPmPickerView.value, mHourPickerView.value)}")
             mCalendar[Calendar.HOUR_OF_DAY] = Hour.getHour(mAmPmPickerView.value, mHourPickerView.value)
         }
-
-        Log.d("TTTT", "dt: ${mCalendar[Calendar.HOUR_OF_DAY]}:${mCalendar[Calendar.MINUTE]}")
 
         mOnTimeChangeListener?.onTimeChanged(value)
     }
@@ -267,14 +290,14 @@ val ff = SimpleDateFormat("yyyy-MM-dd HH:mm")
         when (newHour) {
             mHourStart -> {
                 val newMinuteValue = if (newMinute < mMinuteStart) mMinuteStart else newMinute
-                setDisplayedValuesForPickerView(mMinutePickerView, newMinuteValue, mMinuteStart, 59, mDisplayStartMinute, anim = false)
+                setupDisplayedValues(mMinutePickerView, newMinuteValue, mMinuteStart, 59, mDisplayStartMinute, anim = false)
             }
-            mHourEnd -> {
-                val newMinuteValue = if (newMinute > mMinuteEnd) mMinuteEnd else newMinute
-                setDisplayedValuesForPickerView(mMinutePickerView, newMinuteValue, 0, mMinuteEnd, mDisplayEndMinute, anim = false)
+            mHourStop -> {
+                val newMinuteValue = if (newMinute > mMinuteStop) mMinuteStop else newMinute
+                setupDisplayedValues(mMinutePickerView, newMinuteValue, 0, mMinuteStop, mDisplayStopMinute, anim = false)
             }
             else -> {
-                setDisplayedValuesForPickerView(mMinutePickerView, newMinute, 0, 59, mDisplayMinute, anim = false)
+                setupDisplayedValues(mMinutePickerView, newMinute, 0, 59, mDisplayMinute, anim = false)
             }
         }
         // 更新日历
@@ -291,13 +314,13 @@ val ff = SimpleDateFormat("yyyy-MM-dd HH:mm")
         }
     }
 
-    private fun setDisplayedValuesForPickerView(pickerView: NumberPickerView,
-                                                newValue: Int,
-                                                newStart: Int,
-                                                newStop: Int,
-                                                newDisplayedVales: List<CharSequence>,
-                                                needRespond: Boolean = true,
-                                                anim: Boolean = true) {
+    private fun setupDisplayedValues(pickerView: NumberPickerView,
+                                     newValue: Int,
+                                     newStart: Int,
+                                     newStop: Int,
+                                     newDisplayedVales: List<CharSequence>,
+                                     needRespond: Boolean = true,
+                                     anim: Boolean = true) {
         if (newStart > newStop) { //规避一些错误
             Log.w(TAG, "setValuesForPickerView() newStart > newStop")
             return
@@ -335,7 +358,7 @@ val ff = SimpleDateFormat("yyyy-MM-dd HH:mm")
     }
 
     override fun onValueChange(picker: NumberPickerView, oldVal: Int, newVal: Int) {
-        Log.d(TAG, "onValueChange()  $picker  newVal:$newVal")
+        Log.d(TAG, "onValueChange() ${ViewId.getViewId(picker)}  $oldVal -> $newVal")
         when {
             picker === mAmPmPickerView -> {
                 mCalendar[Calendar.HOUR_OF_DAY] = Hour.getHour(newVal, mHourPickerView.value)
@@ -356,12 +379,7 @@ val ff = SimpleDateFormat("yyyy-MM-dd HH:mm")
         mOnTimeChangeListener?.onTimeChanged(value)
     }
 
-    val value: Time
-        get() {
-            val hour = mCalendar.get(Calendar.HOUR_OF_DAY)
-            val minute = mCalendar.get(Calendar.MINUTE)
-            return Time(hour, minute).apply { is24HourFormat = mIs24HourFormat }
-        }
+    val value: Time get() = Time.from(mCalendar).apply { is24HourFormat = mIs24HourFormat }
 
     fun setOnTimeChangedListener(onTimeChangeListener: OnTimeChangedListener?) {
         mOnTimeChangeListener = onTimeChangeListener
@@ -378,7 +396,6 @@ val ff = SimpleDateFormat("yyyy-MM-dd HH:mm")
     private class Hour(val is24HourFormat: Boolean, val hour: Int) : CharSequence {
 
         companion object {
-
             @JvmStatic
             internal fun getHour(apm: Int, hour24: Int): Int {
                 // 24小时制转化为12小时制时的字面数值

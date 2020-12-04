@@ -4,11 +4,11 @@ import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
-import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import com.liabit.picker.NumberPickerView
 import com.liabit.picker.R
+import com.liabit.picker.datetime.ViewId
 
 /**
  * Author:         songtao
@@ -18,18 +18,6 @@ import com.liabit.picker.R
 class CascadePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     companion object {
         private const val TAG = "CascadePickerView"
-
-        private fun getViewId(view: View): String {
-            val s = view.toString()
-            var i = s.indexOf("app:id")
-            if (i < 0) {
-                i = s.indexOf("android:id")
-            }
-            if (i >= 0) {
-                return s.substring(i, s.length - 1)
-            }
-            return ""
-        }
     }
 
     private lateinit var mFirstPickerView: NumberPickerView
@@ -122,7 +110,7 @@ class CascadePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
     }
 
     override fun onValueChange(picker: NumberPickerView, oldVal: Int, newVal: Int) {
-        Log.d(TAG, "onValueChange() old:$oldVal  new:$newVal  ${getViewId(picker)}")
+        Log.d(TAG, "onValueChange() ${ViewId.getViewId(picker)}  $oldVal -> $newVal")
         val data = mData ?: return
         when (picker) {
             mFirstPickerView -> {
@@ -250,13 +238,10 @@ class CascadePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
 
     data class Value(val index1: Int, val index2: Int, val index3: Int)
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    val value: Value
-        get() = Value(mFirstPickerView.value, mSecondPickerView.value, mThirdPickerView.value)
+    val value: Value get() = Value(mFirstPickerView.value, mSecondPickerView.value, mThirdPickerView.value)
 
     fun setOnValueChangeListener(onTimeChangeListener: OnValueChangeListener?) {
         mOnValueChangeListener = onTimeChangeListener
-        mOnValueChangeListener?.onValueChange(value)
     }
 
     interface OnValueChangeListener {

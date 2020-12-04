@@ -9,25 +9,13 @@
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1.2" />
 
     <com.liabit.picker.NumberPickerView
         android:id="@+id/picker_year"
-        android:layout_width="50dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
-
-    <com.liabit.picker.NumberPickerView
-        android:id="@+id/picker_month"
-        android:layout_width="44dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
-
-    <com.liabit.picker.NumberPickerView
-        android:id="@+id/picker_day"
-        android:layout_width="40dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:paddingHorizontal="@dimen/time_picker_item_padding" />
 
     <Space
         android:layout_width="0dp"
@@ -35,9 +23,32 @@
         android:layout_weight="1" />
 
     <com.liabit.picker.NumberPickerView
+        android:id="@+id/picker_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/time_picker_item_padding" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.liabit.picker.NumberPickerView
+        android:id="@+id/picker_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/time_picker_item_padding" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="2" />
+
+    <com.liabit.picker.NumberPickerView
         android:id="@+id/picker_hour"
-        android:layout_width="@dimen/number_picker_view_width"
-        android:layout_height="wrap_content" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/time_picker_item_padding" />
 
     <com.liabit.picker.NumberPickerView
         android:id="@+id/picker_time_divider"
@@ -47,12 +58,13 @@
 
     <com.liabit.picker.NumberPickerView
         android:id="@+id/picker_min"
-        android:layout_width="@dimen/number_picker_view_width"
-        android:layout_height="wrap_content" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/time_picker_item_padding" />
 
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1.2" />
 
 </merge>

@@ -16,5 +16,14 @@ data class DateTime(val year: Int, val month: Int, val day: Int, val hourOfDay: 
         internal fun from(date: Date, time: Time): DateTime {
             return DateTime(date.year, date.month, date.dayOfMonth, time.hourOfDay, time.minute)
         }
+
+        internal fun from(calendar: Calendar): DateTime {
+            return DateTime(calendar[Calendar.YEAR],
+                    calendar[Calendar.MONTH],
+                    calendar[Calendar.DAY_OF_MONTH],
+                    calendar[Calendar.HOUR_OF_DAY],
+                    calendar[Calendar.MINUTE]
+            )
+        }
     }
 }

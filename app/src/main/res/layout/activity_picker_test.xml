@@ -22,10 +22,16 @@
         android:id="@+id/addressText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autoSizeMaxTextSize="24sp"
+        android:autoSizeMinTextSize="16sp"
+        android:autoSizeTextType="uniform"
         android:gravity="center"
+        android:lines="1"
+        android:paddingHorizontal="30dp"
         android:paddingBottom="20dp"
+        android:singleLine="true"
         android:textColor="@color/add_sub_light_blue"
-        android:textSize="24sp" />
+        tools:targetApi="o" />
 
     <Button
         android:id="@+id/time12Picker"

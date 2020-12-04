@@ -379,7 +379,7 @@ class TimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
         mOnTimeChangeListener?.onTimeChanged(value)
     }
 
-    val value: Time get() = Time.from(mCalendar).apply { is24HourFormat = mIs24HourFormat }
+    val value: Time get() = Time.from(mCalendar)
 
     fun setOnTimeChangedListener(onTimeChangeListener: OnTimeChangedListener?) {
         mOnTimeChangeListener = onTimeChangeListener

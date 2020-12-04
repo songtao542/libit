@@ -471,15 +471,19 @@ class DateTimePickerView : LinearLayout, NumberPickerView.OnValueChangeListener 
             if (day < mDayStart) {
                 updatedDay = mDayStart
             }
-            val newDayStop = getDaysInMonth(year, month)
-            setupDisplayedValues(mDayPickerView, updatedDay, mDayStart, newDayStop, mDisplayStartDays)
+            val dayStop = getDaysInMonth(year, month)
+            setupDisplayedValues(mDayPickerView, updatedDay, mDayStart, dayStop, mDisplayStartDays)
         } else if (year == mYearStop && month == mMonthStop + 1) {
             if (day > mDayStop) {
                 updatedDay = mDayStop
             }
             setupDisplayedValues(mDayPickerView, updatedDay, DAY_START, mDayStop, mDisplayStopDays)
         } else {
-            setupDisplayedValues(mDayPickerView, updatedDay, DAY_START, DAY_STOP, mDisplayDays)
+            val dayStop = getDaysInMonth(year, month)
+            if (updatedDay > dayStop) {
+                updatedDay = dayStop
+            }
+            setupDisplayedValues(mDayPickerView, updatedDay, DAY_START, dayStop, mDisplayDays)
         }
         mCalendar[Calendar.DAY_OF_MONTH] = updatedDay
         passiveUpdateHour(year, month, updatedDay)

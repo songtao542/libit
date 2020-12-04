@@ -7,33 +7,22 @@ import java.util.*
  * CreateDate:     2020/10/10 17:21
  */
 @Suppress("MemberVisibilityCanBePrivate")
-data class Time(
+data class TimeImpl(
         /** 24小时制(0,23) */
-        val hourOfDay: Int,
+        override val hourOfDay: Int,
         /** 分钟 */
-        val minute: Int) {
+        override val minute: Int) : Time {
 
-    companion object {
-        internal fun from(calendar: Calendar): Time {
-            return Time(calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE])
-        }
-    }
-
-    val calendar: Calendar
+    override val calendar: Calendar
         get() = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, hourOfDay)
             set(Calendar.MINUTE, minute)
         }
 
     /**
-     * 是否是24小时制
-     */
-    internal var is24HourFormat: Boolean = true
-
-    /**
      * 是否是上午
      */
-    val isAm: Boolean
+    override val isAm: Boolean
         get() {
             return hourOfDay < 12
         }
@@ -41,13 +30,38 @@ data class Time(
     /**
      * 是否是下午
      */
-    val isPm: Boolean = !isAm
+    override val isPm: Boolean = !isAm
+}
+
+interface Time {
+    /** 24小时制(0,23) */
+    val hourOfDay: Int
+
+    /** 分钟 */
+    val minute: Int
 
     /**
-     * [Calendar.AM] or [Calendar.PM]
+     * 是否是上午
      */
-    internal val apm: Int
-        get() {
-            return if (isAm) Calendar.AM else Calendar.PM
+    val isAm: Boolean
+
+    /**
+     * 是否是下午
+     */
+    val isPm: Boolean
+
+    val calendar: Calendar
+
+    companion object {
+        internal fun from(calendar: Calendar): Time {
+            return TimeImpl(calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE])
         }
+
+        /**
+         * [Calendar.AM] or [Calendar.PM]
+         */
+        internal fun getApm(time: Time): Int {
+            return if (time.isAm) Calendar.AM else Calendar.PM
+        }
+    }
 }

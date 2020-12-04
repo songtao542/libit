@@ -49,13 +49,9 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             return if (dayOfWeek > 7 || dayOfWeek < 1) NON_VALUE else WEEK_ENTRIES[dayOfWeek - 1]
         }
 
-        private fun getTitle(context: Context, dateTime: DateTime?): String {
-            return getTitle(context, dateTime?.date, dateTime?.time)
-        }
-
-        private fun getTitle(context: Context, date: Date?, time: Time?): String {
-            val dateStr = getDateString(context, date)
-            val timeStr = getTimeString(context, time)
+        private fun getDateTimeTitle(context: Context, dateTime: DateTime?): String {
+            val dateStr = getDateTitle(context, dateTime?.date)
+            val timeStr = getTimeTitle(context, dateTime?.time, true)
             return if (dateStr.isNotBlank() && timeStr.isNotBlank()) {
                 "$dateStr  $timeStr"
             } else if (dateStr.isNotBlank()) {
@@ -67,21 +63,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             }
         }
 
-        private fun getTimeString(context: Context, time: Time?): String {
-            if (time == null) return ""
-            val builder = StringBuilder()
-            if (time.is24HourFormat) {
-                builder.append(String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, time.hourOfDay))
-            } else {
-                builder.append(context.resources.getStringArray(R.array.picker_am_pm_entries)[time.apm])
-                builder.append(time.hourOfDay)
-            }
-            builder.append(context.resources.getString(R.string.time_divider))
-            builder.append(String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, time.minute))
-            return builder.toString()
-        }
-
-        private fun getDateString(context: Context, date: Date?): String {
+        private fun getDateTitle(context: Context, date: Date?): String {
             if (date == null) return ""
             val calendar = date.calendar
             val builder = StringBuilder()
@@ -90,6 +72,21 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             builder.append(calendar[Calendar.DAY_OF_MONTH]).append(context.getString(R.string.day))
             builder.append("  ")
             builder.append(getNameOfWeek(calendar[Calendar.DAY_OF_WEEK]))
+            return builder.toString()
+        }
+
+        private fun getTimeTitle(context: Context, time: Time?, is24HourFormat: Boolean): String {
+            if (time == null) return ""
+            val builder = StringBuilder()
+            if (is24HourFormat) {
+                builder.append(String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, time.hourOfDay))
+            } else {
+                val apm = if (time.isAm) Calendar.AM else Calendar.PM
+                builder.append(context.resources.getStringArray(R.array.picker_am_pm_entries)[apm])
+                builder.append(time.hourOfDay)
+            }
+            builder.append(context.resources.getString(R.string.time_divider))
+            builder.append(String.format(Locale.getDefault(), FORMAT_TWO_NUMBER, time.minute))
             return builder.toString()
         }
     }
@@ -101,11 +98,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
     private var mOnDateChangeListener: OnDateChangeListener? = null
     private var mOnTimeChangeListener: OnTimeChangeListener? = null
 
-    private var mDataTime: DateTime? = null
-
-    private var mDateStr: String? = null
-    private var mTimeStr: String? = null
-
+    private val dateTime: DateTime? get() = dateTimePickerView?.value
     private val date: Date? get() = datePickerView?.value
     private val time: Time? get() = timePickerView?.value
 
@@ -122,39 +115,38 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
 
     private val mDateChangeListener = object : DatePickerView.OnDateChangedListener {
         override fun onDateChanged(date: Date) {
-            val time = time
             if (mIsAutoUpdateTitle) {
-                updateTitle(date, time)
+                updateTitle(date)
             }
             mOnDateChangeListener?.onDateChanged(this@DateTimePickerDialog, date)
-            if (time != null) {
-                mOnDateTimeChangeListener?.onDateTimeChanged(this@DateTimePickerDialog, DateTime.from(date, time))
-            }
         }
     }
 
     private val mTimeChangeListener = object : TimePickerView.OnTimeChangedListener {
         override fun onTimeChanged(time: Time) {
-            val date = date
             if (mIsAutoUpdateTitle) {
-                updateTitle(date, time)
+                updateTitle(time, timePickerView?.is24HourFormat() ?: false)
             }
             mOnTimeChangeListener?.onTimeChanged(this@DateTimePickerDialog, time)
-            if (date != null) {
-                mOnDateTimeChangeListener?.onDateTimeChanged(this@DateTimePickerDialog, DateTime.from(date, time))
-            }
         }
     }
 
-    private fun updateTitle(date: Date?, time: Time?) {
-        val title = getTitle(mContext, date, time)
+    private fun updateTitle(date: Date?) {
+        val title = getDateTitle(mContext, date)
+        if (title.isNotBlank()) {
+            dialog.setTitle(title)
+        }
+    }
+
+    private fun updateTitle(time: Time?, is24HourFormat: Boolean) {
+        val title = getTimeTitle(mContext, time, is24HourFormat)
         if (title.isNotBlank()) {
             dialog.setTitle(title)
         }
     }
 
     private fun updateTitle(dateTime: DateTime?) {
-        val title = getTitle(mContext, dateTime)
+        val title = getDateTimeTitle(mContext, dateTime)
         if (title.isNotBlank()) {
             dialog.setTitle(title)
         }
@@ -507,7 +499,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             if (!mIsWithViewDate && mIsWithViewTime) { // 只设置时间
                 fixCalendarTime()
                 title = if (mIsAutoUpdateTitle) {
-                    getTitle(mContext, null, Time.from(mCalendar).apply { is24HourFormat = mIs24HourFormat })
+                    getTimeTitle(mContext, Time.from(mCalendar), mIs24HourFormat)
                 } else {
                     mContext.getString(R.string.picker_select_time)
                 }
@@ -523,7 +515,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
                 timePickerView.setupWithCalendar(mCalendar)
             } else if (mIsWithViewDate && mIsWithViewTime) { // 日期时间都设置
                 title = if (mIsAutoUpdateTitle) {
-                    getTitle(mContext, DateTime.from(mCalendar))
+                    getDateTimeTitle(mContext, DateTime.from(mCalendar))
                 } else {
                     mContext.getString(R.string.picker_select_date_time)
                 }
@@ -535,7 +527,7 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
             } else { // 其他情况只设置日期，默认
                 fixCalendarDate()
                 title = if (mIsAutoUpdateTitle) {
-                    getTitle(mContext, Date.from(mCalendar), null)
+                    getDateTitle(mContext, Date.from(mCalendar))
                 } else {
                     mContext.getString(R.string.picker_select_date)
                 }
@@ -677,14 +669,21 @@ class DateTimePickerDialog private constructor(private val mContext: Context,
 
             override fun onClick(dialog: DialogInterface, which: Int) {
                 mWrappedListener?.onClick(dialog, which)
+                val dateTime = mPickerDialog?.dateTime
                 val date = mPickerDialog?.date
                 val time = mPickerDialog?.time
-                if (date != null && time != null) {
-                    actionListener.onAction(dialog, which, DateTime.from(date, time))
-                } else if (date != null) {
-                    actionListener.onAction(dialog, which, date)
-                } else if (time != null) {
-                    actionListener.onAction(dialog, which, time)
+                when {
+                    dateTime != null -> {
+                        actionListener.onAction(dialog, which, dateTime.date)
+                        actionListener.onAction(dialog, which, dateTime.time)
+                        actionListener.onAction(dialog, which, dateTime)
+                    }
+                    date != null -> {
+                        actionListener.onAction(dialog, which, date)
+                    }
+                    time != null -> {
+                        actionListener.onAction(dialog, which, time)
+                    }
                 }
             }
         }

@@ -12,7 +12,6 @@ import com.liabit.picker.datetime.DateTimePickerDialog
 import com.liabit.picker.datetime.Time
 import kotlinx.android.synthetic.main.activity_picker_test.*
 import java.text.SimpleDateFormat
-import java.util.*
 
 @SuppressLint("SimpleDateFormat")
 class TestPickerActivity : AppCompatActivity() {

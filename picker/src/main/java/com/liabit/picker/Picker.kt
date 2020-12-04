@@ -11,6 +11,7 @@ import java.util.*
  * Author:         songtao
  * CreateDate:     2020/9/18 18:31
  */
+@Suppress("unused")
 object Picker {
     @JvmStatic
     fun pickTime(context: Context, listener: ((hourOfDay: Int, minute: Int) -> Unit)? = null) {

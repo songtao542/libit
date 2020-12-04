@@ -347,15 +347,19 @@ class DatePickerView : LinearLayout, NumberPickerView.OnValueChangeListener {
             if (day < mDayStart) {
                 updatedDay = mDayStart
             }
-            val newDayStop = getDaysInMonth(year, month)
-            setupDisplayedValues(mDayPickerView, updatedDay, mDayStart, newDayStop, mDisplayStartDays, anim = false)
+            val dayStop = getDaysInMonth(year, month)
+            setupDisplayedValues(mDayPickerView, updatedDay, mDayStart, dayStop, mDisplayStartDays, anim = false)
         } else if (year == mYearStop && month == mMonthStop + 1) {
             if (day > mDayStop) {
                 updatedDay = mDayStop
             }
             setupDisplayedValues(mDayPickerView, updatedDay, DAY_START, mDayStop, mDisplayEndDays, anim = false)
         } else {
-            setupDisplayedValues(mDayPickerView, updatedDay, DAY_START, DAY_STOP, mDisplayDays, anim = false)
+            val dayStop = getDaysInMonth(year, month)
+            if (updatedDay > dayStop) {
+                updatedDay = dayStop
+            }
+            setupDisplayedValues(mDayPickerView, updatedDay, DAY_START, dayStop, mDisplayDays, anim = false)
         }
         mCalendar[Calendar.DAY_OF_MONTH] = updatedDay
     }

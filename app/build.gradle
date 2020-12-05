@@ -42,15 +42,15 @@ dependencies {
     implementation project(':gesture')
     implementation project(':shimmer')
     implementation project(':picker')
-    implementation project(':filter_layout')
+    implementation project(':filterlayout')
     implementation project(':addsub')
     implementation project(':popup')
-    implementation project(':smartrecyclerview')
+    implementation project(':recyclerview')
     implementation project(':tablayout')
     implementation project(':ext')
     implementation project(':tagview')
     implementation project(':viewbinding')
-    implementation project(':map_location_picker')
+    implementation project(':location_picker')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.2.0'

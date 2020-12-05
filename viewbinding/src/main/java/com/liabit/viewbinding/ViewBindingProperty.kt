@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.annotation.MainThread
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
@@ -149,14 +151,31 @@ class ViewBindingProperty<VB : ViewBinding>(private val viewProvider: (() -> Vie
      * Create new [ViewBinding] instance
      */
     private fun bind(view: View): VB {
-        return bindMethod(null, view) as VB
+        var vb: VB? = null
+        if (viewBindingClass.isAssignableFrom(ViewDataBinding::class.java)) {
+            vb = DataBindingUtil.bind(view)
+        }
+        if (vb == null) {
+            vb = bindMethod(null, view) as VB
+        }
+        return vb
     }
 
     /**
      * Create new [ViewBinding] instance
      */
-    private fun inflate(layoutInflater: LayoutInflater): VB {
-        return inflateMethod(null, layoutInflater) as VB
+    private fun inflate(inflater: LayoutInflater): VB {
+        var vb: VB? = null
+        if (viewBindingClass.isAssignableFrom(ViewDataBinding::class.java)) {
+            val layoutId = getLayoutResource(inflater.context, viewBindingClass)
+            if (layoutId != 0) {
+                vb = DataBindingUtil.inflate(inflater, layoutId, null, false)
+            }
+        }
+        if (vb == null) {
+            vb = inflateMethod(null, inflater) as VB
+        }
+        return vb
     }
 
     /**

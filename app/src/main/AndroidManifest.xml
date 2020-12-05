@@ -9,6 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".viewbinding.TestBindingActivity"></activity>
+        <activity android:name=".viewbinding.TestDataBindingActivity" />
         <activity
             android:name=".TestMapLocationActivity"
             android:label="MapLocation"
@@ -72,7 +74,7 @@
             android:name=".gesturetest.TestSwipeActivity"
             android:label="TestSwipe" />
         <activity
-            android:name=".viewbinding.TestViewBinding"
+            android:name=".viewbinding.TestViewBindingActivity"
             android:label="ViewBinding" />
         <activity
             android:name=".TestFragmentVisibleActivity"

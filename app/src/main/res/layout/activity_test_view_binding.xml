@@ -4,19 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".viewbinding.TestViewBinding">
+    tools:context=".viewbinding.TestViewBindingActivity">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:minHeight="40dp" />
+        android:minHeight="40dp"
+        android:padding="8dp" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="120dp" />
+        android:layout_height="120dp"
+        android:scaleType="centerCrop" />
 
     <FrameLayout
         android:id="@+id/fragmentContainer"

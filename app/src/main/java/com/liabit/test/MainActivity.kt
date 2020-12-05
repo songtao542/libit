@@ -10,7 +10,7 @@ import com.liabit.test.gesturetest.TestDragActivity
 import com.liabit.test.gesturetest.TestSwipeActivity
 import com.liabit.test.tablayouttest.TestTabLayoutActivity
 import com.liabit.test.tagviewtest.TestTagViewActivity
-import com.liabit.test.viewbinding.TestViewBinding
+import com.liabit.test.viewbinding.TestBindingActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.viewBinding -> {
-                startActivity(Intent(this, TestViewBinding::class.java))
+                startActivity(Intent(this, TestBindingActivity::class.java))
             }
 
             R.id.mapLocation -> {

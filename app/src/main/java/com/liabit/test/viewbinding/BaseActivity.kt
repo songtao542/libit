@@ -13,8 +13,8 @@ open class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("TTTT", "xxxxxxxxxxx")
-        findViewBindingClass<VB>(this.javaClass)
+        val viewBindingClass = findViewBindingClass<VB>(this.javaClass)
+        Log.d("TTTT", "viewBindingClass: $viewBindingClass")
     }
 
 }

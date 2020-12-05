@@ -26,6 +26,10 @@ inline fun <reified VB : ViewBinding> inflate(): ReadOnlyProperty<Any, VB> {
     return ViewBindingProperty(null, VB::class.java)
 }
 
+fun <VB : ViewBinding> inflate(clazz: Class<*>): ReadOnlyProperty<Any, VB> {
+    return ViewBindingProperty(null, findViewBindingClass(clazz))
+}
+
 inline fun <reified VB : ViewBinding> bind(view: View): ReadOnlyProperty<Any, VB> {
     return ViewBindingProperty({ view }, VB::class.java)
 }
@@ -35,6 +39,10 @@ inline fun <reified VB : ViewBinding> bind(view: View): ReadOnlyProperty<Any, VB
  */
 inline fun <reified VB : ViewBinding> Fragment.bind(): ReadOnlyProperty<Any, VB> {
     return ViewBindingProperty(this::getView, VB::class.java)
+}
+
+fun <VB : ViewBinding> Fragment.bind(clazz: Class<*>): ReadOnlyProperty<Any, VB> {
+    return ViewBindingProperty(this::getView, findViewBindingClass(clazz))
 }
 
 /**

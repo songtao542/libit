@@ -1,27 +1,25 @@
-package com.liabit.test
+package com.liabit.test.viewbinding
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.liabit.test.R
 import com.liabit.test.databinding.ActivityViewbindingTestBinding
 import com.liabit.test.databinding.FragmentViewbindingTestBinding
 import com.liabit.test.databinding.RecyclerviewItemViewbindingTestBinding
 import com.liabit.viewbinding.bind
-import com.liabit.viewbinding.inflate
 import kotlin.random.Random
 
 /**
  * Author:         songtao
  * CreateDate:     2020/12/1 15:23
  */
-class TestViewBinding : AppCompatActivity() {
+class TestViewBinding : BaseActivity<ActivityViewbindingTestBinding>() {
 
-    private val binding by inflate<ActivityViewbindingTestBinding>()
+    //private val binding by inflate<ActivityViewbindingTestBinding>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +31,14 @@ class TestViewBinding : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentContainer, TestFragment())
                 .commitAllowingStateLoss()
+
+
     }
 
 
-    class TestFragment : Fragment() {
+    class TestFragment : BaseFragment<FragmentViewbindingTestBinding>() {
 
-        private val binding by bind<FragmentViewbindingTestBinding>()
+        //private val binding by bind<FragmentViewbindingTestBinding>()
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
             return inflater.inflate(R.layout.fragment_viewbinding_test, container, false)

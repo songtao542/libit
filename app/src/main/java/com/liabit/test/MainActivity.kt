@@ -10,6 +10,7 @@ import com.liabit.test.gesturetest.TestDragActivity
 import com.liabit.test.gesturetest.TestSwipeActivity
 import com.liabit.test.tablayouttest.TestTabLayoutActivity
 import com.liabit.test.tagviewtest.TestTagViewActivity
+import com.liabit.test.viewbinding.TestViewBinding
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -72,7 +72,7 @@
             android:name=".gesturetest.TestSwipeActivity"
             android:label="TestSwipe" />
         <activity
-            android:name=".TestViewBinding"
+            android:name=".viewbinding.TestViewBinding"
             android:label="ViewBinding" />
         <activity
             android:name=".TestFragmentVisibleActivity"

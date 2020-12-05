@@ -82,7 +82,6 @@ inline fun <reified VB : ViewBinding> bind(viewBindingClass: Class<VB>, view: Vi
     return vb
 }
 
-
 @Suppress("UNCHECKED_CAST")
 fun <VB : ViewBinding> findViewBindingClass(clazz: Class<*>): Class<VB> {
     val types: Array<Type>? = (clazz.genericSuperclass as? ParameterizedType)?.actualTypeArguments
@@ -96,6 +95,3 @@ fun <VB : ViewBinding> findViewBindingClass(clazz: Class<*>): Class<VB> {
     }
     throw IllegalStateException("Not found Generic Type")
 }
-
-
-

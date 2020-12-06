@@ -145,7 +145,9 @@ class SettingsProvider : ContentProvider() {
             try {
                 dump(pw)
             } catch (e: Exception) {
-                Log.d(TAG, "Exception:" + e.message)
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "Exception:" + e.message)
+                }
             }
         }
     }
@@ -170,7 +172,9 @@ class SettingsProvider : ContentProvider() {
     }
 
     private fun getAllSettings(): Cursor {
-        Log.d(TAG, "getAllSettings()")
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "getAllSettings()")
+        }
         synchronized(mLock) {
             // Get the settings.
             val settingsState = mSettingsRegistry.settingsLocked
@@ -191,22 +195,30 @@ class SettingsProvider : ContentProvider() {
     }
 
     private fun getSetting(name: String): SettingsState.Setting? {
-        Log.v(TAG, "getSetting($name)")
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "getSetting($name)")
+        }
         synchronized(mLock) { return mSettingsRegistry.getSettingLocked(name) }
     }
 
     private fun updateSetting(name: String, value: String?): Boolean {
-        Log.v(TAG, "updateSetting($name, $value)")
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "updateSetting($name, $value)")
+        }
         return mutateSetting(name, value, MUTATION_OPERATION_UPDATE)
     }
 
     private fun insertSetting(name: String, value: String?): Boolean {
-        Log.v(TAG, "insertSetting($name, $value)")
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "insertSetting($name, $value)")
+        }
         return mutateSetting(name, value, MUTATION_OPERATION_INSERT)
     }
 
     private fun deleteSetting(name: String): Boolean {
-        Log.v(TAG, "deleteGlobalSettingLocked($name)")
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "deleteGlobalSettingLocked($name)")
+        }
         return mutateSetting(name, null, MUTATION_OPERATION_DELETE)
     }
 
@@ -246,7 +258,11 @@ class SettingsProvider : ContentProvider() {
         if (setting == null) {
             return NULL_SETTING
         }
-        Log.v(TAG, "packageValueForCallResult, name = " + setting.name + ", value : " + setting.value)
+        if (BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "packageValueForCallResult, name = " + setting.name + ", value : " + setting.value)
+            }
+        }
         return Bundle(1).apply { putString(VALUE, setting.value) }
     }
 
@@ -360,7 +376,9 @@ class SettingsProvider : ContentProvider() {
                         @Suppress("DEPRECATION")
                         requireContext().contentResolver.notifyChange(uri, null, false)
                     }
-                    Log.v(TAG, "Notifying for $userId: $uri")
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "Notifying for $userId: $uri")
+                    }
                 }
             }
         }
@@ -416,7 +434,9 @@ class SettingsProvider : ContentProvider() {
         private fun notifyForSettingsChange(name: String) {
             // Now send the notification through the content framework.
             val uri = getNotificationUriFor(name)
-            Log.d(TAG, "notifyForSettingsChange uri=$uri")
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "notifyForSettingsChange uri=$uri")
+            }
             mHandler.obtainMessage(MSG_NOTIFY_URI_CHANGED, uri).sendToTarget()
         }
 
@@ -444,7 +464,9 @@ class SettingsProvider : ContentProvider() {
 
         @Suppress("SameParameterValue")
         private fun onUpgradeLocked(oldVersion: Int, newVersion: Int): Int {
-            Log.d(TAG, "oldVersion: $oldVersion  newVersion: $newVersion")
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "oldVersion: $oldVersion  newVersion: $newVersion")
+            }
             return oldVersion
         }
     }

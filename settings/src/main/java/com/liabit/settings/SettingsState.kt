@@ -111,7 +111,9 @@ internal class SettingsState(private val mLock: Any, private val mStatePersistFi
 
     // The settings provider must hold its lock when calling here.
     fun getSettingLocked(name: String): Setting? {
-        Log.i(TAG, "getSettingLocked, name = $name")
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "getSettingLocked, name = $name")
+        }
         return if (TextUtils.isEmpty(name)) null else mSettings[name]
     }
 
@@ -122,7 +124,9 @@ internal class SettingsState(private val mLock: Any, private val mStatePersistFi
 
     // The settings provider must hold its lock when calling here.
     fun insertSettingLocked(name: String, value: String): Boolean {
-        Log.i(TAG, "insertSettingLocked, name = $name, value = $value")
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "insertSettingLocked, name = $name, value = $value")
+        }
         if (TextUtils.isEmpty(name)) {
             return false
         }
@@ -149,7 +153,9 @@ internal class SettingsState(private val mLock: Any, private val mStatePersistFi
 
     // The settings provider must hold its lock when calling here.
     fun deleteSettingLocked(name: String): Boolean {
-        Log.i(TAG, "deleteSettingLocked, name = $name")
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "deleteSettingLocked, name = $name")
+        }
         if (TextUtils.isEmpty(name) || !hasSettingLocked(name)) {
             return false
         }
@@ -180,7 +186,9 @@ internal class SettingsState(private val mLock: Any, private val mStatePersistFi
         check(mBytes <= MAX_BYTES_LIMITED) {
             ("You are adding too many system settings. You should stop using system settings for app specific data")
         }
-        Log.i(TAG, "Settings size: $mBytes bytes.")
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Settings size: $mBytes bytes.")
+        }
     }
 
     private fun hasSettingLocked(name: String): Boolean {
@@ -221,7 +229,9 @@ internal class SettingsState(private val mLock: Any, private val mStatePersistFi
     }
 
     private fun doWriteState() {
-        Log.i(TAG, "[PERSIST START]")
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "[PERSIST START]")
+        }
         val destination = AtomicFile(mStatePersistFile)
         var version: Int
         var settings: ArrayMap<String, Setting>
@@ -244,12 +254,16 @@ internal class SettingsState(private val mLock: Any, private val mStatePersistFi
             for (i in 0 until settingCount) {
                 val setting = settings.valueAt(i)
                 writeSingleSetting(mVersion, serializer, setting.name, setting.value)
-                Log.i(TAG, "[PERSISTED]" + setting.name + "=" + setting.value)
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "[PERSISTED]" + setting.name + "=" + setting.value)
+                }
             }
             serializer.endTag(null, TAG_SETTINGS)
             serializer.endDocument()
             destination.finishWrite(out)
-            Log.i(TAG, "[PERSIST END]")
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "[PERSIST END]")
+            }
         } catch (t: Throwable) {
             Log.wtf(TAG, "Failed to write settings, restoring backup", t)
             destination.failWrite(out)
@@ -274,7 +288,9 @@ internal class SettingsState(private val mLock: Any, private val mStatePersistFi
         val inputStream: FileInputStream = try {
             AtomicFile(mStatePersistFile).openRead()
         } catch (e: FileNotFoundException) {
-            Log.i(TAG, "No settings state")
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "No settings state")
+            }
             return
         }
         try {
@@ -315,7 +331,9 @@ internal class SettingsState(private val mLock: Any, private val mStatePersistFi
                     val name = parser.getAttributeValue(null, ATTR_NAME)
                     val value = getValueAttribute(parser)
                     mSettings[name] = Setting(name, value)
-                    Log.i(TAG, "[RESTORED] $name=$value")
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "[RESTORED] $name=$value")
+                    }
                 }
             }
             type = parser.next()
@@ -342,7 +360,9 @@ internal class SettingsState(private val mLock: Any, private val mStatePersistFi
             name: String,
             value: String?
     ) {
-        Log.i(TAG, "writeSingleSetting, version = $version, name = $name, value = $value")
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "writeSingleSetting, version = $version, name = $name, value = $value")
+        }
         if (isBinary(name)) {
             // This shouldn't happen.
             return

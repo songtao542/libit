@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.liabit.test.R
 import com.liabit.test.databinding.FragmentTestDataBindingBinding
 
-class TestDataBindingFragment : BaseFragment<FragmentTestDataBindingBinding>() {
+class TestDataBindingFragment : BaseFragment<AnViewModel, FragmentTestDataBindingBinding>() {
 
     override fun getLayoutResource(): Int {
         return R.layout.fragment_test_data_binding
@@ -20,6 +20,9 @@ class TestDataBindingFragment : BaseFragment<FragmentTestDataBindingBinding>() {
 
         binding.textView.text = "Fragment: 这是通过 DataBinding 设置的文字"
         binding.imageView.setImageResource(R.mipmap.test3)
+
+        binding.textView.setOnClickListener { viewModel.test() }
+        binding.imageView.setOnClickListener { viewModel.test() }
 
         binding.testData = "Fragment: 这是通过 DataBinding 变量 设置的文字"
 

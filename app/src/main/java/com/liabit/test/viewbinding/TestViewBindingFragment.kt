@@ -13,7 +13,7 @@ import com.liabit.test.databinding.RecyclerviewTestViewBindingItemBinding
 import com.liabit.viewbinding.bind
 import kotlin.random.Random
 
-class TestViewBindingFragment : BaseFragment<FragmentTestViewBindingBinding>() {
+class TestViewBindingFragment : BaseFragment<AnViewModel, FragmentTestViewBindingBinding>() {
 
     override fun getLayoutResource(): Int {
         return R.layout.fragment_test_view_binding
@@ -25,6 +25,9 @@ class TestViewBindingFragment : BaseFragment<FragmentTestViewBindingBinding>() {
 
         binding.textView.text = "Fragment: 这是通过 ViewBinding 设置的文字"
         binding.imageView.setImageResource(R.mipmap.test4)
+
+        binding.textView.setOnClickListener { viewModel.test() }
+        binding.imageView.setOnClickListener { viewModel.test() }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = TestAdapter()

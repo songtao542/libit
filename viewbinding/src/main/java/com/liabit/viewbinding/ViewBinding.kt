@@ -1,7 +1,6 @@
 package com.liabit.viewbinding
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +40,7 @@ inline fun <reified VB : ViewBinding> inflate(viewBindingClass: Class<VB>,
                                               parent: ViewGroup?,
                                               attachToParent: Boolean): VB {
     var vb: VB? = null
-    if (viewBindingClass.isAssignableFrom(ViewDataBinding::class.java)) {
+    if (ViewDataBinding::class.java.isAssignableFrom(viewBindingClass)) {
         val layoutId = getLayoutResource(inflater.context, viewBindingClass)
         if (layoutId != 0) {
             vb = DataBindingUtil.inflate(inflater, layoutId, parent, attachToParent)
@@ -60,7 +59,7 @@ inline fun <reified VB : ViewBinding> inflate(viewBindingClass: Class<VB>,
                                               parent: ViewGroup?,
                                               attachToParent: Boolean): VB {
     var vb: VB? = null
-    if (viewBindingClass.isAssignableFrom(ViewDataBinding::class.java)) {
+    if (ViewDataBinding::class.java.isAssignableFrom(viewBindingClass)) {
         vb = DataBindingUtil.inflate(inflater, layoutId, parent, attachToParent)
     }
     if (vb == null) {
@@ -72,7 +71,7 @@ inline fun <reified VB : ViewBinding> inflate(viewBindingClass: Class<VB>,
 
 inline fun <reified VB : ViewBinding> bind(viewBindingClass: Class<VB>, view: View): VB {
     var vb: VB? = null
-    if (viewBindingClass.isAssignableFrom(ViewDataBinding::class.java)) {
+    if (ViewDataBinding::class.java.isAssignableFrom(viewBindingClass)) {
         vb = DataBindingUtil.bind(view)
     }
     if (vb == null) {
@@ -82,8 +81,19 @@ inline fun <reified VB : ViewBinding> bind(viewBindingClass: Class<VB>, view: Vi
     return vb
 }
 
-@Suppress("UNCHECKED_CAST")
 fun <VB : ViewBinding> findViewBindingClass(clazz: Class<*>): Class<VB> {
+    val viewBindingClass = findViewBindingClassOrNull<VB>(clazz)
+    if (viewBindingClass != null) {
+        return viewBindingClass
+    }
+    throw IllegalStateException("Not found Generic Type of ViewBinding in $clazz")
+}
+
+/**
+ * 在泛型中查找 ViewBinding 的类型
+ */
+@Suppress("UNCHECKED_CAST")
+fun <VB : ViewBinding> findViewBindingClassOrNull(clazz: Class<*>): Class<VB>? {
     val types: Array<Type>? = (clazz.genericSuperclass as? ParameterizedType)?.actualTypeArguments
     if (!types.isNullOrEmpty()) {
         for (type in types) {
@@ -93,5 +103,5 @@ fun <VB : ViewBinding> findViewBindingClass(clazz: Class<*>): Class<VB> {
             }
         }
     }
-    throw IllegalStateException("Not found Generic Type")
+    return null
 }

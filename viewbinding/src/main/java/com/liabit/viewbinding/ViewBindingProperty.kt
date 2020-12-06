@@ -28,10 +28,6 @@ inline fun <reified VB : ViewBinding> inflate(): ReadOnlyProperty<Any, VB> {
     return ViewBindingProperty(null, VB::class.java)
 }
 
-fun <VB : ViewBinding> inflate(clazz: Class<*>): ReadOnlyProperty<Any, VB> {
-    return ViewBindingProperty(null, findViewBindingClass(clazz))
-}
-
 inline fun <reified VB : ViewBinding> bind(view: View): ReadOnlyProperty<Any, VB> {
     return ViewBindingProperty({ view }, VB::class.java)
 }
@@ -43,10 +39,6 @@ inline fun <reified VB : ViewBinding> Fragment.bind(): ReadOnlyProperty<Any, VB>
     return ViewBindingProperty(this::getView, VB::class.java)
 }
 
-fun <VB : ViewBinding> Fragment.bind(clazz: Class<*>): ReadOnlyProperty<Any, VB> {
-    return ViewBindingProperty(this::getView, findViewBindingClass(clazz))
-}
-
 /**
  * 需要保证 Fragment 的 view 已经创建
  */
@@ -56,6 +48,36 @@ inline fun <reified VB : ViewBinding> Fragment.bind(viewId: Int): ReadOnlyProper
 
 inline fun <reified VB : ViewBinding> RecyclerView.ViewHolder.bind(): ReadOnlyProperty<Any, VB> {
     return ViewBindingProperty({ itemView }, VB::class.java)
+}
+
+/**********以下非 inline 方法通过 泛型 查找来生成具体的 VB 对象***********/
+
+/**
+ * 通过查找 [clazz] 上的泛型来生成具体的 VB 对象
+ */
+fun <VB : ViewBinding> genericBinding(clazz: Class<*>): ReadOnlyProperty<Any, VB> {
+    return ViewBindingProperty(null, findViewBindingClass(clazz))
+}
+
+/**
+ * 通过查找 [Activity] 上的泛型来生成具体的 VB 对象
+ */
+fun <VB : ViewBinding> ComponentActivity.genericBinding(): ReadOnlyProperty<Any, VB> {
+    return genericBinding(this.javaClass)
+}
+
+/**
+ * 通过查找 [clazz] 上的泛型来生成具体的 VB 对象
+ */
+fun <VB : ViewBinding> Fragment.genericBinding(clazz: Class<*>): ReadOnlyProperty<Any, VB> {
+    return ViewBindingProperty(this::getView, findViewBindingClass(clazz))
+}
+
+/**
+ * 通过查找 [Fragment] 上的泛型来生成具体的 VB 对象
+ */
+fun <VB : ViewBinding> Fragment.genericBinding(): ReadOnlyProperty<Any, VB> {
+    return genericBinding(this.javaClass)
 }
 
 @Suppress("UNCHECKED_CAST")

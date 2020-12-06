@@ -6,7 +6,7 @@ import android.util.Log
 import com.liabit.test.R
 import com.liabit.test.databinding.ActivityTestDataBindingBinding
 
-class TestDataBindingActivity : BaseActivity<ActivityTestDataBindingBinding>() {
+class TestDataBindingActivity : BaseActivity<AnViewModel, ActivityTestDataBindingBinding>() {
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +17,9 @@ class TestDataBindingActivity : BaseActivity<ActivityTestDataBindingBinding>() {
         binding.textView.text = "Activity: 这是通过 DataBinding 设置的文字"
         binding.testData = "Activity: 这是通过 DataBinding 变量 设置的文字"
         binding.imageView.setImageResource(R.mipmap.test5)
+
+        binding.textView.setOnClickListener { viewModel.test() }
+        binding.imageView.setOnClickListener { viewModel.test() }
 
         supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentContainer, TestDataBindingFragment())

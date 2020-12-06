@@ -131,6 +131,15 @@
             android:textAllCaps="false" />
 
         <Button
+            android:id="@+id/settings"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:onClick="onClick"
+            android:text="Settings Test"
+            android:textAllCaps="false" />
+
+        <Button
             android:id="@+id/otherTest"
             android:layout_width="280dp"
             android:layout_height="wrap_content"

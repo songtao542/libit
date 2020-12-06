@@ -1,3 +1,4 @@
+include ':settings'
 include ':viewbinding'
 include ':tagview'
 include ':recyclerview'

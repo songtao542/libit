@@ -73,6 +73,10 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, TestMapLocationActivity::class.java))
             }
 
+            R.id.settings -> {
+                startActivity(Intent(this, TestSettingsActivity::class.java))
+            }
+
             R.id.otherTest -> {
                 startActivity(Intent(this, TestFragmentVisibleActivity::class.java))
             }

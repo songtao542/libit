@@ -12,9 +12,7 @@ import androidx.annotation.MainThread
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import kotlin.properties.ReadOnlyProperty
@@ -61,8 +59,15 @@ fun <VB : ViewBinding> genericBinding(clazz: Class<*>): ReadOnlyProperty<Any, VB
 
 /**
  * 通过查找 [Activity] 上的泛型来生成具体的 VB 对象
+ * Returns a property delegate to access [ViewBinding],
+ *
+ * ```
+ * class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
+ *     val binding by genericBinding<VB>()
+ * }
+ * ```
  */
-fun <VB : ViewBinding> ComponentActivity.genericBinding(): ReadOnlyProperty<Any, VB> {
+fun <VB : ViewBinding> Activity.genericBinding(): ReadOnlyProperty<Any, VB> {
     return genericBinding(this.javaClass)
 }
 
@@ -75,6 +80,13 @@ fun <VB : ViewBinding> Fragment.genericBinding(clazz: Class<*>): ReadOnlyPropert
 
 /**
  * 通过查找 [Fragment] 上的泛型来生成具体的 VB 对象
+ * Returns a property delegate to access [ViewBinding],
+ *
+ * ```
+ * class BaseFragment<VB : ViewBinding> : Fragment() {
+ *     val binding by genericBinding<VB>()
+ * }
+ * ```
  */
 fun <VB : ViewBinding> Fragment.genericBinding(): ReadOnlyProperty<Any, VB> {
     return genericBinding(this.javaClass)

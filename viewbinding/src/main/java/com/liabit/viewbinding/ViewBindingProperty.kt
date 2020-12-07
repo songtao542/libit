@@ -26,8 +26,12 @@ inline fun <reified VB : ViewBinding> inflate(): ReadOnlyProperty<Any, VB> {
     return ViewBindingProperty(null, VB::class.java)
 }
 
-inline fun <reified VB : ViewBinding> bind(view: View): ReadOnlyProperty<Any, VB> {
+/*inline fun <reified VB : ViewBinding> bind(view: View): ReadOnlyProperty<Any, VB> {
     return ViewBindingProperty({ view }, VB::class.java)
+}*/
+
+inline fun <reified VB : ViewBinding> bind(noinline viewProvider: () -> View): ReadOnlyProperty<Any, VB> {
+    return ViewBindingProperty(viewProvider, VB::class.java)
 }
 
 /**

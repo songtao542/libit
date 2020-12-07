@@ -6,7 +6,7 @@
 
         <provider
             android:name="com.liabit.settings.SettingsProvider"
-            android:authorities="com.liabit.settings"
+            android:authorities="${applicationId}.settings"
             android:enabled="true"
             android:exported="false"
             android:label="@string/settings" />

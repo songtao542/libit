@@ -31,7 +31,7 @@ class SettingsProvider : ContentProvider() {
         internal const val CALL_METHOD_GET = "method_get"
         internal const val CALL_METHOD_PUT = "method_put"
 
-        internal val CONTENT_URI: Uri = Uri.parse("content://com.liabit.settings/settings")
+        internal var CONTENT_URI: Uri = Uri.parse("content://com.liabit.settings/settings")
 
         private const val MUTATION_OPERATION_INSERT = 1
         private const val MUTATION_OPERATION_DELETE = 2
@@ -54,6 +54,7 @@ class SettingsProvider : ContentProvider() {
     private val mSettingsRegistry by lazy(mLock) { SettingsRegistry() }
 
     override fun onCreate(): Boolean {
+        CONTENT_URI = Uri.parse("content://${requireContext().packageName}.settings/settings")
         return true
     }
 

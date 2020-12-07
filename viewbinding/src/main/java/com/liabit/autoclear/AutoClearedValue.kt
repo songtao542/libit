@@ -31,6 +31,11 @@ inline fun <reified T> newInstance(valueClass: Class<T>): T {
 fun <T> autoCleared(value: T) = AutoClearedValue { value }
 
 /**
+ * Creates an [AutoClearedValue] associated with this LifecycleOwner.
+ */
+fun <T> autoCleared(valueProvider: () -> T) = AutoClearedValue(valueProvider)
+
+/**
  * A lazy property that gets cleaned up when the fragment is destroyed.
  *
  * Accessing this variable in a destroyed fragment will throw NPE.

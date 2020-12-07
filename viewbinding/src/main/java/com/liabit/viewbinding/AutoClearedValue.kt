@@ -53,12 +53,13 @@ class AutoClearedValue<T>(private var valueProvider: () -> T) : ReadWritePropert
                             Log.d("AutoClearedValue", "close error: ", e)
                         }
                     }
-                }
-                if (it is Closeable) {
-                    try {
-                        it.close()
-                    } catch (e: Throwable) {
-                        Log.d("AutoClearedValue", "close error: ", e)
+                } else {
+                    if (it is Closeable) {
+                        try {
+                            it.close()
+                        } catch (e: Throwable) {
+                            Log.d("AutoClearedValue", "close error: ", e)
+                        }
                     }
                 }
             }

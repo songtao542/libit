@@ -1,4 +1,4 @@
-package com.liabit.viewbinding
+package com.liabit.autoclear
 
 import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver

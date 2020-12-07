@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import com.liabit.test.R
 import com.liabit.test.databinding.ActivityTestDataBindingBinding
-import com.liabit.viewbinding.autoCleared
+import com.liabit.autoclear.autoCleared
 import java.util.*
 
 class TestDataBindingActivity : BaseActivity<AnViewModel, ActivityTestDataBindingBinding>() {

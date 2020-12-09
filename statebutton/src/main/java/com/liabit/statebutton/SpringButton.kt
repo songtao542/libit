@@ -139,6 +139,7 @@ class SpringButton : FrameLayout {
             }
             typedArray.recycle()
         }
+        super.setOnClickListener {}
     }
 
     override fun setOnClickListener(l: OnClickListener?) {
@@ -149,6 +150,15 @@ class SpringButton : FrameLayout {
     fun setOnPressListener(l: OnPressListener?) {
         super.setOnClickListener {}
         mOnPressListener = l
+    }
+
+    fun setOnPressListener(l: ((v: View) -> Unit)?) {
+        super.setOnClickListener {}
+        mOnPressListener = if (l == null) null else object : OnPressListener {
+            override fun onClick(view: View, isLongPressStart: Boolean) {
+                l.invoke(view)
+            }
+        }
     }
 
     override fun setOnLongClickListener(l: OnLongClickListener?) {
@@ -378,12 +388,10 @@ class SpringButton : FrameLayout {
                 0f, mLongProgress, false, mPaint)
     }
 
-
     interface OnLongPressListener {
         fun onLongClick(view: View)
-        fun onLongClickAbort(view: View)
+        fun onLongClickAbort(view: View) {}
     }
-
 
     interface OnPressListener {
         fun onClick(view: View, isLongPressStart: Boolean)

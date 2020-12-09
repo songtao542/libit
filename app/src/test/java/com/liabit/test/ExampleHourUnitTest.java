@@ -2,6 +2,8 @@ package com.liabit.test;
 
 import static org.junit.Assert.assertEquals;
 
+import android.content.Intent;
+
 import org.junit.Test;
 
 /**
@@ -38,6 +40,29 @@ public class ExampleHourUnitTest {
 
     private int getHour(int hour) {
         return hour >> 1;
+    }
+
+    private static int STATE_IDLE = 0x00000000;
+    private static int STATE_EXPANDING = 0x00000001;
+    private static int STATE_EXPANDED = 0x00000010;
+    private static int STATE_CLOSING = 0x00000100;
+    private static int STATE_CLOSED = 0x00001000;
+    private static int STATE_LONG_PRESSING = 0x00010000;
+    private static int STATE_LONG_PRESS_END = 0x00100000;
+    private static int STATE_LONG_PRESS_ABORT = 0x01000000;
+
+    private int mState = 0;
+
+    private boolean hasState(int state) {
+        return (mState & state) == state;
+    }
+
+    private void addState(int state) {
+        mState |= mState;
+    }
+
+    private void clearState(int state) {
+        mState &= ~state;
     }
 
 }

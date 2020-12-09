@@ -60,20 +60,20 @@ public abstract class StateButton extends FrameLayout {
         setClickable(true);
         mIconView = findViewById(R.id.iconView);
         if (attrs != null) {
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.state_button, 0, 0);
-            int icon = typedArray.getResourceId(R.styleable.state_button_icon, -1);
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.StateButton, 0, 0);
+            int icon = typedArray.getResourceId(R.styleable.StateButton_icon, -1);
             if (icon != -1) {
                 mIconView.setImageResource(icon);
             }
-            float iconWidth = typedArray.getDimension(R.styleable.state_button_iconWidth, -1.0f);
-            float iconHeight = typedArray.getDimension(R.styleable.state_button_iconHeight, -1.0f);
+            float iconWidth = typedArray.getDimension(R.styleable.StateButton_iconWidth, -1.0f);
+            float iconHeight = typedArray.getDimension(R.styleable.StateButton_iconHeight, -1.0f);
             if (iconWidth != -1.0f && iconHeight != -1.0f) {
                 ViewGroup.LayoutParams layoutParams = mIconView.getLayoutParams();
                 layoutParams.width = (int) iconWidth;
                 layoutParams.height = (int) iconHeight;
                 mIconView.setLayoutParams(layoutParams);
             }
-            mSupportLoading = typedArray.getBoolean(R.styleable.state_button_supportLoading, true);
+            mSupportLoading = typedArray.getBoolean(R.styleable.StateButton_supportLoading, true);
             typedArray.recycle();
         }
     }

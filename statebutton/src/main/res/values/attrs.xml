@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="state_button">
-        <attr name="icon" format="reference"/>
-        <attr name="iconWidth" format="dimension"/>
-        <attr name="iconHeight" format="dimension"/>
-        <attr name="supportLoading" format="boolean"/>
+    <attr name="icon" format="reference" />
+    <attr name="iconWidth" format="reference|dimension" />
+    <attr name="iconHeight" format="reference|dimension" />
+    <attr name="iconSize" format="reference|dimension" />
+
+    <declare-styleable name="StateButton">
+        <attr name="icon" />
+        <attr name="iconWidth" />
+        <attr name="iconHeight" />
+        <attr name="supportLoading" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="SpringButton">
+        <attr name="icon" />
+        <attr name="iconWidth" />
+        <attr name="iconHeight" />
+        <attr name="iconSize" />
+        <attr name="android:text" />
+        <attr name="android:textSize" />
+        <attr name="android:textColor" />
     </declare-styleable>
 
 </resources>

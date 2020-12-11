@@ -163,8 +163,6 @@ fun <VM : ViewModel> Fragment.createViewModelLazy(
         storeProducer: () -> ViewModelStore,
         factoryProducer: (() -> ViewModelProvider.Factory)? = null
 ): Lazy<VM> {
-    val factoryPromise = factoryProducer ?: {
-        defaultViewModelProviderFactory
-    }
+    val factoryPromise = factoryProducer ?: { defaultViewModelProviderFactory }
     return ViewModelLazy(viewModelClass, storeProducer, factoryPromise)
 }

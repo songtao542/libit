@@ -122,7 +122,6 @@ class ViewBindingProperty<VB : ViewBinding>(private val viewProvider: (() -> Vie
                 when (it) {
                     is Fragment -> {
                         it.lifecycle.removeObserver(this)
-                        it.viewLifecycleOwner.lifecycle.removeObserver(this)
                     }
                     is ComponentActivity -> {
                         it.lifecycle.removeObserver(this)
@@ -142,7 +141,7 @@ class ViewBindingProperty<VB : ViewBinding>(private val viewProvider: (() -> Vie
         this.thisRef = thisRef
 
         when (thisRef) {
-            is Fragment -> thisRef.viewLifecycleOwner.lifecycle
+            is Fragment -> thisRef.lifecycle
             is ComponentActivity -> thisRef.lifecycle
             is LifecycleOwner -> thisRef.lifecycle
             else -> null

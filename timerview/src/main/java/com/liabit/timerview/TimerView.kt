@@ -187,6 +187,14 @@ class TimerView : LinearLayout {
 
     fun start(millisInFuture: Long) {
         countDownTimer?.cancel()
+        val days = TimeUnit.MILLISECONDS.toDays(millisInFuture)
+        if (days > 0) {
+            dayLayout.visibility = View.VISIBLE
+            delimiterDayHour.visibility = View.VISIBLE
+        } else {
+            dayLayout.visibility = View.INVISIBLE
+            delimiterDayHour.visibility = View.INVISIBLE
+        }
         remainingTime = millisInFuture
         countDownTimer = object : CountDownTimer(millisInFuture, tickInterval.toLong()) {
             override fun onTick(millisUntilFinished: Long) {

@@ -17,7 +17,8 @@
         android:layout_height="wrap_content"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="invisible">
 
         <com.liabit.timerview.DigitView
             android:id="@+id/day1"
@@ -42,9 +43,10 @@
         android:gravity="center"
         android:includeFontPadding="false"
         android:paddingHorizontal="2dp"
-        android:text="@string/Days"
+        android:text="@string/days"
         android:textSize="10sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="invisible" />
 
     <LinearLayout
         android:id="@+id/hourLayout"

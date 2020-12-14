@@ -1,3 +1,4 @@
+include ':timerview'
 include ':settings'
 include ':viewbinding'
 include ':tagview'

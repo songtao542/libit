@@ -77,6 +77,10 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, TestSettingsActivity::class.java))
             }
 
+            R.id.timerView -> {
+                startActivity(Intent(this, TestTimerActivity::class.java))
+            }
+
             R.id.otherTest -> {
                 startActivity(Intent(this, TestFragmentVisibleActivity::class.java))
             }

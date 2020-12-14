@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="AlignedTextView">
+        <attr name="alignment" format="enum">
+            <enum name="top" value="0" />
+            <enum name="bottom" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="TimerView">
+        <attr name="resetSymbol" format="reference|string" />
+        <attr name="digitBackgroundColor" format="reference|color" />
+        <attr name="digitTextColor" format="reference|color" />
+        <attr name="digitTextSize" format="reference|dimension" />
+        <attr name="delimiterTextColor" format="reference|color" />
+        <attr name="delimiterTextSize" format="reference|color" />
+        <attr name="digitPadding" format="reference|dimension" />
+        <attr name="delimiterPadding" format="reference|dimension" />
+        <attr name="animationDuration" format="reference|integer" />
+        <attr name="tickInterval" format="reference|integer" />
+        <attr name="corners" format="reference|dimension" />
+        <attr name="android:fontFamily" />
+    </declare-styleable>
+
+
+</resources>

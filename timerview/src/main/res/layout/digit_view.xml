@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="vertical"
+    tools:ignore="HardcodedText"
+    tools:parentTag="android.widget.RelativeLayout">
+
+    <com.liabit.timerview.AlignedTextView
+        android:id="@+id/backTopText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:color/white"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="0dp"
+        android:text="8"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        android:visibility="invisible"
+        app:alignment="bottom" />
+
+    <com.liabit.timerview.AlignedTextView
+        android:id="@+id/backBottomText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/backTopText"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:color/white"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="0dp"
+        android:text="8"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        android:visibility="invisible"
+        app:alignment="top" />
+
+    <com.liabit.timerview.AlignedTextView
+        android:id="@+id/frontTopText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:color/white"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="0dp"
+        android:text="8"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        app:alignment="bottom" />
+
+    <com.liabit.timerview.AlignedTextView
+        android:id="@+id/frontBottomText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/frontTopText"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:color/white"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="0dp"
+        android:text="8"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        android:visibility="invisible"
+        app:alignment="top" />
+
+
+</merge>

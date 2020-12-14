@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:gravity="center"
+    tools:parentTag="LinearLayout"
+    android:orientation="horizontal"
+    tools:ignore="HardcodedText,SmallSp">
+
+    <LinearLayout
+        android:id="@+id/dayLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal">
+
+        <com.liabit.timerview.DigitView
+            android:id="@+id/day1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false" />
+
+        <com.liabit.timerview.DigitView
+            android:id="@+id/day2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/delimiterDayHour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingHorizontal="2dp"
+        android:text="@string/Days"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/hourLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal">
+
+        <com.liabit.timerview.DigitView
+            android:id="@+id/hour1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false" />
+
+        <com.liabit.timerview.DigitView
+            android:id="@+id/hour2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/delimiterHourMinute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minWidth="10dp"
+        android:text=":"
+        android:textStyle="bold"
+        android:translationY="-4px" />
+
+    <LinearLayout
+        android:id="@+id/minuteLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal">
+
+        <com.liabit.timerview.DigitView
+            android:id="@+id/minute1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false" />
+
+        <com.liabit.timerview.DigitView
+            android:id="@+id/minute2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/delimiterMinuteSecond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minWidth="10dp"
+        android:text=":"
+        android:textStyle="bold"
+        android:translationY="-4px" />
+
+    <LinearLayout
+        android:id="@+id/secondLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal">
+
+        <com.liabit.timerview.DigitView
+            android:id="@+id/second1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false" />
+
+        <com.liabit.timerview.DigitView
+            android:id="@+id/second2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false" />
+
+    </LinearLayout>
+</merge>

@@ -140,6 +140,15 @@
             android:textAllCaps="false" />
 
         <Button
+            android:id="@+id/timerView"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:onClick="onClick"
+            android:text="TimerView Test"
+            android:textAllCaps="false" />
+
+        <Button
             android:id="@+id/otherTest"
             android:layout_width="280dp"
             android:layout_height="wrap_content"

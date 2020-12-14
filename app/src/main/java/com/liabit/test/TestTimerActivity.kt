@@ -15,7 +15,7 @@ class TestTimerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_timer)
 
-        /*ResourcesCompat.getFont(this, R.font.dinalternate)?.let {
+        /*ResourcesCompat.getFont(this, R.font.yournamed7generalhalf)?.let {
             timerView.setTypeface(it)
         }*/
         timerView.start(200000)

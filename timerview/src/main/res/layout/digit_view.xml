@@ -11,62 +11,69 @@
     tools:ignore="HardcodedText"
     tools:parentTag="android.widget.RelativeLayout">
 
-    <com.liabit.timerview.AlignedTextView
+    <com.liabit.timerview.HalfTextView
         android:id="@+id/backTopText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
-        android:background="@android:color/white"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/digi"
+        android:gravity="center"
         android:includeFontPadding="false"
         android:lineSpacingExtra="0dp"
         android:text="8"
         android:textColor="@android:color/black"
         android:textSize="25sp"
-        android:visibility="invisible"
-        app:alignment="bottom" />
+        app:showPart="top" />
 
-    <com.liabit.timerview.AlignedTextView
+    <com.liabit.timerview.HalfTextView
         android:id="@+id/backBottomText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/backTopText"
+        android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
-        android:background="@android:color/white"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/digi"
+        android:gravity="center"
         android:includeFontPadding="false"
         android:lineSpacingExtra="0dp"
         android:text="8"
         android:textColor="@android:color/black"
         android:textSize="25sp"
-        android:visibility="invisible"
-        app:alignment="top" />
+        app:showPart="bottom" />
 
-    <com.liabit.timerview.AlignedTextView
+    <com.liabit.timerview.HalfTextView
         android:id="@+id/frontTopText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
-        android:background="@android:color/white"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/digi"
+        android:gravity="center"
         android:includeFontPadding="false"
         android:lineSpacingExtra="0dp"
         android:text="8"
         android:textColor="@android:color/black"
         android:textSize="25sp"
-        app:alignment="bottom" />
+        app:showPart="top" />
 
-    <com.liabit.timerview.AlignedTextView
+    <com.liabit.timerview.HalfTextView
         android:id="@+id/frontBottomText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/frontTopText"
+        android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
-        android:background="@android:color/white"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/digi"
+        android:gravity="center"
         android:includeFontPadding="false"
         android:lineSpacingExtra="0dp"
         android:text="8"
         android:textColor="@android:color/black"
         android:textSize="25sp"
-        android:visibility="invisible"
-        app:alignment="top" />
+        app:showPart="bottom" />
 
 
 </merge>

@@ -3,11 +3,13 @@ package com.liabit.timerview
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Outline
 import android.graphics.Typeface
 import android.os.CountDownTimer
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewOutlineProvider
 import android.widget.LinearLayout
 import android.widget.TextView
 import java.util.concurrent.TimeUnit
@@ -34,7 +36,7 @@ class TimerView : LinearLayout {
     private var countDownTimer: CountDownTimer? = null
     private var timeEndListener: OnTimeEndListener? = null
     private var tickInterval = 1000
-    private var remainingTime: Long = 0
+    private var remainingTime = 0L
     private var resetSymbol = "8"
 
     constructor(context: Context) : super(context) {
@@ -170,7 +172,7 @@ class TimerView : LinearLayout {
 
     @SuppressLint("ObsoleteSdkInt")
     private fun setOutlineProvider(view: View, corners: Float) {
-        /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             view.clipToOutline = true
             view.outlineProvider = object : ViewOutlineProvider() {
                 override fun getOutline(view: View?, outline: Outline?) {
@@ -180,7 +182,7 @@ class TimerView : LinearLayout {
                     outline?.setRoundRect(0, 0, w, h, corners)
                 }
             }
-        }*/
+        }
     }
 
     fun start(millisInFuture: Long) {

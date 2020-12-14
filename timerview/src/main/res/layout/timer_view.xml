@@ -7,9 +7,9 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:gravity="center"
-    tools:parentTag="LinearLayout"
     android:orientation="horizontal"
-    tools:ignore="HardcodedText,SmallSp">
+    tools:ignore="HardcodedText,SmallSp"
+    tools:parentTag="LinearLayout">
 
     <LinearLayout
         android:id="@+id/dayLayout"
@@ -73,6 +73,7 @@
         android:id="@+id/delimiterHourMinute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:gravity="center"
         android:minWidth="10dp"
         android:text=":"
@@ -106,6 +107,7 @@
         android:id="@+id/delimiterMinuteSecond"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:gravity="center"
         android:minWidth="10dp"
         android:text=":"

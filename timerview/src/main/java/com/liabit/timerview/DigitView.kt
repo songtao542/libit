@@ -82,34 +82,34 @@ internal class DigitView : RelativeLayout {
 
         backTopText.text = text
 
-        frontTopText.pivotX = ((frontTopText.right - frontTopText.left) / 2).toFloat()
-        frontTopText.pivotY = frontTopText.bottom.toFloat()
+        frontTopText.pivotX = (frontTopText.right - frontTopText.left) / 2f
+        frontTopText.pivotY = (frontTopText.bottom - frontTopText.top) / 2f
 
-        frontBottomText.pivotX = ((frontTopText.right - frontTopText.left) / 2).toFloat()
-        frontBottomText.pivotY = frontTopText.top.toFloat()
+        frontBottomText.pivotX = (frontBottomText.right - frontBottomText.left) / 2f
+        frontBottomText.pivotY = (frontBottomText.bottom - frontBottomText.top) / 2f
 
         frontTopText.rotationX = 0f
         frontTopText.animate()
-            .setDuration(animationDuration / 2)
-            .rotationX(-90f)
-            .setInterpolator(AccelerateInterpolator())
-            .withEndAction {
-                frontBottomText.rotationX = 90f
-                frontBottomText.text = backTopText.text
+                .setDuration(animationDuration / 2)
+                .rotationX(-90f)
+                .setInterpolator(AccelerateInterpolator())
+                .withEndAction {
+                    frontBottomText.rotationX = 90f
+                    frontBottomText.text = backTopText.text
 
-                frontTopText.text = backTopText.text
-                frontTopText.rotationX = 0f
+                    frontTopText.text = backTopText.text
+                    frontTopText.rotationX = 0f
 
-                frontBottomText.animate()
-                    .setDuration(animationDuration / 2)
-                    .rotationX(0f)
-                    .setInterpolator(DecelerateInterpolator())
-                    .withEndAction {
-                        backBottomText.text = frontBottomText.text
-                    }
-                    .start()
-            }
-            .start()
+                    frontBottomText.animate()
+                            .setDuration(animationDuration / 2)
+                            .rotationX(0f)
+                            .setInterpolator(DecelerateInterpolator())
+                            .withEndAction {
+                                backBottomText.text = frontBottomText.text
+                            }
+                            .start()
+                }
+                .start()
     }
 
     fun setAnimationDuration(duration: Long) {

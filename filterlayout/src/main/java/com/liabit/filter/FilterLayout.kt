@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.Log
@@ -507,17 +508,27 @@ class FilterLayout : LinearLayout {
                 if (filterItem is EditableRangeFilterItem) {
                     editText.inputType = filterItem.getInputType()
                     editText.hint = if (!end) filterItem.getStartHint() else filterItem.getEndHint()
+                    val filters = ArrayList<InputFilter>()
                     filterItem.getInputFilters()?.let {
-                        editText.filters = it
+                        filters.addAll(it)
                     }
                     if (!end) {
                         if (filterItem.getStartText().isNotBlank()) {
                             editText.setText(filterItem.getStartText())
                         }
+                        filterItem.getStartInputFilters()?.let {
+                            filters.addAll(it)
+                        }
                     } else {
                         if (filterItem.getEndText().isNotBlank()) {
                             editText.setText(filterItem.getEndText())
                         }
+                        filterItem.getEndInputFilters()?.let {
+                            filters.addAll(it)
+                        }
+                    }
+                    if (filters.isNotEmpty()) {
+                        editText.filters = filters.toTypedArray()
                     }
                     (editText.getTag(R.integer.watcher_tag) as? TextWatcher)?.let {
                         editText.removeTextChangedListener(it)
@@ -736,11 +747,7 @@ class FilterLayout : LinearLayout {
 
     private class WrapperFilterItem(val wrapped: Filter, val parent: FilterGroup) : Filter by wrapped
 
-    private class WrapperWatcher(
-            val editText: EditText,
-            val filterItem: Filter,
-            val end: Boolean
-    ) : TextWatcher {
+    private class WrapperWatcher(val editText: EditText, val filterItem: Filter, val end: Boolean) : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
         }
 

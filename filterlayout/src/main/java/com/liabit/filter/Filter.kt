@@ -198,6 +198,14 @@ interface EditableRangeFilterItem : RangeFilterItem {
         return null
     }
 
+    fun getStartInputFilters(): Array<InputFilter>? {
+        return null
+    }
+
+    fun getEndInputFilters(): Array<InputFilter>? {
+        return null
+    }
+
     /**
      * 可以对 [editable] 进行修改更新
      */

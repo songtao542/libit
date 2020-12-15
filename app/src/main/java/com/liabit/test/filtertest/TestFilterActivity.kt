@@ -2,6 +2,7 @@ package com.liabit.test.filtertest
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.util.Log
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -120,6 +121,10 @@ class TestFilterActivity : AppCompatActivity() {
                     editable.replace(0, editable.length, "新的单号")
                 }
             }
+
+            override fun getInputFilters(): Array<InputFilter> {
+                return arrayOf(InputFilter.LengthFilter(6))
+            }
         })
         filterData.add(editable)
 
@@ -137,6 +142,14 @@ class TestFilterActivity : AppCompatActivity() {
                 if (editable.toString() == "100") {
                     editable.replace(0, editable.length, "新的最多")
                 }
+            }
+
+            override fun getStartInputFilters(): Array<InputFilter> {
+                return arrayOf(InputFilter.LengthFilter(6))
+            }
+
+            override fun getEndInputFilters(): Array<InputFilter> {
+                return arrayOf(InputFilter.LengthFilter(3))
             }
         })
         filterData.add(editableRange)

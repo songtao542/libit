@@ -22,7 +22,7 @@
         app:digitPadding="4dp"
         app:digitTextColor="#FF455E"
         app:digitTextSize="30sp"
-        app:resetSymbol="8"
+        app:resetSymbol="0"
         app:tickInterval="1000" />
 
     <Button

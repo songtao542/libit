@@ -75,10 +75,8 @@ class TimerView : LinearLayout {
 
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerView, defStyleAttr, 0)
-            val resetSymbol = typedArray.getInt(R.styleable.TimerView_resetSymbol, 0)
-            if (resetSymbol != 0) {
-                this.resetSymbol = resetSymbol % 10
-            }
+            resetSymbol = typedArray.getInt(R.styleable.TimerView_resetSymbol, 0)
+            reset()
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 typedArray.getFont(R.styleable.TimerView_android_fontFamily)?.let {

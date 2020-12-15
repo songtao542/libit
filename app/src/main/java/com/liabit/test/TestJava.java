@@ -3,6 +3,7 @@ package com.liabit.test;
 import android.view.View;
 
 import com.liabit.popup.PopupMenu;
+import com.liabit.timerview.HalfTextView;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ class TestJava {
 
         // View.MeasureSpec
 
-
+        HalfTextView j;
     }
 
 

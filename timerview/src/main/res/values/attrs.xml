@@ -9,7 +9,7 @@
     </declare-styleable>
 
     <declare-styleable name="TimerView">
-        <attr name="resetSymbol" format="reference|string" />
+        <attr name="resetSymbol" format="reference|integer" />
         <attr name="digitBackgroundColor" format="reference|color" />
         <attr name="digitTextColor" format="reference|color" />
         <attr name="digitTextSize" format="reference|dimension" />

@@ -37,7 +37,7 @@ class TimerView : LinearLayout {
     private var timeEndListener: OnTimeEndListener? = null
     private var tickInterval = 1000
     private var remainingTime = 0L
-    private var resetSymbol = "8"
+    private var resetSymbol: Int = 0
 
     constructor(context: Context) : super(context) {
         init(context, null, 0)
@@ -75,9 +75,9 @@ class TimerView : LinearLayout {
 
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerView, defStyleAttr, 0)
-            val resetSymbol = typedArray.getString(R.styleable.TimerView_resetSymbol)
-            if (resetSymbol != null) {
-                setResetSymbol(resetSymbol)
+            val resetSymbol = typedArray.getInt(R.styleable.TimerView_resetSymbol, 0)
+            if (resetSymbol != 0) {
+                this.resetSymbol = resetSymbol % 10
             }
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -283,18 +283,6 @@ class TimerView : LinearLayout {
         }
     }
 
-    private fun setResetSymbol(resetSymbol: String?) {
-        resetSymbol?.also {
-            if (it.isNotEmpty()) {
-                this.resetSymbol = resetSymbol
-            } else {
-                this.resetSymbol = ""
-            }
-        } ?: run {
-            this.resetSymbol = ""
-        }
-    }
-
     private fun setAnimationDuration(animationDuration: Long) {
         day1.setAnimationDuration(animationDuration)
         day2.setAnimationDuration(animationDuration)
@@ -316,14 +304,15 @@ class TimerView : LinearLayout {
 
     fun reset() {
         countDownTimer?.cancel()
-        day1.setText(resetSymbol)
-        day2.setText(resetSymbol)
-        hour1.setText(resetSymbol)
-        hour2.setText(resetSymbol)
-        minute1.setText(resetSymbol)
-        minute2.setText(resetSymbol)
-        second1.setText(resetSymbol)
-        second2.setText(resetSymbol)
+        val symbol = resetSymbol.toString()
+        day1.setText(symbol)
+        day2.setText(symbol)
+        hour1.setText(symbol)
+        hour2.setText(symbol)
+        minute1.setText(symbol)
+        minute2.setText(symbol)
+        second1.setText(symbol)
+        second2.setText(symbol)
     }
 
     fun pause() {

@@ -114,14 +114,10 @@ class TestFilterActivity : AppCompatActivity() {
 
         val editable = SimpleFilterGroup("发货单号")
         editable.add(object : SimpleEditableFilterItem("单号") {
-            override fun getTextWatcher(): OnTextChangeListener? {
-                return object : OnTextChangeListener {
-                    override fun onTextChanged(editable: Editable) {
-                        Log.d("TTTT", "单号 onTextChanged: $editable")
-                        if (editable.toString() == "100") {
-                            editable.replace(0, editable.length, "新的单号")
-                        }
-                    }
+            override fun onTextChanged(editable: Editable) {
+                Log.d("TTTT", "单号 onTextChanged: $editable")
+                if (editable.toString() == "100") {
+                    editable.replace(0, editable.length, "新的单号")
                 }
             }
         })
@@ -129,25 +125,17 @@ class TestFilterActivity : AppCompatActivity() {
 
         val editableRange = SimpleFilterGroup("发货数量")
         editableRange.add(object : SimpleEditableRangeFilterItem("最少", "最多") {
-            override fun getStartTextWatcher(): OnTextChangeListener? {
-                return object : OnTextChangeListener {
-                    override fun onTextChanged(editable: Editable) {
-                        Log.d("TTTT", "最少 onTextChanged: $editable")
-                        if (editable.toString() == "100") {
-                            editable.replace(0, editable.length, "新的最少")
-                        }
-                    }
+            override fun onStartTextChanged(editable: Editable) {
+                Log.d("TTTT", "最少 onTextChanged: $editable")
+                if (editable.toString() == "100") {
+                    editable.replace(0, editable.length, "新的最少")
                 }
             }
 
-            override fun getEndTextWatcher(): OnTextChangeListener? {
-                return object : OnTextChangeListener {
-                    override fun onTextChanged(editable: Editable) {
-                        Log.d("TTTT", "最多 onTextChanged: $editable")
-                        if (editable.toString() == "100") {
-                            editable.replace(0, editable.length, "新的最多")
-                        }
-                    }
+            override fun onEndTextChanged(editable: Editable) {
+                Log.d("TTTT", "最多 onTextChanged: $editable")
+                if (editable.toString() == "100") {
+                    editable.replace(0, editable.length, "新的最多")
                 }
             }
         })

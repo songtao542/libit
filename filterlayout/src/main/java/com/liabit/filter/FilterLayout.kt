@@ -750,14 +750,14 @@ class FilterLayout : LinearLayout {
         override fun afterTextChanged(s: Editable?) {
             if (filterItem is EditableRangeFilterItem) {
                 if (!end) {
-                    s?.let { filterItem.getStartTextWatcher()?.onTextChanged(it) }
+                    s?.let { filterItem.onStartTextChanged(it) }
                     filterItem.setStartText(editText.text)
                 } else {
-                    s?.let { filterItem.getEndTextWatcher()?.onTextChanged(it) }
+                    s?.let { filterItem.onEndTextChanged(it) }
                     filterItem.setEndText(editText.text)
                 }
             } else if (filterItem is EditableFilterItem) {
-                s?.let { filterItem.getTextWatcher()?.onTextChanged(it) }
+                s?.let { filterItem.onTextChanged(it) }
                 filterItem.setText(editText.text)
             }
         }

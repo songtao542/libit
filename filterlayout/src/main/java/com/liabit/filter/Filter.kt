@@ -171,8 +171,10 @@ interface EditableFilterItem : FilterItem {
         return null
     }
 
-    fun getTextWatcher(): OnTextChangeListener? {
-        return null
+    /**
+     * 可以对 [editable] 进行修改更新
+     */
+    fun onTextChanged(editable: Editable) {
     }
 
     override fun getType(): Int {
@@ -196,24 +198,21 @@ interface EditableRangeFilterItem : RangeFilterItem {
         return null
     }
 
-    fun getStartTextWatcher(): OnTextChangeListener? {
-        return null
+    /**
+     * 可以对 [editable] 进行修改更新
+     */
+    fun onStartTextChanged(editable: Editable) {
     }
 
-    fun getEndTextWatcher(): OnTextChangeListener? {
-        return null
+    /**
+     * 可以对 [editable] 进行修改更新
+     */
+    fun onEndTextChanged(editable: Editable) {
     }
 
     override fun getType(): Int {
         return Filter.TYPE_EDITABLE_RANGE
     }
-}
-
-interface OnTextChangeListener {
-    /**
-     * 可以对 [editable] 进行修改更新
-     */
-    fun onTextChanged(editable: Editable)
 }
 
 interface AddressFilterItem : FilterItem {

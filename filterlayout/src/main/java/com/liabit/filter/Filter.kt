@@ -1,9 +1,10 @@
 package com.liabit.filter
 
+import android.text.Editable
+import android.text.InputFilter
 import android.text.InputType
 import android.util.ArrayMap
 import android.view.View
-import androidx.annotation.IntDef
 import java.util.*
 
 /**
@@ -13,16 +14,16 @@ import java.util.*
 interface Filter {
 
     companion object {
-        const val TYPE_GROUP = 0
-        const val TYPE_DATE = 1
-        const val TYPE_DATE_RANGE = 2
-        const val TYPE_TEXT = 3
-        const val TYPE_CHECKABLE = 4
-        const val TYPE_NUMBER = 5
-        const val TYPE_NUMBER_RANGE = 6
-        const val TYPE_EDITABLE = 7
-        const val TYPE_EDITABLE_RANGE = 8
-        const val TYPE_ADDRESS = 9
+        const val TYPE_GROUP = 1000000000
+        const val TYPE_DATE = 1000000001
+        const val TYPE_DATE_RANGE = 1000000002
+        const val TYPE_TEXT = 1000000003
+        const val TYPE_CHECKABLE = 1000000004
+        const val TYPE_NUMBER = 1000000005
+        const val TYPE_NUMBER_RANGE = 1000000006
+        const val TYPE_EDITABLE = 1000000007
+        const val TYPE_EDITABLE_RANGE = 1000000008
+        const val TYPE_ADDRESS = 1000000009
 
         val TYPE_MAP: ArrayMap<Int, Int> = ArrayMap<Int, Int>().apply {
             put(TYPE_GROUP, R.layout.filter_text)
@@ -39,7 +40,7 @@ interface Filter {
         }
     }
 
-    @Target(AnnotationTarget.TYPE, AnnotationTarget.VALUE_PARAMETER)
+    /*@Target(AnnotationTarget.TYPE, AnnotationTarget.VALUE_PARAMETER)
     @IntDef(TYPE_GROUP,
             TYPE_DATE,
             TYPE_DATE_RANGE,
@@ -50,12 +51,12 @@ interface Filter {
             TYPE_EDITABLE,
             TYPE_EDITABLE_RANGE)
     @Retention(AnnotationRetention.SOURCE)
-    annotation class FilterType
+    annotation class FilterType*/
 
     /**
      * 标签类型
      */
-    fun getType(): @FilterType Int
+    fun getType(): /*@FilterType*/ Int
 }
 
 
@@ -166,6 +167,14 @@ interface EditableFilterItem : FilterItem {
         return InputType.TYPE_CLASS_TEXT
     }
 
+    fun getInputFilters(): Array<InputFilter>? {
+        return null
+    }
+
+    fun getTextWatcher(): OnTextChangeListener? {
+        return null
+    }
+
     override fun getType(): Int {
         return Filter.TYPE_EDITABLE
     }
@@ -183,9 +192,28 @@ interface EditableRangeFilterItem : RangeFilterItem {
         return InputType.TYPE_CLASS_TEXT
     }
 
+    fun getInputFilters(): Array<InputFilter>? {
+        return null
+    }
+
+    fun getStartTextWatcher(): OnTextChangeListener? {
+        return null
+    }
+
+    fun getEndTextWatcher(): OnTextChangeListener? {
+        return null
+    }
+
     override fun getType(): Int {
         return Filter.TYPE_EDITABLE_RANGE
     }
+}
+
+interface OnTextChangeListener {
+    /**
+     * 可以对 [editable] 进行修改更新
+     */
+    fun onTextChanged(editable: Editable)
 }
 
 interface AddressFilterItem : FilterItem {

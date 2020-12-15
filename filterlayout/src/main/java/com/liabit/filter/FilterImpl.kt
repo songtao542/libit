@@ -136,9 +136,10 @@ open class SimpleEditableFilterItem(private var mHint: String) : EditableFilterI
     }
 }
 
-open class SimpleEditableRangeFilterItem(private var mStartHint: String = "",
-                                         private var mEndHint: String = "")
-    : EditableRangeFilterItem {
+open class SimpleEditableRangeFilterItem(
+        private var mStartHint: String = "",
+        private var mEndHint: String = ""
+) : EditableRangeFilterItem {
 
     private var mInputType: Int = InputType.TYPE_CLASS_TEXT
     private var mStartText: CharSequence = ""
@@ -231,8 +232,10 @@ open class SimpleDateFilterItem(private val hint: String) : SimpleDateBoundary()
     }
 }
 
-open class SimpleDateRangeFilterItem(private val startHint: String,
-                                     private val endHint: String) : SimpleDateBoundary(), DateRangeFilterItem {
+open class SimpleDateRangeFilterItem(
+        private val startHint: String,
+        private val endHint: String
+) : SimpleDateBoundary(), DateRangeFilterItem {
     private var mEndDate: Date? = null
     private var mStartDate: Date? = null
 

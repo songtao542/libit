@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <integer name="watcher_tag" />
+
     <declare-styleable name="FilterLayout">
         <attr name="leftBottomButtonText" format="string|reference" />
         <attr name="rightBottomButtonText" format="string|reference" />

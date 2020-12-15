@@ -53,6 +53,7 @@ dependencies {
     implementation project(':location_picker')
     implementation project(':settings')
     implementation project(':timerview')
+    implementation project(':color_util')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.2.0'

@@ -21,9 +21,8 @@ class TestJava {
 
         // View.MeasureSpec
 
-        HalfTextView j;
+        int[][] b = new int[4][4];
     }
-
 
 
 }

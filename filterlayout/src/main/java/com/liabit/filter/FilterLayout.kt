@@ -429,6 +429,7 @@ class FilterLayout : LinearLayout {
         }
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
             fun setData(item: Filter) {
                 val filterItem = if (item is WrapperFilterItem) item.wrapped else item
                 if (itemView is Checkable && filterItem is CheckableFilterItem) {
@@ -506,6 +507,9 @@ class FilterLayout : LinearLayout {
                 if (filterItem is EditableRangeFilterItem) {
                     editText.inputType = filterItem.getInputType()
                     editText.hint = if (!end) filterItem.getStartHint() else filterItem.getEndHint()
+                    filterItem.getInputFilters()?.let {
+                        editText.filters = it
+                    }
                     if (!end) {
                         if (filterItem.getStartText().isNotBlank()) {
                             editText.setText(filterItem.getStartText())
@@ -515,35 +519,27 @@ class FilterLayout : LinearLayout {
                             editText.setText(filterItem.getEndText())
                         }
                     }
-                    editText.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                        }
-
-                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                        }
-
-                        override fun afterTextChanged(s: Editable?) {
-                            val text = s?.toString() ?: ""
-                            if (!end) filterItem.setStartText(text) else filterItem.setEndText(text)
-                        }
-                    })
+                    (editText.getTag(R.integer.watcher_tag) as? TextWatcher)?.let {
+                        editText.removeTextChangedListener(it)
+                    }
+                    val watcher = WrapperWatcher(editText, filterItem, end)
+                    editText.setTag(R.integer.watcher_tag, watcher)
+                    editText.addTextChangedListener(watcher)
                 } else if (filterItem is EditableFilterItem) {
                     editText.inputType = filterItem.getInputType()
                     editText.hint = filterItem.getHint()
+                    filterItem.getInputFilters()?.let {
+                        editText.filters = it
+                    }
                     if (filterItem.getText().isNotBlank()) {
                         editText.setText(filterItem.getText())
                     }
-                    editText.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                        }
-
-                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                        }
-
-                        override fun afterTextChanged(s: Editable?) {
-                            filterItem.setText(s?.toString() ?: "")
-                        }
-                    })
+                    (editText.getTag(R.integer.watcher_tag) as? TextWatcher)?.let {
+                        editText.removeTextChangedListener(it)
+                    }
+                    val watcher = WrapperWatcher(editText, filterItem, end)
+                    editText.setTag(R.integer.watcher_tag, watcher)
+                    editText.addTextChangedListener(watcher)
                 }
             }
 
@@ -738,7 +734,33 @@ class FilterLayout : LinearLayout {
         }
     }
 
-    private class WrapperFilterItem(val wrapped: Filter, val parent: FilterGroup) :
-            Filter by wrapped
+    private class WrapperFilterItem(val wrapped: Filter, val parent: FilterGroup) : Filter by wrapped
+
+    private class WrapperWatcher(
+            val editText: EditText,
+            val filterItem: Filter,
+            val end: Boolean
+    ) : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+            if (filterItem is EditableRangeFilterItem) {
+                if (!end) {
+                    s?.let { filterItem.getStartTextWatcher()?.onTextChanged(it) }
+                    filterItem.setStartText(editText.text)
+                } else {
+                    s?.let { filterItem.getEndTextWatcher()?.onTextChanged(it) }
+                    filterItem.setEndText(editText.text)
+                }
+            } else if (filterItem is EditableFilterItem) {
+                s?.let { filterItem.getTextWatcher()?.onTextChanged(it) }
+                filterItem.setText(editText.text)
+            }
+        }
+    }
 
 }

@@ -1,6 +1,9 @@
 package com.liabit.test.filtertest
 
 import android.os.Bundle
+import android.text.Editable
+import android.util.Log
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.liabit.filter.*
 import com.liabit.test.R
@@ -37,12 +40,42 @@ class TestFilterActivity : AppCompatActivity() {
         }
         mPopupFilter?.setFilterPicker(FilterPicker())
         mPopupFilter?.setFilter(getFilterData())
+        mPopupFilter?.setOnResultListener(object : FilterLayout.OnResultListener {
+            override fun onResult(result: List<Filter>) {
+                for (filter in result) {
+                    if (filter is FilterGroup) {
+                        for (child in filter.getChildren()) {
+                            if (child is EditableRangeFilterItem) {
+                                Log.d("TTTT", "${child.getStartHint()}: ${child.getStartText()}  ${child.getEndHint()}: ${child.getEndText()}")
+                            } else if (child is EditableFilterItem) {
+                                Log.d("TTTT", "${child.getHint()}: ${child.getText()}")
+                            }
+                        }
+                    }
+                }
+            }
+        })
         return mPopupFilter!!
     }
 
     private fun getFilterDialogFragment(): FilterDialogFragment {
         val f = FilterDialogFragment(FilterPicker.instance)
         f.setFilter(getFilterData())
+        f.setOnResultListener(object : FilterLayout.OnResultListener {
+            override fun onResult(result: List<Filter>) {
+                for (filter in result) {
+                    if (filter is FilterGroup) {
+                        for (child in filter.getChildren()) {
+                            if (child is EditableRangeFilterItem) {
+                                Log.d("TTTT", "${child.getStartHint()}: ${child.getStartText()}  ${child.getEndHint()}: ${child.getEndText()}")
+                            } else if (child is EditableFilterItem) {
+                                Log.d("TTTT", "${child.getHint()}: ${child.getText()}")
+                            }
+                        }
+                    }
+                }
+            }
+        })
         return f
     }
 
@@ -80,11 +113,44 @@ class TestFilterActivity : AppCompatActivity() {
         filterData.add(dateRange)
 
         val editable = SimpleFilterGroup("发货单号")
-        editable.add(SimpleEditableFilterItem("单号"))
+        editable.add(object : SimpleEditableFilterItem("单号") {
+            override fun getTextWatcher(): OnTextChangeListener? {
+                return object : OnTextChangeListener {
+                    override fun onTextChanged(editable: Editable) {
+                        Log.d("TTTT", "单号 onTextChanged: $editable")
+                        if (editable.toString() == "100") {
+                            editable.replace(0, editable.length, "新的单号")
+                        }
+                    }
+                }
+            }
+        })
         filterData.add(editable)
 
         val editableRange = SimpleFilterGroup("发货数量")
-        editableRange.add(SimpleEditableRangeFilterItem("最少", "最多"))
+        editableRange.add(object : SimpleEditableRangeFilterItem("最少", "最多") {
+            override fun getStartTextWatcher(): OnTextChangeListener? {
+                return object : OnTextChangeListener {
+                    override fun onTextChanged(editable: Editable) {
+                        Log.d("TTTT", "最少 onTextChanged: $editable")
+                        if (editable.toString() == "100") {
+                            editable.replace(0, editable.length, "新的最少")
+                        }
+                    }
+                }
+            }
+
+            override fun getEndTextWatcher(): OnTextChangeListener? {
+                return object : OnTextChangeListener {
+                    override fun onTextChanged(editable: Editable) {
+                        Log.d("TTTT", "最多 onTextChanged: $editable")
+                        if (editable.toString() == "100") {
+                            editable.replace(0, editable.length, "新的最多")
+                        }
+                    }
+                }
+            }
+        })
         filterData.add(editableRange)
 
         val address = SimpleFilterGroup("发货地址")

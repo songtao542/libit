@@ -81,6 +81,10 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, TestTimerActivity::class.java))
             }
 
+            R.id.colorTest -> {
+                startActivity(Intent(this, TestGradient4Activity::class.java))
+            }
+
             R.id.otherTest -> {
                 startActivity(Intent(this, TestFragmentVisibleActivity::class.java))
             }

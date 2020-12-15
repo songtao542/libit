@@ -1,3 +1,4 @@
+include ':color_util'
 include ':timerview'
 include ':settings'
 include ':viewbinding'

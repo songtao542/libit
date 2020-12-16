@@ -2,6 +2,7 @@ package com.liabit.test
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,6 +28,7 @@ class TestGradient4Activity : AppCompatActivity() {
         recyclerView.adapter = Adapter()
 
         val editText = findViewById<EditText>(R.id.editText)
+        editText.inputType = InputType.TYPE_CLASS_NUMBER
         findViewById<EditText>(R.id.editText).addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 Log.d("TTTT", "beforeTextChanged  $s")

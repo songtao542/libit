@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr name="tickInterval" format="reference|integer" />
+
     <declare-styleable name="HalfTextView">
         <attr name="showPart" format="enum">
             <enum name="top" value="0" />
@@ -18,10 +20,19 @@
         <attr name="digitPadding" format="reference|dimension" />
         <attr name="delimiterPadding" format="reference|dimension" />
         <attr name="animationDuration" format="reference|integer" />
-        <attr name="tickInterval" format="reference|integer" />
+        <attr name="dayUnit" format="reference|string" />
+        <attr name="tickInterval" />
+        <attr name="dayVisibility" format="enum">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="4" />
+            <enum name="gone" value="8" />
+        </attr>
         <attr name="corners" format="reference|dimension" />
         <attr name="android:fontFamily" />
     </declare-styleable>
 
-
+    <declare-styleable name="TimerTextView">
+        <attr name="tickInterval" />
+        <attr name="prefix" format="reference|string" />
+    </declare-styleable>
 </resources>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#00fff0"
-    tools:context=".MainActivity">
+    tools:context=".TestTimerActivity">
 
     <com.liabit.timerview.TimerView
         android:id="@+id/timerView"
@@ -22,7 +22,19 @@
         app:digitPadding="4dp"
         app:digitTextColor="#FF455E"
         app:digitTextSize="30sp"
+        app:dayVisibility="gone"
         app:resetSymbol="0"
+        app:tickInterval="1000" />
+
+    <com.liabit.timerview.TimerTextView
+        android:id="@+id/timerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="80dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:prefix="抢购中，距结束："
         app:tickInterval="1000" />
 
     <Button

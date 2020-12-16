@@ -39,6 +39,10 @@ class TimerView : LinearLayout {
     private var remainingTime = 0L
     private var resetSymbol: Int = 0
 
+    private var dayVisibility = View.VISIBLE
+
+    private var dayUnit: String = ""
+
     constructor(context: Context) : super(context) {
         init(context, null, 0)
     }
@@ -73,6 +77,8 @@ class TimerView : LinearLayout {
         minuteLayout = findViewById(R.id.minuteLayout)
         secondLayout = findViewById(R.id.secondLayout)
 
+        dayUnit = resources.getString(R.string.days)
+
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerView, defStyleAttr, 0)
             resetSymbol = typedArray.getInt(R.styleable.TimerView_resetSymbol, 0)
@@ -83,6 +89,13 @@ class TimerView : LinearLayout {
                     setTypeface(it)
                 }
             }
+
+            dayVisibility = typedArray.getInt(R.styleable.TimerView_dayVisibility, dayVisibility)
+            dayLayout.visibility = dayVisibility
+            delimiterDayHour.visibility = dayVisibility
+
+            dayUnit = typedArray.getString(R.styleable.TimerView_dayUnit) ?: dayUnit
+            delimiterDayHour.text = dayUnit
 
             val corners = typedArray.getDimension(R.styleable.TimerView_corners, 0f)
             setOutlineProvider(dayLayout, corners)
@@ -190,8 +203,8 @@ class TimerView : LinearLayout {
             dayLayout.visibility = View.VISIBLE
             delimiterDayHour.visibility = View.VISIBLE
         } else {
-            dayLayout.visibility = View.INVISIBLE
-            delimiterDayHour.visibility = View.INVISIBLE
+            dayLayout.visibility = dayVisibility
+            delimiterDayHour.visibility = dayVisibility
         }
         remainingTime = millisInFuture
         countDownTimer = object : CountDownTimer(millisInFuture, tickInterval.toLong()) {

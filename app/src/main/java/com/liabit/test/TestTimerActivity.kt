@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
+import com.liabit.timerview.TimerTextView
 import com.liabit.timerview.TimerView
 import kotlinx.android.synthetic.main.activity_test_timer.*
 
@@ -39,6 +40,14 @@ class TestTimerActivity : AppCompatActivity() {
                 pauseButton.text = "暂停"
             }
         }
+
+        timerTextView.start(200000)
+        timerTextView.setTimeEndListener(object : TimerTextView.OnTimeEndListener {
+            override fun onTimeEnd() {
+                Toast.makeText(this@TestTimerActivity, "Finished", Toast.LENGTH_SHORT).show()
+                timerTextView.reset()
+            }
+        })
 
     }
 }

@@ -34,5 +34,6 @@
     <declare-styleable name="TimerTextView">
         <attr name="tickInterval" />
         <attr name="prefix" format="reference|string" />
+        <attr name="millisInFuture" format="reference|integer" />
     </declare-styleable>
 </resources>

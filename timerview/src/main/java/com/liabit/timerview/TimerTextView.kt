@@ -1,5 +1,6 @@
 package com.liabit.timerview
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.CountDownTimer
 import android.util.AttributeSet
@@ -32,11 +33,22 @@ class TimerTextView : AppCompatTextView {
     }
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
+        var millisInFuture = 0
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerTextView, defStyleAttr, 0)
             tickInterval = typedArray.getInt(R.styleable.TimerTextView_tickInterval, tickInterval)
             prefix = typedArray.getString(R.styleable.TimerTextView_prefix) ?: ""
+            millisInFuture = typedArray.getInt(R.styleable.TimerTextView_millisInFuture, 0)
             typedArray.recycle()
+        }
+        if (millisInFuture < 0) {
+            millisInFuture = 0
+        }
+        if (millisInFuture == 0) {
+            @SuppressLint("SetTextI18n")
+            text = prefix + String.format(FORMAT, 0, 0, 0)
+        } else {
+            start(millisInFuture.toLong())
         }
     }
 
@@ -69,7 +81,6 @@ class TimerTextView : AppCompatTextView {
         } else {
             prefix + String.format(FORMAT, hours, minutes, seconds)
         }
-
         setText(text)
     }
 
@@ -83,7 +94,6 @@ class TimerTextView : AppCompatTextView {
 
     fun reset() {
         countDownTimer?.cancel()
-
     }
 
     fun pause() {

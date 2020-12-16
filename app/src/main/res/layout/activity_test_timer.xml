@@ -16,13 +16,13 @@
         android:clipToPadding="false"
         app:animationDuration="850"
         app:corners="4dp"
+        app:dayVisibility="gone"
         app:delimiterPadding="4dp"
         app:delimiterTextColor="@android:color/white"
         app:digitBackgroundColor="@android:color/white"
         app:digitPadding="4dp"
         app:digitTextColor="#FF455E"
         app:digitTextSize="30sp"
-        app:dayVisibility="gone"
         app:resetSymbol="0"
         app:tickInterval="1000" />
 
@@ -34,6 +34,7 @@
         android:layout_marginTop="80dp"
         android:clipChildren="false"
         android:clipToPadding="false"
+        app:millisInFuture="30000"
         app:prefix="抢购中，距结束："
         app:tickInterval="1000" />
 

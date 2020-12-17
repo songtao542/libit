@@ -144,7 +144,7 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
      *             {@link MaterialProgressDrawable#DEFAULT}, or
      *             {@link MaterialProgressDrawable#SMALL}.
      */
-    public void updateSizes(@ProgressDrawableSize int size) {
+    public void updateSize(@ProgressDrawableSize int size) {
         final DisplayMetrics metrics = mResources.getDisplayMetrics();
         final float screenDensity = metrics.density;
         int progressCircleWidth;
@@ -373,7 +373,7 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
         final long duration = mRing.mShape == Shape.CIRCLE ? ANIMATION_DURATION : ROUNDED_RECTANGLE_ANIMATION_DURATION;
         final Animation finishRingAnimation = new Animation() {
             public void applyTransformation(float interpolatedTime, Transformation t) {
-                // shrink back down and complete a full roation before starting other circles
+                // shrink back down and complete a full rotation before starting other circles
                 float targetRotation = (float) (Math.floor(ring.getStartingRotation() / .75f) + 1f);
                 final float startTrim = ring.getStartingEndTrim() + (ring.getStartingStartTrim() - ring.getStartingEndTrim()) * interpolatedTime;
                 ring.setEndTrim(startTrim);

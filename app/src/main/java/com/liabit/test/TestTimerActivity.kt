@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
+import com.liabit.statebutton.MaterialProgressDrawable
 import com.liabit.timerview.TimerTextView
 import com.liabit.timerview.TimerView
 import kotlinx.android.synthetic.main.activity_test_timer.*
@@ -48,6 +49,12 @@ class TestTimerActivity : AppCompatActivity() {
                 timerTextView.reset()
             }
         })
+
+        val d = MaterialProgressDrawable(this, drawableView)
+
+        drawableView.background = d
+
+        d.start()
 
     }
 }

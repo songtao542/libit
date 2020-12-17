@@ -23,4 +23,16 @@
         <attr name="android:textColor" />
     </declare-styleable>
 
+    <declare-styleable name="MaterialProgressView">
+        <attr name="strokeWidth" format="reference|dimension" />
+        <attr name="innerRadius" format="reference|dimension" />
+        <attr name="size" format="reference|dimension" />
+        <attr name="progressBarColor" format="reference|color" />
+        <attr name="progressBarColorScheme" format="reference" />
+        <attr name="shape" format="enum">
+            <enum name="circle" value="0" />
+            <enum name="rounded_rectangle" value="1" />
+        </attr>
+    </declare-styleable>
+
 </resources>

@@ -15,6 +15,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -25,6 +26,8 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
 
+import com.liabit.location.R;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -33,8 +36,6 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
-
-import com.liabit.location.R;
 
 /**
  * Author:         songtao
@@ -65,7 +66,11 @@ public class ProgressBar extends AppCompatImageView {
             color = a.getColor(R.styleable.ProgressBar_progressColor, 0);
         } else {
             TypedValue typedValue = new TypedValue();
-            context.getTheme().resolveAttribute(android.R.attr.colorAccent, typedValue, true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                context.getTheme().resolveAttribute(android.R.attr.colorAccent, typedValue, true);
+            } else {
+                context.getTheme().resolveAttribute(android.R.attr.colorActivatedHighlight, typedValue, true);
+            }
             color = typedValue.data;
         }
         a.recycle();
@@ -88,7 +93,7 @@ public class ProgressBar extends AppCompatImageView {
         mProgressDrawable.stop();
     }
 
-    @SuppressWarnings({"unused", "NullableProblems", "WeakerAccess", "SameParameterValue"})
+    @SuppressWarnings({"NullableProblems", "WeakerAccess", "SameParameterValue", "unused"})
     static class MaterialProgressDrawable extends Drawable implements Animatable {
         private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
         private static final Interpolator END_CURVE_INTERPOLATOR = new EndCurveInterpolator();
@@ -117,9 +122,6 @@ public class ProgressBar extends AppCompatImageView {
         private static final int CIRCLE_DIAMETER_SMALL = 16;
         private static final float INNER_RADIUS_SMALL = 3.15f;
         private static final float STROKE_WIDTH_SMALL = 1.3f;
-        private final int[] COLORS = new int[]{
-                Color.BLACK
-        };
         /**
          * The duration of a single progress spin in milliseconds.
          */
@@ -131,7 +133,7 @@ public class ProgressBar extends AppCompatImageView {
         /**
          * The list of animators operating on this drawable.
          */
-        private final ArrayList<Animation> mAnimators = new ArrayList<Animation>();
+        private final ArrayList<Animation> mAnimators = new ArrayList<>();
         /**
          * The indicator ring, used to manage animation state.
          */
@@ -146,9 +148,9 @@ public class ProgressBar extends AppCompatImageView {
         private static final int ARROW_WIDTH = 10;
         private static final int ARROW_HEIGHT = 5;
         private static final float ARROW_OFFSET_ANGLE = 5;
-        private Resources mResources;
+        private final Resources mResources;
         private int mColorIndex;
-        private View mParent;
+        private final View mParent;
         private Animation mAnimation;
         private float mRotationCount;
         private int[] mColors;
@@ -161,8 +163,24 @@ public class ProgressBar extends AppCompatImageView {
         public MaterialProgressDrawable(Context context, View parent) {
             mParent = parent;
             mResources = context.getResources();
-            mRing = new Ring(mCallback);
-            mColors = COLORS;
+            Callback callback = new Callback() {
+                @Override
+                public void invalidateDrawable(Drawable d) {
+                    invalidateSelf();
+                }
+
+                @Override
+                public void scheduleDrawable(Drawable d, Runnable what, long when) {
+                    scheduleSelf(what, when);
+                }
+
+                @Override
+                public void unscheduleDrawable(Drawable d, Runnable what) {
+                    unscheduleSelf(what);
+                }
+            };
+            mRing = new Ring(callback);
+            mColors = new int[]{Color.BLACK};
             mRing.setColors(mColors);
             initialize(CIRCLE_DIAMETER, CIRCLE_DIAMETER, INNER_RADIUS, STROKE_WIDTH);
             setupAnimators();
@@ -302,13 +320,11 @@ public class ProgressBar extends AppCompatImageView {
             mRing.setColorFilter(colorFilter);
         }
 
-        @SuppressWarnings("unused")
         private void setRotation(float rotation) {
             mRotation = rotation;
             invalidateSelf();
         }
 
-        @SuppressWarnings("unused")
         private float getRotation() {
             return mRotation;
         }
@@ -432,24 +448,7 @@ public class ProgressBar extends AppCompatImageView {
             mAnimation = animation;
         }
 
-        private final Callback mCallback = new Callback() {
-            @Override
-            public void invalidateDrawable(Drawable d) {
-                invalidateSelf();
-            }
-
-            @Override
-            public void scheduleDrawable(Drawable d, Runnable what, long when) {
-                scheduleSelf(what, when);
-            }
-
-            @Override
-            public void unscheduleDrawable(Drawable d, Runnable what) {
-                unscheduleSelf(what);
-            }
-        };
-
-        @SuppressWarnings("WeakerAccess")
+        @SuppressWarnings({"WeakerAccess", "unused"})
         private static class Ring {
             private final RectF mTempBounds = new RectF();
             private final Paint mPaint = new Paint();
@@ -470,8 +469,6 @@ public class ProgressBar extends AppCompatImageView {
             private float mArrowScale;
             private double mRingInnerRadius;
             private Path mArrowCopy;
-            private int mArrowWidth;
-            private int mArrowHeight;
             private float mDensity;
             private Matrix mArrowScaleMatrix;
 
@@ -504,18 +501,18 @@ public class ProgressBar extends AppCompatImageView {
                 mPaint.setColor(mColors[mColorIndex]);
                 c.drawArc(arcBounds, startAngle, sweepAngle, false, mPaint);
                 if (mArrow == null) {
-                    mArrowWidth = (int) (ARROW_WIDTH * mDensity);
-                    mArrowHeight = (int) (ARROW_HEIGHT * mDensity);
+                    int arrowWidth = (int) (ARROW_WIDTH * mDensity);
+                    int arrowHeight = (int) (ARROW_HEIGHT * mDensity);
                     // Adjust the position of the triangle so that it is inset as much as the arc, but
                     // also centered on the arc.
-                    int inset = (int) (mStrokeInset / 2 + (mArrowWidth / mStrokeWidth));
+                    int inset = (int) (mStrokeInset / 2 + (arrowWidth / mStrokeWidth));
                     double rad = Math.toRadians(startAngle + sweepAngle);
                     float x = (float) (mRingInnerRadius * Math.cos(rad) + bounds.exactCenterX());
                     float y = (float) (mRingInnerRadius * Math.sin(rad) + bounds.exactCenterY());
                     Point a = new Point((int) (x - inset), (int) (y));
-                    Point b = new Point((int) (x - inset) + mArrowWidth, (int) (y));
-                    Point cPoint = new Point((int) (x - inset) + (mArrowWidth / 2),
-                            (int) (y) + mArrowHeight);
+                    Point b = new Point((int) (x - inset) + arrowWidth, (int) (y));
+                    Point cPoint = new Point((int) (x - inset) + (arrowWidth / 2),
+                            (int) (y) + arrowHeight);
                     mArrow = new Path();
                     mArrow.setFillType(Path.FillType.EVEN_ODD);
                     mArrow.moveTo(a.x, a.y);
@@ -593,18 +590,15 @@ public class ProgressBar extends AppCompatImageView {
                 invalidateSelf();
             }
 
-            @SuppressWarnings("unused")
             public float getStrokeWidth() {
                 return mStrokeWidth;
             }
 
-            @SuppressWarnings("unused")
             public void setStartTrim(float startTrim) {
                 mStartTrim = startTrim;
                 invalidateSelf();
             }
 
-            @SuppressWarnings("unused")
             public float getStartTrim() {
                 return mStartTrim;
             }
@@ -617,24 +611,20 @@ public class ProgressBar extends AppCompatImageView {
                 return mStartingEndTrim;
             }
 
-            @SuppressWarnings("unused")
             public void setEndTrim(float endTrim) {
                 mEndTrim = endTrim;
                 invalidateSelf();
             }
 
-            @SuppressWarnings("unused")
             public float getEndTrim() {
                 return mEndTrim;
             }
 
-            @SuppressWarnings("unused")
             public void setRotation(float rotation) {
                 mRotation = rotation;
                 invalidateSelf();
             }
 
-            @SuppressWarnings("unused")
             public float getRotation() {
                 return mRotation;
             }
@@ -643,7 +633,6 @@ public class ProgressBar extends AppCompatImageView {
                 mStrokeInset = insets;
             }
 
-            @SuppressWarnings("unused")
             public float getInsets() {
                 return mStrokeInset;
             }

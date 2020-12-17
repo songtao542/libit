@@ -93,23 +93,49 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
         <com.liabit.statebutton.MaterialProgressView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            app:progressBarColor="#ff9900"
-            app:progressBarColorScheme="@array/colors"
             app:shape="circle"
+            app:strokeColor="#ff9900"
+            app:strokeColorScheme="@array/colors"
+            app:strokeLineCap="square"
+            app:strokeLineJoin="miter"
             app:strokeWidth="2dp" />
 
         <Space
-            android:layout_width="100dp"
-            android:layout_height="0dp" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.liabit.statebutton.MaterialProgressView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:shape="rounded_rectangle"
+            app:strokeColor="#ff9900"
+            app:strokeColorScheme="@array/colors"
+            app:strokeLineCap="square"
+            app:strokeLineJoin="miter"
+            app:strokeWidth="2dp"
+            app:trimEnd="10"
+            app:trimOffset="30"
+            app:trimStart="20" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <View
             android:id="@+id/drawableView"
@@ -117,5 +143,20 @@
             android:layout_height="50dp"
             android:layout_gravity="right" />
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ProgressBar
+            style="@android:style/Widget.Material.ProgressBar.Large"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
     </LinearLayout>
 </FrameLayout>

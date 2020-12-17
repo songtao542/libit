@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="76dp"
+    android:height="76dp"
+    android:tint="#ffff0000"
+    android:viewportWidth="76"
+    android:viewportHeight="76">
+
+    <group
+        android:name="root"
+        android:translateX="38.0"
+        android:translateY="38.0">
+        <path
+            android:name="progressBar"
+            android:fillColor="#ffff0000"
+            android:pathData="M0, 0 m 0, -29 a 29,29 0 1,1 0,58 a 29,29 0 1,1 0,-58"
+            android:strokeWidth="6"
+            android:strokeColor="@android:color/white"
+            android:strokeLineCap="square"
+            android:strokeLineJoin="miter"
+            android:trimPathStart="0"
+            android:trimPathEnd="0"
+            android:trimPathOffset="0" />
+    </group>
+
+</vector>

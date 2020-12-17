@@ -77,33 +77,57 @@ class MaterialProgressView : View {
         var strokeWidth = dp2px(context, 10)
         var shape = Shape.CIRCLE
         var color = Color.BLACK
-        var progressBarColorScheme = 0
+        var colorScheme = 0
+        var strokeJoin = Paint.Join.MITER
+        var strokeCap = Paint.Cap.SQUARE
+
+        var trimStart = 0f
+        var trimEnd = 0f
+        var trimOffset = 0f
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.MaterialProgressView, defStyleAttr, defStyleRes)
 
             innerRadius = typedArray.getDimension(R.styleable.MaterialProgressView_innerRadius, innerRadius)
             strokeWidth = typedArray.getDimension(R.styleable.MaterialProgressView_strokeWidth, strokeWidth)
             mRingSize = typedArray.getDimension(R.styleable.MaterialProgressView_size, -1f)
-            color = typedArray.getColor(R.styleable.MaterialProgressView_progressBarColor, Color.BLACK)
-            progressBarColorScheme = typedArray.getResourceId(R.styleable.MaterialProgressView_progressBarColorScheme, 0)
+            color = typedArray.getColor(R.styleable.MaterialProgressView_strokeColor, Color.BLACK)
+            colorScheme = typedArray.getResourceId(R.styleable.MaterialProgressView_strokeColorScheme, 0)
+            strokeJoin = when (typedArray.getInt(R.styleable.MaterialProgressView_strokeLineJoin, 0)) {
+                Paint.Join.BEVEL.ordinal -> Paint.Join.BEVEL
+                Paint.Join.ROUND.ordinal -> Paint.Join.ROUND
+                else -> Paint.Join.MITER
+            }
+            strokeCap = when (typedArray.getInt(R.styleable.MaterialProgressView_strokeLineJoin, 0)) {
+                Paint.Cap.BUTT.ordinal -> Paint.Cap.BUTT
+                Paint.Cap.ROUND.ordinal -> Paint.Cap.ROUND
+                else -> Paint.Cap.SQUARE
+            }
+
+            trimStart = typedArray.getFloat(R.styleable.MaterialProgressView_trimStart, 0f)
+            trimEnd = typedArray.getFloat(R.styleable.MaterialProgressView_trimEnd, 0f)
+            trimOffset = typedArray.getFloat(R.styleable.MaterialProgressView_trimOffset, 0f)
 
             shape = if (typedArray.getInt(R.styleable.MaterialProgressView_shape, 0) == 0) {
                 Shape.CIRCLE
             } else {
                 Shape.ROUNDED_RECTANGLE
             }
-
             typedArray.recycle()
         }
-        mRing.setInnerRadius(innerRadius)
-        mRing.setStrokeWidth(strokeWidth)
+        mRing.ringInnerRadius = innerRadius
+        mRing.strokeWidth = strokeWidth
+        mRing.strokeCap = strokeCap
+        mRing.strokeJoin = strokeJoin
+        mRing.trimStart = trimStart
+        mRing.trimEnd = trimEnd
+        mRing.trimOffset = trimOffset
         mRing.setShape(shape)
-        if (progressBarColorScheme != 0) {
-            mRing.setColors(context.resources.getIntArray(progressBarColorScheme))
+        if (colorScheme != 0) {
+            mRing.colorScheme = context.resources.getIntArray(colorScheme)
         } else {
-            mRing.setColors(intArrayOf(color))
+            mRing.colorScheme = intArrayOf(color)
         }
-        mRing.setColorIndex(0)
+        mRing.colorIndex = 0
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -119,10 +143,10 @@ class MaterialProgressView : View {
             mRing.setBound(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
             min(measuredWidth, measuredHeight).toFloat()
         }
-        if (mRing.getInnerRadius() <= 0 || minEdge < 0) {
-            mRing.setInsets(ceil(mRing.getStrokeWidth() / 2.0f))
+        if (mRing.ringInnerRadius <= 0 || minEdge < 0) {
+            mRing.strokeInset = ceil(mRing.strokeWidth / 2.0f)
         } else {
-            mRing.setInsets(minEdge / 2.0f - mRing.getInnerRadius())
+            mRing.strokeInset = minEdge / 2.0f - mRing.ringInnerRadius
         }
     }
 
@@ -134,22 +158,22 @@ class MaterialProgressView : View {
     private var mRingSize = -1f
 
     fun setStrokeWidth(strokeWidth: Float) {
-        mRing.setStrokeWidth(strokeWidth)
-        mRing.setInsets(strokeWidth / 2)
+        mRing.strokeWidth = strokeWidth
+        mRing.strokeInset = strokeWidth / 2
     }
 
     /**
      * @param show Set to true to display the arrowhead on the progress spinner.
      */
     fun showArrow(show: Boolean) {
-        mRing.setShowArrow(show)
+        mRing.showArrow = show
     }
 
     /**
      * @param scale Set the scale of the arrowhead for the spinner.
      */
     fun setArrowScale(scale: Float) {
-        mRing.setArrowScale(scale)
+        mRing.arrowScale = scale
     }
 
     /**
@@ -159,8 +183,8 @@ class MaterialProgressView : View {
      * @param endAngle   end angle
      */
     fun setTrim(startAngle: Float, endAngle: Float) {
-        mRing.setStartTrim(startAngle)
-        mRing.setEndTrim(endAngle)
+        mRing.trimStart = startAngle
+        mRing.trimEnd = endAngle
     }
 
     /**
@@ -204,7 +228,7 @@ class MaterialProgressView : View {
      * @param rotation Rotation in degrees
      */
     fun setProgressRotation(rotation: Float) {
-        mRing.setRotation(rotation)
+        mRing.rotation = rotation
     }
 
     /**
@@ -215,7 +239,7 @@ class MaterialProgressView : View {
      * @param colors scheme colors
      */
     fun setColorSchemeColors(vararg colors: Int) {
-        mRing.setColors(colors)
+        mRing.colorScheme = colors
     }
 
     override fun onDraw(c: Canvas) {
@@ -228,7 +252,7 @@ class MaterialProgressView : View {
         if (mRing.getShape() == Shape.CIRCLE) {
             c.rotate(rotation, centerX, centerY)
         } else {
-            mRing.setRotationExtra(rotation / 2)
+            mRing.rotationExtra = rotation / 2f
         }
         mRing.draw(c, 0f, 0f, width.toFloat(), height.toFloat())
         c.restoreToCount(saveCount)
@@ -251,52 +275,58 @@ class MaterialProgressView : View {
 
     private class Ring(private val view: View) {
         private val mTempBounds = RectF()
-        private val mPaint = Paint()
+        private val mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         private val mArrowPaint = Paint()
-        private var mStartTrim = 0.0f
-        private var mEndTrim = 0.0f
-        private var mRotation = 0.0f
-        private var mRotationExtra = 0.0f
-        private var mStrokeWidth = 5.0f
-        private var mStrokeInset = 2.5f
-        private var mColors: IntArray = intArrayOf(Color.BLACK)
-        private var mColorIndex = 0
         private var mStartingStartTrim = 0f
         private var mStartingEndTrim = 0f
         private var mStartingRotation = 0f
-        private var mShowArrow = false
         private var mArrow: Path = Path()
         private var mPath: Path = Path()
         private var mRemainingPath: Path = Path()
         private var mRoundRectPath: Path = Path()
         private var mRoundRectPathLength = 0f
         private var mProgressMeasure: PathMeasure = PathMeasure()
-        private var mArrowScale = 0f
-        private var mRingInnerRadius = 0f
         private var mArrowCopy: Path = Path()
-        private var mArrowWidth = 0
-        private var mArrowHeight = 0
         private var mArrowScaleMatrix: Matrix = Matrix()
         private var mBlurMaskFilter: BlurMaskFilter? = null
         private var mAnimating = true
         private var mShadowRadius = -1f
         private var mShadowColor = -1
         private var mShape = Shape.CIRCLE
-
         private var mRotationCount = 0f
-        private var mInnerRadius = 0f
         private var mAnimation: Animation? = null
         private var mFinishAnimation: Animation? = null
 
         private var mBound = RectF()
 
+        var trimStart = 0.0f
+        var trimEnd = 0.0f
+        var trimOffset = 0.0f
+        var rotation = 0.0f
+        var rotationExtra = 0.0f
+        var strokeWidth = 5.0f
+        var strokeJoin = Paint.Join.MITER
+        var strokeCap = Paint.Cap.SQUARE
+        var strokeInset = 2.5f
+        var colorScheme: IntArray = intArrayOf(Color.BLACK)
+        var colorIndex = 0
+        var showArrow = false
+        var arrowScale = 0f
+        var arrowWidth = 0
+        var arrowHeight = 0
+        var ringInnerRadius = 0f
+
         init {
-            mPaint.strokeCap = Paint.Cap.ROUND
             mPaint.isAntiAlias = true
+            mPaint.strokeCap = Paint.Cap.ROUND
+            mPaint.strokeJoin = Paint.Join.ROUND
             mPaint.style = Paint.Style.STROKE
             mArrowPaint.strokeWidth = 4f
             mArrowPaint.style = Paint.Style.FILL_AND_STROKE
             mArrowPaint.isAntiAlias = true
+
+            arrowWidth = dp2px(view.context, ARROW_WIDTH).toInt()
+            arrowHeight = dp2px(view.context, ARROW_HEIGHT).toInt()
         }
 
         /**
@@ -310,11 +340,16 @@ class MaterialProgressView : View {
             val centerY = (top + bottom) / 2f
             val arcBounds = mTempBounds
             arcBounds.set(mBound)
-            arcBounds.inset(mStrokeInset, mStrokeInset)
+            arcBounds.inset(strokeInset, strokeInset)
             // Ensure the sweep angle isn't too small to draw.
             val diameter = min(arcBounds.width(), arcBounds.height())
-            mPaint.color = mColors[mColorIndex]
+
+            mPaint.color = colorScheme[colorIndex]
             mPaint.alpha = (view.alpha * 255).toInt()
+            mPaint.strokeJoin = strokeJoin
+            mPaint.strokeCap = strokeCap
+            mPaint.strokeWidth = strokeWidth
+
             if (mBlurMaskFilter != null) {
                 mPaint.maskFilter = mBlurMaskFilter
             }
@@ -322,20 +357,9 @@ class MaterialProgressView : View {
                 mPaint.setShadowLayer(mShadowRadius, 0f, 0f, mShadowColor)
             }
 
-            //无动画效果
-            if (!mAnimating) {
-                if (mShape == Shape.ROUNDED_RECTANGLE) {
-                    val r = diameter / 2
-                    c.drawRoundRect(arcBounds, r, r, mPaint)
-                } else {
-                    c.drawArc(arcBounds, 0f, 360f, false, mPaint)
-                }
-                return
-            }
-            mPaint.strokeJoin = Paint.Join.ROUND
-            val startAngle = (mStartTrim + mRotation) * 360
-            val endAngle = (mEndTrim + mRotation) * 360
-            var sweepAngle = endAngle - startAngle
+            val startAngle = (trimStart + rotation) * 360
+            val endAngle = (trimEnd + rotation) * 360
+            var sweepAngle = endAngle - startAngle + trimOffset
             val minAngle = (360.0 / (diameter * Math.PI)).toFloat()
             if (sweepAngle < minAngle && sweepAngle > -minAngle) {
                 sweepAngle = sign(sweepAngle) * minAngle
@@ -354,14 +378,13 @@ class MaterialProgressView : View {
                     mProgressMeasure.setPath(mRoundRectPath, false)
                     mRoundRectPathLength = mProgressMeasure.length
                 }
-                var angle = startAngle + mRotationExtra
+                var angle = startAngle + rotationExtra
                 while (angle >= 360) {
                     angle -= 360f
                 }
                 var startD = angle / 360 * mRoundRectPathLength
                 var stopD = startD + sweepAngle / 360 * mRoundRectPathLength
                 mPath.reset()
-                //mClipArc.lineTo(0, 0);
                 mProgressMeasure.getSegment(startD, stopD, mPath, true)
                 c.drawPath(mPath, mPaint)
                 val remainingAngle = angle + sweepAngle - 360
@@ -375,17 +398,14 @@ class MaterialProgressView : View {
             } else {
                 c.drawArc(arcBounds, startAngle, sweepAngle, false, mPaint)
             }
-            mArrowWidth = dp2px(view.context, ARROW_WIDTH).toInt()
-            mArrowHeight = dp2px(view.context, ARROW_HEIGHT).toInt()
-            // Adjust the position of the triangle so that it is inset as much as the arc, but
-            // also centered on the arc.
-            val inset = (mStrokeInset / 2 + mArrowWidth / mStrokeWidth).toInt()
+            // Adjust the position of the triangle so that it is inset as much as the arc, but also centered on the arc.
+            val inset = (strokeInset / 2 + arrowWidth / strokeWidth).toInt()
             val rad = Math.toRadians((startAngle + sweepAngle).toDouble())
-            val x = (mRingInnerRadius * cos(rad) + centerX).toFloat()
-            val y = (mRingInnerRadius * sin(rad) + centerY).toFloat()
+            val x = (ringInnerRadius * cos(rad) + centerX).toFloat()
+            val y = (ringInnerRadius * sin(rad) + centerY).toFloat()
             val a = Point((x - inset).toInt(), y.toInt())
-            val b = Point((x - inset).toInt() + mArrowWidth, y.toInt())
-            val cPoint = Point((x - inset).toInt() + mArrowWidth / 2, y.toInt() + mArrowHeight)
+            val b = Point((x - inset).toInt() + arrowWidth, y.toInt())
+            val cPoint = Point((x - inset).toInt() + arrowWidth / 2, y.toInt() + arrowHeight)
             mArrow.rewind()
             mArrow.fillType = Path.FillType.EVEN_ODD
             mArrow.moveTo(a.x.toFloat(), a.y.toFloat())
@@ -393,13 +413,13 @@ class MaterialProgressView : View {
             mArrow.lineTo(cPoint.x.toFloat(), cPoint.y.toFloat())
             mArrow.lineTo(a.x.toFloat(), a.y.toFloat())
             mArrow.close()
-            if (mShowArrow) {
+            if (showArrow) {
                 // draw a triangle
                 val arrowRect = mTempBounds
                 mArrow.computeBounds(arrowRect, true)
-                mArrowScaleMatrix.setScale(mArrowScale, mArrowScale, arrowRect.centerX(), arrowRect.centerY())
+                mArrowScaleMatrix.setScale(arrowScale, arrowScale, arrowRect.centerX(), arrowRect.centerY())
                 mArrow.transform(mArrowScaleMatrix, mArrowCopy)
-                mArrowPaint.color = mColors[mColorIndex]
+                mArrowPaint.color = colorScheme[colorIndex]
                 // Offset the arrow slightly so that it aligns with the cap on the arc
                 c.rotate(startAngle + sweepAngle - ARROW_OFFSET_ANGLE, centerX, centerY)
                 c.drawPath(mArrowCopy, mArrowPaint)
@@ -494,19 +514,6 @@ class MaterialProgressView : View {
             return result
         }
 
-        /**
-         * Set the colors the progress spinner alternates between.
-         *
-         * @param colors Array of integers describing the colors. Must be non-`null`.
-         */
-        fun setColors(colors: IntArray) {
-            mColors = colors
-        }
-
-        fun getColors(): IntArray {
-            return mColors
-        }
-
         fun setBound(left: Float, top: Float, right: Float, bottom: Float) {
             mBound.set(left, top, right, bottom)
         }
@@ -558,75 +565,8 @@ class MaterialProgressView : View {
             mShadowColor = -1
         }
 
-        /**
-         * @param index Index into the color array of the color to display in
-         * the progress spinner.
-         */
-        fun setColorIndex(index: Int) {
-            mColorIndex = index
-        }
-
         fun setColorFilter(filter: ColorFilter?) {
             mPaint.colorFilter = filter
-        }
-
-        fun setStrokeWidth(strokeWidth: Float) {
-            mStrokeWidth = strokeWidth
-            mPaint.strokeWidth = strokeWidth
-        }
-
-        fun setStartTrim(startTrim: Float) {
-            mStartTrim = startTrim
-        }
-
-        fun setEndTrim(endTrim: Float) {
-            mEndTrim = endTrim
-        }
-
-        fun setRotation(rotation: Float) {
-            mRotation = rotation
-        }
-
-        fun setRotationExtra(rotationExtra: Float) {
-            mRotationExtra = rotationExtra
-        }
-
-        fun setInsets(insets: Float) {
-            mStrokeInset = insets
-        }
-
-        fun getInnerRadius(): Float {
-            return mInnerRadius
-        }
-
-        fun getStrokeWidth(): Float {
-            return mStrokeWidth
-        }
-
-        /**
-         * @param innerRadius Inner radius in px of the circle the progress
-         * spinner arc traces.
-         */
-        fun setInnerRadius(innerRadius: Float) {
-            mRingInnerRadius = innerRadius
-        }
-
-        /**
-         * @param show Set to true to show the arrow head on the progress spinner.
-         */
-        fun setShowArrow(show: Boolean) {
-            if (mShowArrow != show) {
-                mShowArrow = show
-            }
-        }
-
-        /**
-         * @param scale Set the scale of the arrowhead for the spinner.
-         */
-        fun setArrowScale(scale: Float) {
-            if (scale != mArrowScale) {
-                mArrowScale = scale
-            }
         }
 
         /**
@@ -634,9 +574,9 @@ class MaterialProgressView : View {
          * animation starts from that offset.
          */
         fun storeOriginals() {
-            mStartingStartTrim = mStartTrim
-            mStartingEndTrim = mEndTrim
-            mStartingRotation = mRotation
+            mStartingStartTrim = trimStart
+            mStartingEndTrim = trimEnd
+            mStartingRotation = rotation
         }
 
         /**
@@ -646,9 +586,9 @@ class MaterialProgressView : View {
             mStartingStartTrim = 0f
             mStartingEndTrim = 0f
             mStartingRotation = 0f
-            mStartTrim = 0f
-            mEndTrim = 0f
-            mRotation = 0f
+            trimStart = 0f
+            trimEnd = 0f
+            rotation = 0f
         }
 
         private fun setupAnimators() {
@@ -657,8 +597,8 @@ class MaterialProgressView : View {
                 override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
                     // shrink back down and complete a full rotation before starting other circles
                     val targetRotation = (floor((mStartingRotation / 0.75f).toDouble()) + 1f).toFloat()
-                    mEndTrim = mStartingEndTrim + (mStartingStartTrim - mStartingEndTrim) * interpolatedTime
-                    mRotation = mStartingRotation + (targetRotation - mStartingRotation) * interpolatedTime
+                    trimEnd = mStartingEndTrim + (mStartingStartTrim - mStartingEndTrim) * interpolatedTime
+                    rotation = mStartingRotation + (targetRotation - mStartingRotation) * interpolatedTime
                     view.invalidate()
                 }
             }
@@ -667,7 +607,7 @@ class MaterialProgressView : View {
             finishRingAnimation.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {}
                 override fun onAnimationEnd(animation: Animation) {
-                    mColorIndex = (mColorIndex + 1) % getColors().size
+                    colorIndex = (colorIndex + 1) % colorScheme.size
                     resetOriginals()
                     view.invalidate()
                     view.startAnimation(mAnimation)
@@ -677,9 +617,9 @@ class MaterialProgressView : View {
             })
             val animation: Animation = object : Animation() {
                 override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
-                    mEndTrim = 0.75f * START_CURVE_INTERPOLATOR.getInterpolation(interpolatedTime)
-                    mStartTrim = 0.75f * END_CURVE_INTERPOLATOR.getInterpolation(interpolatedTime)
-                    mRotation = 0.25f * interpolatedTime
+                    trimEnd = 0.75f * START_CURVE_INTERPOLATOR.getInterpolation(interpolatedTime)
+                    trimStart = 0.75f * END_CURVE_INTERPOLATOR.getInterpolation(interpolatedTime)
+                    rotation = 0.25f * interpolatedTime
                     view.rotation = 720.0f / NUM_POINTS * interpolatedTime + 720.0f * (mRotationCount / NUM_POINTS)
                     view.invalidate()
                 }
@@ -698,7 +638,7 @@ class MaterialProgressView : View {
                 }
 
                 override fun onAnimationRepeat(animation: Animation) {
-                    mColorIndex = (mColorIndex + 1) % getColors().size
+                    colorIndex = (colorIndex + 1) % colorScheme.size
                     resetOriginals()
                     mRotationCount = (mRotationCount + 1) % NUM_POINTS
                     view.invalidate()
@@ -716,7 +656,7 @@ class MaterialProgressView : View {
                 if (mStartingStartTrim != 0f) {
                     view.startAnimation(mFinishAnimation)
                 } else {
-                    mColorIndex = 0
+                    colorIndex = 0
                     resetOriginals()
                     view.invalidate()
                     view.startAnimation(mAnimation)
@@ -728,7 +668,7 @@ class MaterialProgressView : View {
             mAnimating = false
             view.clearAnimation()
             view.rotation = 0f
-            mColorIndex = 0
+            colorIndex = 0
             resetOriginals()
             view.invalidate()
         }

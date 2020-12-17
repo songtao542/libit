@@ -35,13 +35,12 @@ class TimerView : LinearLayout {
 
     private var countDownTimer: CountDownTimer? = null
     private var timeEndListener: OnTimeEndListener? = null
+
     private var tickInterval = 1000
     private var remainingTime = 0L
-    private var resetSymbol: Int = 0
-
+    private var resetSymbol = 0
     private var dayVisibility = View.VISIBLE
-
-    private var dayUnit: String = ""
+    private var dayUnit = ""
 
     constructor(context: Context) : super(context) {
         init(context, null, 0)

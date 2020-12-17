@@ -2,6 +2,7 @@
 <resources>
 
     <attr name="tickInterval" format="reference|integer" />
+    <attr name="dayUnit" format="reference|string" />
 
     <declare-styleable name="HalfTextView">
         <attr name="showPart" format="enum">
@@ -20,7 +21,7 @@
         <attr name="digitPadding" format="reference|dimension" />
         <attr name="delimiterPadding" format="reference|dimension" />
         <attr name="animationDuration" format="reference|integer" />
-        <attr name="dayUnit" format="reference|string" />
+        <attr name="dayUnit" />
         <attr name="tickInterval" />
         <attr name="dayVisibility" format="enum">
             <enum name="visible" value="0" />
@@ -34,6 +35,8 @@
     <declare-styleable name="TimerTextView">
         <attr name="tickInterval" />
         <attr name="prefix" format="reference|string" />
+        <attr name="suffix" format="reference|string" />
+        <attr name="dayUnit" />
         <attr name="millisInFuture" format="reference|integer" />
     </declare-styleable>
 </resources>

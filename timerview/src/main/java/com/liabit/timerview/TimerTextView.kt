@@ -18,6 +18,8 @@ class TimerTextView : AppCompatTextView {
     private var timeEndListener: OnTimeEndListener? = null
     private var tickInterval = 1000
     private var prefix = ""
+    private var suffix = ""
+    private var dayUnit = ""
     private var remainingTime = 0L
 
     constructor(context: Context) : super(context) {
@@ -38,6 +40,8 @@ class TimerTextView : AppCompatTextView {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerTextView, defStyleAttr, 0)
             tickInterval = typedArray.getInt(R.styleable.TimerTextView_tickInterval, tickInterval)
             prefix = typedArray.getString(R.styleable.TimerTextView_prefix) ?: ""
+            suffix = typedArray.getString(R.styleable.TimerTextView_suffix) ?: ""
+            dayUnit = typedArray.getString(R.styleable.TimerView_dayUnit) ?: dayUnit
             millisInFuture = typedArray.getInt(R.styleable.TimerTextView_millisInFuture, 0)
             typedArray.recycle()
         }
@@ -46,7 +50,7 @@ class TimerTextView : AppCompatTextView {
         }
         if (millisInFuture == 0) {
             @SuppressLint("SetTextI18n")
-            text = prefix + String.format(FORMAT, 0, 0, 0)
+            text = prefix + String.format(FORMAT, 0, 0, 0) + suffix
         } else {
             start(millisInFuture.toLong())
         }
@@ -77,9 +81,9 @@ class TimerTextView : AppCompatTextView {
         val mm = TimeUnit.MINUTES.toMillis(minutes)
         val seconds = TimeUnit.MILLISECONDS.toSeconds(timeToStart - (dm + hm + mm))
         val text = if (days > 0) {
-            prefix + String.format(FORMAT_TWO, days) + String.format(FORMAT, hours, minutes, seconds)
+            prefix + String.format(FORMAT_TWO, days) + dayUnit + String.format(FORMAT, hours, minutes, seconds) + suffix
         } else {
-            prefix + String.format(FORMAT, hours, minutes, seconds)
+            prefix + String.format(FORMAT, hours, minutes, seconds) + suffix
         }
         setText(text)
     }

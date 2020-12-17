@@ -14,6 +14,7 @@ import kotlin.math.*
  * Author:         songtao
  * CreateDate:     2020/12/17 11:33
  */
+@Suppress("unused")
 class MaterialProgressView : View {
 
     companion object {
@@ -668,8 +669,8 @@ class MaterialProgressView : View {
                 override fun onAnimationEnd(animation: Animation) {
                     mColorIndex = (mColorIndex + 1) % getColors().size
                     resetOriginals()
-                    view.startAnimation(mAnimation)
                     view.invalidate()
+                    view.startAnimation(mAnimation)
                 }
 
                 override fun onAnimationRepeat(animation: Animation) {}
@@ -717,6 +718,7 @@ class MaterialProgressView : View {
                 } else {
                     mColorIndex = 0
                     resetOriginals()
+                    view.invalidate()
                     view.startAnimation(mAnimation)
                 }
             }

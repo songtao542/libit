@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.BlurMaskFilter.Blur
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.animation.*
@@ -250,9 +251,9 @@ class MaterialProgressView : View {
         val centerX = width / 2f
         val centerY = height / 2f
         if (mRing.getShape() == Shape.CIRCLE) {
-            c.rotate(rotation, centerX, centerY)
+            c.rotate(mRing.groupRotation, centerX, centerY)
         } else {
-            mRing.rotationExtra = rotation / 2f
+            mRing.rotationExtra = mRing.groupRotation / 2f
         }
         mRing.draw(c, 0f, 0f, width.toFloat(), height.toFloat())
         c.restoreToCount(saveCount)
@@ -299,10 +300,11 @@ class MaterialProgressView : View {
 
         private var mBound = RectF()
 
-        var trimStart = 0.0f
-        var trimEnd = 0.0f
-        var trimOffset = 0.0f
+        var trimStart = 210.0f
+        var trimEnd = 30.0f
+        var trimOffset = 30.0f
         var rotation = 0.0f
+        var groupRotation = 0.0f
         var rotationExtra = 0.0f
         var strokeWidth = 5.0f
         var strokeJoin = Paint.Join.MITER
@@ -359,7 +361,7 @@ class MaterialProgressView : View {
 
             val startAngle = (trimStart + rotation) * 360
             val endAngle = (trimEnd + rotation) * 360
-            var sweepAngle = endAngle - startAngle + trimOffset
+            var sweepAngle = endAngle - startAngle
             val minAngle = (360.0 / (diameter * Math.PI)).toFloat()
             if (sweepAngle < minAngle && sweepAngle > -minAngle) {
                 sweepAngle = sign(sweepAngle) * minAngle
@@ -620,11 +622,23 @@ class MaterialProgressView : View {
                     trimEnd = 0.75f * START_CURVE_INTERPOLATOR.getInterpolation(interpolatedTime)
                     trimStart = 0.75f * END_CURVE_INTERPOLATOR.getInterpolation(interpolatedTime)
                     rotation = 0.25f * interpolatedTime
-                    view.rotation = 720.0f / NUM_POINTS * interpolatedTime + 720.0f * (mRotationCount / NUM_POINTS)
+                    groupRotation = 720.0f / NUM_POINTS * interpolatedTime + 720.0f * (mRotationCount / NUM_POINTS)
+
+                    val diameter = min(mBound.width(), mBound.height())
+                    val startAngle = (trimStart + rotation) * 360
+                    val endAngle = (trimEnd + rotation) * 360
+                    var sweepAngle = endAngle - startAngle
+                    val minAngle = (360.0 / (diameter * Math.PI)).toFloat()
+                    if (sweepAngle < minAngle && sweepAngle > -minAngle) {
+                        sweepAngle = sign(sweepAngle) * minAngle
+                    }
+                    Log.d("TTTT", "start: $startAngle    end: $endAngle   $sweepAngle")
+
                     view.invalidate()
                 }
             }
-            animation.repeatCount = Animation.INFINITE
+            //animation.repeatCount = Animation.INFINITE
+            animation.repeatCount = 4
             animation.repeatMode = Animation.RESTART
             animation.interpolator = LINEAR_INTERPOLATOR
             animation.duration = duration
@@ -638,6 +652,7 @@ class MaterialProgressView : View {
                 }
 
                 override fun onAnimationRepeat(animation: Animation) {
+                    Log.d("TTTT","---------------------------------------------")
                     colorIndex = (colorIndex + 1) % colorScheme.size
                     resetOriginals()
                     mRotationCount = (mRotationCount + 1) % NUM_POINTS
@@ -667,7 +682,7 @@ class MaterialProgressView : View {
         fun stop() {
             mAnimating = false
             view.clearAnimation()
-            view.rotation = 0f
+            groupRotation = 0f
             colorIndex = 0
             resetOriginals()
             view.invalidate()

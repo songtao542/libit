@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
+import com.liabit.extension.dip
+import com.liabit.extension.dp
 import com.liabit.statebutton.MaterialProgressDrawable
 import com.liabit.timerview.TimerTextView
 import com.liabit.timerview.TimerView
@@ -51,10 +53,15 @@ class TestTimerActivity : AppCompatActivity() {
         })
 
         val d = MaterialProgressDrawable(this, drawableView)
-
+        d.setColorSchemeColors(0xffff0000.toInt(), 0xff0000ff.toInt())
         drawableView.background = d
-
         d.start()
+
+        val od = com.liabit.test.temp.MaterialProgressDrawable(this, originMPD)
+        od.alpha = 255
+        od.setColorSchemeColors(0xffff0000.toInt(), 0xff0000ff.toInt())
+        originMPD.background = od
+        od.start()
 
     }
 }

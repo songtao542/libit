@@ -203,12 +203,136 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:clipChildren="false"
         android:clipToPadding="false"
         app:millisInFuture="30000"
         app:prefix="抢购中，距结束："
         app:tickInterval="1000" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.liabit.timerview.TimerTextView
+            android:id="@+id/timerTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/rectangle_timer_selector"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="6dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:millisInFuture="5000"
+            app:prefix="跳过 "
+            app:showAsCountDownButton="true"
+            app:showStrokeProgress="false"
+            app:strokeColor="#ffffff"
+            app:tickInterval="1000" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.liabit.timerview.TimerTextView
+            android:id="@+id/timerTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/rounded_rectangle_timer_selector"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="6dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:millisInFuture="5000"
+            app:prefix="跳过 "
+            app:showAsCountDownButton="true"
+            app:showStrokeProgress="false"
+            app:strokeColor="#ffffff"
+            app:tickInterval="1000" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.liabit.timerview.TimerTextView
+            android:id="@+id/timerTextView3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:millisInFuture="5000"
+            app:showAsCountDownButton="true"
+            app:showStrokeProgress="true"
+            app:strokeColor="#ffffff"
+            app:suffix="s"
+            app:tickInterval="1000" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.liabit.timerview.TimerTextView
+            android:id="@+id/timerTextView4"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            app:millisInFuture="5000"
+            app:prefix="跳过\n"
+            app:showAsCountDownButton="true"
+            app:showStrokeProgress="true"
+            app:strokeColor="#ffffff"
+            app:suffix="s"
+            app:tickInterval="1000" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.liabit.timerview.TimerTextView
+            android:id="@+id/timerTextView5"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            app:millisInFuture="5000"
+            app:prefix="跳过"
+            app:showAsCountDownButton="true"
+            app:showCountDownText="false"
+            app:showStrokeProgress="true"
+            app:strokeColor="#ffffff"
+            app:tickInterval="1000" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 </LinearLayout>

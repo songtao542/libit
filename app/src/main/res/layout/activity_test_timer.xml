@@ -27,33 +27,16 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <com.liabit.statebutton.MaterialProgressView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:shape="circle"
-                app:strokeColor="#ff9900"
-                app:strokeColorScheme="@array/colors"
-                app:strokeLineCap="square"
-                app:strokeLineJoin="miter"
-                app:strokeWidth="2dp" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <com.liabit.statebutton.MaterialProgressView
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                app:shape="rounded_rectangle"
-                app:strokeColor="#ff9900"
-                app:strokeColorScheme="@array/colors"
-                app:strokeLineCap="square"
-                app:strokeLineJoin="miter"
-                app:strokeWidth="2dp"
-                app:trimEnd="10"
-                app:trimOffset="30"
-                app:trimStart="20" />
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                style="@style/Widget.MaterialComponents.CircularProgressIndicator"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:indeterminate="true"
+                android:indeterminateDuration="8000"
+                app:indicatorColor="#afaf0f"
+                app:trackColor="@android:color/transparent"
+                app:trackCornerRadius="2dp"
+                app:trackThickness="2dp" />
 
             <Space
                 android:layout_width="0dp"
@@ -87,6 +70,38 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:orientation="horizontal">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.liabit.statebutton.MaterialProgressView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:shape="circle"
+                app:strokeColor="#ff9900"
+                app:strokeColorScheme="@array/colors"
+                app:strokeLineCap="square"
+                app:strokeLineJoin="miter"
+                app:strokeWidth="2dp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.liabit.statebutton.MaterialProgressView
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                app:shape="rounded_rectangle"
+                app:strokeColor="#ff9900"
+                app:strokeColorScheme="@array/colors"
+                app:strokeLineCap="square"
+                app:strokeLineJoin="miter"
+                app:strokeWidth="2dp"
+                app:trimEnd="10"
+                app:trimStart="20" />
 
             <Space
                 android:layout_width="0dp"

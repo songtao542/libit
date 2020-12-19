@@ -163,7 +163,6 @@ class TimerTextView : AppCompatTextView {
         if (showStrokeProgress) {
             val halfStrokeWidth = strokePaint.strokeWidth / 2
             val progress = 1f - (remainingTime.toDouble() / millisInFuture.toDouble()).toFloat()
-            Log.d("TTTT", "progress=$progress")
             strokePaint.color = strokeColor
             canvas.drawArc(0f + halfStrokeWidth, 0f + halfStrokeWidth,
                     width.toFloat() - halfStrokeWidth, height.toFloat() - halfStrokeWidth,

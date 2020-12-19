@@ -47,7 +47,7 @@
             <enum name="bevel" value="2" />
         </attr>
         <attr name="trimEnd" format="reference|float" />
-        <attr name="trimOffset" format="reference|float" />
+        <!--<attr name="trimOffset" format="reference|float" />-->
         <attr name="trimStart" format="reference|float" />
 
         <attr name="shape" format="enum">

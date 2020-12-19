@@ -74,7 +74,7 @@ class MaterialProgressView : View {
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         mRing = Ring(this)
-        var innerRadius = dp2px(context, 10)
+        var innerRadius = 0f
         var strokeWidth = dp2px(context, 10)
         var shape = Shape.CIRCLE
         var color = Color.BLACK
@@ -84,7 +84,7 @@ class MaterialProgressView : View {
 
         var trimStart = 0f
         var trimEnd = 0f
-        var trimOffset = 0f
+        //var trimOffset = 0f
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.MaterialProgressView, defStyleAttr, defStyleRes)
 
@@ -106,7 +106,7 @@ class MaterialProgressView : View {
 
             trimStart = typedArray.getFloat(R.styleable.MaterialProgressView_trimStart, 0f)
             trimEnd = typedArray.getFloat(R.styleable.MaterialProgressView_trimEnd, 0f)
-            trimOffset = typedArray.getFloat(R.styleable.MaterialProgressView_trimOffset, 0f)
+            //trimOffset = typedArray.getFloat(R.styleable.MaterialProgressView_trimOffset, 30f)
 
             shape = if (typedArray.getInt(R.styleable.MaterialProgressView_shape, 0) == 0) {
                 Shape.CIRCLE
@@ -121,7 +121,7 @@ class MaterialProgressView : View {
         mRing.strokeJoin = strokeJoin
         mRing.trimStart = trimStart
         mRing.trimEnd = trimEnd
-        mRing.trimOffset = trimOffset
+        //mRing.trimOffset = trimOffset
         mRing.setShape(shape)
         if (colorScheme != 0) {
             mRing.colorScheme = context.resources.getIntArray(colorScheme)
@@ -137,7 +137,7 @@ class MaterialProgressView : View {
             val left = (measuredWidth - mRingSize) / 2
             val top = (measuredHeight - mRingSize) / 2
             val right = (measuredWidth + mRingSize) / 2
-            val bottom = (measuredWidth + mRingSize) / 2
+            val bottom = (measuredHeight + mRingSize) / 2
             mRing.setBound(left, top, right, bottom)
             min(right - left, bottom - top)
         } else {
@@ -300,16 +300,17 @@ class MaterialProgressView : View {
 
         private var mBound = RectF()
 
-        var trimStart = 210.0f
+        var trimStart = 60.0f
         var trimEnd = 30.0f
-        var trimOffset = 30.0f
+
+        //var trimOffset = 30.0f
         var rotation = 0.0f
         var groupRotation = 0.0f
         var rotationExtra = 0.0f
         var strokeWidth = 5.0f
         var strokeJoin = Paint.Join.MITER
         var strokeCap = Paint.Cap.SQUARE
-        var strokeInset = 2.5f
+        var strokeInset = 0f
         var colorScheme: IntArray = intArrayOf(Color.BLACK)
         var colorIndex = 0
         var showArrow = false
@@ -623,22 +624,10 @@ class MaterialProgressView : View {
                     trimStart = 0.75f * END_CURVE_INTERPOLATOR.getInterpolation(interpolatedTime)
                     rotation = 0.25f * interpolatedTime
                     groupRotation = 720.0f / NUM_POINTS * interpolatedTime + 720.0f * (mRotationCount / NUM_POINTS)
-
-                    val diameter = min(mBound.width(), mBound.height())
-                    val startAngle = (trimStart + rotation) * 360
-                    val endAngle = (trimEnd + rotation) * 360
-                    var sweepAngle = endAngle - startAngle
-                    val minAngle = (360.0 / (diameter * Math.PI)).toFloat()
-                    if (sweepAngle < minAngle && sweepAngle > -minAngle) {
-                        sweepAngle = sign(sweepAngle) * minAngle
-                    }
-                    Log.d("TTTT", "start: $startAngle    end: $endAngle   $sweepAngle")
-
                     view.invalidate()
                 }
             }
-            //animation.repeatCount = Animation.INFINITE
-            animation.repeatCount = 4
+            animation.repeatCount = Animation.INFINITE
             animation.repeatMode = Animation.RESTART
             animation.interpolator = LINEAR_INTERPOLATOR
             animation.duration = duration
@@ -652,7 +641,6 @@ class MaterialProgressView : View {
                 }
 
                 override fun onAnimationRepeat(animation: Animation) {
-                    Log.d("TTTT","---------------------------------------------")
                     colorIndex = (colorIndex + 1) % colorScheme.size
                     resetOriginals()
                     mRotationCount = (mRotationCount + 1) % NUM_POINTS

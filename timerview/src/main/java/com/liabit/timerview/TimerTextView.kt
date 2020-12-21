@@ -38,6 +38,9 @@ class TimerTextView : AppCompatTextView {
     private var strokeWidth = 0f
     private lateinit var strokePaint: Paint
 
+    private var dayFormat = FORMAT_TWO
+    private var timeFormat = FORMAT
+
     private val format by lazy { DecimalFormat.getInstance().apply { this.maximumFractionDigits = 0 } }
 
     constructor(context: Context) : super(context) {
@@ -67,7 +70,9 @@ class TimerTextView : AppCompatTextView {
             tickInterval = typedArray.getInt(R.styleable.TimerTextView_tickInterval, tickInterval)
             prefix = typedArray.getString(R.styleable.TimerTextView_prefix) ?: ""
             suffix = typedArray.getString(R.styleable.TimerTextView_suffix) ?: ""
-            dayUnit = typedArray.getString(R.styleable.TimerView_dayUnit) ?: dayUnit
+            dayUnit = typedArray.getString(R.styleable.TimerTextView_dayUnit) ?: dayUnit
+            dayFormat = typedArray.getString(R.styleable.TimerTextView_dayFormat) ?: dayFormat
+            timeFormat = typedArray.getString(R.styleable.TimerTextView_timeFormat) ?: timeFormat
             millisInFuture = typedArray.getInt(R.styleable.TimerTextView_millisInFuture, 0)
             showStrokeProgress = typedArray.getBoolean(R.styleable.TimerTextView_showStrokeProgress, false)
             strokeColor = typedArray.getColor(R.styleable.TimerTextView_strokeColor, Color.WHITE)
@@ -130,9 +135,9 @@ class TimerTextView : AppCompatTextView {
             val mm = TimeUnit.MINUTES.toMillis(minutes)
             val seconds = TimeUnit.MILLISECONDS.toSeconds(timeToStart - (dm + hm + mm))
             if (days > 0) {
-                prefix + String.format(FORMAT_TWO, days) + dayUnit + String.format(FORMAT, hours, minutes, seconds) + suffix
+                prefix + String.format(dayFormat, days) + dayUnit + String.format(timeFormat, hours, minutes, seconds) + suffix
             } else {
-                prefix + String.format(FORMAT, hours, minutes, seconds) + suffix
+                prefix + String.format(timeFormat, hours, minutes, seconds) + suffix
             }
         }
         setText(text)

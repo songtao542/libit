@@ -37,6 +37,8 @@
         <attr name="prefix" format="reference|string" />
         <attr name="suffix" format="reference|string" />
         <attr name="dayUnit" />
+        <attr name="dayFormat" format="reference|string" />
+        <attr name="timeFormat" format="reference|string" />
         <attr name="showAsCountDownButton" format="reference|boolean" />
         <attr name="showCountDownText" format="reference|boolean" />
         <attr name="showStrokeProgress" format="reference|boolean" />

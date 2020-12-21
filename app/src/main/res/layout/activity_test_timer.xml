@@ -225,9 +225,12 @@
             android:layout_marginTop="20dp"
             android:clipChildren="false"
             android:clipToPadding="false"
-            app:millisInFuture="30000"
+            app:dayFormat="%d"
+            app:dayUnit="天 "
+            app:millisInFuture="30000000"
             app:prefix="抢购中，距结束："
-            app:tickInterval="1000" />
+            app:tickInterval="1000"
+            app:timeFormat="%d:%02d:%02d" />
 
         <LinearLayout
             android:layout_width="match_parent"

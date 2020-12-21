@@ -1,73 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#00fff0"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    tools:context=".TestTimerActivity">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="#00fff0"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        tools:context=".TestTimerActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                style="@style/Widget.MaterialComponents.CircularProgressIndicator"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:indeterminate="true"
-                android:indeterminateDuration="8000"
-                app:indicatorColor="#afaf0f"
-                app:trackColor="@android:color/transparent"
-                app:trackCornerRadius="2dp"
-                app:trackThickness="2dp" />
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    style="@style/Widget.MaterialComponents.CircularProgressIndicator"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:indeterminate="true"
+                    android:indeterminateDuration="8000"
+                    app:indicatorColor="#afaf0f"
+                    app:trackColor="@android:color/transparent"
+                    app:trackCornerRadius="2dp"
+                    app:trackThickness="2dp" />
 
-            <View
-                android:id="@+id/drawableView"
-                android:layout_width="50dp"
-                android:layout_height="50dp" />
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                <View
+                    android:id="@+id/drawableView"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
 
-            <ProgressBar
-                style="@android:style/Widget.Material.ProgressBar.Large"
-                android:layout_width="50dp"
-                android:layout_height="50dp" />
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                <ProgressBar
+                    style="@android:style/Widget.Material.ProgressBar.Large"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.liabit.statebutton.MaterialProgressView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:shape="circle"
+                    app:strokeColor="#ff9900"
+                    app:strokeColorScheme="@array/colors"
+                    app:strokeLineCap="square"
+                    app:strokeLineJoin="miter"
+                    app:strokeWidth="2dp" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.liabit.statebutton.MaterialProgressView
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    app:shape="rounded_rectangle"
+                    app:strokeColor="#ff9900"
+                    app:strokeColorScheme="@array/colors"
+                    app:strokeLineCap="square"
+                    app:strokeLineJoin="miter"
+                    app:strokeWidth="2dp"
+                    app:trimEnd="10"
+                    app:trimStart="20" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <View
+                    android:id="@+id/originMPD"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:fontFamily="@font/digi"
+                android:gravity="center"
+                android:text="1234567890"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/digib"
+                android:gravity="center"
+                android:text="1234567890"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/digii"
+                android:gravity="center"
+                android:text="1234567890"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/digit"
+                android:gravity="center"
+                android:text="1234567890"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/yournamed7generalhalf"
+                android:gravity="center"
+                android:text="1234567890"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/yournamed7homehalf"
+                android:gravity="center"
+                android:text="1234567890"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <com.liabit.timerview.TimerView
+            android:id="@+id/timerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            app:animationDuration="850"
+            app:corners="4dp"
+            app:dayVisibility="gone"
+            app:delimiterPadding="4dp"
+            app:delimiterTextColor="@android:color/white"
+            app:digitBackgroundColor="@android:color/white"
+            app:digitPadding="4dp"
+            app:digitTextColor="#FF455E"
+            app:digitTextSize="30sp"
+            app:resetSymbol="0"
+            app:tickInterval="1000" />
+
+        <Button
+            android:id="@+id/pauseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="暂停" />
+
+        <com.liabit.timerview.TimerTextView
+            android:id="@+id/timerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            app:millisInFuture="30000"
+            app:prefix="抢购中，距结束："
+            app:tickInterval="1000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
@@ -76,278 +240,119 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <com.liabit.statebutton.MaterialProgressView
+            <com.liabit.timerview.TimerTextView
+                android:id="@+id/timerTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/rectangle_timer_selector"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="6dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                app:millisInFuture="5000"
+                app:prefix="跳过 "
+                app:showAsCountDownButton="true"
+                app:showStrokeProgress="false"
+                app:strokeColor="#ffffff"
+                app:tickInterval="1000" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.liabit.timerview.TimerTextView
+                android:id="@+id/timerTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/rounded_rectangle_timer_selector"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="6dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                app:millisInFuture="5000"
+                app:prefix="跳过 "
+                app:showAsCountDownButton="true"
+                app:showStrokeProgress="false"
+                app:strokeColor="#ffffff"
+                app:tickInterval="1000" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.liabit.timerview.TimerTextView
+                android:id="@+id/timerTextView3"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                app:shape="circle"
-                app:strokeColor="#ff9900"
-                app:strokeColorScheme="@array/colors"
-                app:strokeLineCap="square"
-                app:strokeLineJoin="miter"
-                app:strokeWidth="2dp" />
+                android:layout_gravity="center"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                app:millisInFuture="5000"
+                app:showAsCountDownButton="true"
+                app:showStrokeProgress="true"
+                app:strokeColor="#ffffff"
+                app:suffix="s"
+                app:tickInterval="1000" />
 
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <com.liabit.statebutton.MaterialProgressView
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                app:shape="rounded_rectangle"
-                app:strokeColor="#ff9900"
-                app:strokeColorScheme="@array/colors"
-                app:strokeLineCap="square"
-                app:strokeLineJoin="miter"
-                app:strokeWidth="2dp"
-                app:trimEnd="10"
-                app:trimStart="20" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <View
-                android:id="@+id/originMPD"
+            <com.liabit.timerview.TimerTextView
+                android:id="@+id/timerTextView4"
                 android:layout_width="50dp"
-                android:layout_height="50dp" />
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                app:millisInFuture="5000"
+                app:prefix="跳过\n"
+                app:showAsCountDownButton="true"
+                app:showStrokeProgress="true"
+                app:strokeColor="#ffffff"
+                app:suffix="s"
+                app:tickInterval="1000" />
 
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
+
+            <com.liabit.timerview.TimerTextView
+                android:id="@+id/timerTextView5"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                app:millisInFuture="5000"
+                app:prefix="跳过"
+                app:showAsCountDownButton="true"
+                app:showCountDownText="false"
+                app:showStrokeProgress="true"
+                app:strokeColor="#ffffff"
+                app:tickInterval="1000" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
         </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center_horizontal"
-            android:fontFamily="@font/digi"
-            android:gravity="center"
-            android:text="1234567890"
-            android:textSize="30sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center_horizontal"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/digib"
-            android:gravity="center"
-            android:text="1234567890"
-            android:textSize="30sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center_horizontal"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/digii"
-            android:gravity="center"
-            android:text="1234567890"
-            android:textSize="30sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center_horizontal"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/digit"
-            android:gravity="center"
-            android:text="1234567890"
-            android:textSize="30sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center_horizontal"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/yournamed7generalhalf"
-            android:gravity="center"
-            android:text="1234567890"
-            android:textSize="30sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center_horizontal"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/yournamed7homehalf"
-            android:gravity="center"
-            android:text="1234567890"
-            android:textSize="30sp" />
-    </LinearLayout>
-
-    <com.liabit.timerview.TimerView
-        android:id="@+id/timerView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        app:animationDuration="850"
-        app:corners="4dp"
-        app:dayVisibility="gone"
-        app:delimiterPadding="4dp"
-        app:delimiterTextColor="@android:color/white"
-        app:digitBackgroundColor="@android:color/white"
-        app:digitPadding="4dp"
-        app:digitTextColor="#FF455E"
-        app:digitTextSize="30sp"
-        app:resetSymbol="0"
-        app:tickInterval="1000" />
-
-    <Button
-        android:id="@+id/pauseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginTop="20dp"
-        android:text="暂停" />
-
-    <com.liabit.timerview.TimerTextView
-        android:id="@+id/timerTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        app:millisInFuture="30000"
-        app:prefix="抢购中，距结束："
-        app:tickInterval="1000" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <com.liabit.timerview.TimerTextView
-            android:id="@+id/timerTextView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/rectangle_timer_selector"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="6dp"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            app:millisInFuture="5000"
-            app:prefix="跳过 "
-            app:showAsCountDownButton="true"
-            app:showStrokeProgress="false"
-            app:strokeColor="#ffffff"
-            app:tickInterval="1000" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <com.liabit.timerview.TimerTextView
-            android:id="@+id/timerTextView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/rounded_rectangle_timer_selector"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="6dp"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            app:millisInFuture="5000"
-            app:prefix="跳过 "
-            app:showAsCountDownButton="true"
-            app:showStrokeProgress="false"
-            app:strokeColor="#ffffff"
-            app:tickInterval="1000" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <com.liabit.timerview.TimerTextView
-            android:id="@+id/timerTextView3"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            app:millisInFuture="5000"
-            app:showAsCountDownButton="true"
-            app:showStrokeProgress="true"
-            app:strokeColor="#ffffff"
-            app:suffix="s"
-            app:tickInterval="1000" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <com.liabit.timerview.TimerTextView
-            android:id="@+id/timerTextView4"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:textColor="@android:color/white"
-            android:textSize="12sp"
-            app:millisInFuture="5000"
-            app:prefix="跳过\n"
-            app:showAsCountDownButton="true"
-            app:showStrokeProgress="true"
-            app:strokeColor="#ffffff"
-            app:suffix="s"
-            app:tickInterval="1000" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <com.liabit.timerview.TimerTextView
-            android:id="@+id/timerTextView5"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:textColor="@android:color/white"
-            android:textSize="12sp"
-            app:millisInFuture="5000"
-            app:prefix="跳过"
-            app:showAsCountDownButton="true"
-            app:showCountDownText="false"
-            app:showStrokeProgress="true"
-            app:strokeColor="#ffffff"
-            app:tickInterval="1000" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-    </LinearLayout>
-</LinearLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

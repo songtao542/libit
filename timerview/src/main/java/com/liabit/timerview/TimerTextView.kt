@@ -61,6 +61,7 @@ class TimerTextView : AppCompatTextView {
             style = Paint.Style.STROKE
             strokeWidth = strokeWidth
         }
+        dayUnit = resources.getString(R.string.days)
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerTextView, defStyleAttr, 0)
             tickInterval = typedArray.getInt(R.styleable.TimerTextView_tickInterval, tickInterval)

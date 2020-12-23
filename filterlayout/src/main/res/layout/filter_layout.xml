@@ -1,36 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:parentTag="android.widget.LinearLayout">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.liabit.filter.FilterLayout"
+    tools:parentTag="android.widget.RelativeLayout">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="@color/filter_light_blue"
+        app:tabIndicatorFullWidth="true"
+        app:tabSelectedTextColor="@color/filter_item_pressed_text_color"
+        app:tabTextColor="@android:color/darker_gray" />
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tabLayout"
+        android:paddingBottom="60dp" />
 
-    <LinearLayout
+    <View
+        android:id="@+id/bottomDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_above="@+id/footer"
+        android:background="#eeeeee" />
+
+    <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@+id/viewpager"
         android:layout_gravity="bottom"
-        android:orientation="horizontal">
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
+        android:orientation="horizontal"
+        app:alignItems="center"
+        app:flexDirection="row"
+        app:justifyContent="space_evenly">
 
         <TextView
             android:id="@+id/reset"
-            android:layout_width="150dp"
+            android:layout_width="120dp"
             android:layout_height="@dimen/filter_action_height"
             android:layout_gravity="center_vertical"
             android:background="@drawable/filter_reset_button_selector"
@@ -38,14 +52,10 @@
             android:text="@string/filter_reset"
             android:textColor="@android:color/black" />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/confirm"
-            android:layout_width="150dp"
+            android:layout_width="120dp"
             android:layout_height="@dimen/filter_action_height"
             android:layout_gravity="center_vertical"
             android:background="@drawable/filter_confirm_button_selector"
@@ -53,10 +63,6 @@
             android:text="@string/filter_confirm"
             android:textColor="@android:color/white" />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
-    </LinearLayout>
+    </com.google.android.flexbox.FlexboxLayout>
 
 </merge>

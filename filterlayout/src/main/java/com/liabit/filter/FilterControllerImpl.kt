@@ -3,6 +3,7 @@ package com.liabit.filter
 import android.graphics.Rect
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 
 internal class FilterControllerImpl : FilterController {
 
@@ -25,6 +26,8 @@ internal class FilterControllerImpl : FilterController {
     private var mRightFilterConfigurator: FilterAdapter? = null
 
     private var mFilterPicker: IPicker? = null
+
+    private var mMaxHeight: Int? = null
 
     override fun setup(filterLayout: FilterLayout) {
         mFilterLayout = filterLayout
@@ -147,6 +150,14 @@ internal class FilterControllerImpl : FilterController {
 
     override fun getOnConfirmListener(): FilterLayout.OnConfirmListener? {
         return mOnConfirmListener
+    }
+
+    override fun setMaxHeight(max: Int) {
+        mMaxHeight = max
+    }
+
+    override fun getMaxHeight():Int? {
+        return mMaxHeight
     }
 
 }

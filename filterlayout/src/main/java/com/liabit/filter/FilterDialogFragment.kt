@@ -8,6 +8,7 @@ import android.view.*
 import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.widget.ViewPager2
 
 /**
  * Author:         songtao
@@ -26,18 +27,29 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
     }
 
     private var mShowAsDialog: Boolean = true
-    private var mPopHeight = 0
+    private var mMatchParentHeight: Boolean = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.filter_dialog_fragment, container, false)?.apply {
             if (mShowAsDialog) {
                 val screenHeight = context?.resources?.displayMetrics?.heightPixels ?: 0
                 if (screenHeight > 0) {
-                    mPopHeight = screenHeight / 4 * 3
-                    layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mPopHeight)
+                    val maxHeight = getMaxHeight() ?: screenHeight / 4 * 3
+                    (this as? MHLinearLayout)?.setMaxHeight(maxHeight)
+                }
+            } else if (mMatchParentHeight) {
+                layoutParams = layoutParams?.also { it.height = ViewGroup.LayoutParams.MATCH_PARENT }
+                        ?: ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                findViewById<ViewPager2>(R.id.viewpager)?.let { viewpager ->
+                    viewpager.layoutParams = viewpager.layoutParams?.also { it.height = ViewGroup.LayoutParams.MATCH_PARENT }
+                            ?: ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 }
             }
         }
+    }
+
+    fun setMatchParentHeight(matchParentHeight: Boolean) {
+        mMatchParentHeight = matchParentHeight
     }
 
     class InnerDialog(context: Context?, theme: Int) : AppCompatDialog(context, theme) {

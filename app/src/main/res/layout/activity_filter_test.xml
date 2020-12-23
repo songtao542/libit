@@ -22,20 +22,83 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/showFilterAsFragment"
+            android:id="@+id/showAsPopup"
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp"
-            android:text="Show As Fragment" />
+            android:text="Show As PopupWindow"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showFilterAsFragment"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show As Fragment"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/showFilterAsDialog"
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            android:text="Show As Dialog" />
+            android:layout_marginTop="20dp"
+            android:text="Show As Dialog"
+            android:textAllCaps="false" />
 
+        <Button
+            android:id="@+id/showTwoColumnAsPopup"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show Two Column As PopupWindow"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showTwoColumnFilterAsFragment"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show Two Column Filter as Fragment"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showTwoColumnFilterAsDialog"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show Two Column As Dialog"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showShortFragment"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show Short List As Fragment"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showShortPopup"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show Short List As Popup"
+            android:textAllCaps="false" />
+        <Button
+            android:id="@+id/showShort"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show Short List As Dialog"
+            android:textAllCaps="false" />
     </LinearLayout>
 </LinearLayout>

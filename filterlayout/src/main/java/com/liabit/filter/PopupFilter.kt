@@ -20,7 +20,7 @@ class PopupFilter(context: Context) : FilterController by FilterControllerImpl()
         if (screenHeight > 0) {
             mPopHeight = screenHeight / 4 * 3
         }
-        mFilterLayout.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mPopHeight)
+        mFilterLayout.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     override fun onConfirm(view: View) {
@@ -29,6 +29,10 @@ class PopupFilter(context: Context) : FilterController by FilterControllerImpl()
     }
 
     fun show(anchor: View) {
+        val height = getMaxHeight() ?: mPopHeight
+        if (height > 0) {
+            mFilterLayout.setMaxHeight(height)
+        }
         setup(mFilterLayout)
         mFilterLayout.setOnConfirmListener(this)
         mPopupWindow.setContentView(mFilterLayout)

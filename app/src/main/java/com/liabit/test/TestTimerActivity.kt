@@ -44,7 +44,8 @@ class TestTimerActivity : AppCompatActivity() {
             }
         }
 
-        timerTextView.start(10009900)
+        //timerTextView.start(10009900)
+        timerTextView.start(2090159900)
         timerTextView.setTimeEndListener(object : TimerTextView.OnTimeEndListener {
             override fun onTimeEnd() {
                 Toast.makeText(this@TestTimerActivity, "Finished", Toast.LENGTH_SHORT).show()

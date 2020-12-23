@@ -11,17 +11,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Checkable
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.flexbox.*
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -31,7 +28,7 @@ import kotlin.collections.ArrayList
  * CreateDate:     2020/9/13 15:21
  */
 @Suppress("unused")
-class FilterLayout : LinearLayout {
+class FilterLayout : RelativeLayout {
 
     companion object {
         const val TAG = "FilterLayout"
@@ -46,7 +43,7 @@ class FilterLayout : LinearLayout {
     private var mFooter: View? = null
     private var mReset: View? = null
     private var mConfirm: View? = null
-    private var mViewPager: ViewPager? = null
+    private var mViewPager: ViewPager2? = null
     private var mTabLayout: TabLayout? = null
 
     private var mPageCount = 1
@@ -63,6 +60,8 @@ class FilterLayout : LinearLayout {
     private var mOnConfirmListener: OnConfirmListener? = null
 
     private var mFilterPicker: IPicker? = null
+
+    private var mMaxHeight = 0
 
     constructor(context: Context) : super(context) {
         init(context, null, 0, 0)
@@ -81,8 +80,7 @@ class FilterLayout : LinearLayout {
     }
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
-        orientation = VERTICAL
-
+        //orientation = VERTICAL
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FilterLayout, defStyleAttr, defStyleRes)
             val pickerClass = typedArray.getString(R.styleable.FilterLayout_picker)
@@ -117,25 +115,24 @@ class FilterLayout : LinearLayout {
         }
         initLeftPage(context)
 
-        mViewPager?.adapter = object : PagerAdapter() {
-            override fun getCount(): Int {
+        mViewPager?.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+            override fun getItemCount(): Int {
                 return mPageCount
             }
 
-            override fun isViewFromObject(view: View, obj: Any): Boolean {
-                return view == obj
+            override fun getItemViewType(position: Int): Int {
+                return if (position == 0) 0 else 1
             }
 
-            override fun instantiateItem(container: ViewGroup, position: Int): Any {
-                val view = if (position == 0) mLeftPage!! else mRightPage!!
-                container.addView(view)
-                return view
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+                val view = if (viewType == 0) mLeftPage!! else mRightPage!!
+                return object : RecyclerView.ViewHolder(view) {}
             }
 
-            override fun getPageTitle(position: Int): CharSequence? {
-                return if (position == 0) mLeftPageTitle else mRightPageTitle
+            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             }
         }
+
         mReset?.setOnClickListener {
             when (mViewPager?.currentItem) {
                 0 -> {
@@ -174,6 +171,21 @@ class FilterLayout : LinearLayout {
         configFooter()
     }
 
+    fun setMaxHeight(maxHeight: Int) {
+        mMaxHeight = maxHeight
+        requestLayout()
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val height = MeasureSpec.getSize(heightMeasureSpec)
+        val hMeasureSpec = if (mMaxHeight in 1 until height) {
+            MeasureSpec.makeMeasureSpec(mMaxHeight, MeasureSpec.getMode(heightMeasureSpec))
+        } else {
+            heightMeasureSpec
+        }
+        super.onMeasure(widthMeasureSpec, hMeasureSpec)
+    }
+
     private fun initLeftPage(context: Context) {
         mLeftPage = LayoutInflater.from(context).inflate(R.layout.filter_list,
                 mViewPager, false) as? LinearLayout
@@ -195,7 +207,16 @@ class FilterLayout : LinearLayout {
             mRightPage = LayoutInflater.from(context).inflate(R.layout.filter_list,
                     mViewPager, false) as? LinearLayout
             mRightPageRecycleView = mRightPage?.findViewById(R.id.recyclerView)
-            mTabLayout?.setupWithViewPager(mViewPager)
+            //mTabLayout?.setupWithViewPager(mViewPager)
+            val tabLayout = mTabLayout
+            val viewPager = mViewPager
+            if (tabLayout != null && viewPager != null) {
+                val mediator = TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+                    tab.text = if (position == 0) mLeftPageTitle else mRightPageTitle
+                }
+                //要执行这一句才是真正将两者绑定起来
+                mediator.attach()
+            }
             mTabLayout?.visibility = View.VISIBLE
             mRightPageRecycleView?.let {
                 mRightPageListPadding?.let { rect ->
@@ -314,7 +335,7 @@ class FilterLayout : LinearLayout {
         if (rightPageTitle != null) {
             mRightPageTitle = rightPageTitle
         }
-        mTabLayout?.setupWithViewPager(mViewPager)
+        //mTabLayout?.setupWithViewPager(mViewPager)
     }
 
     fun setLeftPageFilter(items: List<Filter>, adapter: FilterAdapter? = null) {
@@ -513,18 +534,18 @@ class FilterLayout : LinearLayout {
                         filters.addAll(it)
                     }
                     if (!end) {
-                        if (filterItem.getStartText().isNotBlank()) {
-                            editText.setText(filterItem.getStartText())
-                        }
                         filterItem.getStartInputFilters()?.let {
                             filters.addAll(it)
                         }
-                    } else {
-                        if (filterItem.getEndText().isNotBlank()) {
-                            editText.setText(filterItem.getEndText())
+                        if (filterItem.getStartText().isNotBlank()) {
+                            editText.setText(filterItem.getStartText())
                         }
+                    } else {
                         filterItem.getEndInputFilters()?.let {
                             filters.addAll(it)
+                        }
+                        if (filterItem.getEndText().isNotBlank()) {
+                            editText.setText(filterItem.getEndText())
                         }
                     }
                     if (filters.isNotEmpty()) {

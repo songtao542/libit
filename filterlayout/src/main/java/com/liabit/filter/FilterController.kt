@@ -36,4 +36,11 @@ internal interface FilterController : FilterLayout.OnCombinationResultListener, 
 
     fun getOnConfirmListener(): FilterLayout.OnConfirmListener?
 
+    /**
+     * 设置最大高度
+     */
+    fun setMaxHeight(max: Int)
+
+    fun getMaxHeight(): Int?
+
 }

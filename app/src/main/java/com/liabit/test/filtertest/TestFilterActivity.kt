@@ -4,27 +4,41 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.util.Log
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.liabit.filter.*
 import com.liabit.test.R
 import kotlinx.android.synthetic.main.activity_filter_test.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class TestFilterActivity : AppCompatActivity() {
 
     private var mPopupFilter: PopupFilter? = null
+    private var mTwoColumnPopupFilter: PopupFilter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_filter_test)
 
-        toolbar.setOnClickListener {
-            getPopupFilter().show(it)
+        filterData = getFilterData()
+        rightFilterData = getFilterData()
+
+        shortFilterData = ArrayList()
+        val checkableList1 = SimpleFilterGroup("订单类型")
+        checkableList1.add(SimpleCheckableFilterItem("网批订单"))
+        checkableList1.add(SimpleCheckableFilterItem("标准订单"))
+        checkableList1.add(SimpleCheckableFilterItem("非标准订单"))
+        checkableList1.add(SimpleCheckableFilterItem("订货计划订单"))
+        checkableList1.setSingleChoice(true)
+        shortFilterData.add(checkableList1)
+
+        showAsPopup.setOnClickListener {
+            getPopupFilter().show(toolbar)
         }
 
         showFilterAsFragment.setOnClickListener {
             val f = getFilterDialogFragment()
+            f.setShowAsDialog(false)
             f.show(this)
         }
 
@@ -33,6 +47,88 @@ class TestFilterActivity : AppCompatActivity() {
             f.setShowAsDialog(true)
             f.show(this)
         }
+
+        showTwoColumnAsPopup.setOnClickListener {
+            getTwoColumnPopupFilter().show(toolbar)
+        }
+
+        showTwoColumnFilterAsFragment.setOnClickListener {
+            val f = getFilterDialogFragment(true)
+            f.setShowAsDialog(false)
+            f.show(this)
+        }
+
+        showTwoColumnFilterAsDialog.setOnClickListener {
+            val f = getFilterDialogFragment(true)
+            f.setShowAsDialog(true)
+            f.show(this)
+        }
+
+        showShortFragment.setOnClickListener {
+            val f = FilterDialogFragment(FilterPicker.instance)
+            f.setFilter(shortFilterData)
+            f.setOnResultListener(object : FilterLayout.OnResultListener {
+                override fun onResult(result: List<Filter>) {
+                    for (filter in result) {
+                        if (filter is FilterGroup) {
+                            for (child in filter.getChildren()) {
+                                if (child is EditableRangeFilterItem) {
+                                    Log.d("TTTT", "${child.getStartHint()}: ${child.getStartText()}  ${child.getEndHint()}: ${child.getEndText()}")
+                                } else if (child is EditableFilterItem) {
+                                    Log.d("TTTT", "${child.getHint()}: ${child.getText()}")
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            f.setShowAsDialog(false)
+            f.show(this)
+        }
+
+        showShort.setOnClickListener {
+            val f = FilterDialogFragment(FilterPicker.instance)
+            f.setFilter(shortFilterData)
+            f.setOnResultListener(object : FilterLayout.OnResultListener {
+                override fun onResult(result: List<Filter>) {
+                    for (filter in result) {
+                        if (filter is FilterGroup) {
+                            for (child in filter.getChildren()) {
+                                if (child is EditableRangeFilterItem) {
+                                    Log.d("TTTT", "${child.getStartHint()}: ${child.getStartText()}  ${child.getEndHint()}: ${child.getEndText()}")
+                                } else if (child is EditableFilterItem) {
+                                    Log.d("TTTT", "${child.getHint()}: ${child.getText()}")
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            f.setShowAsDialog(true)
+            f.show(this)
+        }
+
+        showShortPopup.setOnClickListener {
+            val f = PopupFilter(this)
+            f.setFilterPicker(FilterPicker.instance)
+            f.setFilter(shortFilterData)
+            f.setOnResultListener(object : FilterLayout.OnResultListener {
+                override fun onResult(result: List<Filter>) {
+                    for (filter in result) {
+                        if (filter is FilterGroup) {
+                            for (child in filter.getChildren()) {
+                                if (child is EditableRangeFilterItem) {
+                                    Log.d("TTTT", "${child.getStartHint()}: ${child.getStartText()}  ${child.getEndHint()}: ${child.getEndText()}")
+                                } else if (child is EditableFilterItem) {
+                                    Log.d("TTTT", "${child.getHint()}: ${child.getText()}")
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            f.show(toolbar)
+        }
     }
 
     private fun getPopupFilter(): PopupFilter {
@@ -40,7 +136,7 @@ class TestFilterActivity : AppCompatActivity() {
             mPopupFilter = PopupFilter(this)
         }
         mPopupFilter?.setFilterPicker(FilterPicker())
-        mPopupFilter?.setFilter(getFilterData())
+        mPopupFilter?.setFilter(filterData)
         mPopupFilter?.setOnResultListener(object : FilterLayout.OnResultListener {
             override fun onResult(result: List<Filter>) {
                 for (filter in result) {
@@ -59,9 +155,40 @@ class TestFilterActivity : AppCompatActivity() {
         return mPopupFilter!!
     }
 
-    private fun getFilterDialogFragment(): FilterDialogFragment {
+    private fun getTwoColumnPopupFilter(): PopupFilter {
+        if (mTwoColumnPopupFilter == null) {
+            mTwoColumnPopupFilter = PopupFilter(this)
+        }
+        mTwoColumnPopupFilter?.setFilterPicker(FilterPicker())
+        mTwoColumnPopupFilter?.setFilter(filterData)
+        mTwoColumnPopupFilter?.setRightPageFilter(rightFilterData)
+        mTwoColumnPopupFilter?.setTab("按价格", "按订单")
+        mTwoColumnPopupFilter?.setOnResultListener(object : FilterLayout.OnResultListener {
+            override fun onResult(result: List<Filter>) {
+                for (filter in result) {
+                    if (filter is FilterGroup) {
+                        for (child in filter.getChildren()) {
+                            if (child is EditableRangeFilterItem) {
+                                Log.d("TTTT", "${child.getStartHint()}: ${child.getStartText()}  ${child.getEndHint()}: ${child.getEndText()}")
+                            } else if (child is EditableFilterItem) {
+                                Log.d("TTTT", "${child.getHint()}: ${child.getText()}")
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        return mTwoColumnPopupFilter!!
+    }
+
+    private fun getFilterDialogFragment(twoColumn: Boolean = false): FilterDialogFragment {
         val f = FilterDialogFragment(FilterPicker.instance)
-        f.setFilter(getFilterData())
+        f.setFilter(filterData)
+        if (twoColumn) {
+            f.setRightPageFilter(rightFilterData)
+            f.setTab("按价格", "按订单")
+        }
+        f.setMaxHeight(1080)
         f.setOnResultListener(object : FilterLayout.OnResultListener {
             override fun onResult(result: List<Filter>) {
                 for (filter in result) {
@@ -80,8 +207,12 @@ class TestFilterActivity : AppCompatActivity() {
         return f
     }
 
+    private lateinit var filterData: List<FilterItem>
+    private lateinit var shortFilterData: ArrayList<FilterItem>
+    private lateinit var rightFilterData: List<FilterItem>
+
     private fun getFilterData(): List<FilterItem> {
-        val filterData: ArrayList<FilterItem> = ArrayList()
+        val filterData = ArrayList<FilterItem>()
 
         val checkableList1 = SimpleFilterGroup("订单类型")
         checkableList1.add(SimpleCheckableFilterItem("网批订单"))

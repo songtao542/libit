@@ -31,16 +31,19 @@
         android:layout_above="@+id/footer"
         android:background="#eeeeee" />
 
-    <com.google.android.flexbox.FlexboxLayout
+    <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignBottom="@+id/viewpager"
         android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        app:alignItems="center"
-        app:flexDirection="row"
-        app:justifyContent="space_evenly">
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/reset"
@@ -52,6 +55,10 @@
             android:text="@string/filter_reset"
             android:textColor="@android:color/black" />
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/confirm"
@@ -63,6 +70,10 @@
             android:text="@string/filter_confirm"
             android:textColor="@android:color/white" />
 
-    </com.google.android.flexbox.FlexboxLayout>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
 
 </merge>

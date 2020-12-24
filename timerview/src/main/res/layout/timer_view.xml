@@ -26,7 +26,8 @@
             android:layout_height="wrap_content"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:fontFamily="@font/digit" />
+            android:fontFamily="@font/digit"
+            android:visibility="gone" />
 
         <com.liabit.timerview.DigitView
             android:id="@+id/day1"

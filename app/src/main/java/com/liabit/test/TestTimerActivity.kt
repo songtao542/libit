@@ -22,7 +22,7 @@ class TestTimerActivity : AppCompatActivity() {
         /*ResourcesCompat.getFont(this, R.font.digi)?.let {
             timerView.setTypeface(it)
         }*/
-        timerView.start(9000000000000)
+        timerView.start(9000000000000 -  55L * 24 * 60 * 60 * 1000 )
         timerView.setTimeEndListener(object : TimerView.OnTimeEndListener {
             override fun onTimeEnd() {
                 Toast.makeText(this@TestTimerActivity, "Finished", Toast.LENGTH_SHORT).show()

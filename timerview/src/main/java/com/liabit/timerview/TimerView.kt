@@ -207,12 +207,22 @@ class TimerView : LinearLayout {
     fun start(millisInFuture: Long) {
         countDownTimer?.cancel()
         val days = TimeUnit.MILLISECONDS.toDays(millisInFuture)
-        if (days > 0) {
-            dayLayout.visibility = View.VISIBLE
-            delimiterDayHour.visibility = View.VISIBLE
-        } else {
-            dayLayout.visibility = dayVisibility
-            delimiterDayHour.visibility = dayVisibility
+        when {
+            days > 99 -> {
+                dayLayout.visibility = View.VISIBLE
+                delimiterDayHour.visibility = View.VISIBLE
+                day0.visibility = View.VISIBLE
+                day1.visibility = View.GONE
+                day2.visibility = View.GONE
+            }
+            days > 0 -> {
+                dayLayout.visibility = View.VISIBLE
+                delimiterDayHour.visibility = View.VISIBLE
+            }
+            else -> {
+                dayLayout.visibility = dayVisibility
+                delimiterDayHour.visibility = dayVisibility
+            }
         }
         remainingTime = millisInFuture
         countDownTimer = object : CountDownTimer(millisInFuture, tickInterval.toLong()) {
@@ -245,9 +255,7 @@ class TimerView : LinearLayout {
         val dayLength = daysString.length
         when {
             dayLength > 2 -> {
-                day0.text = daysString.substring(0, dayLength - 2)
-                day1.animateTextChange((daysString[dayLength - 2].toString()))
-                day2.animateTextChange((daysString[dayLength - 1].toString()))
+                day0.text = daysString
             }
             dayLength == 2 -> {
                 day1.animateTextChange((daysString[0].toString()))

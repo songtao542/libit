@@ -80,7 +80,6 @@ class FilterLayout : RelativeLayout {
     }
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
-        //orientation = VERTICAL
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FilterLayout, defStyleAttr, defStyleRes)
             val pickerClass = typedArray.getString(R.styleable.FilterLayout_picker)
@@ -207,14 +206,12 @@ class FilterLayout : RelativeLayout {
             mRightPage = LayoutInflater.from(context).inflate(R.layout.filter_list,
                     mViewPager, false) as? LinearLayout
             mRightPageRecycleView = mRightPage?.findViewById(R.id.recyclerView)
-            //mTabLayout?.setupWithViewPager(mViewPager)
             val tabLayout = mTabLayout
             val viewPager = mViewPager
             if (tabLayout != null && viewPager != null) {
                 val mediator = TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                     tab.text = if (position == 0) mLeftPageTitle else mRightPageTitle
                 }
-                //要执行这一句才是真正将两者绑定起来
                 mediator.attach()
             }
             mTabLayout?.visibility = View.VISIBLE
@@ -335,7 +332,12 @@ class FilterLayout : RelativeLayout {
         if (rightPageTitle != null) {
             mRightPageTitle = rightPageTitle
         }
-        //mTabLayout?.setupWithViewPager(mViewPager)
+        val viewPager = mViewPager
+        if (viewPager != null && (viewPager.adapter?.itemCount ?: 0) > 1) {
+            mTabLayout?.let {
+                it.selectTab(it.getTabAt(viewPager.currentItem))
+            }
+        }
     }
 
     fun setLeftPageFilter(items: List<Filter>, adapter: FilterAdapter? = null) {

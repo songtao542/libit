@@ -20,6 +20,14 @@
         android:orientation="horizontal"
         android:visibility="invisible">
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/day0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:fontFamily="@font/digit" />
+
         <com.liabit.timerview.DigitView
             android:id="@+id/day1"
             android:layout_width="wrap_content"

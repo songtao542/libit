@@ -19,10 +19,10 @@ class TestTimerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_timer)
 
-        /*ResourcesCompat.getFont(this, R.font.yournamed7generalhalf)?.let {
+        /*ResourcesCompat.getFont(this, R.font.digi)?.let {
             timerView.setTypeface(it)
         }*/
-        timerView.start(200000)
+        timerView.start(9000000000000)
         timerView.setTimeEndListener(object : TimerView.OnTimeEndListener {
             override fun onTimeEnd() {
                 Toast.makeText(this@TestTimerActivity, "Finished", Toast.LENGTH_SHORT).show()

@@ -10,9 +10,12 @@ import android.view.View
 import android.view.ViewOutlineProvider
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.res.ResourcesCompat
 import java.util.concurrent.TimeUnit
 
 class TimerView : LinearLayout {
+    private lateinit var day0: AppCompatTextView
     private lateinit var day1: DigitView
     private lateinit var day2: DigitView
     private lateinit var hour1: DigitView
@@ -56,6 +59,7 @@ class TimerView : LinearLayout {
         orientation = HORIZONTAL
         View.inflate(context, R.layout.timer_view, this)
 
+        day0 = findViewById(R.id.day0)
         day1 = findViewById(R.id.day1)
         day2 = findViewById(R.id.day2)
         hour1 = findViewById(R.id.hour1)
@@ -75,6 +79,10 @@ class TimerView : LinearLayout {
         secondLayout = findViewById(R.id.secondLayout)
 
         dayUnit = resources.getString(R.string.days)
+
+        ResourcesCompat.getFont(context, R.font.digit)?.let {
+            setTypeface(it)
+        }
 
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerView, defStyleAttr, 0)
@@ -105,6 +113,7 @@ class TimerView : LinearLayout {
             hourLayout.setBackgroundColor(digitBackgroundColor)
             minuteLayout.setBackgroundColor(digitBackgroundColor)
             secondLayout.setBackgroundColor(digitBackgroundColor)
+            day0.setBackgroundColor(digitBackgroundColor)
             day1.setBackgroundColor(digitBackgroundColor)
             day2.setBackgroundColor(digitBackgroundColor)
             hour1.setBackgroundColor(digitBackgroundColor)
@@ -130,6 +139,7 @@ class TimerView : LinearLayout {
 
             val digitTextColor = typedArray.getColorStateList(R.styleable.TimerView_digitTextColor)
             if (digitTextColor != null) {
+                day0.setTextColor(digitTextColor)
                 day1.setTextColor(digitTextColor)
                 day2.setTextColor(digitTextColor)
                 hour1.setTextColor(digitTextColor)
@@ -142,6 +152,7 @@ class TimerView : LinearLayout {
 
             val digitTextSize = typedArray.getDimension(R.styleable.TimerView_digitTextSize, 0f)
             if (digitTextSize > 0) {
+                day0.setTextSize(TypedValue.COMPLEX_UNIT_PX, digitTextSize)
                 day1.setTextSize(TypedValue.COMPLEX_UNIT_PX, digitTextSize)
                 day2.setTextSize(TypedValue.COMPLEX_UNIT_PX, digitTextSize)
                 hour1.setTextSize(TypedValue.COMPLEX_UNIT_PX, digitTextSize)
@@ -231,12 +242,18 @@ class TimerView : LinearLayout {
         val minutesString = minutes.toString()
         val secondsString = seconds.toString()
 
-        when (daysString.length) {
-            2 -> {
+        val dayLength = daysString.length
+        when {
+            dayLength > 2 -> {
+                day0.text = daysString.substring(0, dayLength - 2)
+                day1.animateTextChange((daysString[dayLength - 2].toString()))
+                day2.animateTextChange((daysString[dayLength - 1].toString()))
+            }
+            dayLength == 2 -> {
                 day1.animateTextChange((daysString[0].toString()))
                 day2.animateTextChange((daysString[1].toString()))
             }
-            1 -> {
+            dayLength == 1 -> {
                 day1.animateTextChange(("0"))
                 day2.animateTextChange((daysString[0].toString()))
             }
@@ -313,6 +330,7 @@ class TimerView : LinearLayout {
     fun reset() {
         countDownTimer?.cancel()
         val symbol = resetSymbol.toString()
+        day0.text = symbol
         day1.setText(symbol)
         day2.setText(symbol)
         hour1.setText(symbol)
@@ -332,6 +350,7 @@ class TimerView : LinearLayout {
     }
 
     fun setTypeface(typeface: Typeface) {
+        day0.typeface = typeface
         day1.setTypeFace(typeface)
         day2.setTypeFace(typeface)
         hour1.setTypeFace(typeface)

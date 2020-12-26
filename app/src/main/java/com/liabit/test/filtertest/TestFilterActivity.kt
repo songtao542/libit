@@ -41,13 +41,13 @@ class TestFilterActivity : AppCompatActivity() {
             getPopupFilter().show(toolbar)
         }
 
-        showFilterAsFragment.setOnClickListener {
+        showAsFragment.setOnClickListener {
             val f = getFilterDialogFragment()
             f.setShowAsDialog(false)
             f.show(this)
         }
 
-        showFilterAsDialog.setOnClickListener {
+        showAsDialog.setOnClickListener {
             val f = getFilterDialogFragment()
             f.setShowAsDialog(true)
             f.show(this)
@@ -57,19 +57,19 @@ class TestFilterActivity : AppCompatActivity() {
             getTwoColumnPopupFilter().show(toolbar)
         }
 
-        showTwoColumnFilterAsFragment.setOnClickListener {
+        showTwoColumnAsFragment.setOnClickListener {
             val f = getFilterDialogFragment(true)
             f.setShowAsDialog(false)
             f.show(this)
         }
 
-        showTwoColumnFilterAsDialog.setOnClickListener {
+        showTwoColumnAsDialog.setOnClickListener {
             val f = getFilterDialogFragment(true)
             f.setShowAsDialog(true)
             f.show(this)
         }
 
-        showShortFragment.setOnClickListener {
+        showShortListAsFragment.setOnClickListener {
             val f = FilterDialogFragment(FilterPicker.instance)
             f.setFilter(shortFilterData)
             f.setOnResultListener(object : FilterLayout.OnResultListener {
@@ -91,29 +91,7 @@ class TestFilterActivity : AppCompatActivity() {
             f.show(this)
         }
 
-        showShort.setOnClickListener {
-            val f = FilterDialogFragment(FilterPicker.instance)
-            f.setFilter(shortFilterData)
-            f.setOnResultListener(object : FilterLayout.OnResultListener {
-                override fun onResult(result: List<Filter>) {
-                    for (filter in result) {
-                        if (filter is FilterGroup) {
-                            for (child in filter.getChildren()) {
-                                if (child is EditableRangeFilterItem) {
-                                    Log.d("TTTT", "${child.getStartHint()}: ${child.getStartText()}  ${child.getEndHint()}: ${child.getEndText()}")
-                                } else if (child is EditableFilterItem) {
-                                    Log.d("TTTT", "${child.getHint()}: ${child.getText()}")
-                                }
-                            }
-                        }
-                    }
-                }
-            })
-            f.setShowAsDialog(true)
-            f.show(this)
-        }
-
-        showShortPopup.setOnClickListener {
+        showShortListAsPopup.setOnClickListener {
             val f = PopupFilter(this)
             f.setFilterPicker(FilterPicker.instance)
             f.setFilter(shortFilterData)
@@ -133,6 +111,28 @@ class TestFilterActivity : AppCompatActivity() {
                 }
             })
             f.show(toolbar)
+        }
+
+        showShortListAsDialog.setOnClickListener {
+            val f = FilterDialogFragment(FilterPicker.instance)
+            f.setFilter(shortFilterData)
+            f.setOnResultListener(object : FilterLayout.OnResultListener {
+                override fun onResult(result: List<Filter>) {
+                    for (filter in result) {
+                        if (filter is FilterGroup) {
+                            for (child in filter.getChildren()) {
+                                if (child is EditableRangeFilterItem) {
+                                    Log.d("TTTT", "${child.getStartHint()}: ${child.getStartText()}  ${child.getEndHint()}: ${child.getEndText()}")
+                                } else if (child is EditableFilterItem) {
+                                    Log.d("TTTT", "${child.getHint()}: ${child.getText()}")
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            f.setShowAsDialog(true)
+            f.show(this)
         }
     }
 
@@ -193,7 +193,6 @@ class TestFilterActivity : AppCompatActivity() {
             f.setRightPageFilter(rightFilterData)
             f.setTab("按价格", "按订单")
         }
-        f.setMaxHeight(1080)
         f.setOnResultListener(object : FilterLayout.OnResultListener {
             override fun onResult(result: List<Filter>) {
                 for (filter in result) {

@@ -27,7 +27,7 @@ internal class MHLinearLayout : LinearLayout {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val height = MeasureSpec.getSize(heightMeasureSpec)
         val hMeasureSpec = if (mMaxHeight in 1 until height) {
-            MeasureSpec.makeMeasureSpec(mMaxHeight, MeasureSpec.getMode(heightMeasureSpec))
+            MeasureSpec.makeMeasureSpec(mMaxHeight, MeasureSpec.AT_MOST)
         } else {
             heightMeasureSpec
         }

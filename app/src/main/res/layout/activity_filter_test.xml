@@ -30,11 +30,11 @@
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:text="Show As PopupWindow"
+            android:text="Show As Popup"
             android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/showFilterAsFragment"
+            android:id="@+id/showAsFragment"
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
@@ -43,7 +43,7 @@
             android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/showFilterAsDialog"
+            android:id="@+id/showAsDialog"
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
@@ -57,20 +57,20 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:text="Show Two Column As PopupWindow"
+            android:text="Show Two Column As Popup"
             android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/showTwoColumnFilterAsFragment"
+            android:id="@+id/showTwoColumnAsFragment"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:text="Show Two Column Filter as Fragment"
+            android:text="Show Two Column As Fragment"
             android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/showTwoColumnFilterAsDialog"
+            android:id="@+id/showTwoColumnAsDialog"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -79,7 +79,7 @@
             android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/showShortFragment"
+            android:id="@+id/showShortListAsFragment"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -88,7 +88,7 @@
             android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/showShortPopup"
+            android:id="@+id/showShortListAsPopup"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -97,7 +97,7 @@
             android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/showShort"
+            android:id="@+id/showShortListAsDialog"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

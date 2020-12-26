@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.InputFilter
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.liabit.extension.layoutUnderStatusBar
 import com.liabit.filter.*
 import com.liabit.test.R
 import kotlinx.android.synthetic.main.activity_filter_test.*
@@ -18,7 +19,11 @@ class TestFilterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_filter_test)
+
+        setSupportActionBar(toolbar)
+        layoutUnderStatusBar(true)
 
         filterData = getFilterData()
         rightFilterData = getFilterData()

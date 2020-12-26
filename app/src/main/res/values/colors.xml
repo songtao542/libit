@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#2D3547</color>
     <color name="colorAccent">#2D3547</color>
 
+    <color name="filter">#1abc9c</color>
+
     <array name="colors">
         <item>#0099CC</item>
         <item>#9933CC</item>

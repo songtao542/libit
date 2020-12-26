@@ -23,6 +23,7 @@
             android:name=".TestMapLocationActivity"
             android:label="MapLocation"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,6 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".tablayouttest.TestTabLayoutActivity"
             android:label="TestTabLayout" />
@@ -65,7 +67,7 @@
         <activity
             android:name=".filtertest.TestFilterActivity"
             android:label="Filter"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/TestFilterTheme" />
         <activity
             android:name=".TestPickerActivity"
             android:label="Picker" />

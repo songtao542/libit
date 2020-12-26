@@ -5,28 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.liabit.filter.FilterDialogFragment">
 
     <FrameLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:elevation="10dp">
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize">
 
         <ImageView
             android:id="@+id/backButton"
             android:layout_width="?attr/actionBarSize"
-            android:layout_height="match_parent"
+            android:layout_height="?attr/actionBarSize"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="centerInside"
             android:src="@drawable/filter_back_icon" />
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="?attr/actionBarSize"
             android:gravity="center"
+            android:paddingHorizontal="?attr/actionBarSize"
             android:text="@string/filter"
             android:textColor="@android:color/black"
             android:textSize="18sp" />

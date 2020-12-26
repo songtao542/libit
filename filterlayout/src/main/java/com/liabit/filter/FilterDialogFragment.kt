@@ -1,14 +1,17 @@
 package com.liabit.filter
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.*
-import androidx.appcompat.app.AppCompatDialog
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
+
 
 /**
  * Author:         songtao
@@ -52,43 +55,46 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
         mMatchParentHeight = matchParentHeight
     }
 
-    class InnerDialog(context: Context?, theme: Int) : AppCompatDialog(context, theme) {
-        init {
-            supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
-            setCanceledOnTouchOutside(true)
-        }
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = InnerDialog(context, R.style.TopSheetDialog)
-        dialog.window?.let {
-            val lp = it.attributes ?: WindowManager.LayoutParams()
-            it.attributes?.let { attr -> lp.copyFrom(attr) }
-            val flag = lp.flags or WindowManager.LayoutParams.FLAG_DIM_BEHIND or
-                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-            lp.flags = flag
-            lp.dimAmount = 0.1f
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT
-            lp.gravity = Gravity.TOP
-            it.attributes = lp
-            it.statusBarColor = Color.TRANSPARENT
-            it.requestFeature(Window.FEATURE_NO_TITLE)
-            it.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            it.setGravity(Gravity.TOP)
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                it.isStatusBarContrastEnforced = false
-                it.isNavigationBarContrastEnforced = false
+        setStyle(STYLE_NORMAL, R.style.TopSheetDialog)
+        return super.onCreateDialog(savedInstanceState).apply {
+            setCancelable(true)
+            setCanceledOnTouchOutside(true)
+            window?.let {
+                //it.attributes?.height = WindowManager.LayoutParams.WRAP_CONTENT
+                it.attributes?.gravity = Gravity.TOP
+                it.attributes?.flags = (it.attributes?.flags ?: 0) or WindowManager.LayoutParams.FLAG_DIM_BEHIND or
+                        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
+                        WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+                it.decorView.systemUiVisibility = it.decorView.systemUiVisibility or
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    it.decorView.systemUiVisibility = it.decorView.systemUiVisibility or
+                            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                }
+                val gestureDetector = GestureDetector(it.context, object : GestureDetector.SimpleOnGestureListener() {
+                    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+                        back()
+                        return true
+                    }
+                })
+                it.decorView.setOnTouchListener { _, event ->
+                    return@setOnTouchListener gestureDetector.onTouchEvent(event)
+                }
             }
         }
-        dialog.setCancelable(true)
-        dialog.setCanceledOnTouchOutside(true)
-        return dialog
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (view.context as? Activity)?.let {
+            val layFull = it.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            if (layFull == View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN) {
+                view.findViewById<FrameLayout>(R.id.toolbar)?.setPadding(0, getStatusBarHeight(), 0, 0)
+            }
+        }
         view.findViewById<View>(R.id.backButton).setOnClickListener {
             back()
         }
@@ -100,6 +106,20 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
                 getOnConfirmListener()?.onConfirm(view)
             }
         })
+    }
+
+    private fun getStatusBarHeight(): Int {
+        var height = 0
+        try {
+            val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+            if (resourceId > 0) {
+                height = resources.getDimensionPixelSize(resourceId)
+            }
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt()
+        }
+        return height
     }
 
     fun show(activity: FragmentActivity) {
@@ -161,4 +181,5 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
     fun setShowAsDialog(showAsDialog: Boolean) {
         mShowAsDialog = showAsDialog
     }
+
 }

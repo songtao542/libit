@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="TopSheetDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowActionBarOverlay">false</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@style/TopSheetDialogAnimation</item>
         <item name="android:backgroundDimEnabled">true</item>
@@ -11,11 +15,13 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="actionBarSize">@dimen/action_bar_height</item>
         <!-- dialog 样式 -->
         <item name="android:buttonBarNegativeButtonStyle">@style/DialogButtonStyle</item>
         <item name="android:buttonBarPositiveButtonStyle">@style/DialogButtonStyle</item>
         <item name="android:windowTitleStyle">@style/DialogTitleStyle</item>
+
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
     </style>
 
     <style name="DialogTitleStyle" parent="TextAppearance.AppCompat.Title">

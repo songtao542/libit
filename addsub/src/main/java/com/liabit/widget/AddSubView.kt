@@ -37,8 +37,9 @@ import com.liabit.addsub.R
 class AddSubView : RelativeLayout, TextWatcher {
 
     companion object {
-        const val TAG = "AddSubView"
+        private const val TAG = "AddSubView"
 
+        @JvmStatic
         var MAX_VALUE = Int.MAX_VALUE
     }
 
@@ -362,9 +363,9 @@ class AddSubView : RelativeLayout, TextWatcher {
         editText.addTextChangedListener(onTextChanged = { text: CharSequence?, _, _, _ ->
             val txt = text?.toString() ?: return@addTextChangedListener
             if (txt.isNotBlank() && TextUtils.isDigitsOnly(txt)) {
-                // 最大输入长度限制为 Int.MAX_VALUE 的长度，即最多输入10个字符，所以这里转换成 Long 类型一定不会出错
+                // 最大输入长度限制为 MAX_VALUE 的长度，即最多输入10个字符，所以这里转换成 Long 类型一定不会出错
                 val num = txt.toLongOrNull() ?: return@addTextChangedListener
-                val number = if (num > Int.MAX_VALUE) Int.MAX_VALUE else num.toInt()
+                val number = if (num > MAX_VALUE) MAX_VALUE else num.toInt()
                 val min = mMin
                 val max = mMax
                 if (min != null && max != null && min <= max && (number < min || number > max)) {
@@ -377,7 +378,7 @@ class AddSubView : RelativeLayout, TextWatcher {
                     notifyOutOfRangeOrUpdateText(number, max, editText)
                     return@addTextChangedListener
                 }
-                if (num > Int.MAX_VALUE) {
+                if (num > MAX_VALUE) {
                     updateTextWithoutNotify(number.toString(), editText)
                 }
             }
@@ -468,9 +469,9 @@ class AddSubView : RelativeLayout, TextWatcher {
     private fun setAndCheckValue(text: String, updateTextView: Boolean, actionDone: Boolean) {
         val editText = mNumEditor ?: return
         if (text.isNotBlank() && TextUtils.isDigitsOnly(text)) {
-            // 最大输入长度限制为 Int.MAX_VALUE 的长度，即最多输入10个字符，所以这里转换成 Long 类型一定不会出错
+            // 最大输入长度限制为 MAX_VALUE 的长度，即最多输入10个字符，所以这里转换成 Long 类型一定不会出错
             val num = text.toLongOrNull() ?: return
-            val number = if (num > Int.MAX_VALUE) Int.MAX_VALUE else num.toInt()
+            val number = if (num > MAX_VALUE) MAX_VALUE else num.toInt()
             val min = mMin
             val max = mMax
             if (min != null && max != null && min <= max && (number < min || number > max)) {
@@ -484,7 +485,7 @@ class AddSubView : RelativeLayout, TextWatcher {
                 return
             }
 
-            if (num > Int.MAX_VALUE) {
+            if (num > MAX_VALUE) {
                 updateTextWithoutNotify(number.toString(), editText)
             }
 

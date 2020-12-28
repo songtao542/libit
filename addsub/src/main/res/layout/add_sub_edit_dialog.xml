@@ -44,6 +44,7 @@
                 android:inputType="numberSigned"
                 android:maxWidth="120dp"
                 android:minWidth="50dp"
+                android:paddingHorizontal="10dp"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/black"
                 android:textSize="14sp" />

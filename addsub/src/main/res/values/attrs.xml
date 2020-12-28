@@ -8,6 +8,7 @@
         <attr name="showEditDialog" format="boolean" />
         <attr name="showEditDialogOptButton" format="boolean" />
         <attr name="editDialogTheme" format="reference" />
+        <attr name="editDialogEditTextBackground" format="reference|color" />
         <attr name="editDialogTitle" format="reference|string" />
         <attr name="editBackground" format="reference" />
         <attr name="editHeight" format="dimension|reference" />

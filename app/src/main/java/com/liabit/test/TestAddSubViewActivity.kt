@@ -63,6 +63,9 @@ class TestAddSubViewActivity : AppCompatActivity() {
 
             fun setData(position: Int) {
                 mPosition = position
+                if (position % 3 == 1) {
+                    view.addSubView.setOnTextViewClickListener(null)
+                }
                 view.addSubView.setMaxValue(999999999)
                 itemView.text.text = "$mPosition: "
             }

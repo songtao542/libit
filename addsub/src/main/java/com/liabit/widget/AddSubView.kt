@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Outline
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.StateListDrawable
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextUtils
@@ -40,12 +41,12 @@ class AddSubView : LinearLayout, TextWatcher {
         var MAX_VALUE = Int.MAX_VALUE
     }
 
-    private var mNotifyChangeWhenActionDone: Boolean = false
-
     private lateinit var mAddButton: ImageView
     private lateinit var mSubButton: ImageView
     private lateinit var mNumEditor: EditText
     private lateinit var mNumTextView: TextView
+
+    private var mNotifyChangeWhenActionDone: Boolean = false
 
     private val mEditorRect = Rect()
     private var mMin: Int? = null
@@ -67,6 +68,7 @@ class AddSubView : LinearLayout, TextWatcher {
 
     private var mAddIcon: Drawable? = null
     private var mSubIcon: Drawable? = null
+    private var mEditDialogEditTextBackground: Drawable? = null
 
     private var mDialogTitle: CharSequence? = null
 
@@ -119,6 +121,7 @@ class AddSubView : LinearLayout, TextWatcher {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.AddSubView, defStyleAttr, defStyleRes)
             mShowEditDialog = typedArray.getBoolean(R.styleable.AddSubView_showEditDialog, false)
             mShowEditDialogOptButton = typedArray.getBoolean(R.styleable.AddSubView_showEditDialogOptButton, false)
+            mEditDialogEditTextBackground = typedArray.getDrawable(R.styleable.AddSubView_editDialogEditTextBackground)
             mDialogTheme = typedArray.getResourceId(R.styleable.AddSubView_editDialogTheme, mDialogTheme)
             mDialogTitle = typedArray.getString(R.styleable.AddSubView_editDialogTitle)
             mAddIcon = typedArray.getDrawable(R.styleable.AddSubView_addIcon) ?: mAddIcon
@@ -315,8 +318,18 @@ class AddSubView : LinearLayout, TextWatcher {
             subButton.visibility = View.GONE
             editText.minWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160f, context.resources.displayMetrics).toInt()
             editText.setBackgroundColor(Color.TRANSPARENT)
-            dialogContentLayout.background = ResourcesCompat.getDrawable(context.resources,
-                    R.drawable.add_sub_dialog_round_corner_content_background, context.theme)
+            if (mEditDialogEditTextBackground != null) {
+                dialogContentLayout.background = mEditDialogEditTextBackground
+            } else {
+                val bg = ResourcesCompat.getDrawable(context.resources, R.drawable.add_sub_dialog_round_corner_content_background, context.theme)
+                val ty = context.obtainStyledAttributes(intArrayOf(android.R.attr.colorPrimary))
+                val colorPrimary = ty.getColor(0, Int.MIN_VALUE)
+                if (colorPrimary != Int.MIN_VALUE) {
+                    bg?.setTint(colorPrimary)
+                }
+                ty.recycle()
+                dialogContentLayout.background = bg
+            }
         } else {
             addButton.visibility = View.VISIBLE
             subButton.visibility = View.VISIBLE
@@ -482,19 +495,15 @@ class AddSubView : LinearLayout, TextWatcher {
                 return
             }
 
-            if (num > MAX_VALUE) {
-                updateTextWithoutNotify(number.toString(), mNumEditor)
-            }
-
             var notifyValueChange = if (mNotifyChangeWhenActionDone) actionDone else false
             if (number != mValue) {
                 setValueInner(number)
-                if (updateTextView) {
-                    updateTextWithoutNotify(number.toString(), mNumEditor)
-                }
                 if (!mNotifyChangeWhenActionDone) {
                     notifyValueChange = true
                 }
+            }
+            if (updateTextView || num > MAX_VALUE) {
+                updateTextWithoutNotify(number.toString(), mNumEditor)
             }
             if (notifyValueChange) {
                 mOnValueChangedListener?.invoke(this, mValue, true)

@@ -9,11 +9,28 @@
     tools:context="com.liabit.test.TestAddSubViewActivity">
 
     <com.liabit.widget.AddSubView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:editDialogEditTextBackground="@drawable/test_add_sub_dialog_round_corner_content_background"
+        app:editDialogTheme="@style/AddSubAlertDialogTheme"
+        app:editHeight="70dp"
+        app:editWidth="50dp"
+        app:iconColor="@color/add_sub_color"
+        app:iconPadding="10dp"
+        app:iconSize="50dp"
+        app:maxValue="10000000"
+        app:minValue="1"
+        app:showEditDialog="true"
+        app:showEditDialogOptButton="true" />
+
+    <com.liabit.widget.AddSubView
         android:id="@+id/addAndSubView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:editDialogTheme="@style/AlertDialogTheme"
+        app:editDialogEditTextBackground="@drawable/test_add_sub_dialog_round_corner_content_background"
+        app:editDialogTheme="@style/AddSubAlertDialogTheme"
         app:editHeight="70dp"
         app:editWidth="50dp"
         app:iconColor="@color/add_sub_color"

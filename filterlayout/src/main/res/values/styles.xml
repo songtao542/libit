@@ -2,10 +2,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="TopSheetDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowActionBarOverlay">false</item>
         <item name="android:windowActionBarOverlay">false</item>
-        <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@style/TopSheetDialogAnimation</item>
         <item name="android:backgroundDimEnabled">true</item>

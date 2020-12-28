@@ -347,10 +347,11 @@ class AddSubView : LinearLayout, TextWatcher {
                     contentView.outlineProvider = object : ViewOutlineProvider() {
                         override fun getOutline(view: View?, outline: Outline?) {
                             view?.let {
-                                val radius = it.context.resources.getDimension(R.dimen.add_sub_dialog_content_bg_radius) - 1
-                                if (radius > 0) {
-                                    outline?.setRoundRect(0, 0, it.width, it.height, radius)
+                                var radius = it.context.resources.getDimension(R.dimen.add_sub_dialog_content_bg_radius) - 1
+                                if (radius < 0) {
+                                    radius = 0f
                                 }
+                                outline?.setRoundRect(0, 0, it.width, it.height, radius)
                             }
                         }
                     }

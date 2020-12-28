@@ -40,6 +40,21 @@
         app:minValue="1"
         app:showEditDialog="true" />
 
+    <com.liabit.widget.AddSubView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:editDialogEditTextStrokeColor="?attr/colorPrimary"
+        app:editDialogTheme="@style/AddSubAlertDialogTheme"
+        app:editHeight="70dp"
+        app:editWidth="50dp"
+        app:iconColor="@color/add_sub_color"
+        app:iconPadding="10dp"
+        app:iconSize="50dp"
+        app:maxValue="10000000"
+        app:minValue="1"
+        app:showEditDialog="true" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

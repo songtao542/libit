@@ -2,5 +2,5 @@
 <resources>
     <string name="add_sub_dialog_confirm">确认</string>
     <string name="add_sub_dialog_cancel">取消</string>
-    <string name="add_sub_dialog_title">修改数值</string>
+    <string name="add_sub_dialog_title">修改数量</string>
 </resources>

@@ -4,9 +4,9 @@
     <dimen name="add_sub_dialog_edit_view_radius">8dp</dimen>
     <dimen name="add_sub_dialog_buttonbar_height">48dp</dimen>
     <dimen name="add_sub_action_bar_content_inset">15dp</dimen>
-    <dimen name="add_sub_dialog_content_bg_stroke_width">2px</dimen>
+    <dimen name="add_sub_dialog_content_bg_stroke_width">1dp</dimen>
     <dimen name="add_sub_dialog_content_bg_radius">0dp</dimen>
-    <dimen name="add_sub_dialog_content_bg_radius_big">8dp</dimen>
+    <dimen name="add_sub_dialog_content_bg_radius_big">5dp</dimen>
     <dimen name="add_sub_dialog_title_text_size">17sp</dimen>
     <dimen name="add_sub_dialog_title_padding">20dp</dimen>
     <dimen name="add_sub_dialog_content_margin_top">24dp</dimen>

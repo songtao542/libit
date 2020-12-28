@@ -69,6 +69,7 @@ class AddSubView : LinearLayout, TextWatcher {
     private var mAddIcon: Drawable? = null
     private var mSubIcon: Drawable? = null
     private var mEditDialogEditTextBackground: Drawable? = null
+    private var mEditDialogEditTextStrokeColor: Int = Color.TRANSPARENT
 
     private var mDialogTitle: CharSequence? = null
 
@@ -122,6 +123,7 @@ class AddSubView : LinearLayout, TextWatcher {
             mShowEditDialog = typedArray.getBoolean(R.styleable.AddSubView_showEditDialog, false)
             mShowEditDialogOptButton = typedArray.getBoolean(R.styleable.AddSubView_showEditDialogOptButton, false)
             mEditDialogEditTextBackground = typedArray.getDrawable(R.styleable.AddSubView_editDialogEditTextBackground)
+            mEditDialogEditTextStrokeColor = typedArray.getColor(R.styleable.AddSubView_editDialogEditTextStrokeColor, Color.TRANSPARENT)
             mDialogTheme = typedArray.getResourceId(R.styleable.AddSubView_editDialogTheme, mDialogTheme)
             mDialogTitle = typedArray.getString(R.styleable.AddSubView_editDialogTitle)
             mAddIcon = typedArray.getDrawable(R.styleable.AddSubView_addIcon) ?: mAddIcon
@@ -322,12 +324,15 @@ class AddSubView : LinearLayout, TextWatcher {
                 dialogContentLayout.background = mEditDialogEditTextBackground
             } else {
                 val bg = ResourcesCompat.getDrawable(context.resources, R.drawable.add_sub_dialog_round_corner_content_background, context.theme)
-                val ty = context.obtainStyledAttributes(intArrayOf(android.R.attr.colorPrimary))
+                /*val ty = context.obtainStyledAttributes(intArrayOf(android.R.attr.colorPrimary))
                 val colorPrimary = ty.getColor(0, Int.MIN_VALUE)
                 if (colorPrimary != Int.MIN_VALUE) {
                     bg?.setTint(colorPrimary)
                 }
-                ty.recycle()
+                ty.recycle()*/
+                if (mEditDialogEditTextStrokeColor != Color.TRANSPARENT) {
+                    bg?.setTint(mEditDialogEditTextStrokeColor)
+                }
                 dialogContentLayout.background = bg
             }
         } else {
@@ -343,7 +348,9 @@ class AddSubView : LinearLayout, TextWatcher {
                         override fun getOutline(view: View?, outline: Outline?) {
                             view?.let {
                                 val radius = it.context.resources.getDimension(R.dimen.add_sub_dialog_content_bg_radius) - 1
-                                outline?.setRoundRect(0, 0, it.width, it.height, radius)
+                                if (radius > 0) {
+                                    outline?.setRoundRect(0, 0, it.width, it.height, radius)
+                                }
                             }
                         }
                     }

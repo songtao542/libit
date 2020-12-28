@@ -1,29 +1,31 @@
 package com.liabit.test.filtertest
 
+import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import com.liabit.extension.layoutUnderStatusBar
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.liabit.filter.*
 import com.liabit.test.R
 import kotlinx.android.synthetic.main.activity_filter_test.*
-import java.util.*
-import kotlin.collections.ArrayList
 
-class TestFilterActivity : AppCompatActivity() {
+class TestFilterFragment : Fragment() {
 
     private var mPopupFilter: PopupFilter? = null
     private var mTwoColumnPopupFilter: PopupFilter? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.activity_filter_test, container, false)
+    }
 
-        setContentView(R.layout.activity_filter_test)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        setSupportActionBar(toolbar)
-        layoutUnderStatusBar(true)
+        val activity = activity ?: return
 
         filterData = getFilterData()
         rightFilterData = getFilterData()
@@ -37,44 +39,38 @@ class TestFilterActivity : AppCompatActivity() {
         checkableList1.setSingleChoice(true)
         shortFilterData.add(checkableList1)
 
-        openFragment.setOnClickListener {
-            val fragment = TestFilterFragment()
-            supportFragmentManager
-                    .beginTransaction()
-                    .add(android.R.id.content, fragment)
-                    .commitAllowingStateLoss()
-        }
+        openFragment.visibility = View.GONE
 
         showAsPopup.setOnClickListener {
-            getPopupFilter().show(toolbar)
+            getPopupFilter(activity).show(toolbar)
         }
 
         showAsFragment.setOnClickListener {
             val f = getFilterDialogFragment()
             f.setShowAsDialog(false)
-            f.show(this)
+            f.show(activity)
         }
 
         showAsDialog.setOnClickListener {
             val f = getFilterDialogFragment()
             f.setShowAsDialog(true)
-            f.show(this)
+            f.show(activity)
         }
 
         showTwoColumnAsPopup.setOnClickListener {
-            getTwoColumnPopupFilter().show(toolbar)
+            getTwoColumnPopupFilter(activity).show(toolbar)
         }
 
         showTwoColumnAsFragment.setOnClickListener {
             val f = getFilterDialogFragment(true)
             f.setShowAsDialog(false)
-            f.show(this)
+            f.show(activity)
         }
 
         showTwoColumnAsDialog.setOnClickListener {
             val f = getFilterDialogFragment(true)
             f.setShowAsDialog(true)
-            f.show(this)
+            f.show(activity)
         }
 
         showShortListAsFragment.setOnClickListener {
@@ -96,11 +92,11 @@ class TestFilterActivity : AppCompatActivity() {
                 }
             })
             f.setShowAsDialog(false)
-            f.show(this)
+            f.show(activity)
         }
 
         showShortListAsPopup.setOnClickListener {
-            val f = PopupFilter(this)
+            val f = PopupFilter(activity)
             f.setFilterPicker(FilterPicker.instance)
             f.setFilter(shortFilterData)
             f.setOnResultListener(object : FilterLayout.OnResultListener {
@@ -140,13 +136,13 @@ class TestFilterActivity : AppCompatActivity() {
                 }
             })
             f.setShowAsDialog(true)
-            f.show(this)
+            f.show(activity)
         }
     }
 
-    private fun getPopupFilter(): PopupFilter {
+    private fun getPopupFilter(activity: Activity): PopupFilter {
         if (mPopupFilter == null) {
-            mPopupFilter = PopupFilter(this)
+            mPopupFilter = PopupFilter(activity)
         }
         mPopupFilter?.setFilterPicker(FilterPicker())
         mPopupFilter?.setFilter(filterData)
@@ -168,9 +164,9 @@ class TestFilterActivity : AppCompatActivity() {
         return mPopupFilter!!
     }
 
-    private fun getTwoColumnPopupFilter(): PopupFilter {
+    private fun getTwoColumnPopupFilter(activity: Activity): PopupFilter {
         if (mTwoColumnPopupFilter == null) {
-            mTwoColumnPopupFilter = PopupFilter(this)
+            mTwoColumnPopupFilter = PopupFilter(activity)
         }
         mTwoColumnPopupFilter?.setFilterPicker(FilterPicker())
         mTwoColumnPopupFilter?.setFilter(filterData)

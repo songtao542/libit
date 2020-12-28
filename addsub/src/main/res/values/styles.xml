@@ -5,6 +5,10 @@
         <item name="android:textColor">@color/add_sub_light_blue</item>
     </style>
 
+    <style name="DialogTitleStyle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/add_sub_light_blue</item>
+    </style>
+
     <style name="AddAndSubEditDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@drawable/add_sub_dialog_background</item>
         <item name="android:windowMinWidthMajor">68%</item>
@@ -12,8 +16,8 @@
         <!-- dialog 样式 -->
         <item name="android:buttonBarNegativeButtonStyle">@style/DialogButtonStyle</item>
         <item name="android:buttonBarPositiveButtonStyle">@style/DialogButtonStyle</item>
-        <item name="buttonBarNegativeButtonStyle">@style/DialogButtonStyle</item>
-        <item name="buttonBarPositiveButtonStyle">@style/DialogButtonStyle</item>
+        <item name="android:windowTitleStyle">@style/DialogTitleStyle</item>
+        <item name="colorPrimary">@color/add_sub_light_blue</item>
     </style>
 
 </resources>

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.Outline
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
@@ -18,6 +19,7 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
@@ -36,6 +38,8 @@ class AddSubView : RelativeLayout, TextWatcher {
 
     companion object {
         const val TAG = "AddSubView"
+
+        var MAX_VALUE = Int.MAX_VALUE
     }
 
     private var mNotifyChangeWhenActionDone: Boolean = false
@@ -56,6 +60,7 @@ class AddSubView : RelativeLayout, TextWatcher {
     private var mEmptyListener: OnEmptyListener? = null
     private var mTextClickListener: OnClickListener? = null
     private var mShowEditDialog = false
+    private var mShowEditDialogOptButton = false
 
     private var mDialogTheme = R.style.AddAndSubEditDialog
     private var mDialog: AlertDialog? = null
@@ -107,6 +112,7 @@ class AddSubView : RelativeLayout, TextWatcher {
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.AddSubView, defStyleAttr, defStyleRes)
             mShowEditDialog = typedArray.getBoolean(R.styleable.AddSubView_showEditDialog, false)
+            mShowEditDialogOptButton = typedArray.getBoolean(R.styleable.AddSubView_showEditDialogOptButton, false)
             mDialogTheme = typedArray.getResourceId(R.styleable.AddSubView_editDialogTheme, mDialogTheme)
             mDialogTitle = typedArray.getString(R.styleable.AddSubView_editDialogTitle)
             mAddIcon = typedArray.getDrawable(R.styleable.AddSubView_addIcon) ?: mAddIcon
@@ -129,7 +135,8 @@ class AddSubView : RelativeLayout, TextWatcher {
                 mMin = typedArray.getInt(R.styleable.AddSubView_minValue, 0)
             }
             if (typedArray.hasValue(R.styleable.AddSubView_maxValue)) {
-                mMax = typedArray.getInt(R.styleable.AddSubView_maxValue, 0)
+                val max = typedArray.getInt(R.styleable.AddSubView_maxValue, MAX_VALUE)
+                mMax = if (max > MAX_VALUE) MAX_VALUE else max
             }
             if (typedArray.hasValue(R.styleable.AddSubView_value)) {
                 value = typedArray.getInt(R.styleable.AddSubView_value, 0)
@@ -147,7 +154,7 @@ class AddSubView : RelativeLayout, TextWatcher {
 
         setValueInner(value)
         mNumEditor?.let {
-            setupEditTextFilter(mMax ?: Int.MAX_VALUE, it)
+            setupEditTextFilter(mMax ?: MAX_VALUE, it)
             it.setText(value.toString())
             it.isEnabled = editable
             editTextBackground?.let { drawable ->
@@ -299,25 +306,41 @@ class AddSubView : RelativeLayout, TextWatcher {
         }
         val view = LayoutInflater.from(ContextThemeWrapper(context, mDialogTheme)).inflate(R.layout.add_sub_edit_dialog, null)
         val contentView = view.findViewById<View>(R.id.addSubContent)
-        contentView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                contentView.clipToOutline = true
-                contentView.outlineProvider = object : ViewOutlineProvider() {
-                    override fun getOutline(view: View?, outline: Outline?) {
-                        view?.let {
-                            val context = it.context
-                            val radius = context.resources.getDimension(R.dimen.add_sub_dialog_content_bg_radius) - 1
-                            outline?.setRoundRect(0, 0, it.width, it.height, radius)
-                        }
-                    }
-                }
-                contentView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-            }
-        })
+
+        val dialogContentLayout = view.findViewById<FrameLayout>(R.id.dialogContentLayout)
         val editText = view.findViewById<EditText>(R.id.editText)
         val addButton = view.findViewById<ImageView>(R.id.addButton)
         val subButton = view.findViewById<ImageView>(R.id.subButton)
-        setupEditTextFilter(mMax ?: Int.MAX_VALUE, editText)
+
+        if (!mShowEditDialogOptButton) {
+            addButton.visibility = View.GONE
+            subButton.visibility = View.GONE
+            editText.minWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160f, context.resources.displayMetrics).toInt()
+            editText.setBackgroundColor(Color.TRANSPARENT)
+            dialogContentLayout.setBackgroundResource(R.drawable.add_sub_dialog_round_corner_content_background)
+        } else {
+            addButton.visibility = View.VISIBLE
+            subButton.visibility = View.VISIBLE
+            editText.minWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50f, context.resources.displayMetrics).toInt()
+            editText.setBackgroundColor(ResourcesCompat.getColor(context.resources, R.color.add_sub_editor_bg_color, context.theme))
+            dialogContentLayout.setBackgroundResource(R.drawable.add_sub_dialog_content_background)
+            contentView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    contentView.clipToOutline = true
+                    contentView.outlineProvider = object : ViewOutlineProvider() {
+                        override fun getOutline(view: View?, outline: Outline?) {
+                            view?.let {
+                                val radius = it.context.resources.getDimension(R.dimen.add_sub_dialog_content_bg_radius) - 1
+                                outline?.setRoundRect(0, 0, it.width, it.height, radius)
+                            }
+                        }
+                    }
+                    contentView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
+        }
+
+        setupEditTextFilter(mMax ?: MAX_VALUE, editText)
         var value = mValue
         mMax?.let {
             if (value > it) {
@@ -514,7 +537,7 @@ class AddSubView : RelativeLayout, TextWatcher {
     }
 
     fun setMaxValue(max: Int) {
-        mMax = max
+        mMax = if (max > MAX_VALUE) MAX_VALUE else max
         mNumEditor?.let { setupEditTextFilter(max, it) }
         updateButtonState()
     }

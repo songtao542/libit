@@ -6,6 +6,7 @@
         <attr name="subIcon" format="reference" />
         <attr name="editable" format="boolean" />
         <attr name="showEditDialog" format="boolean" />
+        <attr name="showEditDialogOptButton" format="boolean" />
         <attr name="editDialogTheme" format="reference" />
         <attr name="editDialogTitle" format="reference|string" />
         <attr name="editBackground" format="reference" />

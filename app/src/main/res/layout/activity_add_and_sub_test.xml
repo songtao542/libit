@@ -19,7 +19,7 @@
         app:iconColor="@color/add_sub_color"
         app:iconPadding="10dp"
         app:iconSize="50dp"
-        app:maxValue="10"
+        app:maxValue="10000000"
         app:minValue="1"
         app:showEditDialog="true" />
 

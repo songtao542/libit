@@ -7,6 +7,7 @@
     <include layout="@layout/add_sub_edit_dialog_title" />
 
     <FrameLayout
+        android:id="@+id/dialogContentLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

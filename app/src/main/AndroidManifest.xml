@@ -63,7 +63,8 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".TestAddSubViewActivity"
-            android:label="AddSubView" />
+            android:label="AddSubView"
+            android:theme="@style/TestAddSubViewTheme" />
         <activity
             android:name=".filtertest.TestFilterActivity"
             android:label="Filter"

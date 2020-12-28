@@ -48,5 +48,13 @@
         <item name="colorSecondary">#46ff46</item>
     </style>
 
+    <style name="TestAddSubViewTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/filter</item>
+        <item name="android:statusBarColor">@color/filter</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+        <item name="colorSecondary">#46ff46</item>
+    </style>
+
 
 </resources>

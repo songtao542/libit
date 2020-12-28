@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="DialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+    <style name="AddSubDialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
         <item name="android:textColor">@color/add_sub_light_blue</item>
     </style>
 
-    <style name="DialogTitleStyle" parent="TextAppearance.AppCompat.Title">
+    <style name="AddSubDialogTitleStyle" parent="TextAppearance.AppCompat.Title">
         <item name="android:textColor">@color/add_sub_light_blue</item>
     </style>
 
@@ -14,9 +14,9 @@
         <item name="android:windowMinWidthMajor">68%</item>
         <item name="android:windowMinWidthMinor">68%</item>
         <!-- dialog 样式 -->
-        <item name="android:buttonBarNegativeButtonStyle">@style/DialogButtonStyle</item>
-        <item name="android:buttonBarPositiveButtonStyle">@style/DialogButtonStyle</item>
-        <item name="android:windowTitleStyle">@style/DialogTitleStyle</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/AddSubDialogButtonStyle</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/AddSubDialogButtonStyle</item>
+        <item name="android:windowTitleStyle">@style/AddSubDialogTitleStyle</item>
         <item name="colorPrimary">@color/add_sub_light_blue</item>
     </style>
 

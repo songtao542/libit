@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    tools:parentTag="android.widget.RelativeLayout">
+    tools:parentTag="android.widget.LinearLayout">
 
     <ImageView
         android:id="@+id/subButton"
@@ -16,40 +16,46 @@
         android:scaleType="centerInside"
         android:src="@drawable/ic_num_sub" />
 
-
     <EditText
         android:id="@+id/numEditor"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
+        android:layout_toStartOf="@+id/addButton"
         android:layout_toEndOf="@+id/subButton"
         android:background="@drawable/add_sub_editor_background"
         android:gravity="center"
         android:imeOptions="actionDone"
         android:inputType="numberSigned"
         android:minWidth="40dp"
+        android:paddingHorizontal="10dp"
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/black"
         android:textSize="14sp" />
 
-    <View
-        android:id="@+id/editorMaskView"
+    <TextView
+        android:id="@+id/numberTextView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/numEditor"
-        android:layout_alignTop="@+id/numEditor"
-        android:layout_alignEnd="@+id/numEditor"
-        android:layout_alignBottom="@+id/numEditor"
+        android:layout_height="30dp"
         android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical" />
+        android:layout_gravity="center_vertical"
+        android:layout_toLeftOf="@+id/addButton"
+        android:layout_toEndOf="@+id/subButton"
+        android:background="@drawable/add_sub_editor_background"
+        android:gravity="center"
+        android:minWidth="40dp"
+        android:paddingHorizontal="10dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
+        android:textSize="14sp"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/addButton"
         android:layout_width="40dp"
         android:layout_height="30dp"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/numEditor"
         android:padding="8dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_num_add" />

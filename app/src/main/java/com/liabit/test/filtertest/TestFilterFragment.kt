@@ -8,7 +8,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.liabit.extension.getStatusBarHeight
 import com.liabit.filter.*
 import com.liabit.test.R
 import kotlinx.android.synthetic.main.activity_filter_test.*
@@ -19,11 +22,19 @@ class TestFilterFragment : Fragment() {
     private var mTwoColumnPopupFilter: PopupFilter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.activity_filter_test, container, false)
+        return inflater.inflate(R.layout.fragment_filter_test, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (view.context as? Activity)?.let {
+            val layFull = it.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            if (layFull == View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN) {
+                val toolbar = view.findViewById<FrameLayout>(R.id.toolbarWrapper)
+                toolbar?.setPadding(0, getStatusBarHeight(), 0, 0)
+            }
+        }
 
         val activity = activity ?: return
 

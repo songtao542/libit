@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:clickable="true"
+    android:orientation="vertical"
+    tools:context="com.liabit.test.filtertest.TestFilterActivity">
+
+    <FrameLayout
+        android:id="@+id/toolbarWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:elevation="3dp"
+            android:fitsSystemWindows="true"
+            app:title="筛选-Fragment" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/openFragment"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Open Fragment"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showAsPopup"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show As Popup"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showAsFragment"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show As Fragment"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showAsDialog"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show As Dialog"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showTwoColumnAsPopup"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show Two Column As Popup"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showTwoColumnAsFragment"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show Two Column As Fragment"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showTwoColumnAsDialog"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show Two Column As Dialog"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showShortListAsFragment"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show Short List As Fragment"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showShortListAsPopup"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show Short List As Popup"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/showShortListAsDialog"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Show Short List As Dialog"
+            android:textAllCaps="false" />
+    </LinearLayout>
+</LinearLayout>

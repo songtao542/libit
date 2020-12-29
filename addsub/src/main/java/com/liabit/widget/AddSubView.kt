@@ -338,7 +338,7 @@ class AddSubView : LinearLayout, TextWatcher {
         } else {
             addButton.visibility = View.VISIBLE
             subButton.visibility = View.VISIBLE
-            editText.minWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50f, context.resources.displayMetrics).toInt()
+            editText.minWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70f, context.resources.displayMetrics).toInt()
             editText.setBackgroundColor(ResourcesCompat.getColor(context.resources, R.color.add_sub_editor_bg_color, context.theme))
             dialogContentLayout.setBackgroundResource(R.drawable.add_sub_dialog_content_background)
             contentView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
@@ -381,10 +381,21 @@ class AddSubView : LinearLayout, TextWatcher {
         editText.setText(value.toString())
         editText.addTextChangedListener(onTextChanged = { text: CharSequence?, _, _, _ ->
             val txt = text?.toString() ?: return@addTextChangedListener
-            if (txt.isNotBlank() && TextUtils.isDigitsOnly(txt)) {
+            txt.toLongOrNull()?.also {
+                mMin?.let { min ->
+                    mMax?.let { max ->
+                        addButton?.isEnabled = it < max
+                    }
+                    subButton?.isEnabled = it > min
+                }
+                mMax?.let { max ->
+                    addButton?.isEnabled = it < max
+                    mMin?.let { min ->
+                        subButton?.isEnabled = it > min
+                    }
+                }
                 // 最大输入长度限制为 MAX_VALUE 的长度，即最多输入10个字符，所以这里转换成 Long 类型一定不会出错
-                val num = txt.toLongOrNull() ?: return@addTextChangedListener
-                val number = if (num > MAX_VALUE) MAX_VALUE else num.toInt()
+                val number = if (it > MAX_VALUE) MAX_VALUE else it.toInt()
                 val min = mMin
                 val max = mMax
                 if (min != null && max != null && min <= max && (number < min || number > max)) {
@@ -397,9 +408,12 @@ class AddSubView : LinearLayout, TextWatcher {
                     notifyOutOfRangeOrUpdateText(number, max, editText)
                     return@addTextChangedListener
                 }
-                if (num > MAX_VALUE) {
+                if (it > MAX_VALUE) {
                     updateTextWithoutNotify(number.toString(), editText)
                 }
+            } ?: run {
+                subButton.isEnabled = false
+                addButton.isEnabled = false
             }
         })
         mAddIcon?.let { addButton?.setImageDrawable(it) }

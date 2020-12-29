@@ -43,7 +43,7 @@
                 android:imeOptions="actionDone"
                 android:inputType="numberSigned"
                 android:maxWidth="120dp"
-                android:minWidth="50dp"
+                android:minWidth="70dp"
                 android:paddingHorizontal="10dp"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/black"

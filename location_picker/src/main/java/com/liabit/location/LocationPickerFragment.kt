@@ -1,5 +1,6 @@
 package com.liabit.location
 
+import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
+import com.amap.api.maps2d.AMapOptions
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.LatLng
 import com.amap.api.maps2d.model.MyLocationStyle
@@ -23,7 +25,10 @@ import com.liabit.viewbinding.bind
 /**
  *
  */
-class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemClickListener, Toolbar.OnMenuItemClickListener {
+class LocationPickerFragment : MapBaseFragment(),
+        LocationBottomSheetDialog.OnItemClickListener,
+        View.OnClickListener,
+        Toolbar.OnMenuItemClickListener {
 
     companion object {
         @JvmStatic
@@ -50,6 +55,9 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
 
     private lateinit var mapProxy: MapProxy
 
+    private var mCheckedPoiAddress: PoiAddress? = null
+    private var mPoiAddressCheckedListener: ((address: PoiAddress?) -> Unit)? = null
+
     private val binding by bind<MapLocationPickerFragmentBinding>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -59,7 +67,7 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity == null) return
-        enableOptionsMenu(binding.appbar.toolbar, false, R.menu.map_location_picker_menu)
+        enableOptionsMenu(binding.appbar.toolbar, false, R.menu.map_location_picker_fragment_menu)
         binding.appbar.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
         binding.appbar.toolbar.setOnMenuItemClickListener(this)
 
@@ -71,13 +79,19 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
         }
 
         //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
-        // 连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        // 连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。
+        // （1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
         val myLocationStyle = MyLocationStyle()
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE)
         myLocationStyle.showMyLocation(true)
+        myLocationStyle.strokeColor(Color.TRANSPARENT)
+        myLocationStyle.radiusFillColor(0x22444444)
 
         binding.mapView.map.setMyLocationStyle(myLocationStyle)
         binding.mapView.map.isMyLocationEnabled = true
+        binding.mapView.map.uiSettings.isZoomControlsEnabled = false
+        binding.mapView.map.uiSettings.isCompassEnabled = true
+        binding.mapView.map.uiSettings.logoPosition = AMapOptions.LOGO_POSITION_BOTTOM_RIGHT
 
         mapProxy = MapLocationFactory.create(requireContext(), mapView = binding.mapView)
 
@@ -146,12 +160,20 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
         } else {
             LocationBottomSheetDialog.newInstance(title, list).apply {
                 setOnItemClickListener(this@LocationPickerFragment)
+                setOnConfirmClickListener(this@LocationPickerFragment)
             }.show(childFragmentManager, "poi_result")
         }
     }
 
+    override fun onClick(v: View?) {
+        activity?.onBackPressed()
+        mPoiAddressCheckedListener?.invoke(mCheckedPoiAddress)
+    }
+
     override fun onItemClick(view: View, position: Int, address: PoiAddress) {
         Log.d("LocationPickerFragment", "position: $position  address: $address")
+        mCheckedPoiAddress = address
+        mPoiAddressCheckedListener?.invoke(address)
     }
 
     private fun getMyLocation() {
@@ -193,8 +215,13 @@ class LocationPickerFragment : BaseFragment(), LocationBottomSheetDialog.OnItemC
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (checkPermission()) {
+        if (!checkPermission()) {
 
         }
     }
+
+    fun setOnPoiAddressCheckedListener(listener: ((address: PoiAddress?) -> Unit)?) {
+        mPoiAddressCheckedListener = listener
+    }
+
 }

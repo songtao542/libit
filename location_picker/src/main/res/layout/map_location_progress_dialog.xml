@@ -22,8 +22,7 @@
             <com.liabit.location.widget.ProgressBar
                 android:layout_width="@dimen/ml_progress_dialog_bar_size"
                 android:layout_height="@dimen/ml_progress_dialog_bar_size"
-                android:layout_gravity="center_horizontal"
-                app:progressColor="?attr/colorPrimary" />
+                android:layout_gravity="center_horizontal" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/titleView"

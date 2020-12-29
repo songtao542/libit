@@ -5,7 +5,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 
-abstract class BaseFragment : Fragment() {
+abstract class MapBaseFragment : Fragment() {
 
     companion object {
         private const val MAP_LOCATION_TAG = "map_location"
@@ -14,16 +14,15 @@ abstract class BaseFragment : Fragment() {
     private var progressDialog: ProgressDialog? = null
 
     fun enableOptionsMenu(toolbar: Toolbar?, showTitle: Boolean = true, menu: Int = 0) {
-        toolbar?.let { toolbar ->
-            activity?.let { activity ->
-                setHasOptionsMenu(true)
-                if (activity is AppCompatActivity) {
-                    //activity.setSupportActionBar(toolbar)
-                    if (menu != 0) {
-                        toolbar.inflateMenu(menu)
-                    }
-                    activity.supportActionBar?.setDisplayShowTitleEnabled(showTitle)
+        val activity = activity ?: return
+        toolbar?.let {
+            setHasOptionsMenu(true)
+            if (activity is AppCompatActivity) {
+                //activity.setSupportActionBar(toolbar)
+                if (menu != 0) {
+                    it.inflateMenu(menu)
                 }
+                activity.supportActionBar?.setDisplayShowTitleEnabled(showTitle)
             }
         }
     }

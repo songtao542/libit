@@ -1,5 +1,6 @@
 package com.liabit.location
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,7 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
     private var title: String? = null
 
     private var onItemClickListener: OnItemClickListener? = null
+    private var onConfirmClickListener: View.OnClickListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +45,15 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
         }
     }
 
-    fun setOnItemClickListener(listener: OnItemClickListener) {
+    fun setOnItemClickListener(listener: OnItemClickListener?) {
         this.onItemClickListener = listener
     }
 
-    private val binding by bind<MapLocationSheetFragmentBinding>()
+    fun setOnConfirmClickListener(listener: View.OnClickListener?) {
+        this.onConfirmClickListener = listener
+    }
+
+    private val binding by bind<MapLocationSheetFragmentBinding> { requireView() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.map_location_sheet_fragment, container, false)
@@ -63,10 +69,20 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
         binding.close.setOnClickListener {
             dismiss()
         }
+        binding.confirm.setOnClickListener {
+            onConfirmClickListener?.onClick(it)
+        }
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return super.onCreateDialog(savedInstanceState).apply {
+            window?.setDimAmount(0.2f)
+        }
     }
 
     class SheetAdapter(private val poiResult: List<PoiAddress>,
-                       private var onItemClickListener: OnItemClickListener? = null) : RecyclerView.Adapter<SheetAdapter.ViewHolder>() {
+                       private var onItemClickListener: OnItemClickListener? = null)
+        : RecyclerView.Adapter<SheetAdapter.ViewHolder>() {
 
         private var lastSelected: PoiAddress? = null
 
@@ -116,10 +132,6 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
         super.onResume()
         binding.list.adapter?.notifyDataSetChanged()
         setTitleInternal()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
     }
 
     fun setSearchResult(result: List<PoiAddress>) {

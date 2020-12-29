@@ -30,7 +30,20 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="MapPickerStyle" parent="Theme.AppCompat.Dialog">
+    <style name="MapPickerStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="android:gravity">bottom</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/MapPickerAnimation</item>
     </style>
+
+    <style name="MapPickerAnimation">
+        <item name="android:windowEnterAnimation">@anim/map_location_anim_bottom_enter</item>
+        <item name="android:windowExitAnimation">@anim/map_location_anim_bottom_exit</item>
+        <item name="android:activityOpenEnterAnimation">@anim/map_location_anim_bottom_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/map_location_anim_bottom_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/map_location_anim_bottom_enter</item>
+    </style>
+
 </resources>

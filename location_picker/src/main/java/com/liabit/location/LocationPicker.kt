@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amap.api.location.AMapLocation
+import com.amap.api.maps2d.AMapOptions
 import com.amap.api.maps2d.model.LatLng
 import com.amap.api.maps2d.model.MyLocationStyle
 import com.liabit.location.databinding.MapLocationNestedPickerFragmentBinding
@@ -26,7 +27,7 @@ import com.liabit.viewbinding.bind
 /**
  *
  */
-class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
+class LocationPicker : MapBaseFragment(), Toolbar.OnMenuItemClickListener {
 
     companion object {
         @JvmStatic
@@ -69,18 +70,23 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
         enableOptionsMenu(binding.appbar.toolbar, false, R.menu.map_location_picker_menu)
         binding.appbar.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
         binding.appbar.toolbar.setOnMenuItemClickListener(this)
-        //titleTextView.setText(R.string.location_picker_title)
 
         mapProxy = MapLocationFactory.create(requireContext(), mapView = binding.mapView)
 
         mapProxy.onCreate(savedInstanceState)
 
-        val myLocationStyle = MyLocationStyle() //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
+        // 连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。
+        // （1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        val myLocationStyle = MyLocationStyle()
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE)
         myLocationStyle.showMyLocation(false)
 
         binding.mapView.map.setMyLocationStyle(myLocationStyle)
         binding.mapView.map.isMyLocationEnabled = true
+        binding.mapView.map.uiSettings.isZoomControlsEnabled = false
+        binding.mapView.map.uiSettings.isCompassEnabled = true
+        binding.mapView.map.uiSettings.logoPosition = AMapOptions.LOGO_POSITION_BOTTOM_RIGHT
 
         binding.mapView.map.setOnMapTouchListener { event ->
             if (event.action == MotionEvent.ACTION_MOVE) {
@@ -113,7 +119,6 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
         }
         binding.list.adapter = adapter
 
-
         binding.appbar.searchBox.setOnEditorActionListener { textView, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_SEARCH -> {
@@ -141,11 +146,6 @@ class LocationPicker : BaseFragment(), Toolbar.OnMenuItemClickListener {
         // start search
         search()
     }
-
-    /*override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.location_picker, menu)
-    }*/
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {

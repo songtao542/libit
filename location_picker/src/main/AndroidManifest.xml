@@ -1,2 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.liabit.location" />
+    package="com.liabit.location" >
+
+
+    <application>
+        <!--高德定位服务-->
+        <service android:name="com.amap.api.location.APSService" />
+
+        <!--开发者申请的key-->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="0d6a6c46aec86bb67b5421a3882076fb" />
+
+    </application>
+
+
+</manifest>

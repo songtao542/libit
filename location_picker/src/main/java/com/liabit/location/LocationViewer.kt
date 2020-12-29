@@ -1,21 +1,20 @@
 package com.liabit.location
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.util.TypedValue
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import com.amap.api.maps2d.AMapOptions
 import com.amap.api.maps2d.CoordinateConverter
 import com.amap.api.maps2d.model.LatLng
 import com.amap.api.maps2d.model.MyLocationStyle
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.liabit.location.databinding.MapLocationViewerFragmentBinding
 import com.liabit.location.extension.checkAndRequestPermission
 import com.liabit.location.extension.checkAppPermission
@@ -26,7 +25,7 @@ import com.liabit.viewbinding.bind
 /**
  *
  */
-class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
+class LocationViewer : MapBaseFragment(), Toolbar.OnMenuItemClickListener {
 
     companion object {
         const val EXTRA_TITLE = "TITLE"
@@ -72,7 +71,7 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
 
     private lateinit var adapter: LocationPickerRecyclerViewAdapter
 
-    private var mapPickerDialog: BottomSheetDialog? = null
+    private var mapPickerDialog: AlertDialog? = null
 
     private val binding by bind<MapLocationViewerFragmentBinding>()
 
@@ -80,13 +79,30 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
         return inflater.inflate(R.layout.map_location_viewer_fragment, container, false)
     }
 
+    private fun getStatusBarHeight(): Int {
+        var height = 0
+        try {
+            val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+            if (resourceId > 0) {
+                height = resources.getDimensionPixelSize(resourceId)
+            }
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt()
+        }
+        return height
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        //enableOptionsMenu(toolbar, false, R.menu.location_picker)
-        //toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
-        //toolbar.setOnMenuItemClickListener(this)
-        //titleTextView.setText(R.string.location_picker_title)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            activity?.let {
+                val layFull = it.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                if (layFull == View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN) {
+                    binding.toolbar.setPadding(0, getStatusBarHeight(), 0, 0)
+                }
+            }
+        }
 
         binding.backButton.setOnClickListener { activity?.onBackPressed() }
 
@@ -94,12 +110,18 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
 
         mapProxy.onCreate(savedInstanceState)
 
-        val myLocationStyle = MyLocationStyle() //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
+        // 连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。
+        // （1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        val myLocationStyle = MyLocationStyle()
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE)
         myLocationStyle.showMyLocation(false)
 
         binding.mapView.map.setMyLocationStyle(myLocationStyle)
         binding.mapView.map.isMyLocationEnabled = true
+        binding.mapView.map.uiSettings.isZoomControlsEnabled = false
+        binding.mapView.map.uiSettings.isCompassEnabled = true
+        binding.mapView.map.uiSettings.logoPosition = AMapOptions.LOGO_POSITION_BOTTOM_RIGHT
 
         adapter = LocationPickerRecyclerViewAdapter()
         adapter.setOnItemClickListener {
@@ -128,10 +150,7 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
                 targetLocationSubTitle?.let { subTitle ->
                     binding.locationSubTitle.text = subTitle
                 }
-
-                setTargetLocation(Position(targetLocationLatitude, targetLocationLongitude),
-                        16f)
-
+                setTargetLocation(Position(targetLocationLatitude, targetLocationLongitude), 16f)
                 binding.openNavigation.setOnClickListener {
                     showMapPicker()
                 }
@@ -147,49 +166,56 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
     }
 
     private fun showMapPicker() {
-        if (mapPickerDialog != null || context == null) {
+        val context = context ?: return
+        if (mapPickerDialog != null) {
             return
         }
-        context?.let {
-            mapPickerDialog = BottomSheetDialog(it, R.style.MapPickerStyle)
-            val view: View = LayoutInflater.from(it).inflate(R.layout.map_location_picker_menu_dialog, null)
-            val cancel = view.findViewById<TextView>(R.id.cancel)
-            cancel.setOnClickListener { mapPickerDialog?.dismiss() }
-            val baiduMap = view.findViewById<TextView>(R.id.baiduMap)
-            val tencentMap = view.findViewById<TextView>(R.id.tencentMap)
-            val aMap = view.findViewById<TextView>(R.id.aMap)
 
-            /*val baiduDivider = view.findViewById<View>(R.id.baiduDivider)
-            val tencentDivider = view.findViewById<View>(R.id.tencentDivider)
-            val aMapDivider = view.findViewById<View>(R.id.aMapDivider)
-            if (!isMapAppInstalled(BAIDU_MAP)) {
-                baiduMap.visibility = View.GONE
-                baiduDivider.visibility = View.GONE
-                tencentMap.setBackgroundResource(R.drawable.menu_button_top_selector)
+        val view: View = LayoutInflater.from(context).inflate(R.layout.map_location_picker_menu_dialog, null)
+        val cancel = view.findViewById<TextView>(R.id.cancel)
+        cancel.setOnClickListener { mapPickerDialog?.dismiss() }
+        val baiduMap = view.findViewById<TextView>(R.id.baiduMap)
+        val tencentMap = view.findViewById<TextView>(R.id.tencentMap)
+        val aMap = view.findViewById<TextView>(R.id.aMap)
+
+        /*val baiduDivider = view.findViewById<View>(R.id.baiduDivider)
+        val tencentDivider = view.findViewById<View>(R.id.tencentDivider)
+        val aMapDivider = view.findViewById<View>(R.id.aMapDivider)
+        if (!isMapAppInstalled(BAIDU_MAP)) {
+            baiduMap.visibility = View.GONE
+            baiduDivider.visibility = View.GONE
+            tencentMap.setBackgroundResource(R.drawable.menu_button_top_selector)
+        }
+        if (!isMapAppInstalled(TENCENT_MAP)) {
+            tencentMap.visibility = View.GONE
+            tencentDivider.visibility = View.GONE
+            aMap.setBackgroundResource(R.drawable.menu_button_top_selector)
+        }
+        if (!isMapAppInstalled(A_MAP)) {
+            aMap.visibility = View.GONE
+            aMapDivider.visibility = View.GONE
+            Toast.makeText(it, R.string.not_find_map_app, Toast.LENGTH_SHORT).show()
+            return
+        }*/
+
+        baiduMap.setOnClickListener { openNavigation(BAIDU_MAP) }
+        tencentMap.setOnClickListener { openNavigation(TENCENT_MAP) }
+        aMap.setOnClickListener { openNavigation(A_MAP) }
+
+        val builder = AlertDialog.Builder(context, R.style.MapPickerStyle)
+                .setView(view)
+                .setOnDismissListener { mapPickerDialog = null }
+
+        mapPickerDialog = builder.create().also {
+            it.window?.let { win ->
+                win.setDimAmount(0.2f)
+                win.setGravity(Gravity.BOTTOM)
             }
-            if (!isMapAppInstalled(TENCENT_MAP)) {
-                tencentMap.visibility = View.GONE
-                tencentDivider.visibility = View.GONE
-                aMap.setBackgroundResource(R.drawable.menu_button_top_selector)
-            }
-            if (!isMapAppInstalled(A_MAP)) {
-                aMap.visibility = View.GONE
-                aMapDivider.visibility = View.GONE
-                Toast.makeText(it, R.string.not_find_map_app, Toast.LENGTH_SHORT).show()
-                return
-            }*/
-
-            baiduMap.setOnClickListener { openNavigation(BAIDU_MAP) }
-            tencentMap.setOnClickListener { openNavigation(TENCENT_MAP) }
-            aMap.setOnClickListener { openNavigation(A_MAP) }
-
-            mapPickerDialog?.setContentView(view)
-            mapPickerDialog?.setOnDismissListener { mapPickerDialog = null }
-            mapPickerDialog?.show()
-            return@let
+            it.show()
         }
     }
 
+    @Suppress("unused")
     private fun isMapAppInstalled(packageName: String): Boolean {
         var packageInfo: PackageInfo? = null
         try {
@@ -248,7 +274,7 @@ class LocationViewer : BaseFragment(), Toolbar.OnMenuItemClickListener {
                     else -> {
                     }
                 }
-            } catch (ex: ActivityNotFoundException) {
+            } catch (ex: Throwable) {
                 if (toast != 0) {
                     Toast.makeText(it, toast, Toast.LENGTH_SHORT).show()
                 }

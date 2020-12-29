@@ -12,6 +12,16 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@drawable/map_location_underline">
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="?attr/selectableItemBackground"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/map_location_cancel_icon" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/titleView"
             android:layout_width="match_parent"
@@ -22,15 +32,16 @@
             android:textColor="@android:color/black"
             android:textSize="@dimen/ml_textsize_large" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/close"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/confirm"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:background="?attr/selectableItemBackground"
-            android:padding="8dp"
-            android:scaleType="centerInside"
-            app:srcCompat="@drawable/map_location_cancel_icon" />
+            android:gravity="center"
+            android:text="@string/ml_confirm"
+            android:textColor="@color/map_location_action_menu_text_color"
+            android:textSize="@dimen/ml_textsize_normal" />
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView

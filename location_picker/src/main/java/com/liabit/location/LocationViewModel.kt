@@ -35,9 +35,9 @@ class LocationViewModel constructor(private var context: Context) : ViewModel() 
 
     private var locating = false
 
-    val error: MutableLiveData<String> by lazy { SingleLiveData<String>() }
+    val error: MutableLiveData<String> by lazy { SingleLiveData() }
 
-    val success: MutableLiveData<String> by lazy { SingleLiveData<String>() }
+    val success: MutableLiveData<String> by lazy { SingleLiveData() }
 
     fun getMyLocation(handler: ((Location) -> Unit)? = null) {
         if (locating) {

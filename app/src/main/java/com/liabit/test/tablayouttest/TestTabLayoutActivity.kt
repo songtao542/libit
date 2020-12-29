@@ -5,8 +5,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.liabit.test.R
+import com.liabit.test.databinding.ActivityTestTabLayoutBinding
+import com.liabit.viewbinding.inflate
 
 class TestTabLayoutActivity : AppCompatActivity() {
+
+    private val binding by inflate<ActivityTestTabLayoutBinding>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_tab_layout)

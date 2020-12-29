@@ -10,11 +10,14 @@ import com.liabit.picker.datetime.Date
 import com.liabit.picker.datetime.DateTime
 import com.liabit.picker.datetime.DateTimePickerDialog
 import com.liabit.picker.datetime.Time
-import kotlinx.android.synthetic.main.activity_picker_test.*
+import com.liabit.test.databinding.ActivityPickerTestBinding
+import com.liabit.viewbinding.inflate
 import java.text.SimpleDateFormat
 
 @SuppressLint("SimpleDateFormat")
 class TestPickerActivity : AppCompatActivity() {
+
+    private val binding by inflate<ActivityPickerTestBinding>()
 
     private var mAddress: Address? = null
 
@@ -26,7 +29,7 @@ class TestPickerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_picker_test)
 
-        time12Picker.setOnClickListener {
+        binding.time12Picker.setOnClickListener {
             val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(false)
                     .setWithTime(true)
@@ -36,13 +39,13 @@ class TestPickerActivity : AppCompatActivity() {
                     .setPositiveButton(R.string.ml_confirm) { _, _ -> }
                     .setOnTimeChangedListener(object : DateTimePickerDialog.OnTimeChangeListener {
                         override fun onTimeChanged(dialog: DateTimePickerDialog, time: Time) {
-                            dateTimeText.text = mTimeFormat.format(time.calendar.time)
+                            binding.dateTimeText.text = mTimeFormat.format(time.calendar.time)
                         }
                     })
                     .create()
             dialog.show()
         }
-        time12BoundPicker.setOnClickListener {
+        binding.time12BoundPicker.setOnClickListener {
             val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(false)
                     .setWithTime(true)
@@ -54,13 +57,13 @@ class TestPickerActivity : AppCompatActivity() {
                     .setPositiveButton(R.string.ml_confirm) { _, _ -> }
                     .setOnTimeChangedListener(object : DateTimePickerDialog.OnTimeChangeListener {
                         override fun onTimeChanged(dialog: DateTimePickerDialog, time: Time) {
-                            dateTimeText.text = mTimeFormat.format(time.calendar.time)
+                            binding.dateTimeText.text = mTimeFormat.format(time.calendar.time)
                         }
                     })
                     .create()
             dialog.show()
         }
-        time24Picker.setOnClickListener {
+        binding.time24Picker.setOnClickListener {
             val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(false)
                     .setWithTime(true)
@@ -70,13 +73,13 @@ class TestPickerActivity : AppCompatActivity() {
                     .setPositiveButton(R.string.ml_confirm) { _, _ -> }
                     .setOnTimeChangedListener(object : DateTimePickerDialog.OnTimeChangeListener {
                         override fun onTimeChanged(dialog: DateTimePickerDialog, time: Time) {
-                            dateTimeText.text = mTimeFormat.format(time.calendar.time)
+                            binding.dateTimeText.text = mTimeFormat.format(time.calendar.time)
                         }
                     })
                     .create()
             dialog.show()
         }
-        time24BoundPicker.setOnClickListener {
+        binding.time24BoundPicker.setOnClickListener {
             val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(false)
                     .setWithTime(true)
@@ -88,13 +91,13 @@ class TestPickerActivity : AppCompatActivity() {
                     .setPositiveButton(R.string.ml_confirm) { _, _ -> }
                     .setOnTimeChangedListener(object : DateTimePickerDialog.OnTimeChangeListener {
                         override fun onTimeChanged(dialog: DateTimePickerDialog, time: Time) {
-                            dateTimeText.text = mTimeFormat.format(time.calendar.time)
+                            binding.dateTimeText.text = mTimeFormat.format(time.calendar.time)
                         }
                     })
                     .create()
             dialog.show()
         }
-        datePicker.setOnClickListener {
+        binding.datePicker.setOnClickListener {
             val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(true)
                     .setWithTime(false)
@@ -103,13 +106,13 @@ class TestPickerActivity : AppCompatActivity() {
                     .setPositiveButton(R.string.ml_confirm) { _, _ -> }
                     .setOnDateChangedListener(object : DateTimePickerDialog.OnDateChangeListener {
                         override fun onDateChanged(dialog: DateTimePickerDialog, date: Date) {
-                            dateTimeText.text = mDateFormat.format(date.calendar.time)
+                            binding.dateTimeText.text = mDateFormat.format(date.calendar.time)
                         }
                     })
                     .create()
             dialog.show()
         }
-        dateBoundPicker.setOnClickListener {
+        binding.dateBoundPicker.setOnClickListener {
             val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(true)
                     .setWithTime(false)
@@ -120,13 +123,13 @@ class TestPickerActivity : AppCompatActivity() {
                     .setPositiveButton(R.string.ml_confirm) { _, _ -> }
                     .setOnDateChangedListener(object : DateTimePickerDialog.OnDateChangeListener {
                         override fun onDateChanged(dialog: DateTimePickerDialog, date: Date) {
-                            dateTimeText.text = mDateFormat.format(date.calendar.time)
+                            binding.dateTimeText.text = mDateFormat.format(date.calendar.time)
                         }
                     })
                     .create()
             dialog.show()
         }
-        dateTimePicker.setOnClickListener {
+        binding.dateTimePicker.setOnClickListener {
             val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(true)
                     .setWithTime(true)
@@ -134,13 +137,13 @@ class TestPickerActivity : AppCompatActivity() {
                     .setPositiveButton(R.string.ml_confirm) { _, _ -> }
                     .setOnDateTimeChangedListener(object : DateTimePickerDialog.OnDateTimeChangeListener {
                         override fun onDateTimeChanged(dialog: DateTimePickerDialog, dateTime: DateTime) {
-                            dateTimeText.text = mDateTimeFormat.format(dateTime.calendar.time)
+                            binding.dateTimeText.text = mDateTimeFormat.format(dateTime.calendar.time)
                         }
                     })
                     .create()
             dialog.show()
         }
-        dateTimeBoundPicker.setOnClickListener {
+        binding.dateTimeBoundPicker.setOnClickListener {
             val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(true)
                     .setWithTime(true)
@@ -150,13 +153,13 @@ class TestPickerActivity : AppCompatActivity() {
                     .setPositiveButton(R.string.ml_confirm) { _, _ -> }
                     .setOnDateTimeChangedListener(object : DateTimePickerDialog.OnDateTimeChangeListener {
                         override fun onDateTimeChanged(dialog: DateTimePickerDialog, dateTime: DateTime) {
-                            dateTimeText.text = mDateTimeFormat.format(dateTime.calendar.time)
+                            binding.dateTimeText.text = mDateTimeFormat.format(dateTime.calendar.time)
                         }
                     })
                     .create()
             dialog.show()
         }
-        addressPicker.setOnClickListener {
+        binding.addressPicker.setOnClickListener {
             val dialog = AddressPickerDialog.Builder(this)
                     .setAutoUpdateTitle(true)
                     .setDefaultAddress(mAddress)
@@ -164,7 +167,7 @@ class TestPickerActivity : AppCompatActivity() {
                         override fun onAddressChanged(dialog: AddressPickerDialog, address: Address) {
                             Log.d("TTTT", "picked address: $address")
                             mAddress = address
-                            addressText.text = address.formatted
+                            binding.addressText.text = address.formatted
                         }
                     })
                     .setNegativeButton(R.string.cancel) { _, _ -> }

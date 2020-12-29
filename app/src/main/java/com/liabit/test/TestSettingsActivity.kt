@@ -1,15 +1,18 @@
 package com.liabit.test
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.liabit.settings.AppSettings
-import org.junit.Assert.assertEquals
+import com.liabit.test.databinding.ActivityTestSettingsBinding
+import com.liabit.viewbinding.inflate
 
 class TestSettingsActivity : AppCompatActivity() {
     companion object {
         const val TAG = "TTTT"
     }
+
+    private val binding by inflate<ActivityTestSettingsBinding>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

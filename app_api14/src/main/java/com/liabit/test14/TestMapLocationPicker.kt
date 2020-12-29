@@ -6,15 +6,18 @@ import androidx.appcompat.app.AppCompatActivity
 import com.liabit.location.LocationPicker
 import com.liabit.location.LocationPickerFragment
 import com.liabit.location.LocationViewer
-import kotlinx.android.synthetic.main.activity_test_map_location_picker.*
+import com.liabit.test14.databinding.ActivityTestMapLocationPickerBinding
+import com.liabit.viewbinding.inflate
 
 class TestMapLocationPicker : AppCompatActivity() {
+
+    private val binding by inflate<ActivityTestMapLocationPickerBinding>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_map_location_picker)
 
-        pick.setOnClickListener {
+        binding.pick.setOnClickListener {
             val picker = LocationPicker.newInstance()
             picker.setOnResultListener {
                 Log.d("TTTT", "open location viewer: $it")
@@ -31,7 +34,7 @@ class TestMapLocationPicker : AppCompatActivity() {
         }
 
 
-        pick1.setOnClickListener {
+        binding.pick1.setOnClickListener {
             val trans = supportFragmentManager.beginTransaction()
             trans.add(android.R.id.content, LocationPickerFragment.newInstance(), "picker")
             trans.addToBackStack(null)

@@ -9,29 +9,33 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.liabit.recyclerview.decoration.SpaceDecoration
-import kotlinx.android.synthetic.main.activity_add_and_sub_test.*
-import kotlinx.android.synthetic.main.activity_add_and_sub_test_item.view.*
+import com.liabit.test.databinding.ActivityAddAndSubTestBinding
+import com.liabit.test.databinding.ActivityAddAndSubTestItemBinding
+import com.liabit.viewbinding.inflate
 
 class TestAddSubViewActivity : AppCompatActivity() {
+
+    private val binding by inflate<ActivityAddAndSubTestBinding>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_and_sub_test)
 
         Log.d("TTTT", "addAndSubView dialog theme=${R.style.AlertDialogTheme}")
-        addAndSubView.setHint(3)
-        addAndSubView.setOnValueChangedListener { view, value, edited ->
+        binding.addAndSubView.setHint(3)
+        binding.addAndSubView.setOnValueChangedListener { _, value, edited ->
             Log.d("TTTT", "addAndSubView value=$value  edited=$edited")
         }
-        addAndSubView.setOnValueOutOfRangeListener { view, value ->
+        binding.addAndSubView.setOnValueOutOfRangeListener { _, value ->
             Log.d("TTTT", "addAndSubView out range value=$value")
         }
-        addAndSubView.setOnEmptyListener {
+        binding.addAndSubView.setOnEmptyListener {
 
         }
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.addItemDecoration(SpaceDecoration(5f))
-        recyclerView.adapter = TestAdapter()
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.addItemDecoration(SpaceDecoration(5f))
+        binding.recyclerView.adapter = TestAdapter()
     }
 
     class TestAdapter : RecyclerView.Adapter<TestAdapter.Holder>() {
@@ -47,27 +51,28 @@ class TestAddSubViewActivity : AppCompatActivity() {
 
 
         class Holder(private val view: View) : RecyclerView.ViewHolder(view) {
+
+            private val bd = ActivityAddAndSubTestItemBinding.bind(view)
+
             private var mPosition: Int = 0
-
-            init {
-                view.addSubView.setOnValueChangedListener { view, value, edited ->
-                    itemView.text.text = "$mPosition: $value"
-                }
-                view.addSubView.setOnValueOutOfRangeListener { view, value ->
-                    itemView.text.text = "$mPosition: $value"
-                }
-                view.addSubView.setOnEmptyListener {
-
-                }
-            }
 
             fun setData(position: Int) {
                 mPosition = position
                 if (position % 3 == 1) {
-                    view.addSubView.setOnTextViewClickListener(null)
+                    bd.addSubView.setOnTextViewClickListener(null)
                 }
-                view.addSubView.setMaxValue(999999999)
-                itemView.text.text = "$mPosition: "
+                bd.addSubView.setMaxValue(999999999)
+                bd.text.text = "$mPosition: "
+
+                bd.addSubView.setOnValueChangedListener { _, value, _ ->
+                    bd.text.text = "$mPosition: $value"
+                }
+                bd.addSubView.setOnValueOutOfRangeListener { _, value ->
+                    bd.text.text = "$mPosition: $value"
+                }
+                bd.addSubView.setOnEmptyListener {
+
+                }
             }
 
         }

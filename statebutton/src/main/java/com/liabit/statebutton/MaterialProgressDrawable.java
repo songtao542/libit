@@ -676,7 +676,7 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
             } else if (angle > 90 && angle <= (180 - ra)) { //左下方
                 result[0] = cx - (float) (ry * Math.tan(radian - Math.PI / 2));
                 result[1] = rect.bottom;
-            } else if (angle > (180 - ra) && angle < 180) {  //左下方圆弧区域
+            } else if (angle > (180 - ra) && angle < 180) { //左下方圆弧区域
                 double d1 = cc * Math.cos(Math.PI - radian);
                 double f = cc * Math.sin(Math.PI - radian);
                 double d2 = Math.sqrt(ry * ry - f * f);

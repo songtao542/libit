@@ -10,14 +10,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import kotlinx.android.synthetic.main.activity_test_fragment_visible.*
+import com.liabit.test.databinding.ActivityTestFragmentVisibleBinding
+import com.liabit.viewbinding.inflate
 
 class TestFragmentVisibleActivity : AppCompatActivity() {
+
+    private val binding by inflate<ActivityTestFragmentVisibleBinding>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_fragment_visible)
-        viewPager.adapter = FAdapter(supportFragmentManager)
-        tabLayout.setupWithViewPager(viewPager)
+        binding.viewPager.adapter = FAdapter(supportFragmentManager)
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
 
     class FAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {

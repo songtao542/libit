@@ -8,11 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.liabit.extension.layoutUnderStatusBar
 import com.liabit.filter.*
 import com.liabit.test.R
-import kotlinx.android.synthetic.main.activity_filter_test.*
-import java.util.*
-import kotlin.collections.ArrayList
+import com.liabit.test.databinding.ActivityFilterTestBinding
+import com.liabit.viewbinding.inflate
 
 class TestFilterActivity : AppCompatActivity() {
+
+    private val binding by inflate<ActivityFilterTestBinding>()
 
     private var mPopupFilter: PopupFilter? = null
     private var mTwoColumnPopupFilter: PopupFilter? = null
@@ -22,7 +23,7 @@ class TestFilterActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_filter_test)
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         layoutUnderStatusBar(true)
 
         filterData = getFilterData()
@@ -37,7 +38,7 @@ class TestFilterActivity : AppCompatActivity() {
         checkableList1.setSingleChoice(true)
         shortFilterData.add(checkableList1)
 
-        openFragment.setOnClickListener {
+        binding.openFragment.setOnClickListener {
             val fragment = TestFilterFragment()
             supportFragmentManager
                     .beginTransaction()
@@ -45,39 +46,39 @@ class TestFilterActivity : AppCompatActivity() {
                     .commitAllowingStateLoss()
         }
 
-        showAsPopup.setOnClickListener {
-            getPopupFilter().show(toolbar)
+        binding.showAsPopup.setOnClickListener {
+            getPopupFilter().show(binding.toolbar)
         }
 
-        showAsFragment.setOnClickListener {
+        binding.showAsFragment.setOnClickListener {
             val f = getFilterDialogFragment()
             f.setShowAsDialog(false)
             f.show(this)
         }
 
-        showAsDialog.setOnClickListener {
+        binding.showAsDialog.setOnClickListener {
             val f = getFilterDialogFragment()
             f.setShowAsDialog(true)
             f.show(this)
         }
 
-        showTwoColumnAsPopup.setOnClickListener {
-            getTwoColumnPopupFilter().show(toolbar)
+        binding.showTwoColumnAsPopup.setOnClickListener {
+            getTwoColumnPopupFilter().show(binding.toolbar)
         }
 
-        showTwoColumnAsFragment.setOnClickListener {
+        binding.showTwoColumnAsFragment.setOnClickListener {
             val f = getFilterDialogFragment(true)
             f.setShowAsDialog(false)
             f.show(this)
         }
 
-        showTwoColumnAsDialog.setOnClickListener {
+        binding.showTwoColumnAsDialog.setOnClickListener {
             val f = getFilterDialogFragment(true)
             f.setShowAsDialog(true)
             f.show(this)
         }
 
-        showShortListAsFragment.setOnClickListener {
+        binding.showShortListAsFragment.setOnClickListener {
             val f = FilterDialogFragment(FilterPicker.instance)
             f.setFilter(shortFilterData)
             f.setOnResultListener(object : FilterLayout.OnResultListener {
@@ -99,7 +100,7 @@ class TestFilterActivity : AppCompatActivity() {
             f.show(this)
         }
 
-        showShortListAsPopup.setOnClickListener {
+        binding.showShortListAsPopup.setOnClickListener {
             val f = PopupFilter(this)
             f.setFilterPicker(FilterPicker.instance)
             f.setFilter(shortFilterData)
@@ -118,10 +119,10 @@ class TestFilterActivity : AppCompatActivity() {
                     }
                 }
             })
-            f.show(toolbar)
+            f.show(binding.toolbar)
         }
 
-        showShortListAsDialog.setOnClickListener {
+        binding.showShortListAsDialog.setOnClickListener {
             val f = FilterDialogFragment(FilterPicker.instance)
             f.setFilter(shortFilterData)
             f.setOnResultListener(object : FilterLayout.OnResultListener {

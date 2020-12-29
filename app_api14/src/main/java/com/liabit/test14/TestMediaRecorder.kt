@@ -9,7 +9,9 @@ import android.os.Environment
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.liabit.location.extension.checkAndRequestPermission
-import kotlinx.android.synthetic.main.test_record_activity.*
+import com.liabit.test14.databinding.ActivityMainBinding
+import com.liabit.test14.databinding.TestRecordActivityBinding
+import com.liabit.viewbinding.inflate
 import java.io.File
 import java.text.SimpleDateFormat
 
@@ -19,6 +21,8 @@ import java.text.SimpleDateFormat
  * CreateDate:     2020/6/1 15:02
  */
 class TestMediaRecorder : AppCompatActivity() {
+
+    private val binding by inflate<TestRecordActivityBinding>()
 
     private var mMediaRecorder: MediaRecorder? = null
     private var mFileName: String = ""
@@ -32,11 +36,11 @@ class TestMediaRecorder : AppCompatActivity() {
             startRecord()
         }
 
-        startRecordButton.setOnClickListener {
+        binding.startRecordButton.setOnClickListener {
             startRecord()
         }
 
-        stopRecordButton.setOnClickListener {
+        binding.stopRecordButton.setOnClickListener {
             stopRecord()
         }
     }

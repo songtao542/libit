@@ -17,10 +17,13 @@ import com.liabit.tablayout.indicator.LineTabIndicator
 import com.liabit.tablayout.indicator.TriangularTabIndicator
 import com.liabit.tablayout.indicator.WrapTabIndicator
 import com.liabit.test.R
-import kotlinx.android.synthetic.main.activity_test_tablayout_fix_mode_with_viewpager.*
+import com.liabit.test.databinding.ActivityTestTablayoutFixModeWithViewpagerBinding
+import com.liabit.viewbinding.inflate
 import kotlin.random.Random
 
 class TestTabLayoutFixModeWithViewPagerActivity : AppCompatActivity() {
+
+    private val binding by inflate<ActivityTestTablayoutFixModeWithViewpagerBinding>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +31,7 @@ class TestTabLayoutFixModeWithViewPagerActivity : AppCompatActivity() {
 
         val test = arrayOf(R.mipmap.test1, R.mipmap.test2, R.mipmap.test3)
 
-        viewPager.adapter = object : PagerAdapter() {
+        binding.viewPager.adapter = object : PagerAdapter() {
 
             val pageCount = 3
 
@@ -63,9 +66,9 @@ class TestTabLayoutFixModeWithViewPagerActivity : AppCompatActivity() {
             }
         }
 
-        tab0.setupWithViewPager(viewPager)
+        binding.tab0.setupWithViewPager(binding.viewPager)
 
-        tab1.tabAdapter = object : DefaultTabAdapter() {
+        binding.tab1.tabAdapter = object : DefaultTabAdapter() {
             override fun onCreateInterpolator(type: Int): Interpolator {
                 return if (type == TabIndicator.INTERPOLATOR_START)
                     AccelerateInterpolator()
@@ -77,9 +80,9 @@ class TestTabLayoutFixModeWithViewPagerActivity : AppCompatActivity() {
                 return LineTabIndicator(context)
             }
         }
-        tab1.setupWith(viewPager)
+        binding.tab1.setupWith(binding.viewPager)
 
-        tab2.tabAdapter = object : DefaultTabAdapter() {
+        binding.tab2.tabAdapter = object : DefaultTabAdapter() {
             override fun onCreateInterpolator(type: Int): Interpolator {
                 return if (type == TabIndicator.INTERPOLATOR_START)
                     AccelerateInterpolator()
@@ -91,9 +94,9 @@ class TestTabLayoutFixModeWithViewPagerActivity : AppCompatActivity() {
                 return BezierTabIndicator(context)
             }
         }
-        tab2.setupWith(viewPager)
+        binding.tab2.setupWith(binding.viewPager)
 
-        tab3.tabAdapter = object : DefaultTabAdapter() {
+        binding.tab3.tabAdapter = object : DefaultTabAdapter() {
             override fun onCreateInterpolator(type: Int): Interpolator {
                 return if (type == TabIndicator.INTERPOLATOR_START)
                     AccelerateInterpolator()
@@ -105,9 +108,9 @@ class TestTabLayoutFixModeWithViewPagerActivity : AppCompatActivity() {
                 return TriangularTabIndicator(context)
             }
         }
-        tab3.setupWith(viewPager)
+        binding.tab3.setupWith(binding.viewPager)
 
-        tab4.tabAdapter = object : DefaultTabAdapter() {
+        binding.tab4.tabAdapter = object : DefaultTabAdapter() {
             override fun onCreateInterpolator(type: Int): Interpolator {
                 return AccelerateInterpolator()
             }
@@ -116,9 +119,9 @@ class TestTabLayoutFixModeWithViewPagerActivity : AppCompatActivity() {
                 return WrapTabIndicator(context)
             }
         }
-        tab4.setupWith(viewPager)
+        binding.tab4.setupWith(binding.viewPager)
 
-        tab5.tabAdapter = object : DefaultTabAdapter() {
+        binding.tab5.tabAdapter = object : DefaultTabAdapter() {
             override fun onCreateInterpolator(type: Int): Interpolator {
                 return AccelerateInterpolator()
             }
@@ -127,6 +130,6 @@ class TestTabLayoutFixModeWithViewPagerActivity : AppCompatActivity() {
                 return WrapTabIndicator(context)
             }
         }
-        tab5.setupWith(viewPager)
+        binding.tab5.setupWith(binding.viewPager)
     }
 }

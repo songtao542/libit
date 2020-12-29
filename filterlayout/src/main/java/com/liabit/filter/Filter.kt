@@ -95,7 +95,7 @@ interface FilterGroup : FilterItem {
 }
 
 /**
- * 日期范围限定
+ * 范围限定
  */
 interface Boundary<T> {
     fun getMin(): T

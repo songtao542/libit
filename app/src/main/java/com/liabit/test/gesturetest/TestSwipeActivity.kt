@@ -7,19 +7,22 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.PagerAdapter
 import com.liabit.test.R
-import kotlinx.android.synthetic.main.activity_main_gesture_swipe.*
+import com.liabit.test.databinding.ActivityMainGestureSwipeBinding
+import com.liabit.viewbinding.inflate
 
 class TestSwipeActivity : AppCompatActivity() {
+
+    private val binding by inflate<ActivityMainGestureSwipeBinding>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_gesture_swipe)
 
-        val page1 = LayoutInflater.from(this).inflate(R.layout.page_swipe, viewPager, false)
-        val page2 = LayoutInflater.from(this).inflate(R.layout.page_swipe, viewPager, false)
-        val page3 = LayoutInflater.from(this).inflate(R.layout.page_swipe, viewPager, false)
+        val page1 = LayoutInflater.from(this).inflate(R.layout.page_swipe, binding.viewPager, false)
+        val page2 = LayoutInflater.from(this).inflate(R.layout.page_swipe, binding.viewPager, false)
+        val page3 = LayoutInflater.from(this).inflate(R.layout.page_swipe, binding.viewPager, false)
 
-        viewPager.adapter = object : PagerAdapter() {
+        binding.viewPager.adapter = object : PagerAdapter() {
             override fun isViewFromObject(view: View, obj: Any): Boolean {
                 return view == obj
             }

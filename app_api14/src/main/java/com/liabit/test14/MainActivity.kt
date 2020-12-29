@@ -4,9 +4,11 @@ import android.annotation.TargetApi
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -18,15 +20,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.liabit.screencapture.ScreenCapture
 import com.liabit.screencapture.ScreenCaptureUtil
 import com.liabit.screenrecord.ScreenRecordUtil
-import kotlinx.android.synthetic.main.activity_main.*
-import android.content.pm.PackageManager
-import android.os.Handler
+import com.liabit.test14.databinding.ActivityMainBinding
+import com.liabit.viewbinding.inflate
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
         const val ALIAS = "com.liabit.test14.FakeMainActivity"
     }
+
+    private val binding by inflate<ActivityMainBinding>()
 
     private var floatButtons: LinearLayout? = null
 
@@ -40,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        hide.setOnClickListener {
+        binding.hide.setOnClickListener {
             val componentName = ComponentName(this, ALIAS)
             packageManager.setComponentEnabledSetting(componentName,
                     //PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER,
@@ -48,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                     PackageManager.DONT_KILL_APP)
         }
 
-        show.setOnClickListener {
+        binding.show.setOnClickListener {
             val componentName = ComponentName(this, ALIAS)
             packageManager.setComponentEnabledSetting(componentName,
                     //PackageManager.COMPONENT_ENABLED_STATE_DEFAULT,
@@ -60,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             //addFloat()
         }
 
-        testScreenRecorder.setOnClickListener {
+        binding.testScreenRecorder.setOnClickListener {
             if (floatButtons == null) {
                 addFloat()
             } else {
@@ -71,10 +74,10 @@ class MainActivity : AppCompatActivity() {
         handler = Handler(callback)
         handler?.sendEmptyMessageDelayed(1, 1000)
 
-        toTestRecord.setOnClickListener {
+        binding.toTestRecord.setOnClickListener {
             startActivity(Intent(this, TestMediaRecorder::class.java))
         }
-        toPicker.setOnClickListener {
+        binding.toPicker.setOnClickListener {
             startActivity(Intent(this, TestMapLocationPicker::class.java))
         }
     }

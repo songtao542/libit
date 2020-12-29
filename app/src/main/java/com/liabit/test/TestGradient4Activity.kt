@@ -13,12 +13,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.liabit.color.Gradient4
+import com.liabit.test.databinding.ActivityTestGradient4Binding
+import com.liabit.viewbinding.inflate
 
 class TestGradient4Activity : AppCompatActivity() {
 
     companion object {
         const val MATRIX = 15
     }
+
+    private val binding by inflate<ActivityTestGradient4Binding>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

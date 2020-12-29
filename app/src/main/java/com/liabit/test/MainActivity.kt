@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.liabit.test.databinding.ActivityMainBinding
 import com.liabit.test.decorationtest.TestRecyclerViewDecorationActivity
 import com.liabit.test.filtertest.TestFilterActivity
 import com.liabit.test.gesturetest.TestDragActivity
@@ -11,8 +12,12 @@ import com.liabit.test.gesturetest.TestSwipeActivity
 import com.liabit.test.tablayouttest.TestTabLayoutActivity
 import com.liabit.test.tagviewtest.TestTagViewActivity
 import com.liabit.test.viewbinding.TestBindingActivity
+import com.liabit.viewbinding.inflate
 
 class MainActivity : AppCompatActivity() {
+
+    private val binding by inflate<ActivityMainBinding>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -83,6 +88,10 @@ class MainActivity : AppCompatActivity() {
 
             R.id.colorTest -> {
                 startActivity(Intent(this, TestGradient4Activity::class.java))
+            }
+
+            R.id.progressBarTest -> {
+                startActivity(Intent(this, TestProgressBarActivity::class.java))
             }
 
             R.id.otherTest -> {

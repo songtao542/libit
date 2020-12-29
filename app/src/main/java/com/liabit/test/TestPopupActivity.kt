@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.liabit.popup.PopupMenu
-import kotlinx.android.synthetic.main.activity_popup_menu_test.*
+import com.liabit.test.databinding.ActivityPopupMenuTestBinding
+import com.liabit.viewbinding.inflate
 
 class TestPopupActivity : AppCompatActivity() {
 
@@ -17,11 +18,13 @@ class TestPopupActivity : AppCompatActivity() {
             PopupMenu.MenuItem(R.drawable.ic_charge_black, "极慢速充电", R.drawable.menu_selector)
     )
 
+    private val binding by inflate<ActivityPopupMenuTestBinding>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_popup_menu_test)
 
-        toolbar.setOnClickListener {
+        binding.toolbar.setOnClickListener {
             val popupMenu = PopupMenu(this)
             popupMenu.setMenu(mMenus)
             popupMenu.setFullScreenWidth()
@@ -40,7 +43,7 @@ class TestPopupActivity : AppCompatActivity() {
                     Log.d("TTTT", "dismiss")
                 }
             })
-            popupMenu.show(toolbar)
+            popupMenu.show(binding.toolbar)
             //popupMenu.showAsDialog()
         }
 

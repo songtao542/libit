@@ -1,19 +1,18 @@
 package com.liabit.test
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.core.content.res.ResourcesCompat
-import com.liabit.extension.dip
-import com.liabit.extension.dp
-import com.liabit.statebutton.MaterialProgressDrawable
+import androidx.appcompat.app.AppCompatActivity
+import com.liabit.test.databinding.ActivityTestTimerBinding
 import com.liabit.timerview.TimerTextView
 import com.liabit.timerview.TimerView
-import kotlinx.android.synthetic.main.activity_test_timer.*
+import com.liabit.viewbinding.inflate
 
 class TestTimerActivity : AppCompatActivity() {
 
     private var isRunning = true
+
+    private val binding by inflate<ActivityTestTimerBinding>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,47 +22,35 @@ class TestTimerActivity : AppCompatActivity() {
             timerView.setTypeface(it)
         }*/
         //timerView.start(9000000000000 -  55L * 24 * 60 * 60 * 1000 )
-        timerView.start(55L * 24 * 60 * 60 * 1000)
-        timerView.setTimeEndListener(object : TimerView.OnTimeEndListener {
+        binding.timerView.start(55L * 24 * 60 * 60 * 1000)
+        binding.timerView.setTimeEndListener(object : TimerView.OnTimeEndListener {
             override fun onTimeEnd() {
                 Toast.makeText(this@TestTimerActivity, "Finished", Toast.LENGTH_SHORT).show()
-                timerView.reset()
+                binding.timerView.reset()
                 isRunning = false
-                pauseButton.isEnabled = false
+                binding.pauseButton.isEnabled = false
             }
         })
 
-        pauseButton.setOnClickListener {
+        binding.pauseButton.setOnClickListener {
             if (isRunning) {
                 isRunning = false
-                timerView.pause()
-                pauseButton.text = "继续"
+                binding.timerView.pause()
+                binding.pauseButton.text = "继续"
             } else {
                 isRunning = true
-                timerView.resume()
-                pauseButton.text = "暂停"
+                binding.timerView.resume()
+                binding.pauseButton.text = "暂停"
             }
         }
 
         //timerTextView.start(10009900)
-        timerTextView.start(2090159900)
-        timerTextView.setTimeEndListener(object : TimerTextView.OnTimeEndListener {
+        binding.timerTextView.start(2090159900)
+        binding.timerTextView.setTimeEndListener(object : TimerTextView.OnTimeEndListener {
             override fun onTimeEnd() {
                 Toast.makeText(this@TestTimerActivity, "Finished", Toast.LENGTH_SHORT).show()
-                timerTextView.reset()
+                binding.timerTextView.reset()
             }
         })
-
-        val d = MaterialProgressDrawable(this, drawableView)
-        d.setColorSchemeColors(0xffff0000.toInt(), 0xff0000ff.toInt())
-        drawableView.background = d
-        d.start()
-
-        val od = com.liabit.test.temp.MaterialProgressDrawable(this, originMPD)
-        od.alpha = 255
-        od.setColorSchemeColors(0xffff0000.toInt(), 0xff0000ff.toInt())
-        originMPD.background = od
-        od.start()
-
     }
 }

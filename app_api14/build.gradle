@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 29
@@ -31,6 +30,11 @@ android {
         jvmTarget = '1.8'
     }
 
+    buildFeatures {
+        dataBinding true
+        viewBinding true
+    }
+
 }
 
 dependencies {
@@ -51,6 +55,8 @@ dependencies {
     implementation 'com.amap.api:location:4.9.0'
     implementation 'com.amap.api:map2d:6.0.0'
     implementation 'com.amap.api:search:7.3.0'
+
+    implementation project(':viewbinding')
 
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test:runner:1.3.0'

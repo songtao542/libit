@@ -19,11 +19,14 @@ import com.liabit.tablayout.indicator.LineTabIndicator
 import com.liabit.tablayout.indicator.TriangularTabIndicator
 import com.liabit.tablayout.indicator.WrapTabIndicator
 import com.liabit.test.R
-import kotlinx.android.synthetic.main.activity_test_tablayout_fix_mode_with_viewpager2.*
+import com.liabit.test.databinding.ActivityTestTablayoutFixModeWithViewpager2Binding
+import com.liabit.viewbinding.inflate
 import kotlin.random.Random
 
 
 class TestTabLayoutFixModeWithViewPager2Activity : AppCompatActivity() {
+
+    private val binding by inflate<ActivityTestTablayoutFixModeWithViewpager2Binding>()
 
     private lateinit var mAdapter: ViewPagerAdapter
 
@@ -33,15 +36,15 @@ class TestTabLayoutFixModeWithViewPager2Activity : AppCompatActivity() {
 
         mAdapter = ViewPagerAdapter()
 
-        viewPager.adapter = mAdapter
+        binding.viewPager.adapter = mAdapter
 
-        val mediator = TabLayoutMediator(tab0, viewPager) { tab, position ->
+        val mediator = TabLayoutMediator(binding.tab0, binding.viewPager) { tab, position ->
             tab.text = mAdapter.titles[position]
         }
         //要执行这一句才是真正将两者绑定起来
         mediator.attach()
 
-        tab1.tabAdapter = object : DefaultTabAdapter() {
+        binding.tab1.tabAdapter = object : DefaultTabAdapter() {
             override fun onCreateInterpolator(type: Int): Interpolator {
                 return if (type == TabIndicator.INTERPOLATOR_START)
                     AccelerateInterpolator()
@@ -53,9 +56,9 @@ class TestTabLayoutFixModeWithViewPager2Activity : AppCompatActivity() {
                 return LineTabIndicator(context)
             }
         }
-        tab1.setupWith(viewPager, mAdapter.titles)
+        binding.tab1.setupWith(binding.viewPager, mAdapter.titles)
 
-        tab2.tabAdapter = object : DefaultTabAdapter() {
+        binding.tab2.tabAdapter = object : DefaultTabAdapter() {
             override fun onCreateInterpolator(type: Int): Interpolator {
                 return if (type == TabIndicator.INTERPOLATOR_START)
                     AccelerateInterpolator()
@@ -67,9 +70,9 @@ class TestTabLayoutFixModeWithViewPager2Activity : AppCompatActivity() {
                 return BezierTabIndicator(context)
             }
         }
-        tab2.setupWith(viewPager, mAdapter.titles)
+        binding.tab2.setupWith(binding.viewPager, mAdapter.titles)
 
-        tab3.tabAdapter = object : DefaultTabAdapter() {
+        binding.tab3.tabAdapter = object : DefaultTabAdapter() {
             override fun onCreateInterpolator(type: Int): Interpolator {
                 return if (type == TabIndicator.INTERPOLATOR_START)
                     AccelerateInterpolator()
@@ -81,9 +84,9 @@ class TestTabLayoutFixModeWithViewPager2Activity : AppCompatActivity() {
                 return TriangularTabIndicator(context)
             }
         }
-        tab3.setupWith(viewPager, mAdapter.titles)
+        binding.tab3.setupWith(binding.viewPager, mAdapter.titles)
 
-        tab4.tabAdapter = object : DefaultTabAdapter() {
+        binding.tab4.tabAdapter = object : DefaultTabAdapter() {
             override fun onCreateInterpolator(type: Int): Interpolator {
                 return AccelerateInterpolator()
             }
@@ -92,9 +95,9 @@ class TestTabLayoutFixModeWithViewPager2Activity : AppCompatActivity() {
                 return WrapTabIndicator(context)
             }
         }
-        tab4.setupWith(viewPager, mAdapter.titles)
+        binding.tab4.setupWith(binding.viewPager, mAdapter.titles)
 
-        tab5.tabAdapter = object : DefaultTabAdapter() {
+        binding.tab5.tabAdapter = object : DefaultTabAdapter() {
             override fun onCreateInterpolator(type: Int): Interpolator {
                 return AccelerateInterpolator()
             }
@@ -103,7 +106,7 @@ class TestTabLayoutFixModeWithViewPager2Activity : AppCompatActivity() {
                 return WrapTabIndicator(context)
             }
         }
-        tab5.setupWith(viewPager, mAdapter.titles)
+        binding.tab5.setupWith(binding.viewPager, mAdapter.titles)
     }
 
 

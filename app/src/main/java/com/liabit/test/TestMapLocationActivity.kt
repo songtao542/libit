@@ -8,10 +8,12 @@ import com.liabit.location.LocationPicker
 import com.liabit.location.LocationPickerFragment
 import com.liabit.location.LocationViewer
 import com.liabit.location.model.PoiAddress
+import com.liabit.test.databinding.ActivityTestMapLocationBinding
+import com.liabit.viewbinding.inflate
 
 class TestMapLocationActivity : AppCompatActivity() {
 
-    //private val binding by inflate<ActivityTestMapLocationBinding>()
+    private val binding by inflate<ActivityTestMapLocationBinding>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

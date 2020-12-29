@@ -7,19 +7,22 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.PagerAdapter
 import com.liabit.test.R
-import kotlinx.android.synthetic.main.activity_main_gesture_drag.*
+import com.liabit.test.databinding.ActivityMainGestureDragBinding
+import com.liabit.viewbinding.inflate
 
 class TestDragActivity : AppCompatActivity() {
+
+    private val binding by inflate<ActivityMainGestureDragBinding>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_gesture_drag)
 
-        val page1 = LayoutInflater.from(this).inflate(R.layout.page_drag, viewPager, false)
-        val page2 = LayoutInflater.from(this).inflate(R.layout.page_drag, viewPager, false)
-        val page3 = LayoutInflater.from(this).inflate(R.layout.page_drag, viewPager, false)
+        val page1 = LayoutInflater.from(this).inflate(R.layout.page_drag, binding.viewPager, false)
+        val page2 = LayoutInflater.from(this).inflate(R.layout.page_drag, binding.viewPager, false)
+        val page3 = LayoutInflater.from(this).inflate(R.layout.page_drag, binding.viewPager, false)
 
-        viewPager.adapter = object : PagerAdapter() {
+        binding.viewPager.adapter = object : PagerAdapter() {
             override fun isViewFromObject(view: View, obj: Any): Boolean {
                 return view == obj
             }

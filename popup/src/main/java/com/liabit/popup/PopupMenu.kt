@@ -395,7 +395,7 @@ class PopupMenu {
     }
 
     /**
-     * @param height   单位dp， 每一行的高度
+     * @param height 单位dp， 每一行的高度
      */
     fun setItemHeight(height: Int) {
         mItemHeight = dp2px(height)

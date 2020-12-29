@@ -27,7 +27,7 @@ class TestTabLayoutFixModeWithViewPagerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test_tablayout_fix_mode_with_viewpager)
+        setContentView(binding.root)
 
         val test = arrayOf(R.mipmap.test1, R.mipmap.test2, R.mipmap.test3)
 

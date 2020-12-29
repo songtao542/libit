@@ -10,8 +10,6 @@ import android.util.TypedValue
 import android.view.View
 import android.view.animation.Interpolator
 import android.view.animation.LinearInterpolator
-import androidx.annotation.IntDef
-import androidx.annotation.RestrictTo
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import kotlin.math.floor
 import kotlin.math.max
@@ -22,34 +20,11 @@ import kotlin.math.min
  * CreateDate:     2020/12/17 11:33
  */
 @Suppress("unused")
-class MaterialProgressBar : View {
+class MaterialProgressView : View {
 
     companion object {
         private val LINEAR_INTERPOLATOR: Interpolator = LinearInterpolator()
         private val MATERIAL_INTERPOLATOR: Interpolator = FastOutSlowInInterpolator()
-
-        /** @hide
-         */
-        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP_PREFIX)
-        @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
-        @IntDef(LARGE, DEFAULT)
-        annotation class ProgressDrawableSize
-
-        /** Maps to ProgressBar.Large style.  */
-        const val LARGE = 0
-
-        private const val CENTER_RADIUS_LARGE = 11f
-        private const val STROKE_WIDTH_LARGE = 3f
-        private const val ARROW_WIDTH_LARGE = 12
-        private const val ARROW_HEIGHT_LARGE = 6
-
-        /** Maps to ProgressBar default style.  */
-        const val DEFAULT = 1
-
-        private const val CENTER_RADIUS = 7.5f
-        private const val STROKE_WIDTH = 2.5f
-        private const val ARROW_WIDTH = 10
-        private const val ARROW_HEIGHT = 5
 
         /**
          * The value in the linear interpolator for animating the drawable at which
@@ -59,7 +34,7 @@ class MaterialProgressBar : View {
         private const val SHRINK_OFFSET = 0.5f
 
         /** The duration of a single progress spin in milliseconds.  */
-        private const val ANIMATION_DURATION = 1332
+        private const val ANIMATION_DURATION = 2000L
 
         /** Full rotation that's done for the animation duration in degrees.  */
         private const val GROUP_FULL_ROTATION = 1080f / 5f
@@ -73,9 +48,6 @@ class MaterialProgressBar : View {
         /** Rotation applied to ring during the animation, to complete it to a full circle.  */
         private const val RING_ROTATION = 1f - (MAX_PROGRESS_ARC - MIN_PROGRESS_ARC)
 
-        private fun dp2px(context: Context, dp: Int): Float {
-            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), context.resources.displayMetrics)
-        }
     }
 
     constructor(context: Context) : super(context) {
@@ -94,24 +66,22 @@ class MaterialProgressBar : View {
         init(context, attrs, defStyleAttr, defStyleRes)
     }
 
-
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         mRing = Ring()
 
-        var innerRadius = 0f
-        var strokeWidth = dp2px(context, 10)
+        var strokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2f, context.resources.displayMetrics)
         var color = Color.BLACK
         var colorScheme = 0
         var strokeJoin = Paint.Join.MITER
         var strokeCap = Cap.SQUARE
+        var showArrow = false
 
         var trimStart = 0f
         var trimEnd = 0f
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.MaterialProgressView, defStyleAttr, defStyleRes)
-            innerRadius = typedArray.getDimension(R.styleable.MaterialProgressView_innerRadius, innerRadius)
             strokeWidth = typedArray.getDimension(R.styleable.MaterialProgressView_strokeWidth, strokeWidth)
-            val mRingSize = typedArray.getDimension(R.styleable.MaterialProgressView_size, -1f)
+            showArrow = typedArray.getBoolean(R.styleable.MaterialProgressView_showArrow, false)
             color = typedArray.getColor(R.styleable.MaterialProgressView_strokeColor, Color.BLACK)
             colorScheme = typedArray.getResourceId(R.styleable.MaterialProgressView_strokeColorScheme, 0)
             strokeJoin = when (typedArray.getInt(R.styleable.MaterialProgressView_strokeLineJoin, 0)) {
@@ -127,6 +97,10 @@ class MaterialProgressBar : View {
 
             trimStart = typedArray.getFloat(R.styleable.MaterialProgressView_trimStart, 0f)
             trimEnd = typedArray.getFloat(R.styleable.MaterialProgressView_trimEnd, 0f)
+            mDuration = typedArray.getInt(R.styleable.MaterialProgressView_android_duration, ANIMATION_DURATION.toInt()).toLong()
+            if (mDuration < 1320) {
+                mDuration = 1320
+            }
             typedArray.recycle()
         }
         if (colorScheme != 0) {
@@ -138,9 +112,21 @@ class MaterialProgressBar : View {
         mRing.setStrokeJoin(strokeJoin)
         mRing.startTrim = trimStart
         mRing.endTrim = trimEnd
-
-        setStrokeWidth(STROKE_WIDTH)
+        mRing.strokeWidth = strokeWidth
+        mRing.showArrow = showArrow
+        val arrowHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5f, context.resources.displayMetrics)
+        mRing.setArrowDimensions(arrowHeight * 2, arrowHeight)
         setupAnimators()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        start()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        stop()
     }
 
     /** The indicator ring, used to manage animation state.  */
@@ -150,34 +136,11 @@ class MaterialProgressBar : View {
     private var mRotation = 0f
 
     private var mAnimator: Animator? = null
+
+    private var mDuration = ANIMATION_DURATION
+
     var mRotationCount = 0f
     var mFinishing = false
-
-    /** Sets all parameters at once in dp.  */
-    private fun setSizeParameters(centerRadius: Float, strokeWidth: Float, arrowWidth: Float,
-                                  arrowHeight: Float) {
-        val screenDensity = resources.displayMetrics.density
-        mRing.strokeWidth = strokeWidth * screenDensity
-        mRing.centerRadius = centerRadius * screenDensity
-        mRing.setColorIndex(0)
-        mRing.setArrowDimensions(arrowWidth * screenDensity, arrowHeight * screenDensity)
-    }
-
-    /**
-     * Sets the overall size for the progress spinner. This updates the radius
-     * and stroke width of the ring, and arrow dimensions.
-     *
-     * @param size one of [.LARGE] or [.DEFAULT]
-     */
-    fun setStyle(@ProgressDrawableSize size: Int) {
-        if (size == LARGE) {
-            setSizeParameters(CENTER_RADIUS_LARGE, STROKE_WIDTH_LARGE, ARROW_WIDTH_LARGE.toFloat(),
-                    ARROW_HEIGHT_LARGE.toFloat())
-        } else {
-            setSizeParameters(CENTER_RADIUS, STROKE_WIDTH, ARROW_WIDTH.toFloat(), ARROW_HEIGHT.toFloat())
-        }
-        invalidate()
-    }
 
     /**
      * Returns the stroke width for the progress spinner in pixels.
@@ -412,25 +375,25 @@ class MaterialProgressBar : View {
     }
 
     fun isRunning(): Boolean {
-        return mAnimator!!.isRunning
+        return mAnimator?.isRunning ?: false
     }
 
     /**
      * Starts the animation for the spinner.
      */
     fun start() {
-        mAnimator!!.cancel()
+        mAnimator?.cancel()
         mRing.storeOriginals()
         // Already showing some part of the ring
         if (mRing.endTrim != mRing.startTrim) {
             mFinishing = true
-            mAnimator!!.duration = (ANIMATION_DURATION / 2).toLong()
-            mAnimator!!.start()
+            mAnimator?.duration = (mDuration / 2)
+            mAnimator?.start()
         } else {
             mRing.setColorIndex(0)
             mRing.resetOriginals()
-            mAnimator!!.duration = ANIMATION_DURATION.toLong()
-            mAnimator!!.start()
+            mAnimator?.duration = mDuration
+            mAnimator?.start()
         }
     }
 
@@ -438,7 +401,7 @@ class MaterialProgressBar : View {
      * Stops the animation for the spinner.
      */
     fun stop() {
-        mAnimator!!.cancel()
+        mAnimator?.cancel()
         rotation = 0f
         mRing.showArrow = false
         mRing.setColorIndex(0)
@@ -553,11 +516,10 @@ class MaterialProgressBar : View {
                 mRing.storeOriginals()
                 mRing.goToNextColor()
                 if (mFinishing) {
-                    // finished closing the last ring from the swipe gesture; go
-                    // into progress mode
+                    // finished closing the last ring from the swipe gesture; go into progress mode
                     mFinishing = false
                     animator.cancel()
-                    animator.duration = ANIMATION_DURATION.toLong()
+                    animator.duration = ANIMATION_DURATION
                     animator.start()
                     mRing.showArrow = false
                 } else {
@@ -580,12 +542,12 @@ class MaterialProgressBar : View {
         private var mColorIndex = 0
         private var mStrokeWidth = 5f
         private var mColors: IntArray = intArrayOf(Color.BLUE)
-        private var mShowArrow = false
         private var mArrow: Path = Path()
-        private var mArrowScale = 1f
         private var mAlpha = 255
         private var mCurrentColor = 0
 
+        var arrowScale = 1f
+        var showArrow = false
         var startTrim = 0f
         var endTrim = 0f
         var rotation = 0f
@@ -654,28 +616,6 @@ class MaterialProgressBar : View {
             }
 
         val startingColor: Int get() = mColors[mColorIndex]
-
-        /**
-         * `true` if should show the arrow head on the progress spinner
-         */
-        var showArrow: Boolean
-            get() = mShowArrow
-            set(show) {
-                if (mShowArrow != show) {
-                    mShowArrow = show
-                }
-            }
-
-        /**
-         *  scale of the arrowhead for the spinner
-         */
-        var arrowScale: Float
-            get() = mArrowScale
-            set(scale) {
-                if (scale != mArrowScale) {
-                    mArrowScale = scale
-                }
-            }
 
         /**
          * Sets the absolute color of the progress spinner. This is should only
@@ -762,7 +702,7 @@ class MaterialProgressBar : View {
             val centerY = (top + bottom) / 2
             if (centerRadius <= 0) {
                 // If center radius is not set, fill the bounds
-                arcRadius = min(width, height) / 2f - max(arrowWidth * mArrowScale / 2f, mStrokeWidth / 2f)
+                arcRadius = min(width, height) / 2f - max(arrowWidth * arrowScale / 2f, mStrokeWidth / 2f)
             }
             arcBounds[centerX - arcRadius, centerY - arcRadius, centerX + arcRadius] = centerY + arcRadius
             val startAngle = (startTrim + rotation) * 360
@@ -781,20 +721,20 @@ class MaterialProgressBar : View {
         }
 
         private fun drawTriangle(c: Canvas, startAngle: Float, sweepAngle: Float, bounds: RectF) {
-            if (mShowArrow) {
+            if (showArrow) {
 
                 mArrow.fillType = Path.FillType.EVEN_ODD
                 mArrow.reset()
 
                 val centerRadius = min(bounds.width(), bounds.height()) / 2f
-                val inset = arrowWidth * mArrowScale / 2f
+                val inset = arrowWidth * arrowScale / 2f
                 // Update the path each time. This works around an issue in SKIA
                 // where concatenating a rotation matrix to a scale matrix
                 // ignored a starting negative rotation. This appears to have
                 // been fixed as of API 21.
                 mArrow.moveTo(0f, 0f)
-                mArrow.lineTo(arrowWidth * mArrowScale, 0f)
-                mArrow.lineTo(arrowWidth * mArrowScale / 2, arrowHeight * mArrowScale)
+                mArrow.lineTo(arrowWidth * arrowScale, 0f)
+                mArrow.lineTo(arrowWidth * arrowScale / 2, arrowHeight * arrowScale)
                 mArrow.offset(centerRadius + bounds.centerX() - inset, bounds.centerY() + mStrokeWidth / 2f)
                 mArrow.close()
                 // draw a triangle

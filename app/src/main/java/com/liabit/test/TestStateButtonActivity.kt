@@ -14,7 +14,7 @@ class TestStateButtonActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_statebutton_test)
+        setContentView(binding.root)
 
         binding.pauseButton.setOnClickListener {
             binding.finishButton.show()

@@ -17,7 +17,7 @@ class TestMapLocationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test_map_location)
+        setContentView(binding.root)
     }
 
     fun onClick(view: View) {

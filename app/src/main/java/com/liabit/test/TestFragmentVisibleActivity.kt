@@ -19,7 +19,7 @@ class TestFragmentVisibleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test_fragment_visible)
+        setContentView(binding.root)
         binding.viewPager.adapter = FAdapter(supportFragmentManager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
     }

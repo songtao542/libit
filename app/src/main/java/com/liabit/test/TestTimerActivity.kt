@@ -16,7 +16,7 @@ class TestTimerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test_timer)
+        setContentView(binding.root)
 
         /*ResourcesCompat.getFont(this, R.font.digi)?.let {
             timerView.setTypeface(it)

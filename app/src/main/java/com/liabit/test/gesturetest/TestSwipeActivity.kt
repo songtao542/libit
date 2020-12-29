@@ -16,7 +16,7 @@ class TestSwipeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_gesture_swipe)
+        setContentView(binding.root)
 
         val page1 = LayoutInflater.from(this).inflate(R.layout.page_swipe, binding.viewPager, false)
         val page2 = LayoutInflater.from(this).inflate(R.layout.page_swipe, binding.viewPager, false)

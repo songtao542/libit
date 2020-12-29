@@ -13,14 +13,21 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:navigationIcon="@drawable/filter_back_icon"
-        app:title="标题栏" />
+        app:title="点击弹出PopupWindow" />
 
-    <ImageView
-        android:layout_width="624px"
+    <Button
+        android:id="@+id/button"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:src="@mipmap/cat1" />
+        android:text="点击弹出PopupWindow" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="点击弹出 Dialog" />
 
     <ImageView
         android:layout_width="match_parent"

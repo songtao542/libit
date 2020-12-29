@@ -12,17 +12,12 @@ class TestProgressBarActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test_progress_bar)
+        setContentView(binding.root)
 
         val d = MaterialProgressDrawable(this, binding.drawableView)
         d.setColorSchemeColors(0xffff0000.toInt(), 0xff0000ff.toInt())
         binding.drawableView.background = d
         d.start()
 
-        val od = com.liabit.test.temp.MaterialProgressDrawable(this, binding.originMPD)
-        od.alpha = 255
-        od.setColorSchemeColors(0xffff0000.toInt(), 0xff0000ff.toInt())
-        binding.originMPD.background = od
-        od.start()
     }
 }

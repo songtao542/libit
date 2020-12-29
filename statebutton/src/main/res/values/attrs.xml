@@ -24,12 +24,10 @@
     </declare-styleable>
 
     <declare-styleable name="MaterialProgressView">
-
         <attr name="size" format="reference|dimension" />
         <attr name="strokeColor" format="reference|color" />
         <attr name="strokeColorScheme" format="reference" />
         <attr name="strokeWidth" format="reference|dimension" />
-        <attr name="innerRadius" format="reference|dimension" />
         <attr name="strokeLineCap" format="enum">
             <!--The stroke ends with the path, and does not project beyond it.-->
             <enum name="butt" value="0" />
@@ -49,11 +47,8 @@
         <attr name="trimEnd" format="reference|float" />
         <!--<attr name="trimOffset" format="reference|float" />-->
         <attr name="trimStart" format="reference|float" />
-
-        <attr name="shape" format="enum">
-            <enum name="circle" value="0" />
-            <enum name="rounded_rectangle" value="1" />
-        </attr>
+        <attr name="android:duration" />
+        <attr name="showArrow" format="reference|boolean" />
     </declare-styleable>
 
 </resources>

@@ -26,7 +26,7 @@ class TestGradient4Activity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test_gradient4)
+        setContentView(binding.root)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = GridLayoutManager(this, MATRIX)
         recyclerView.adapter = Adapter()

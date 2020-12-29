@@ -27,9 +27,10 @@ class TestPickerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_picker_test)
+        setContentView(binding.root)
 
         binding.time12Picker.setOnClickListener {
+            Log.d("TTTT", "vvvvvvvvvvvvvvvvvvv: ")
             val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(false)
                     .setWithTime(true)

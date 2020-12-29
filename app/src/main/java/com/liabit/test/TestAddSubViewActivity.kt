@@ -19,7 +19,7 @@ class TestAddSubViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_and_sub_test)
+        setContentView(binding.root)
 
         Log.d("TTTT", "addAndSubView dialog theme=${R.style.AlertDialogTheme}")
         binding.addAndSubView.setHint(3)

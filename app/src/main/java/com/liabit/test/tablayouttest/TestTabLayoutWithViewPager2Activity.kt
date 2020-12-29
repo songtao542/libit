@@ -31,7 +31,7 @@ class TestTabLayoutWithViewPager2Activity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test_tab_layout_with_viewpager2)
+        setContentView(binding.root)
         mAdapter = ViewPagerAdapter()
         binding.viewPager.adapter = mAdapter
 

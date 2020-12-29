@@ -22,30 +22,50 @@ class TestPopupActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_popup_menu_test)
+        setContentView(binding.root)
 
-        binding.toolbar.setOnClickListener {
-            val popupMenu = PopupMenu(this)
-            popupMenu.setMenu(mMenus)
-            popupMenu.setFullScreenWidth()
-            popupMenu.setTextWidth(120)
-            popupMenu.setShowMask(true)
-            //popupMenu.setVisibleItemCount(3)
-            popupMenu.setItemHeight(60)
-            popupMenu.setDefaultCheckedPosition(2)
-            popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
-                override fun onOptionsItemSelected(item: PopupMenu.MenuItem) {
-                    Log.d("TTTT", "clicked: $item")
-                }
-            })
-            popupMenu.setOnDismissListener(object : PopupMenu.OnDismissListener {
-                override fun onDismiss() {
-                    Log.d("TTTT", "dismiss")
-                }
-            })
-            popupMenu.show(binding.toolbar)
-            //popupMenu.showAsDialog()
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressed()
         }
 
+        binding.toolbar.setOnClickListener {
+            showPopup(false)
+        }
+
+        binding.button.setOnClickListener {
+            showPopup(false)
+        }
+
+        binding.button1.setOnClickListener {
+            showPopup(true)
+        }
+    }
+
+    private fun showPopup(showAsDialog: Boolean) {
+        val popupMenu = PopupMenu(this)
+        popupMenu.setMenu(mMenus)
+        if (!showAsDialog) {
+            popupMenu.setFullScreenWidth()
+        }
+        popupMenu.setTextWidth(120)
+        popupMenu.setShowMask(true)
+        //popupMenu.setVisibleItemCount(3)
+        popupMenu.setItemHeight(60)
+        popupMenu.setDefaultCheckedPosition(2)
+        popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+            override fun onOptionsItemSelected(item: PopupMenu.MenuItem) {
+                Log.d("TTTT", "clicked: $item")
+            }
+        })
+        popupMenu.setOnDismissListener(object : PopupMenu.OnDismissListener {
+            override fun onDismiss() {
+                Log.d("TTTT", "dismiss")
+            }
+        })
+        if (!showAsDialog) {
+            popupMenu.show(binding.toolbar)
+        } else {
+            popupMenu.showAsDialog()
+        }
     }
 }

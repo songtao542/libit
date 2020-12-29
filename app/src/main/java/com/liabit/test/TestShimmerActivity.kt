@@ -13,7 +13,7 @@ class TestShimmerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_shimmer_test)
+        setContentView(binding.root)
 
         //binding.shimmerLayout
     }

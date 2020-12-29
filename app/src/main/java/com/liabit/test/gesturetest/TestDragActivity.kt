@@ -16,7 +16,7 @@ class TestDragActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_gesture_drag)
+        setContentView(binding.root)
 
         val page1 = LayoutInflater.from(this).inflate(R.layout.page_drag, binding.viewPager, false)
         val page2 = LayoutInflater.from(this).inflate(R.layout.page_drag, binding.viewPager, false)

@@ -13,6 +13,7 @@ import com.liabit.recyclerview.decoration.SpaceDecoration
 import com.liabit.extension.dp
 import com.liabit.test.R
 import com.liabit.test.databinding.ActivityFilterTestBinding
+import com.liabit.test.databinding.ActivityRecyclerViewDecorationBinding
 import com.liabit.viewbinding.inflate
 import kotlin.random.Random
 

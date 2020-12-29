@@ -20,8 +20,7 @@ class TestFilterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_filter_test)
+        setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
         layoutUnderStatusBar(true)

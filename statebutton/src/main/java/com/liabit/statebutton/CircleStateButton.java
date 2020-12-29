@@ -69,7 +69,6 @@ public class CircleStateButton extends StateButton {
                     mAnimatorDrawable.stop();
                 }
                 case LOADING: {
-                    Log.d("TTTT", "handleState loading");
                     mAnimatorDrawable.setVisible(true);
                     mAnimatorDrawable.start();
                 }

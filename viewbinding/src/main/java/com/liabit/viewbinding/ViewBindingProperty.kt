@@ -200,7 +200,7 @@ class ViewBindingProperty<VB : ViewBinding>(private val viewProvider: (() -> Vie
     private fun inflate(inflater: LayoutInflater): VB {
         var vb: VB? = null
         if (viewBindingClass.isAssignableFrom(ViewDataBinding::class.java)) {
-            val layoutId = getLayoutResource(inflater.context, viewBindingClass)
+            val layoutId = getLayoutResource(inflater.context, viewBindingClass.simpleName)
             if (layoutId != 0) {
                 vb = DataBindingUtil.inflate(inflater, layoutId, null, false)
             }

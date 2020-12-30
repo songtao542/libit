@@ -1,7 +1,6 @@
 package com.liabit.viewbinding
 
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,23 +20,18 @@ import java.util.regex.Pattern
  */
 val HUMP_PATTERN: Pattern = Pattern.compile("[A-Z]")
 
-fun <VB : ViewBinding> getLayoutResource(fragment: Fragment, context: Context?): Int {
-    val viewBindingClass = findViewBindingClassOrNull<VB>(fragment.javaClass)
-            ?: throw IllegalStateException("Not found Generic Type of ViewBinding in ${fragment.javaClass}")
-    return getLayoutResource(context ?: fragment.requireContext(), viewBindingClass)
-}
-
-fun <VB : ViewBinding> getLayoutResource(fragment: Fragment): Int {
-    return getLayoutResource<VB>(fragment, null)
+fun <VB : ViewBinding> getLayoutResource(context: Context, clazz: Class<*>): Int {
+    val viewBindingClass = findViewBindingClassOrNull<VB>(clazz)
+            ?: throw IllegalStateException("Not found Generic Type of ViewBinding in $clazz")
+    return getLayoutResource(context, viewBindingClass.simpleName)
 }
 
 fun <VB : ViewBinding> inflate(fragment: Fragment, inflater: LayoutInflater, container: ViewGroup?): View {
-    return inflater.inflate(getLayoutResource<VB>(fragment, inflater.context), container, false)
+    return inflater.inflate(getLayoutResource<VB>(inflater.context, fragment.javaClass), container, false)
 }
 
-fun getLayoutResource(context: Context, viewBindingClass: Class<*>): Int {
-    val viewDataBindingName = viewBindingClass.simpleName
-    val matcher: Matcher = HUMP_PATTERN.matcher(viewDataBindingName)
+fun getLayoutResource(context: Context, viewBindingClassName: String): Int {
+    val matcher: Matcher = HUMP_PATTERN.matcher(viewBindingClassName)
     val sb = StringBuffer()
     while (matcher.find()) {
         val match = matcher.group(0)
@@ -57,7 +51,7 @@ inline fun <reified VB : ViewBinding> inflate(viewBindingClass: Class<VB>,
                                               attachToParent: Boolean): VB {
     var vb: VB? = null
     if (ViewDataBinding::class.java.isAssignableFrom(viewBindingClass)) {
-        val layoutId = getLayoutResource(inflater.context, viewBindingClass)
+        val layoutId = getLayoutResource(inflater.context, viewBindingClass.simpleName)
         if (layoutId != 0) {
             vb = DataBindingUtil.inflate(inflater, layoutId, parent, attachToParent)
         }

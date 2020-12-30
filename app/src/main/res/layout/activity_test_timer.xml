@@ -211,7 +211,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
                 app:millisInFuture="5000"
-                app:prefix="跳过\n"
+                app:prefix="@string/skip"
                 app:showAsCountDownButton="true"
                 app:showStrokeProgress="true"
                 app:strokeColor="#ffffff"

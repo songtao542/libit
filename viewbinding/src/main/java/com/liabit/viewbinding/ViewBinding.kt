@@ -1,11 +1,13 @@
 package com.liabit.viewbinding
 
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -18,6 +20,20 @@ import java.util.regex.Pattern
  * CreateDate:     2020/12/1 16:52
  */
 val HUMP_PATTERN: Pattern = Pattern.compile("[A-Z]")
+
+fun <VB : ViewBinding> getLayoutResource(fragment: Fragment, context: Context?): Int {
+    val viewBindingClass = findViewBindingClassOrNull<VB>(fragment.javaClass)
+            ?: throw IllegalStateException("Not found Generic Type of ViewBinding in ${fragment.javaClass}")
+    return getLayoutResource(context ?: fragment.requireContext(), viewBindingClass)
+}
+
+fun <VB : ViewBinding> getLayoutResource(fragment: Fragment): Int {
+    return getLayoutResource<VB>(fragment, null)
+}
+
+fun <VB : ViewBinding> inflate(fragment: Fragment, inflater: LayoutInflater, container: ViewGroup?): View {
+    return inflater.inflate(getLayoutResource<VB>(fragment, inflater.context), container, false)
+}
 
 fun getLayoutResource(context: Context, viewBindingClass: Class<*>): Int {
     val viewDataBindingName = viewBindingClass.simpleName

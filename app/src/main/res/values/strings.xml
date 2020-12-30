@@ -89,6 +89,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="click_to_show_filter">点击弹出PopupWindow Filter</string>
+    <string name="skip">跳过\n</string>
 
 
 </resources>

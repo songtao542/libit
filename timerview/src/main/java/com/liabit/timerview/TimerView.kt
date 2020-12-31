@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.os.CountDownTimer
+import android.os.SystemClock
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
@@ -42,6 +43,8 @@ class TimerView : LinearLayout {
     private var resetSymbol = 0
     private var dayVisibility = View.VISIBLE
     private var dayUnit = ""
+
+    private var pauseTime = 0L
 
     constructor(context: Context) : super(context) {
         init(context, null, 0)
@@ -187,6 +190,21 @@ class TimerView : LinearLayout {
 
             typedArray.recycle()
         }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        remainingTime -= (SystemClock.elapsedRealtime() - pauseTime)
+        if (countDownTimer == null) {
+            start(remainingTime)
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        pauseTime = SystemClock.elapsedRealtime()
+        countDownTimer?.cancel()
+        countDownTimer = null
     }
 
     @SuppressLint("ObsoleteSdkInt")

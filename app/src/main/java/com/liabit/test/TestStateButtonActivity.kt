@@ -13,7 +13,7 @@ class TestStateButtonActivity : AppCompatActivity() {
 
     private val binding by inflate<ActivityStatebuttonTestBinding>()
 
-    private var mProgressVisibility1 = View.VISIBLE
+    private var mProgressVisibility1 = View.GONE
     private var mProgressVisibility2 = View.VISIBLE
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,14 +59,14 @@ class TestStateButtonActivity : AppCompatActivity() {
             }
         }
 
-//        binding.progressButton2.setOnClickListener {
-//            if (mProgressVisibility2 == View.GONE) {
-//                mProgressVisibility2 = View.VISIBLE
-//                binding.progressButton2.setMode(ProgressButton.PROGRESS)
-//            } else {
-//                mProgressVisibility2 = View.GONE
-//                binding.progressButton2.setMode(ProgressButton.TEXT)
-//            }
-//        }
+        binding.progressButton2.setOnClickListener {
+            if (mProgressVisibility2 == View.GONE) {
+                mProgressVisibility2 = View.VISIBLE
+                binding.progressButton2.setMode(ProgressButton.PROGRESS)
+            } else {
+                mProgressVisibility2 = View.GONE
+                binding.progressButton2.setMode(ProgressButton.TEXT)
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.CountDownTimer
+import android.os.SystemClock
 import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
@@ -30,6 +31,7 @@ class TimerTextView : AppCompatTextView {
     private var suffix = ""
     private var dayUnit = ""
     private var remainingTime = 0L
+    private var pauseTime = 0L
     private var millisInFuture = 0L
     private var showStrokeProgress = false
     private var showAsCountDownButton = false
@@ -101,6 +103,21 @@ class TimerTextView : AppCompatTextView {
         } else {
             start(millisInFuture.toLong())
         }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        remainingTime -= (SystemClock.elapsedRealtime() - pauseTime)
+        if (countDownTimer == null) {
+            start(remainingTime)
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        pauseTime = SystemClock.elapsedRealtime()
+        countDownTimer?.cancel()
+        countDownTimer = null
     }
 
     fun start(millisInFuture: Long) {

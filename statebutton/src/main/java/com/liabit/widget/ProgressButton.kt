@@ -53,14 +53,16 @@ class ProgressButton : LinearLayout {
         var progressPosition = 1
         var progressVisibility = 1
         var progressSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, context.resources.displayMetrics)
+        var progressMode = -1
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ProgressButton, defStyleAttr, defStyleRes)
             progressPosition = typedArray.getInt(R.styleable.ProgressButton_progressPosition, 1)
             progressVisibility = typedArray.getInt(R.styleable.ProgressButton_progressVisibility, View.GONE)
             progressSize = typedArray.getDimension(R.styleable.ProgressButton_progressSize, progressSize)
+            progressMode = typedArray.getInt(R.styleable.ProgressButton_mode, -1)
             typedArray.recycle()
         }
-        val tlp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        val tlp = LayoutParams(LayoutParams.WRAP_CONTENT, progressSize.toInt())
         tlp.gravity = Gravity.CENTER
 
         val plp = LayoutParams(progressSize.toInt(), progressSize.toInt())
@@ -75,8 +77,13 @@ class ProgressButton : LinearLayout {
         }
         mProgressView.setStrokeWidth(progressSize / 24)
         mTextView.setPadding(0, 0, 0, 0)
+        mTextView.gravity = Gravity.CENTER
         mProgressView.setPadding(0, 0, 0, 0)
-        setProgressVisibility(progressVisibility)
+        if (progressMode != -1) {
+            setMode(progressMode)
+        } else {
+            setProgressVisibility(progressVisibility)
+        }
     }
 
     fun setProgressVisibility(visibility: Int) {

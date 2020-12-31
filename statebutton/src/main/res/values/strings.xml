@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">StateButton</string>
+    <string name="colon">:</string>
 </resources>

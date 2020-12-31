@@ -75,4 +75,24 @@
         <attr name="showArrow" format="reference|boolean" />
     </declare-styleable>
 
+    <declare-styleable name="LabelView">
+        <attr name="android:label" />
+        <attr name="android:text" />
+        <attr name="rightText" format="string" />
+        <attr name="rightTextColor" format="color|reference" />
+        <attr name="android:hint" />
+        <attr name="android:textColor" />
+        <attr name="labelTextColor" format="reference|color" />
+        <attr name="android:textSize" />
+        <attr name="rightTextSize" format="dimension" />
+        <attr name="labelTextSize" format="dimension" />
+        <attr name="android:textColorHint" />
+        <attr name="android:editable" />
+        <attr name="labelClickable" format="boolean" />
+        <attr name="labelWithColon" format="boolean" />
+        <attr name="showRightArrow" format="boolean" />
+        <attr name="rightArrow" format="reference" />
+        <attr name="rightArrowSize" format="reference|dimension" />
+    </declare-styleable>
+
 </resources>

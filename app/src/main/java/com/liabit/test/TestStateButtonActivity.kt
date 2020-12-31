@@ -14,7 +14,7 @@ class TestStateButtonActivity : AppCompatActivity() {
     private val binding by inflate<ActivityStatebuttonTestBinding>()
 
     private var mProgressVisibility1 = View.GONE
-    private var mProgressVisibility2 = View.VISIBLE
+    private var mProgressVisibility2 = View.GONE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

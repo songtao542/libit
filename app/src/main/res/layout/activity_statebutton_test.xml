@@ -113,29 +113,58 @@
         </FrameLayout>
     </LinearLayout>
 
-    <com.liabit.widget.ProgressButton
-        android:id="@+id/progressButton1"
-        android:layout_width="180dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/test_button_selector"
-        android:gravity="center"
-        android:paddingHorizontal="10dp"
-        android:text="获取验证码" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical">
 
-    <com.liabit.widget.ProgressButton
-        android:id="@+id/progressButton2"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/test_button_selector"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="20dp"
-        android:text="获取验证码"
-        app:mode="text" />
+        <com.liabit.widget.ProgressButton
+            android:id="@+id/progressButton1"
+            android:layout_width="180dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/test_button_selector"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
+            android:text="获取验证码"
+            android:textColor="@android:color/white"
+            app:strokeColor="@android:color/white" />
 
+        <com.liabit.widget.ProgressButton
+            android:id="@+id/progressButton2"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/test_button_selector"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="20dp"
+            android:text="获取验证码"
+            android:textColor="@android:color/white"
+            app:mode="text"
+            app:strokeColor="@android:color/white" />
+
+        <com.liabit.widget.LabelView
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:label="验证码"
+            android:orientation="vertical"
+            android:paddingHorizontal="10dp"
+            android:textColor="@android:color/black"
+            app:labelTextColor="@android:color/black"
+            app:rightArrowColor="@android:color/darker_gray"
+            app:rightArrowPadding="1dp"
+            app:rightText="获取验证码"
+            app:rightTextColor="@android:color/darker_gray"
+            app:showRightArrow="true"
+            app:textPaddingBottom="0dp" />
+    </LinearLayout>
 </LinearLayout>

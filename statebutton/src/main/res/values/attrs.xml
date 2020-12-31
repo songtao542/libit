@@ -93,6 +93,9 @@
         <attr name="showRightArrow" format="boolean" />
         <attr name="rightArrow" format="reference" />
         <attr name="rightArrowSize" format="reference|dimension" />
+        <attr name="rightArrowColor" format="reference|color" />
+        <attr name="rightArrowPadding" format="reference|dimension" />
+        <attr name="textPaddingBottom" format="reference|dimension" />
     </declare-styleable>
 
 </resources>

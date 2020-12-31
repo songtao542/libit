@@ -13,10 +13,11 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:paddingStart="0dp"
+        android:paddingEnd="15dp"
         android:textColor="@android:color/black"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        tools:text="学校" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/editText"
@@ -52,17 +53,15 @@
         android:gravity="center_vertical"
         android:paddingRight="15dp"
         android:textColor="@android:color/black"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        tools:text="请选择" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/rightArrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="15dp"
-        android:gravity="center_vertical"
         android:scaleType="centerInside"
-        android:visibility="gone"
         app:srcCompat="@drawable/ic_right_arrow" />
 
 </merge>

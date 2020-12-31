@@ -57,6 +57,7 @@ class LabelView : LinearLayout {
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         orientation = HORIZONTAL
         LayoutInflater.from(context).inflate(R.layout.label_view, this, true)
+        isClickable = true
         mLabelTextView = findViewById(R.id.label)
         mTextView = findViewById(R.id.textView)
         mEditTextView = findViewById(R.id.editText)
@@ -100,6 +101,8 @@ class LabelView : LinearLayout {
                 mRightTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mRightTextSize.toFloat())
             }
 
+            val textPaddingBottom = typedArray.getDimension(R.styleable.LabelView_textPaddingBottom, 0f)
+
             typedArray.getColorStateList(R.styleable.LabelView_android_textColor)?.let {
                 textView.setTextColor(it)
             }
@@ -127,6 +130,21 @@ class LabelView : LinearLayout {
                 mRightArrow.setImageDrawable(rightArrowIcon)
             }
 
+            val rightArrowColor = typedArray.getColorStateList(R.styleable.LabelView_rightArrowColor)
+            if (rightArrowColor != null) {
+                mRightArrow.imageTintList = rightArrowColor
+            }
+
+            val rightArrowPadding = typedArray.getDimension(R.styleable.LabelView_rightArrowPadding, -1f)
+            if (rightArrowPadding >= 0) {
+                mRightTextView.setPadding(0, 0, rightArrowPadding.toInt(), textPaddingBottom.toInt())
+            } else {
+                mRightTextView.setPadding(0, 0, 0, textPaddingBottom.toInt())
+            }
+
+            mLabelTextView.setPadding(0, 0, 0, textPaddingBottom.toInt())
+            textView.setPadding(0, 0, 0, textPaddingBottom.toInt())
+
             val rightArrowSize = typedArray.getDimension(R.styleable.LabelView_rightArrowSize, -1f)
             if (rightArrowSize > 0) {
                 val lp = mRightArrow.layoutParams
@@ -137,6 +155,8 @@ class LabelView : LinearLayout {
                 lp.height = rightArrowSize.toInt()
                 mRightArrow.layoutParams = lp
             }
+
+
 
             typedArray.recycle()
         }

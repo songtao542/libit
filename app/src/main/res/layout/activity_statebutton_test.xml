@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="30dp" />
 
-    <com.liabit.statebutton.CircleStateButton
+    <com.liabit.widget.CircleStateButton
         android:id="@+id/circleStateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="30dp" />
 
-    <com.liabit.statebutton.RoundCornerStateButton
+    <com.liabit.widget.RoundCornerStateButton
         android:id="@+id/roundedStateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             android:clipChildren="false"
             android:clipToPadding="false">
 
-            <com.liabit.statebutton.SpringButton
+            <com.liabit.widget.SpringButton
                 android:id="@+id/finishButton"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -80,7 +80,7 @@
             android:clipChildren="false"
             android:clipToPadding="false">
 
-            <com.liabit.statebutton.SpringButton
+            <com.liabit.widget.SpringButton
                 android:id="@+id/pauseButton"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -99,7 +99,7 @@
             android:clipChildren="false"
             android:clipToPadding="false">
 
-            <com.liabit.statebutton.SpringButton
+            <com.liabit.widget.SpringButton
                 android:id="@+id/continueButton"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -112,5 +112,30 @@
                 app:iconSize="30dp" />
         </FrameLayout>
     </LinearLayout>
+
+    <com.liabit.widget.ProgressButton
+        android:id="@+id/progressButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/test_button_selector"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:text="获取验证码"  />
+
+<!--    <com.liabit.widget.ProgressButton-->
+<!--        android:id="@+id/progressButton2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:background="@drawable/test_button_selector"-->
+<!--        android:gravity="center"-->
+<!--        android:orientation="vertical"-->
+<!--        android:paddingHorizontal="10dp"-->
+<!--        android:paddingVertical="20dp"-->
+<!--        android:text="获取验证码"-->
+<!--        app:progressVisibility="visible" />-->
 
 </LinearLayout>

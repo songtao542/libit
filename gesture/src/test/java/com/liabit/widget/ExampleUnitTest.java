@@ -1,4 +1,4 @@
-package com.liabit.statebutton;
+package com.liabit.widget;
 
 import org.junit.Test;
 

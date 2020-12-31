@@ -23,6 +23,22 @@
         <attr name="android:textColor" />
     </declare-styleable>
 
+    <declare-styleable name="ProgressButton">
+        <attr name="progressVisibility" format="enum">
+            <!-- Visible on screen; the default value. -->
+            <enum name="visible" value="0" />
+            <!-- Not displayed, but taken into account during layout (space is left for it). -->
+            <enum name="invisible" value="1" />
+            <!-- Completely hidden, as if the view had not been added. -->
+            <enum name="gone" value="2" />
+        </attr>
+        <attr name="progressPosition" format="enum">
+            <enum name="start" value="0" />
+            <enum name="end" value="1" />
+        </attr>
+        <attr name="progressSize" format="reference|dimension" />
+    </declare-styleable>
+
     <declare-styleable name="MaterialProgressView">
         <attr name="size" format="reference|dimension" />
         <attr name="strokeColor" format="reference|color" />

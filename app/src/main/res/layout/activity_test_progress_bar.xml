@@ -96,7 +96,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <com.liabit.statebutton.MaterialProgressView
+            <com.liabit.widget.MaterialProgressView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
@@ -112,5 +112,27 @@
                 android:text="MaterialProgressBar" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.liabit.widget.MaterialProgressView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:duration="2200"
+                app:strokeLineCap="round"
+                app:strokeWidth="2dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="MaterialProgressBar" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

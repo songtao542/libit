@@ -21,5 +21,7 @@
     <color name="spring_pause_button_bg_color">#4f4f4f</color>
     <color name="spring_continue_button_bg_color">#7cccb3</color>
     <color name="spring_finish_button_bg_color">#ff5c6d</color>
+    <color name="test_ripple_color">#cccccc</color>
+
 
 </resources>

@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.liabit.statebutton.SpringButton
+import com.liabit.widget.SpringButton
 import com.liabit.test.databinding.ActivityStatebuttonTestBinding
 import com.liabit.viewbinding.inflate
+import com.liabit.widget.ProgressButton
 
 class TestStateButtonActivity : AppCompatActivity() {
 
     private val binding by inflate<ActivityStatebuttonTestBinding>()
+
+    private var mProgressVisibility1 = View.VISIBLE
+    private var mProgressVisibility2 = View.VISIBLE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,5 +48,25 @@ class TestStateButtonActivity : AppCompatActivity() {
             binding.continueButton.hide()
             binding.pauseButton.show()
         }
+
+        binding.progressButton1.setOnClickListener {
+            if (mProgressVisibility1 == View.GONE) {
+                mProgressVisibility1 = View.VISIBLE
+                binding.progressButton1.setMode(ProgressButton.PROGRESS)
+            } else {
+                mProgressVisibility1 = View.GONE
+                binding.progressButton1.setMode(ProgressButton.TEXT)
+            }
+        }
+
+//        binding.progressButton2.setOnClickListener {
+//            if (mProgressVisibility2 == View.GONE) {
+//                mProgressVisibility2 = View.VISIBLE
+//                binding.progressButton2.setMode(ProgressButton.PROGRESS)
+//            } else {
+//                mProgressVisibility2 = View.GONE
+//                binding.progressButton2.setMode(ProgressButton.TEXT)
+//            }
+//        }
     }
 }

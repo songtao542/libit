@@ -1,13 +1,15 @@
-package com.liabit.statebutton
+package com.liabit.widget
 
 import android.animation.Animator
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.Cap
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.Interpolator
 import android.view.animation.LinearInterpolator
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -50,6 +52,22 @@ class MaterialProgressView : View {
 
     }
 
+    /** The indicator ring, used to manage animation state.  */
+    private lateinit var mRing: Ring
+
+    /** Canvas rotation in degrees.  */
+    private var mRotation = 0f
+
+    private lateinit var mAnimator: ValueAnimator
+
+    private var mDuration = ANIMATION_DURATION
+
+    private var mRotationCount = 0f
+    private var mFinishing = false
+
+    private var mLayoutWidth: Int = ViewGroup.LayoutParams.WRAP_CONTENT
+    private var mLayoutHeight: Int = ViewGroup.LayoutParams.WRAP_CONTENT
+
     constructor(context: Context) : super(context) {
         init(context, null, 0, 0)
     }
@@ -66,6 +84,7 @@ class MaterialProgressView : View {
         init(context, attrs, defStyleAttr, defStyleRes)
     }
 
+    @SuppressLint("ResourceType")
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         mRing = Ring()
 
@@ -79,6 +98,10 @@ class MaterialProgressView : View {
         var trimStart = 0f
         var trimEnd = 0f
         if (attrs != null) {
+            val ta = context.obtainStyledAttributes(attrs, intArrayOf(android.R.attr.layout_width, android.R.attr.layout_height))
+            mLayoutWidth = ta.getLayoutDimension(0, -2)
+            mLayoutHeight = ta.getLayoutDimension(1, -2)
+            ta.recycle()
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.MaterialProgressView, defStyleAttr, defStyleRes)
             strokeWidth = typedArray.getDimension(R.styleable.MaterialProgressView_strokeWidth, strokeWidth)
             showArrow = typedArray.getBoolean(R.styleable.MaterialProgressView_showArrow, false)
@@ -119,9 +142,19 @@ class MaterialProgressView : View {
         setupAnimators()
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val lp = layoutParams
+        val size = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, context.resources.displayMetrics).toInt()
+        val width = if ((lp?.width ?: mLayoutWidth) < 0) size else lp.width
+        val height = if ((lp?.height ?: mLayoutHeight) < 0) size else lp.height
+        setMeasuredDimension(width, height)
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        start()
+        if (visibility == VISIBLE) {
+            start()
+        }
     }
 
     override fun onDetachedFromWindow() {
@@ -129,18 +162,20 @@ class MaterialProgressView : View {
         stop()
     }
 
-    /** The indicator ring, used to manage animation state.  */
-    private lateinit var mRing: Ring
-
-    /** Canvas rotation in degrees.  */
-    private var mRotation = 0f
-
-    private var mAnimator: Animator? = null
-
-    private var mDuration = ANIMATION_DURATION
-
-    var mRotationCount = 0f
-    var mFinishing = false
+    override fun setVisibility(visibility: Int) {
+        super.setVisibility(visibility)
+        if (visibility == VISIBLE) {
+            if (!mAnimator.isRunning) {
+                start()
+            } else if (mAnimator.isPaused) {
+                mAnimator.resume()
+            }
+        } else {
+            if (mAnimator.isRunning) {
+                mAnimator.pause()
+            }
+        }
+    }
 
     /**
      * Returns the stroke width for the progress spinner in pixels.
@@ -375,25 +410,25 @@ class MaterialProgressView : View {
     }
 
     fun isRunning(): Boolean {
-        return mAnimator?.isRunning ?: false
+        return mAnimator.isRunning
     }
 
     /**
      * Starts the animation for the spinner.
      */
     fun start() {
-        mAnimator?.cancel()
+        mAnimator.cancel()
         mRing.storeOriginals()
         // Already showing some part of the ring
         if (mRing.endTrim != mRing.startTrim) {
             mFinishing = true
-            mAnimator?.duration = (mDuration / 2)
-            mAnimator?.start()
+            mAnimator.duration = (mDuration / 2)
+            mAnimator.start()
         } else {
             mRing.setColorIndex(0)
             mRing.resetOriginals()
-            mAnimator?.duration = mDuration
-            mAnimator?.start()
+            mAnimator.duration = mDuration
+            mAnimator.start()
         }
     }
 
@@ -401,12 +436,24 @@ class MaterialProgressView : View {
      * Stops the animation for the spinner.
      */
     fun stop() {
-        mAnimator?.cancel()
+        mAnimator.cancel()
         rotation = 0f
         mRing.showArrow = false
         mRing.setColorIndex(0)
         mRing.resetOriginals()
         invalidate()
+    }
+
+    fun pause() {
+        if (mAnimator.isRunning) {
+            mAnimator.pause()
+        }
+    }
+
+    fun resume() {
+        if (mAnimator.isPaused) {
+            mAnimator.resume()
+        }
     }
 
     // Adapted from ArgbEvaluator.java
@@ -488,17 +535,17 @@ class MaterialProgressView : View {
     }
 
     private fun setupAnimators() {
-        val animator = ValueAnimator.ofFloat(0f, 1f)
-        animator.addUpdateListener { animation ->
+        mAnimator = ValueAnimator.ofFloat(0f, 1f)
+        mAnimator.addUpdateListener { animation ->
             val interpolatedTime = animation.animatedValue as Float
             updateRingColor(interpolatedTime, mRing)
             applyTransformation(interpolatedTime, mRing, false)
             invalidate()
         }
-        animator.repeatCount = ValueAnimator.INFINITE
-        animator.repeatMode = ValueAnimator.RESTART
-        animator.interpolator = LINEAR_INTERPOLATOR
-        animator.addListener(object : Animator.AnimatorListener {
+        mAnimator.repeatCount = ValueAnimator.INFINITE
+        mAnimator.repeatMode = ValueAnimator.RESTART
+        mAnimator.interpolator = LINEAR_INTERPOLATOR
+        mAnimator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animator: Animator) {
                 mRotationCount = 0f
             }
@@ -527,7 +574,6 @@ class MaterialProgressView : View {
                 }
             }
         })
-        mAnimator = animator
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.liabit.statebutton
+package com.liabit.widget
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

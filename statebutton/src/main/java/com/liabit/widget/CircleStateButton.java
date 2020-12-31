@@ -1,4 +1,4 @@
-package com.liabit.statebutton;
+package com.liabit.widget;
 
 import android.content.Context;
 import android.graphics.BlurMaskFilter;
@@ -6,10 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
-import com.liabit.statebutton.MaterialProgressDrawable.Shape;
+import com.liabit.widget.MaterialProgressDrawable.Shape;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
@@ -17,25 +16,25 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 
 @SuppressWarnings("unused")
-public class RoundCornerStateButton extends StateButton {
+public class CircleStateButton extends StateButton {
 
-    public RoundCornerStateButton(@NonNull Context context) {
+    public CircleStateButton(@NonNull Context context) {
         super(context);
         init(context);
     }
 
-    public RoundCornerStateButton(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public CircleStateButton(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public RoundCornerStateButton(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public CircleStateButton(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
 
-    public RoundCornerStateButton(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
+    public CircleStateButton(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
@@ -44,8 +43,8 @@ public class RoundCornerStateButton extends StateButton {
 
     private void init(Context context) {
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        Drawable backgroundDrawable = getResources().getDrawable(R.drawable.round_corner_state_button_background, context.getTheme());
-        mAnimatorDrawable = new MaterialProgressDrawable(context, this, 64.0, 64.0, 0.0, 1.2, Shape.ROUNDED_RECTANGLE);
+        Drawable backgroundDrawable = getResources().getDrawable(R.drawable.circle_state_button_background, context.getTheme());
+        mAnimatorDrawable = new MaterialProgressDrawable(context, this, 64.0, 64.0, 0.0, 1.2, Shape.CIRCLE);
         int color = Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1 ?
                 getResources().getColor(R.color.progress_color, context.getTheme()) : getResources().getColor(R.color.progress_color);
         mAnimatorDrawable.setColorSchemeColors(color);
@@ -69,7 +68,6 @@ public class RoundCornerStateButton extends StateButton {
                     mAnimatorDrawable.stop();
                 }
                 case LOADING: {
-                    Log.d("TTTT", "handleState loading");
                     mAnimatorDrawable.setVisible(true);
                     mAnimatorDrawable.start();
                 }

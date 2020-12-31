@@ -2,7 +2,7 @@ package com.liabit.test
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.liabit.statebutton.MaterialProgressDrawable
+import com.liabit.widget.MaterialProgressDrawable
 import com.liabit.test.databinding.ActivityTestProgressBarBinding
 import com.liabit.viewbinding.inflate
 

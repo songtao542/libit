@@ -26,7 +26,6 @@
             <option value="$PROJECT_DIR$/screenrecord" />
             <option value="$PROJECT_DIR$/settings" />
             <option value="$PROJECT_DIR$/shimmer" />
-            <option value="$PROJECT_DIR$/statebutton" />
             <option value="$PROJECT_DIR$/tablayout" />
             <option value="$PROJECT_DIR$/tagview" />
             <option value="$PROJECT_DIR$/timerview" />
@@ -34,6 +33,7 @@
             <option value="$PROJECT_DIR$/viewbinding" />
             <option value="$PROJECT_DIR$/wallpaper_cropper" />
             <option value="$PROJECT_DIR$/wallpaper_cropper_lite" />
+            <option value="$PROJECT_DIR$/widget" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

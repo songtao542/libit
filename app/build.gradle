@@ -61,7 +61,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation project(':statebutton')
+    implementation project(':widget')
     implementation project(':gesture')
     implementation project(':shimmer')
     implementation project(':picker')

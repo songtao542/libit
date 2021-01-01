@@ -96,6 +96,12 @@
         <attr name="rightArrowColor" format="reference|color" />
         <attr name="rightArrowPadding" format="reference|dimension" />
         <attr name="textPaddingBottom" format="reference|dimension" />
+        <attr name="startIcon" format="reference" />
+        <attr name="startIconSize" format="reference|dimension" />
+        <attr name="startIconPadding" format="reference|dimension" />
+        <attr name="endIcon" format="reference" />
+        <attr name="endIconSize" format="reference|dimension" />
+        <attr name="endIconPadding" format="reference|dimension" />
     </declare-styleable>
 
 </resources>

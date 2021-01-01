@@ -25,6 +25,8 @@ class LabelView : LinearLayout {
     private lateinit var mTextView: TextView
     private lateinit var mRightTextView: TextView
     private lateinit var mRightArrow: ImageView
+    private lateinit var mStartIconView: ImageView
+    private lateinit var mEndIconView: ImageView
     private var mLabelClickable = false
     private var mLabelWithColon = true
     private var mEditable = false
@@ -63,6 +65,8 @@ class LabelView : LinearLayout {
         mEditTextView = findViewById(R.id.editText)
         mRightTextView = findViewById(R.id.rightText)
         mRightArrow = findViewById(R.id.rightArrow)
+        mStartIconView = findViewById(R.id.startIcon)
+        mEndIconView = findViewById(R.id.endIcon)
 
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelView, defStyleAttr, defStyleRes)
@@ -156,7 +160,43 @@ class LabelView : LinearLayout {
                 mRightArrow.layoutParams = lp
             }
 
+            val startIcon = typedArray.getDrawable(R.styleable.LabelView_startIcon)
+            if (startIcon != null) {
+                mStartIconView.visibility = View.VISIBLE
+                mStartIconView.setImageDrawable(startIcon)
+                val lp = mStartIconView.layoutParams
+                        ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                            gravity = Gravity.CENTER_VERTICAL
+                        }
+                val startIconSize = typedArray.getDimension(R.styleable.LabelView_startIconSize, -1f)
+                if (startIconSize > 0) {
+                    lp.width = startIconSize.toInt()
+                    lp.height = startIconSize.toInt()
+                }
+                val startIconPadding = typedArray.getDimension(R.styleable.LabelView_startIconPadding, 0f)
+                if (startIconPadding > 0) {
+                    (lp as? MarginLayoutParams)?.marginEnd = startIconPadding.toInt()
+                }
+                mStartIconView.layoutParams = lp
+            }
 
+            val endIcon = typedArray.getDrawable(R.styleable.LabelView_endIcon)
+            if (endIcon != null) {
+                mEndIconView.setImageDrawable(endIcon)
+                mEndIconView.visibility = View.VISIBLE
+                val lp = mEndIconView.layoutParams
+                        ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                            gravity = Gravity.CENTER_VERTICAL
+                        }
+                val endIconSize = typedArray.getDimension(R.styleable.LabelView_endIconSize, -1f)
+                if (endIconSize > 0) {
+                    lp.width = endIconSize.toInt()
+                    lp.height = endIconSize.toInt()
+                }
+                val endIconPadding = typedArray.getDimension(R.styleable.LabelView_endIconPadding, 0f)
+                (lp as? MarginLayoutParams)?.marginStart = endIconPadding.toInt()
+                mEndIconView.layoutParams = lp
+            }
 
             typedArray.recycle()
         }

@@ -164,6 +164,7 @@ class LabelView : LinearLayout {
             }
 
             val startIcon = typedArray.getDrawable(R.styleable.LabelView_startIcon)
+            val startIconPadding = typedArray.getDimension(R.styleable.LabelView_startIconPadding, 0f)
             if (startIcon != null) {
                 mStartIconView.visibility = View.VISIBLE
                 mStartIconView.setImageDrawable(startIcon)
@@ -175,7 +176,6 @@ class LabelView : LinearLayout {
                     lp.width = startIconSize.toInt()
                     lp.height = startIconSize.toInt()
                 }
-                val startIconPadding = typedArray.getDimension(R.styleable.LabelView_startIconPadding, 0f)
                 if (startIconPadding > 0) {
                     (lp as? MarginLayoutParams)?.let {
                         if (ori == VERTICAL) {
@@ -189,6 +189,7 @@ class LabelView : LinearLayout {
             }
 
             val endIcon = typedArray.getDrawable(R.styleable.LabelView_endIcon)
+            val endIconPadding = typedArray.getDimension(R.styleable.LabelView_endIconPadding, 0f)
             if (endIcon != null) {
                 mEndIconView.setImageDrawable(endIcon)
                 mEndIconView.visibility = View.VISIBLE
@@ -200,7 +201,6 @@ class LabelView : LinearLayout {
                     lp.width = endIconSize.toInt()
                     lp.height = endIconSize.toInt()
                 }
-                val endIconPadding = typedArray.getDimension(R.styleable.LabelView_endIconPadding, 0f)
                 if (endIconPadding > 0) {
                     (lp as? MarginLayoutParams)?.let {
                         if (ori == VERTICAL) {
@@ -220,13 +220,27 @@ class LabelView : LinearLayout {
             mRightTextView.gravity = typedArray.getInt(R.styleable.LabelView_rightTextGravity, Gravity.CENTER_VERTICAL)
 
             if (ori == VERTICAL) {
-                val llp = textView.layoutParams ?: LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                val slp = mStartIconView.layoutParams ?: LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                slp.width = LayoutParams.MATCH_PARENT
+                slp.height = LayoutParams.WRAP_CONTENT
+                (slp as? LayoutParams)?.weight = 0f
+                (slp as? MarginLayoutParams)?.let {
+                    it.marginStart = 0
+                    it.marginEnd = 0
+                    it.topMargin = 0
+                    it.bottomMargin = startIconPadding.toInt()
+                }
+                mStartIconView.layoutParams = slp
+
+                val llp = mLabelTextView.layoutParams ?: LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
                 llp.width = LayoutParams.MATCH_PARENT
                 llp.height = LayoutParams.WRAP_CONTENT
                 (llp as? LayoutParams)?.weight = 0f
                 (llp as? MarginLayoutParams)?.let {
                     it.marginStart = 0
                     it.marginEnd = 0
+                    it.topMargin = 0
+                    it.bottomMargin = 0
                 }
                 mLabelTextView.layoutParams = llp
 
@@ -237,18 +251,46 @@ class LabelView : LinearLayout {
                 (tlp as? MarginLayoutParams)?.let {
                     it.marginStart = 0
                     it.marginEnd = 0
+                    it.topMargin = 0
+                    it.bottomMargin = 0
                 }
                 textView.layoutParams = tlp
 
-                val rlp = textView.layoutParams ?: LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                val rlp = mRightTextView.layoutParams ?: LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
                 rlp.width = LayoutParams.MATCH_PARENT
                 rlp.height = LayoutParams.WRAP_CONTENT
                 (rlp as? LayoutParams)?.weight = 0f
                 (rlp as? MarginLayoutParams)?.let {
                     it.marginStart = 0
                     it.marginEnd = 0
+                    it.topMargin = 0
+                    it.bottomMargin = 0
                 }
                 mRightTextView.layoutParams = rlp
+
+                val elp = mEndIconView.layoutParams ?: LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                elp.width = LayoutParams.MATCH_PARENT
+                elp.height = LayoutParams.WRAP_CONTENT
+                (elp as? LayoutParams)?.weight = 0f
+                (elp as? MarginLayoutParams)?.let {
+                    it.marginStart = 0
+                    it.marginEnd = 0
+                    it.topMargin = endIconPadding.toInt()
+                    it.bottomMargin = 0
+                }
+                mEndIconView.layoutParams = elp
+
+                val alp = mRightArrowView.layoutParams ?: LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                alp.width = LayoutParams.MATCH_PARENT
+                alp.height = LayoutParams.WRAP_CONTENT
+                (alp as? LayoutParams)?.weight = 0f
+                (alp as? MarginLayoutParams)?.let {
+                    it.marginStart = 0
+                    it.marginEnd = 0
+                    it.topMargin = rightArrowPadding.toInt()
+                    it.bottomMargin = 0
+                }
+                mRightArrowView.layoutParams = alp
 
                 if (mRightText.isBlank()) {
                     mRightTextView.visibility = View.GONE

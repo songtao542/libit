@@ -44,9 +44,9 @@
         android:background="?attr/selectableItemBackground"
         android:label="年龄"
         android:orientation="horizontal"
-        app:rightArrowPadding="10dp"
         android:paddingHorizontal="16dp"
         app:rightArrowColor="@android:color/darker_gray"
+        app:rightArrowPadding="10dp"
         app:rightArrowSize="12dp"
         app:rightText="请选择年龄"
         app:rightTextColor="@android:color/darker_gray"
@@ -68,6 +68,46 @@
         app:rightTextColor="@android:color/darker_gray"
         app:rightTextSize="12sp"
         app:showRightArrow="true"
+        app:textPaddingHorizontal="16dp" />
+
+    <com.liabit.widget.LabelView
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="?attr/selectableItemBackground"
+        android:label="年龄"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:text="24岁"
+        app:labelWithColon="true"
+        app:rightArrowColor="@android:color/darker_gray"
+        app:rightArrowSize="12dp"
+        app:rightText="修改年龄"
+        app:rightTextColor="@android:color/darker_gray"
+        app:rightTextSize="12sp"
+        app:showRightArrow="true"
+        app:startIcon="@drawable/ic_pause_blue"
+        app:textPaddingHorizontal="16dp" />
+
+    <com.liabit.widget.LabelView
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="?attr/selectableItemBackground"
+        android:label="年龄"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:text="24岁"
+        app:endIcon="@drawable/ic_pause_blue"
+        app:endIconPadding="10dp"
+        app:labelWithColon="true"
+        app:rightArrowColor="@android:color/darker_gray"
+        app:rightArrowPadding="10dp"
+        app:rightArrowSize="12dp"
+        app:rightText="修改年龄"
+        app:rightTextColor="@android:color/darker_gray"
+        app:rightTextSize="12sp"
+        app:showRightArrow="true"
+        app:startIcon="@drawable/ic_pause_blue"
+        app:startIconPadding="10dp"
         app:textPaddingHorizontal="16dp" />
 
     <View
@@ -152,6 +192,52 @@
             android:textColor="@android:color/black"
             app:labelTextGravity="center"
             app:labelTextSize="24sp"
+            app:textGravity="center" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.liabit.widget.LabelView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:label="完成"
+            android:orientation="vertical"
+            android:paddingVertical="16dp"
+            android:text="5次"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            app:labelTextGravity="center"
+            app:startIcon="@drawable/ic_pause_blue"
+            app:textGravity="center" />
+
+        <com.liabit.widget.LabelView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:label="完成"
+            android:orientation="vertical"
+            android:paddingVertical="16dp"
+            android:text="5次"
+            android:textColor="@android:color/black"
+            app:endIcon="@drawable/ic_pause_blue"
+            app:endIconPadding="10dp"
+            app:labelTextGravity="center"
+            app:labelTextSize="24sp"
+            app:startIcon="@drawable/ic_pause_blue"
+            app:startIconPadding="10dp"
             app:textGravity="center" />
     </LinearLayout>
 </LinearLayout>

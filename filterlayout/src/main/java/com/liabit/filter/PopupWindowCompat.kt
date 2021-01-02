@@ -1,13 +1,16 @@
 package com.liabit.filter
 
+import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.transition.Fade
 import android.transition.Transition
+import android.transition.TransitionValues
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -268,6 +271,30 @@ internal class PopupWindowCompat(context: Context) {
         }
 
         override fun onTransitionResume(transition: Transition?) {
+        }
+
+        override fun onAppear(sceneRoot: ViewGroup, view: View, startValues: TransitionValues?, endValues: TransitionValues?): Animator? {
+            return createAnimation(view, -1f, 1f)
+        }
+
+        override fun onDisappear(sceneRoot: ViewGroup, view: View, startValues: TransitionValues?, endValues: TransitionValues?): Animator? {
+            return createAnimation(view, 1f, -1f)
+        }
+
+        private fun createAnimation(view: View, startAlpha: Float, endAlpha: Float): Animator? {
+            if (startAlpha == endAlpha) {
+                return null
+            }
+            view.alpha = startAlpha
+            val anim = ValueAnimator.ofFloat(startAlpha, endAlpha)
+            anim.addUpdateListener {
+                var alpha = it.animatedValue as Float
+                if (alpha < 0f) {
+                    alpha = 0f
+                }
+                view.alpha = alpha
+            }
+            return anim
         }
     }
 

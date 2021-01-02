@@ -20,24 +20,40 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="点击弹出PopupWindow" />
+        android:text="点击弹出PopupWindow"
+        android:textAllCaps="false" />
 
     <Button
         android:id="@+id/button1"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="点击弹出 Dialog" />
+        android:text="点击弹出 Dialog"
+        android:textAllCaps="false" />
 
-    <ImageView
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/menuDialog"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:src="@mipmap/cat1" />
+        android:layout_gravity="center"
+        android:text="点击弹出 BottomMenuDialog"
+        android:textAllCaps="false" />
 
-    <ImageView
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/menuDialog1"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/cat2" />
+        android:layout_gravity="center"
+        android:text="点击弹出 BottomMenuDialog"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/menuDialog2"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="点击弹出 BottomMenuDialog"
+        android:textAllCaps="false" />
+
 
 </LinearLayout>

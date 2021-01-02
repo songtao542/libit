@@ -1,9 +1,6 @@
 package com.liabit.test;
 
-import android.view.View;
-
-import com.liabit.popup.PopupMenu;
-import com.liabit.timerview.HalfTextView;
+import com.liabit.widget.PopupMenu;
 
 import java.util.List;
 

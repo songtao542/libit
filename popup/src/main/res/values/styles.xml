@@ -5,4 +5,20 @@
         <item name="android:windowEnterAnimation">@anim/popup_enter_material</item>
         <item name="android:windowExitAnimation">@anim/popup_exit_material</item>
     </style>
+
+    <style name="BottomMenuStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/BottomMenuAnimation</item>
+    </style>
+
+    <style name="BottomMenuAnimation">
+        <item name="android:windowEnterAnimation">@anim/anim_bottom_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_bottom_exit</item>
+        <item name="android:activityOpenEnterAnimation">@anim/anim_bottom_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/anim_bottom_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/anim_bottom_enter</item>
+    </style>
 </resources>

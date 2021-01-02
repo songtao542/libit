@@ -3,9 +3,10 @@ package com.liabit.test
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.liabit.popup.PopupMenu
+import com.liabit.widget.PopupMenu
 import com.liabit.test.databinding.ActivityPopupMenuTestBinding
 import com.liabit.viewbinding.inflate
+import com.liabit.widget.BottomMenuDialog
 
 class TestPopupActivity : AppCompatActivity() {
 
@@ -39,6 +40,70 @@ class TestPopupActivity : AppCompatActivity() {
         binding.button1.setOnClickListener {
             showPopup(true)
         }
+
+        binding.menuDialog.setOnClickListener {
+            BottomMenuDialog(this)
+                    .setRadius(20f, 0f)
+                    .setTitleMatchParentWidth(false)
+                    .menu("允许评论") {
+
+                    }
+                    .menu("不允许评论") {
+
+                    }
+                    .show()
+        }
+        binding.menuDialog1.setOnClickListener {
+            BottomMenuDialog(this)
+                    .setRadius(20f, 0f)
+                    .setTitleMatchParentWidth(false)
+                    .menu("允许评论", R.drawable.ic_charge_black) {
+
+                    }
+                    .menu("不允许评论") {
+
+                    }
+                    .show()
+        }
+        val menus = arrayListOf<BottomMenuDialog.MenuItem>(
+                BottomMenuDialog.MenuItem.Builder(this).setTitle("充电")
+                        .setEndIcon(R.drawable.ic_charge_black)
+                        .setBackground(R.drawable.menu_selector)
+                        .setChecked(false)
+                        .build(),
+                BottomMenuDialog.MenuItem.Builder(this).setTitle("快速充电")
+                        .setEndIcon(R.drawable.ic_charge_black)
+                        .setBackground(R.drawable.menu_selector)
+                        .build(),
+                BottomMenuDialog.MenuItem.Builder(this).setTitle("极快速充电")
+                        .setEndIcon(R.drawable.ic_charge_black)
+                        .setBackground(R.drawable.menu_selector)
+                        .build(),
+                BottomMenuDialog.MenuItem.Builder(this).setTitle("快充电")
+                        .setEndIcon(R.drawable.ic_charge_black)
+                        .setBackground(R.drawable.menu_selector)
+                        .build(),
+                BottomMenuDialog.MenuItem.Builder(this).setTitle("慢速充电")
+                        .setEndIcon(R.drawable.ic_charge_black)
+                        .setBackground(R.drawable.menu_selector)
+                        .build(),
+                BottomMenuDialog.MenuItem.Builder(this).setTitle("极慢速充电")
+                        .setEndIcon(R.drawable.ic_charge_black)
+                        .setBackground(R.drawable.menu_selector)
+                        .build()
+        )
+
+
+        binding.menuDialog2.setOnClickListener {
+            BottomMenuDialog(this)
+                    .setRadius(20f, 0f)
+                    .setTitleMatchParentWidth(false)
+                    .menu(menus)
+                    .setOnMenuItemClickListener {
+
+                    }
+                    .show()
+        }
     }
 
     private fun showPopup(showAsDialog: Boolean) {
@@ -52,6 +117,11 @@ class TestPopupActivity : AppCompatActivity() {
         //popupMenu.setVisibleItemCount(3)
         popupMenu.setItemHeight(60)
         popupMenu.setDefaultCheckedPosition(2)
+        if (showAsDialog) {
+            popupMenu.setRadius(8f, 8f)
+        } else {
+            popupMenu.setRadius(0f, 8f)
+        }
         popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
             override fun onOptionsItemSelected(item: PopupMenu.MenuItem) {
                 Log.d("TTTT", "clicked: $item")

@@ -1,17 +1,24 @@
-package com.liabit.popup
+package com.liabit.widget
 
+import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Path
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.text.TextPaint
 import android.transition.Fade
 import android.transition.Transition
+import android.transition.TransitionValues
+import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.*
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
@@ -60,7 +67,7 @@ class PopupMenu {
     private var mVisibleCount = 0
     private var mLayoutAnimationEnabled = false
     private var mAdapter: DropMenuAdapter = DropMenuAdapter()
-    private lateinit var mListView: ListView
+    private lateinit var mListView: CustomListView
     private lateinit var mMaskView: View
     private lateinit var mRootView: FrameLayout
     private var mItemHeight = LinearLayout.LayoutParams.WRAP_CONTENT
@@ -76,6 +83,11 @@ class PopupMenu {
     private var mCheckedPosition = -1
     private var mCheckedTitle: String? = null
     private var mShowMask = false
+
+    private var mTopLeftRadius: Float = 0f
+    private var mTopRightRadius: Float = 0f
+    private var mBottomLeftRadius: Float = 0f
+    private var mBottomRightRadius: Float = 0f
 
     constructor(context: Context) : super() {
         mContext = context
@@ -98,6 +110,20 @@ class PopupMenu {
         initItems(strings)
     }
 
+    fun setRadius(leftTop: Float, rightTop: Float, leftBottom: Float, rightBottom: Float) {
+        mTopLeftRadius = leftTop
+        mTopRightRadius = rightTop
+        mBottomLeftRadius = leftBottom
+        mBottomRightRadius = rightBottom
+    }
+
+    fun setRadius(top: Float, bottom: Float) {
+        mTopLeftRadius = top
+        mTopRightRadius = top
+        mBottomLeftRadius = bottom
+        mBottomRightRadius = bottom
+    }
+
     fun clear() {
         mMenuItems.clear()
     }
@@ -116,11 +142,10 @@ class PopupMenu {
 
         mMaskView = View(mContext)
         mMaskView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        //mMaskView.setBackgroundColor(0x99000000.toInt())
         mMaskView.setBackgroundColor(Color.TRANSPARENT)
         mRootView.addView(mMaskView)
 
-        mListView = ListView(mContext)
+        mListView = CustomListView(mContext)
         mListView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         mListView.setBackgroundColor(Color.WHITE)
         mListView.setFooterDividersEnabled(false)
@@ -409,6 +434,10 @@ class PopupMenu {
         mLayoutAnimationEnabled = enabled
     }
 
+    private fun dp2px(dp: Float): Float {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, mContext.resources.displayMetrics)
+    }
+
     private fun dp2px(dp: Int): Int {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), mContext.resources.displayMetrics).toInt()
     }
@@ -462,6 +491,18 @@ class PopupMenu {
             it.width = mWidth
             it.height = mHeight
         }
+        val leftTop = dp2px(mTopLeftRadius)
+        val rightTop = dp2px(mTopRightRadius)
+        val leftBottom = dp2px(mBottomLeftRadius)
+        val rightBottom = dp2px(mBottomRightRadius)
+        val radii = floatArrayOf(leftTop, leftTop, rightTop, rightTop, leftBottom, leftBottom, rightBottom, rightBottom)
+        mListView.setRadius(radii)
+        val background = GradientDrawable()
+        background.setColor(Color.WHITE)
+        val cornerRadii = floatArrayOf(leftTop, leftTop, rightTop, rightTop, leftBottom, leftBottom, rightBottom, rightBottom)
+        background.cornerRadii = cornerRadii
+        mListView.background = background
+
         mMaskView.visibility = if (mShowMask) View.VISIBLE else View.GONE
         val height = if (mShowMask) ViewGroup.LayoutParams.WRAP_CONTENT else mHeight
 
@@ -474,10 +515,10 @@ class PopupMenu {
                     Animation.RELATIVE_TO_SELF, 0f
             )
             translate.interpolator = AccelerateDecelerateInterpolator()
-            val alpha = AlphaAnimation(0f, 1f)
             animation.addAnimation(translate)
-            animation.addAnimation(alpha)
-            animation.duration = 230
+            //val alpha = AlphaAnimation(0f, 1f)
+            //animation.addAnimation(alpha)
+            animation.duration = 280
             if (mLayoutAnimationEnabled) {
                 mListView.layoutAnimation = LayoutAnimationController(animation).apply {
                     order = LayoutAnimationController.ORDER_NORMAL
@@ -487,7 +528,7 @@ class PopupMenu {
         }
 
         mPopupWindow = PopupWindow(mRootView, mWidth, height, true).also {
-            it.setBackgroundDrawable(if (mShowMask) ColorDrawable(0x88000000.toInt()) else ColorDrawable(Color.WHITE))
+            it.setBackgroundDrawable(if (mShowMask) ColorDrawable(0x66000000.toInt()) else ColorDrawable(Color.WHITE))
             it.isOutsideTouchable = true
             it.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
             it.animationStyle = R.style.PopupMenuAnimation
@@ -496,32 +537,50 @@ class PopupMenu {
                 mOnDismissListener?.onDismiss()
             }
             if (mShowMask && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                it.exitTransition = Fade(Fade.OUT).setDuration(150).addListener(object : Transition.TransitionListener {
-                    override fun onTransitionStart(transition: Transition?) {
-                        AnimatorSet().apply {
-                            play(ObjectAnimator.ofFloat(mListView, View.ALPHA, 1f, 0f))
-                            play(ObjectAnimator.ofFloat(mListView, View.TRANSLATION_Y, 0f, (-mListView.height).toFloat()))
-                            interpolator = AccelerateInterpolator()
-                            duration = 150
-                        }.start()
-                    }
-
-                    override fun onTransitionEnd(transition: Transition?) {
-                    }
-
-                    override fun onTransitionCancel(transition: Transition?) {
-                    }
-
-                    override fun onTransitionPause(transition: Transition?) {
-                    }
-
-                    override fun onTransitionResume(transition: Transition?) {
-                    }
-                })
+                it.enterTransition = CustomFade(Fade.IN)
+                it.exitTransition = CustomFade(Fade.OUT)
+                        .setDuration(280)
+                        .addListener(object : TransitionListenerAdapter() {
+                            override fun onTransitionStart(transition: Transition) {
+                                AnimatorSet().apply {
+                                    play(ObjectAnimator.ofFloat(mListView, View.ALPHA, 1f, 0f))
+                                    play(ObjectAnimator.ofFloat(mListView, View.TRANSLATION_Y, 0f, (-mListView.height).toFloat()))
+                                    interpolator = AccelerateInterpolator()
+                                    duration = 280
+                                }.start()
+                            }
+                        })
             }
         }
 
         mMaskView.setOnClickListener { mPopupWindow?.dismiss() }
+    }
+
+    private class CustomFade(fadingMode: Int) : Fade(fadingMode) {
+
+        override fun onAppear(sceneRoot: ViewGroup, view: View, startValues: TransitionValues?, endValues: TransitionValues?): Animator? {
+            return createAnimation(view, -1f, 1f)
+        }
+
+        override fun onDisappear(sceneRoot: ViewGroup, view: View, startValues: TransitionValues?, endValues: TransitionValues?): Animator? {
+            return createAnimation(view, 1f, -1f)
+        }
+
+        private fun createAnimation(view: View, startAlpha: Float, endAlpha: Float): Animator? {
+            if (startAlpha == endAlpha) {
+                return null
+            }
+            view.alpha = startAlpha
+            val anim = ValueAnimator.ofFloat(startAlpha, endAlpha)
+            anim.addUpdateListener {
+                var alpha = it.animatedValue as Float
+                if (alpha < 0f) {
+                    alpha = 0f
+                }
+                view.alpha = alpha
+            }
+            return anim
+        }
     }
 
     /**
@@ -607,6 +666,10 @@ class PopupMenu {
         private var mIsChecked = false
         private var mTitle: String = ""
 
+        private constructor() {
+
+        }
+
         constructor(title: String) {
             mTitle = title
         }
@@ -650,6 +713,35 @@ class PopupMenu {
          * 是否被选中
          */
         val isChecked: Boolean get() = mIsChecked
+
+        class Builder(private val context: Context) {
+
+            private val mItem = MenuItem()
+
+            fun setIcon(iconResId: Int): Builder {
+                mItem.mIconResId = iconResId
+                return this
+            }
+
+            fun setTailIcon(iconResId: Int): Builder {
+                mItem.mTailIconResId = iconResId
+                return this
+            }
+
+            fun setIsChecked(checked: Boolean): Builder {
+                mItem.mIsChecked = checked
+                return this
+            }
+
+            fun setTitle(title: String): Builder {
+                mItem.mTitle = title
+                return this
+            }
+
+            fun build(): MenuItem {
+                return mItem
+            }
+        }
     }
 
     private inner class MenuItemLayout(context: Context, menuItem: MenuItem, height: Int, textWidth: Int) : LinearLayout(context) {
@@ -845,8 +937,21 @@ class PopupMenu {
             }
             popupList.mListView.layoutParams = llp
 
+            val leftTop = popupList.dp2px(popupList.mTopLeftRadius)
+            val rightTop = popupList.dp2px(popupList.mTopRightRadius)
+            val leftBottom = popupList.dp2px(popupList.mBottomLeftRadius)
+            val rightBottom = popupList.dp2px(popupList.mBottomRightRadius)
+            val radii = floatArrayOf(leftTop, leftTop, rightTop, rightTop, leftBottom, leftBottom, rightBottom, rightBottom)
+            popupList.mListView.setRadius(radii)
+            val background = GradientDrawable()
+            background.setColor(Color.WHITE)
+            val cornerRadii = floatArrayOf(leftTop, leftTop, rightTop, rightTop, leftBottom, leftBottom, rightBottom, rightBottom)
+            background.cornerRadii = cornerRadii
+            popupList.mListView.background = ColorDrawable(Color.TRANSPARENT)
+
             setContentView(popupList.mRootView)
             popupList.mAdapter.notifyDataSetChanged()
+            window?.setBackgroundDrawable(background)
             show()
             window?.attributes = window?.attributes ?: WindowManager.LayoutParams().apply {
                 width = popupList.mWidth
@@ -862,4 +967,49 @@ class PopupMenu {
         PopupDialog(mContext).show(this)
     }
 
+
+    private class CustomListView : ListView {
+        private var mPath = Path()
+        private var mRadii: FloatArray? = null
+
+        constructor(context: Context) : super(context)
+
+        constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+
+        constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
+        constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+
+        fun setRadius(radii: FloatArray) {
+            mRadii = radii
+        }
+
+//        override fun draw(c: Canvas?) {
+//            val canvas = c ?: return
+//            mRadii?.also {
+//                canvas.save()
+//                mPath.rewind()
+//                mPath.addRoundRect(0f, 0f, width.toFloat(), height.toFloat(), it, Path.Direction.CW)
+//                canvas.clipPath(mPath)
+//                super.draw(canvas)
+//                canvas.restore()
+//            } ?: run {
+//                super.draw(canvas)
+//            }
+//        }
+
+        override fun dispatchDraw(c: Canvas?) {
+            val canvas = c ?: return
+            mRadii?.also {
+                canvas.save()
+                mPath.rewind()
+                mPath.addRoundRect(0f, 0f, width.toFloat(), height.toFloat(), it, Path.Direction.CW)
+                canvas.clipPath(mPath)
+                super.dispatchDraw(canvas)
+                canvas.restore()
+            } ?: run {
+                super.dispatchDraw(canvas)
+            }
+        }
+    }
 }

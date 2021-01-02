@@ -27,6 +27,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 
+@Suppress("unused")
 class BottomMenu(private val context: Context) {
 
     companion object {

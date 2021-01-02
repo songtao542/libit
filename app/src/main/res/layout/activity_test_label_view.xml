@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".TestLabelViewActivity">
+
+    <com.liabit.widget.LabelView
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="?attr/selectableItemBackground"
+        android:label="年龄"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        app:rightText="请选择年龄" />
+
+    <com.liabit.widget.LabelView
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="?attr/selectableItemBackground"
+        android:label="年龄"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        app:rightText="请选择年龄"
+        app:showRightArrow="true" />
+
+    <com.liabit.widget.LabelView
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="?attr/selectableItemBackground"
+        android:label="年龄"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        app:rightArrowColor="@android:color/darker_gray"
+        app:rightText="请选择年龄"
+        app:rightTextColor="@android:color/darker_gray"
+        app:showRightArrow="true" />
+
+    <com.liabit.widget.LabelView
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="?attr/selectableItemBackground"
+        android:label="年龄"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        app:rightArrowColor="@android:color/darker_gray"
+        app:rightArrowSize="12dp"
+        app:rightText="请选择年龄"
+        app:rightTextColor="@android:color/darker_gray"
+        app:rightTextSize="12sp"
+        app:showRightArrow="true" />
+
+    <com.liabit.widget.LabelView
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="?attr/selectableItemBackground"
+        android:label="年龄"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:text="24岁"
+        app:labelWithColon="true"
+        app:rightArrowColor="@android:color/darker_gray"
+        app:rightArrowSize="12dp"
+        app:rightText="修改年龄"
+        app:rightTextColor="@android:color/darker_gray"
+        app:rightTextSize="12sp"
+        app:showRightArrow="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.liabit.widget.LabelView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:label="完成"
+            android:orientation="vertical"
+            android:paddingVertical="16dp"
+            android:text="5次"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            app:labelTextGravity="center"
+            app:rightText="5A"
+            app:rightTextGravity="center"
+            app:textGravity="center" />
+
+        <com.liabit.widget.LabelView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:label="完成"
+            android:orientation="vertical"
+            android:paddingVertical="16dp"
+            android:text="5次"
+            android:textColor="@android:color/black"
+            app:labelTextGravity="center"
+            app:textGravity="center" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.liabit.widget.LabelView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:label="完成"
+            android:orientation="vertical"
+            android:paddingVertical="16dp"
+            android:text="5次"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            app:labelTextGravity="center"
+            app:textGravity="center" />
+
+        <com.liabit.widget.LabelView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:label="完成"
+            android:orientation="vertical"
+            android:paddingVertical="16dp"
+            android:text="5次"
+            android:textColor="@android:color/black"
+            app:labelTextGravity="center"
+            app:labelTextSize="24sp"
+            app:textGravity="center" />
+    </LinearLayout>
+</LinearLayout>

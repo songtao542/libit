@@ -78,6 +78,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:scaleType="centerInside"
-        app:srcCompat="@drawable/ic_right_arrow" />
+        app:srcCompat="@drawable/label_right_arrow" />
 
 </merge>

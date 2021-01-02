@@ -94,6 +94,10 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, TestProgressBarActivity::class.java))
             }
 
+            R.id.labelViewTest -> {
+                startActivity(Intent(this, TestLabelViewActivity::class.java))
+            }
+
             R.id.otherTest -> {
                 startActivity(Intent(this, TestFragmentVisibleActivity::class.java))
             }

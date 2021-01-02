@@ -57,7 +57,6 @@ class LabelView : LinearLayout {
 
     @SuppressLint("SetTextI18n")
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
-        orientation = HORIZONTAL
         LayoutInflater.from(context).inflate(R.layout.label_view, this, true)
         isClickable = true
         mLabelTextView = findViewById(R.id.label)
@@ -69,6 +68,11 @@ class LabelView : LinearLayout {
         mEndIconView = findViewById(R.id.endIcon)
 
         if (attrs != null) {
+            var ori = HORIZONTAL
+            val ta = context.obtainStyledAttributes(attrs, intArrayOf(android.R.attr.orientation))
+            ori = ta.getInt(0, HORIZONTAL)
+            ta.recycle()
+
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelView, defStyleAttr, defStyleRes)
             mEditable = typedArray.getBoolean(R.styleable.LabelView_android_editable, false)
             if (mEditable) {
@@ -98,7 +102,7 @@ class LabelView : LinearLayout {
             }
             mTextSize = typedArray.getDimensionPixelSize(R.styleable.LabelView_android_textSize, 0)
             if (mTextSize > 0) {
-                mEditTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize.toFloat())
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize.toFloat())
             }
             mRightTextSize = typedArray.getDimensionPixelSize(R.styleable.LabelView_rightTextSize, 0)
             if (mRightTextSize > 0) {
@@ -151,10 +155,9 @@ class LabelView : LinearLayout {
 
             val rightArrowSize = typedArray.getDimension(R.styleable.LabelView_rightArrowSize, -1f)
             if (rightArrowSize > 0) {
-                val lp = mRightArrow.layoutParams
-                        ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-                            gravity = Gravity.CENTER_VERTICAL
-                        }
+                val lp = mRightArrow.layoutParams ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                    gravity = Gravity.CENTER_VERTICAL
+                }
                 lp.width = rightArrowSize.toInt()
                 lp.height = rightArrowSize.toInt()
                 mRightArrow.layoutParams = lp
@@ -164,10 +167,9 @@ class LabelView : LinearLayout {
             if (startIcon != null) {
                 mStartIconView.visibility = View.VISIBLE
                 mStartIconView.setImageDrawable(startIcon)
-                val lp = mStartIconView.layoutParams
-                        ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-                            gravity = Gravity.CENTER_VERTICAL
-                        }
+                val lp = mStartIconView.layoutParams ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                    gravity = Gravity.CENTER_VERTICAL
+                }
                 val startIconSize = typedArray.getDimension(R.styleable.LabelView_startIconSize, -1f)
                 if (startIconSize > 0) {
                     lp.width = startIconSize.toInt()
@@ -184,10 +186,9 @@ class LabelView : LinearLayout {
             if (endIcon != null) {
                 mEndIconView.setImageDrawable(endIcon)
                 mEndIconView.visibility = View.VISIBLE
-                val lp = mEndIconView.layoutParams
-                        ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-                            gravity = Gravity.CENTER_VERTICAL
-                        }
+                val lp = mEndIconView.layoutParams ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                    gravity = Gravity.CENTER_VERTICAL
+                }
                 val endIconSize = typedArray.getDimension(R.styleable.LabelView_endIconSize, -1f)
                 if (endIconSize > 0) {
                     lp.width = endIconSize.toInt()
@@ -196,6 +197,48 @@ class LabelView : LinearLayout {
                 val endIconPadding = typedArray.getDimension(R.styleable.LabelView_endIconPadding, 0f)
                 (lp as? MarginLayoutParams)?.marginStart = endIconPadding.toInt()
                 mEndIconView.layoutParams = lp
+            }
+
+            mLabelTextView.gravity = typedArray.getInt(R.styleable.LabelView_labelTextGravity, Gravity.CENTER_VERTICAL)
+            val textGravity = typedArray.getInt(R.styleable.LabelView_textGravity, Gravity.CENTER_VERTICAL)
+            mTextView.gravity = textGravity
+            mEditTextView.gravity = textGravity
+            mRightTextView.gravity = typedArray.getInt(R.styleable.LabelView_rightTextGravity, Gravity.CENTER_VERTICAL)
+
+            if (ori == VERTICAL) {
+                val llp = textView.layoutParams ?: LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                llp.width = LayoutParams.MATCH_PARENT
+                llp.height = LayoutParams.WRAP_CONTENT
+                (llp as? LayoutParams)?.weight = 0f
+                (llp as? MarginLayoutParams)?.let {
+                    it.marginStart = 0
+                    it.marginEnd = 0
+                }
+                mLabelTextView.layoutParams = llp
+
+                val tlp = textView.layoutParams ?: LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                tlp.width = LayoutParams.MATCH_PARENT
+                tlp.height = LayoutParams.WRAP_CONTENT
+                (tlp as? LayoutParams)?.weight = 0f
+                (tlp as? MarginLayoutParams)?.let {
+                    it.marginStart = 0
+                    it.marginEnd = 0
+                }
+                textView.layoutParams = tlp
+
+                val rlp = textView.layoutParams ?: LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                rlp.width = LayoutParams.MATCH_PARENT
+                rlp.height = LayoutParams.WRAP_CONTENT
+                (rlp as? LayoutParams)?.weight = 0f
+                (rlp as? MarginLayoutParams)?.let {
+                    it.marginStart = 0
+                    it.marginEnd = 0
+                }
+                mRightTextView.layoutParams = rlp
+
+                if (mRightText.isNullOrBlank()) {
+                    mRightTextView.visibility = View.GONE
+                }
             }
 
             typedArray.recycle()

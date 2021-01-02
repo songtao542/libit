@@ -24,10 +24,9 @@ class LabelView : LinearLayout {
     private lateinit var mEditTextView: EditText
     private lateinit var mTextView: TextView
     private lateinit var mRightTextView: TextView
-    private lateinit var mRightArrow: ImageView
+    private lateinit var mRightArrowView: ImageView
     private lateinit var mStartIconView: ImageView
     private lateinit var mEndIconView: ImageView
-    private var mLabelClickable = false
     private var mLabelWithColon = true
     private var mEditable = false
 
@@ -63,7 +62,7 @@ class LabelView : LinearLayout {
         mTextView = findViewById(R.id.textView)
         mEditTextView = findViewById(R.id.editText)
         mRightTextView = findViewById(R.id.rightText)
-        mRightArrow = findViewById(R.id.rightArrow)
+        mRightArrowView = findViewById(R.id.rightArrow)
         mStartIconView = findViewById(R.id.startIcon)
         mEndIconView = findViewById(R.id.endIcon)
 
@@ -123,27 +122,26 @@ class LabelView : LinearLayout {
             }
             mRightText = typedArray.getText(R.styleable.LabelView_rightText) ?: ""
             mRightTextView.text = mRightText
-            mLabelClickable = typedArray.getBoolean(R.styleable.LabelView_labelClickable, false)
 
             if (typedArray.getBoolean(R.styleable.LabelView_showRightArrow, false)) {
-                mRightArrow.visibility = View.VISIBLE
+                mRightArrowView.visibility = View.VISIBLE
             } else {
-                mRightArrow.visibility = View.GONE
+                mRightArrowView.visibility = View.GONE
             }
 
             val rightArrowIcon = typedArray.getDrawable(R.styleable.LabelView_rightArrow)
             if (rightArrowIcon != null) {
-                mRightArrow.setImageDrawable(rightArrowIcon)
+                mRightArrowView.setImageDrawable(rightArrowIcon)
             }
 
             val rightArrowColor = typedArray.getColorStateList(R.styleable.LabelView_rightArrowColor)
             if (rightArrowColor != null) {
-                mRightArrow.imageTintList = rightArrowColor
+                mRightArrowView.imageTintList = rightArrowColor
             }
 
             val rightArrowPadding = typedArray.getDimension(R.styleable.LabelView_rightArrowPadding, -1f)
             if (rightArrowPadding >= 0) {
-                val lp = mRightArrow.layoutParams ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                val lp = mRightArrowView.layoutParams ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
                     gravity = Gravity.CENTER_VERTICAL
                 }
                 (lp as? MarginLayoutParams)?.let {
@@ -153,17 +151,17 @@ class LabelView : LinearLayout {
                         it.marginStart = rightArrowPadding.toInt()
                     }
                 }
-                mRightArrow.layoutParams = lp
+                mRightArrowView.layoutParams = lp
             }
 
             val rightArrowSize = typedArray.getDimension(R.styleable.LabelView_rightArrowSize, -1f)
             if (rightArrowSize > 0) {
-                val lp = mRightArrow.layoutParams ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                val lp = mRightArrowView.layoutParams ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
                     gravity = Gravity.CENTER_VERTICAL
                 }
                 lp.width = rightArrowSize.toInt()
                 lp.height = rightArrowSize.toInt()
-                mRightArrow.layoutParams = lp
+                mRightArrowView.layoutParams = lp
             }
 
             val startIcon = typedArray.getDrawable(R.styleable.LabelView_startIcon)
@@ -276,17 +274,30 @@ class LabelView : LinearLayout {
         }
     }
 
-    private val textView: TextView
-        get() {
-            return if (mEditable) mEditTextView else mTextView
-        }
+    private val textView: TextView get() = if (mEditable) mEditTextView else mTextView
 
-    override fun setOnClickListener(listener: OnClickListener?) {
-        if (mLabelClickable) {
-            super.setOnClickListener(listener)
-        } else {
-            mEditTextView.setOnClickListener(listener)
-        }
+    fun setOnLabelClickListener(listener: OnClickListener?) {
+        mLabelTextView.setOnClickListener(listener)
+    }
+
+    fun setOnTextClickListener(listener: OnClickListener?) {
+        textView.setOnClickListener(listener)
+    }
+
+    fun setOnRightTextClickListener(listener: OnClickListener?) {
+        mRightTextView.setOnClickListener(listener)
+    }
+
+    fun setOnStartIconClickListener(listener: OnClickListener?) {
+        mStartIconView.setOnClickListener(listener)
+    }
+
+    fun setOnEndIconClickListener(listener: OnClickListener?) {
+        mEndIconView.setOnClickListener(listener)
+    }
+
+    fun setOnArrowClickListener(listener: OnClickListener?) {
+        mRightArrowView.setOnClickListener(listener)
     }
 
     fun setLabelWithColon(withColon: Boolean) {

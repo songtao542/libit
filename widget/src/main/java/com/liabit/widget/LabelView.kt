@@ -67,9 +67,8 @@ class LabelView : LinearLayout {
         mEndIconView = findViewById(R.id.endIcon)
 
         if (attrs != null) {
-            var ori = HORIZONTAL
             val ta = context.obtainStyledAttributes(attrs, intArrayOf(android.R.attr.orientation))
-            ori = ta.getInt(0, HORIZONTAL)
+            val ori = ta.getInt(0, HORIZONTAL)
             ta.recycle()
 
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelView, defStyleAttr, defStyleRes)

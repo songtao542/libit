@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.liabit.widget.PopupMenu
 import com.liabit.test.databinding.ActivityPopupMenuTestBinding
 import com.liabit.viewbinding.inflate
-import com.liabit.widget.BottomMenuDialog
+import com.liabit.widget.BottomMenu
 
 class TestPopupActivity : AppCompatActivity() {
 
@@ -42,7 +42,7 @@ class TestPopupActivity : AppCompatActivity() {
         }
 
         binding.menuDialog.setOnClickListener {
-            BottomMenuDialog(this)
+            BottomMenu(this)
                     .setRadius(20f, 0f)
                     .setTitleMatchParentWidth(false)
                     .menu("允许评论") {
@@ -54,7 +54,7 @@ class TestPopupActivity : AppCompatActivity() {
                     .show()
         }
         binding.menuDialog1.setOnClickListener {
-            BottomMenuDialog(this)
+            BottomMenu(this)
                     .setRadius(20f, 0f)
                     .setTitleMatchParentWidth(false)
                     .menu("允许评论", R.drawable.ic_charge_black) {
@@ -65,40 +65,45 @@ class TestPopupActivity : AppCompatActivity() {
                     }
                     .show()
         }
-        val menus = arrayListOf<BottomMenuDialog.MenuItem>(
-                BottomMenuDialog.MenuItem.Builder(this).setTitle("充电")
-                        .setEndIcon(R.drawable.ic_charge_black)
-                        .setBackground(R.drawable.menu_selector)
+        val menus = arrayListOf(
+                BottomMenu.MenuItem.Builder(this).setTitle("充电")
+                        .setStartIcon(R.drawable.ic_charge_black)
+                        .setEndIcon(R.drawable.menu_selector)
                         .setChecked(false)
                         .build(),
-                BottomMenuDialog.MenuItem.Builder(this).setTitle("快速充电")
-                        .setEndIcon(R.drawable.ic_charge_black)
-                        .setBackground(R.drawable.menu_selector)
+                BottomMenu.MenuItem.Builder(this).setTitle("快速充电")
+                        .setStartIcon(R.drawable.ic_charge_black)
+                        .setEndIcon(R.drawable.menu_selector)
                         .build(),
-                BottomMenuDialog.MenuItem.Builder(this).setTitle("极快速充电")
-                        .setEndIcon(R.drawable.ic_charge_black)
-                        .setBackground(R.drawable.menu_selector)
+                BottomMenu.MenuItem.Builder(this).setTitle("极快速充电")
+                        .setStartIcon(R.drawable.ic_charge_black)
+                        .setEndIcon(R.drawable.menu_selector)
                         .build(),
-                BottomMenuDialog.MenuItem.Builder(this).setTitle("快充电")
-                        .setEndIcon(R.drawable.ic_charge_black)
-                        .setBackground(R.drawable.menu_selector)
+                BottomMenu.MenuItem.Builder(this).setTitle("快充电")
+                        .setStartIcon(R.drawable.ic_charge_black)
+                        .setEndIcon(R.drawable.menu_selector)
                         .build(),
-                BottomMenuDialog.MenuItem.Builder(this).setTitle("慢速充电")
-                        .setEndIcon(R.drawable.ic_charge_black)
-                        .setBackground(R.drawable.menu_selector)
+                BottomMenu.MenuItem.Builder(this).setTitle("慢速充电")
+                        .setStartIcon(R.drawable.ic_charge_black)
+                        .setEndIcon(R.drawable.menu_selector)
                         .build(),
-                BottomMenuDialog.MenuItem.Builder(this).setTitle("极慢速充电")
-                        .setEndIcon(R.drawable.ic_charge_black)
-                        .setBackground(R.drawable.menu_selector)
+                BottomMenu.MenuItem.Builder(this).setTitle("极慢速充电")
+                        .setStartIcon(R.drawable.ic_charge_black)
+                        .setEndIcon(R.drawable.menu_selector)
                         .build()
         )
 
 
         binding.menuDialog2.setOnClickListener {
-            BottomMenuDialog(this)
-                    .setRadius(20f, 0f)
+            BottomMenu(this)
+                    .setRadius(20f, 20f)
+                    .setFloating(true)
                     .setTitleMatchParentWidth(false)
                     .menu(menus)
+                    .setCancelDivider(0xffdddddd.toInt())
+                    .setCancelDividerMargin(10f)
+                    .setCancelDividerHeightPx(1f)
+                    .setItemHeight(50f)
                     .setOnMenuItemClickListener {
 
                     }

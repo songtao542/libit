@@ -453,10 +453,10 @@ class PopupMenu {
             var hasIcon = false
             var hasTail = false
             for (menuItem in mMenuItems) {
-                if (menuItem.icon != 0) {
+                if (menuItem.startIcon != 0) {
                     hasIcon = true
                 }
-                if (menuItem.tail != 0) {
+                if (menuItem.endIcon != 0) {
                     hasTail = true
                 }
                 if (!menuItem.title.isBlank()) {
@@ -661,8 +661,8 @@ class PopupMenu {
 
     open class MenuItem {
         private var mPosition = 0
-        private var mIconResId = 0
-        private var mTailIconResId = 0
+        private var mStartIconResId = 0
+        private var mEndIconResId = 0
         private var mIsChecked = false
         private var mTitle: String = ""
 
@@ -675,15 +675,15 @@ class PopupMenu {
         }
 
         constructor(iconResId: Int, title: String) : this(title) {
-            mIconResId = iconResId
+            mStartIconResId = iconResId
         }
 
-        constructor(iconResId: Int, title: String, tailIconResId: Int) : this(iconResId, title) {
-            mTailIconResId = tailIconResId
+        constructor(startIconResId: Int, title: String, endIconResId: Int) : this(startIconResId, title) {
+            mEndIconResId = endIconResId
         }
 
         constructor(iconResId: Int) {
-            mIconResId = iconResId
+            mStartIconResId = iconResId
         }
 
         internal fun setPosition(position: Int) {
@@ -702,12 +702,12 @@ class PopupMenu {
         /**
          * 头部图标
          */
-        val icon: Int get() = mIconResId
+        val startIcon: Int get() = mStartIconResId
 
         /**
          * 尾部图标
          */
-        val tail: Int get() = mTailIconResId
+        val endIcon: Int get() = mEndIconResId
 
         /**
          * 是否被选中
@@ -719,12 +719,12 @@ class PopupMenu {
             private val mItem = MenuItem()
 
             fun setIcon(iconResId: Int): Builder {
-                mItem.mIconResId = iconResId
+                mItem.mStartIconResId = iconResId
                 return this
             }
 
             fun setTailIcon(iconResId: Int): Builder {
-                mItem.mTailIconResId = iconResId
+                mItem.mEndIconResId = iconResId
                 return this
             }
 
@@ -775,7 +775,7 @@ class PopupMenu {
         }
 
         private fun addIconView(menuItem: MenuItem) {
-            val resId = menuItem.icon
+            val resId = menuItem.startIcon
             if (resId == 0) return
             if (mIconView == null) {
                 mIconView = ImageView(context).apply {
@@ -793,7 +793,7 @@ class PopupMenu {
         }
 
         private fun addTailIconView(menuItem: MenuItem) {
-            val resId = menuItem.tail
+            val resId = menuItem.endIcon
             if (resId == 0) return
             if (mTailIconView == null) {
                 mTailIconView = ImageView(context).apply {

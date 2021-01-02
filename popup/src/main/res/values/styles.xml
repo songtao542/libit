@@ -14,6 +14,14 @@
         <item name="android:windowAnimationStyle">@style/BottomMenuAnimation</item>
     </style>
 
+    <style name="FloatBottomMenuStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/BottomMenuAnimation</item>
+    </style>
+
     <style name="BottomMenuAnimation">
         <item name="android:windowEnterAnimation">@anim/anim_bottom_enter</item>
         <item name="android:windowExitAnimation">@anim/anim_bottom_exit</item>

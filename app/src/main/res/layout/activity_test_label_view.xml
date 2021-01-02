@@ -44,6 +44,7 @@
         android:background="?attr/selectableItemBackground"
         android:label="年龄"
         android:orientation="horizontal"
+        app:rightArrowPadding="10dp"
         android:paddingHorizontal="16dp"
         app:rightArrowColor="@android:color/darker_gray"
         app:rightArrowSize="12dp"
@@ -66,7 +67,8 @@
         app:rightText="修改年龄"
         app:rightTextColor="@android:color/darker_gray"
         app:rightTextSize="12sp"
-        app:showRightArrow="true" />
+        app:showRightArrow="true"
+        app:textPaddingHorizontal="16dp" />
 
     <View
         android:layout_width="match_parent"
@@ -93,7 +95,8 @@
             app:labelTextGravity="center"
             app:rightText="5A"
             app:rightTextGravity="center"
-            app:textGravity="center" />
+            app:textGravity="center"
+            app:textPaddingVertical="8dp" />
 
         <com.liabit.widget.LabelView
             android:layout_width="0dp"

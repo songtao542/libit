@@ -95,7 +95,12 @@
         <attr name="rightArrowSize" format="reference|dimension" />
         <attr name="rightArrowColor" format="reference|color" />
         <attr name="rightArrowPadding" format="reference|dimension" />
+        <attr name="textPaddingStart" format="reference|dimension" />
+        <attr name="textPaddingEnd" format="reference|dimension" />
+        <attr name="textPaddingTop" format="reference|dimension" />
         <attr name="textPaddingBottom" format="reference|dimension" />
+        <attr name="textPaddingHorizontal" format="reference|dimension" />
+        <attr name="textPaddingVertical" format="reference|dimension" />
         <attr name="startIcon" format="reference" />
         <attr name="startIconSize" format="reference|dimension" />
         <attr name="startIconPadding" format="reference|dimension" />

@@ -21,8 +21,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
-        android:paddingStart="0dp"
-        android:paddingEnd="15dp"
         android:textColor="@android:color/black"
         android:textSize="14sp"
         tools:text="学校" />
@@ -59,7 +57,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
-        android:paddingRight="15dp"
         android:textColor="@android:color/black"
         android:textSize="14sp"
         tools:text="请选择" />

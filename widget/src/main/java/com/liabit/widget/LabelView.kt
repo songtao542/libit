@@ -109,8 +109,6 @@ class LabelView : LinearLayout {
                 mRightTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mRightTextSize.toFloat())
             }
 
-            val textPaddingBottom = typedArray.getDimension(R.styleable.LabelView_textPaddingBottom, 0f)
-
             typedArray.getColorStateList(R.styleable.LabelView_android_textColor)?.let {
                 textView.setTextColor(it)
             }
@@ -145,13 +143,18 @@ class LabelView : LinearLayout {
 
             val rightArrowPadding = typedArray.getDimension(R.styleable.LabelView_rightArrowPadding, -1f)
             if (rightArrowPadding >= 0) {
-                mRightTextView.setPadding(0, 0, rightArrowPadding.toInt(), textPaddingBottom.toInt())
-            } else {
-                mRightTextView.setPadding(0, 0, 0, textPaddingBottom.toInt())
+                val lp = mRightArrow.layoutParams ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                    gravity = Gravity.CENTER_VERTICAL
+                }
+                (lp as? MarginLayoutParams)?.let {
+                    if (ori == VERTICAL) {
+                        it.topMargin = rightArrowPadding.toInt()
+                    } else {
+                        it.marginStart = rightArrowPadding.toInt()
+                    }
+                }
+                mRightArrow.layoutParams = lp
             }
-
-            mLabelTextView.setPadding(0, 0, 0, textPaddingBottom.toInt())
-            textView.setPadding(0, 0, 0, textPaddingBottom.toInt())
 
             val rightArrowSize = typedArray.getDimension(R.styleable.LabelView_rightArrowSize, -1f)
             if (rightArrowSize > 0) {
@@ -177,7 +180,13 @@ class LabelView : LinearLayout {
                 }
                 val startIconPadding = typedArray.getDimension(R.styleable.LabelView_startIconPadding, 0f)
                 if (startIconPadding > 0) {
-                    (lp as? MarginLayoutParams)?.marginEnd = startIconPadding.toInt()
+                    (lp as? MarginLayoutParams)?.let {
+                        if (ori == VERTICAL) {
+                            it.bottomMargin = startIconPadding.toInt()
+                        } else {
+                            it.marginEnd = startIconPadding.toInt()
+                        }
+                    }
                 }
                 mStartIconView.layoutParams = lp
             }
@@ -195,7 +204,15 @@ class LabelView : LinearLayout {
                     lp.height = endIconSize.toInt()
                 }
                 val endIconPadding = typedArray.getDimension(R.styleable.LabelView_endIconPadding, 0f)
-                (lp as? MarginLayoutParams)?.marginStart = endIconPadding.toInt()
+                if (endIconPadding > 0) {
+                    (lp as? MarginLayoutParams)?.let {
+                        if (ori == VERTICAL) {
+                            it.topMargin = endIconPadding.toInt()
+                        } else {
+                            it.marginStart = endIconPadding.toInt()
+                        }
+                    }
+                }
                 mEndIconView.layoutParams = lp
             }
 
@@ -236,10 +253,24 @@ class LabelView : LinearLayout {
                 }
                 mRightTextView.layoutParams = rlp
 
-                if (mRightText.isNullOrBlank()) {
+                if (mRightText.isBlank()) {
                     mRightTextView.visibility = View.GONE
                 }
             }
+
+            val textPaddingStart = typedArray.getDimension(R.styleable.LabelView_textPaddingStart, 0f)
+            val textPaddingEnd = typedArray.getDimension(R.styleable.LabelView_textPaddingEnd, 0f)
+            val textPaddingTop = typedArray.getDimension(R.styleable.LabelView_textPaddingTop, 0f)
+            val textPaddingBottom = typedArray.getDimension(R.styleable.LabelView_textPaddingBottom, 0f)
+            val textPaddingHorizontal = typedArray.getDimension(R.styleable.LabelView_textPaddingHorizontal, 0f)
+            val textPaddingVertical = typedArray.getDimension(R.styleable.LabelView_textPaddingVertical, 0f)
+
+            val start = if (textPaddingHorizontal > 0) textPaddingHorizontal else textPaddingStart
+            val end = if (textPaddingHorizontal > 0) textPaddingHorizontal else textPaddingEnd
+            val top = if (textPaddingVertical > 0) textPaddingVertical else textPaddingTop
+            val bottom = if (textPaddingVertical > 0) textPaddingVertical else textPaddingBottom
+
+            textView.setPaddingRelative(start.toInt(), top.toInt(), end.toInt(), bottom.toInt())
 
             typedArray.recycle()
         }

@@ -142,4 +142,10 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="FlowLayout">
+        <attr name="column" format="integer" />
+        <attr name="space" format="dimension" />
+        <attr name="square" format="boolean" />
+    </declare-styleable>
+
 </resources>

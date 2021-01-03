@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cp_search_view"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@android:color/white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    tools:showIn="@layout/cp_dialog_city_picker">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/cp_back"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:scaleType="centerInside"
+        app:srcCompat="?attr/cpBackIcon" />
+
+    <EditText
+        android:id="@+id/cp_search_box"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@null"
+        android:hint="?attr/cpSearchHintText"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:paddingLeft="16dp"
+        android:textColor="?attr/cpSearchTextColor"
+        android:textColorHint="?attr/cpSearchHintTextColor"
+        android:textCursorDrawable="?attr/cpSearchCursorDrawable"
+        android:textSize="?attr/cpSearchTextSize" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/cp_clear_all"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:padding="2dp"
+        android:scaleType="centerInside"
+        app:srcCompat="?attr/cpClearTextIcon"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/cp_divider"
+        android:layout_width="1px"
+        android:layout_height="14dp"
+        android:background="@color/cp_color_gray_light" />
+
+    <TextView
+        android:id="@+id/cp_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/cp_confirm"
+        android:textColor="?attr/cpConfirmTextColor"
+        android:textSize="?attr/cpConfirmTextSize"
+        android:visibility="gone" />
+</LinearLayout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/cp_list_item_name"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/cpListItemHeight"
+        android:layout_gravity="left|center_vertical"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/cp_content_padding_start"
+        android:paddingLeft="@dimen/cp_content_padding_start"
+        android:textColor="?attr/cpListItemTextColor"
+        android:textSize="?attr/cpListItemTextSize"
+        tools:ignore="RtlSymmetry" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/cp_selected"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/cp_unselected_bg"
+        android:padding="4dp"
+        android:scaleType="centerInside"
+        app:srcCompat="@drawable/cp_unselected" />
+
+
+</FrameLayout>

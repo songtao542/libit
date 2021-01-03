@@ -1,3 +1,4 @@
+include ':citypicker'
 include ':color_util'
 include ':timerview'
 include ':settings'

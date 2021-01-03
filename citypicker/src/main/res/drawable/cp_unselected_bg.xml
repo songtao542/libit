@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+
+            <stroke android:width="1.5dp" android:color="?attr/cpListItemSelectColor"></stroke>
+            <solid android:color="?attr/cpListItemSelectColor" />
+
+        </shape>
+    </item>
+
+    <item android:state_pressed="true">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+
+            <stroke android:width="1.5dp" android:color="?attr/cpListItemSelectColor"></stroke>
+            <solid android:color="?attr/cpListItemSelectColor" />
+
+        </shape>
+    </item>
+
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+
+            <stroke android:width="1.5dp" android:color="?attr/cpListItemTextColor"></stroke>
+            <solid android:color="@android:color/transparent" />
+
+        </shape>
+    </item>
+</selector>

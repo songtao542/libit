@@ -6,6 +6,23 @@ import android.content.Intent
 import android.net.Uri
 import com.zhihu.matisse.Matisse
 
+/**
+ * 配合 FlowLayout 用于选择图片
+ * <p>
+ * <com.liabit.integratepicker.FlowLayout
+ *      android:id="@+id/photos"
+ *      android:layout_width="match_parent"
+ *      android:layout_height="wrap_content"
+ *      android:layout_margin="16dp"
+ *      app:alignContent="flex_start"
+ *      app:alignItems="flex_start"
+ *      app:column="4"
+ *      app:flexWrap="wrap"
+ *      app:justifyContent="flex_start"
+ *      app:space="5dp"
+ *      app:square="true" />
+ * </p>
+ */
 class PhotoSelector(private val context: Context) {
 
     private val mAdapter by lazy { PhotoFlowAdapter(context) }

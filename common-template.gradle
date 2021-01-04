@@ -1,79 +1,79 @@
-// 以下代码作用是: 发布 aar 时替换包名
-
-def RENAME_TO = ""
-
-def replaceAll(File file, String replace, String replacement) {
-    if (file.isDirectory()) {
-        File[] files = file.listFiles()
-        for (File f : files) {
-            replaceAll(f, replace, replacement)
-        }
-    } else if (file.exists()) {
-        System.out.println("file: " + file)
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))
-        CharArrayWriter caw = new CharArrayWriter();
-        String line
-        while ((line = br.readLine()) != null) {
-            line = line.replaceAll(replace, replacement)
-            caw.write(line)
-            caw.append(System.getProperty("line.separator"))
-        }
-        br.close()
-        FileWriter fw = new FileWriter(file)
-        caw.writeTo(fw)
-        fw.close()
-    }
-}
-
-def repackage() {
-    File sourceDir = project.projectDir
-    File liabit = new File(sourceDir, "src/main/java/com/liabit")
-    File rename_to = new File(sourceDir, "src/main/java/com/$RENAME_TO")
-    if (liabit.exists()) {
-        System.out.println("-------------liabit -> $RENAME_TO-------------")
-        System.out.println("liabit   : " + liabit)
-        System.out.println("rename_to: " + $RENAME_TO)
-        liabit.renameTo(rename_to)
-    }
-    System.out.println("-------------com.liabit. -> com.$RENAME_TO.-------------")
-    String oldStr = "com.liabit."
-    String newStr = "com.$RENAME_TO."
-    File main = new File(sourceDir, "src/main/")
-    replaceAll(main, oldStr, newStr)
-}
-
-def repackageBack() {
-    File sourceDir = project.projectDir
-    File your_rename_to = new File(sourceDir, "src/main/java/com/$RENAME_TO")
-    File liabit = new File(sourceDir, "src/main/java/com/liabit")
-    if (your_rename_to.exists()) {
-        System.out.println("-------------$RENAME_TO -> liabit-------------")
-        System.out.println("rename_to: " + $RENAME_TO)
-        System.out.println("liabit   : " + liabit)
-        your_rename_to.renameTo(liabit)
-    }
-    System.out.println("-------------com.$RENAME_TO. -> com.liabit.-------------")
-    String newStr = "com.liabit."
-    String oldStr = "com.$RENAME_TO."
-    File main = new File(sourceDir, "src/main/")
-    replaceAll(main, oldStr, newStr)
-}
-
-tasks.whenTaskAdded { task ->
-    if (task.name == 'preReleaseBuild') {
-        task.doFirst {
-            repackage()
-        }
-    }
-}
-
-task repackage(dependsOn: 'assembleRelease') {
-    doLast {
-        repackageBack()
-    }
-}
-
-tasks.artifactoryPublish.dependsOn(repackage)
-//tasks.generateMetadataFileForAarPublication.dependsOn(repackage)
-//tasks.generatePomFileForAarPublication.dependsOn(tasks.generateMetadataFileForAarPublication)
-//tasks.artifactoryPublish.dependsOn(tasks.generatePomFileForAarPublication)
+//// 以下代码作用是: 发布 aar 时替换包名
+//
+//def RENAME_TO = ""
+//
+//def replaceAll(File file, String replace, String replacement) {
+//    if (file.isDirectory()) {
+//        File[] files = file.listFiles()
+//        for (File f : files) {
+//            replaceAll(f, replace, replacement)
+//        }
+//    } else if (file.exists()) {
+//        System.out.println("file: " + file)
+//        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))
+//        CharArrayWriter caw = new CharArrayWriter();
+//        String line
+//        while ((line = br.readLine()) != null) {
+//            line = line.replaceAll(replace, replacement)
+//            caw.write(line)
+//            caw.append(System.getProperty("line.separator"))
+//        }
+//        br.close()
+//        FileWriter fw = new FileWriter(file)
+//        caw.writeTo(fw)
+//        fw.close()
+//    }
+//}
+//
+//def repackage() {
+//    File sourceDir = project.projectDir
+//    File liabit = new File(sourceDir, "src/main/java/com/liabit")
+//    File rename_to = new File(sourceDir, "src/main/java/com/$RENAME_TO")
+//    if (liabit.exists()) {
+//        System.out.println("-------------liabit -> $RENAME_TO-------------")
+//        System.out.println("liabit   : " + liabit)
+//        System.out.println("rename_to: " + $RENAME_TO)
+//        liabit.renameTo(rename_to)
+//    }
+//    System.out.println("-------------com.liabit. -> com.$RENAME_TO.-------------")
+//    String oldStr = "com.liabit."
+//    String newStr = "com.$RENAME_TO."
+//    File main = new File(sourceDir, "src/main/")
+//    replaceAll(main, oldStr, newStr)
+//}
+//
+//def repackageBack() {
+//    File sourceDir = project.projectDir
+//    File your_rename_to = new File(sourceDir, "src/main/java/com/$RENAME_TO")
+//    File liabit = new File(sourceDir, "src/main/java/com/liabit")
+//    if (your_rename_to.exists()) {
+//        System.out.println("-------------$RENAME_TO -> liabit-------------")
+//        System.out.println("rename_to: " + $RENAME_TO)
+//        System.out.println("liabit   : " + liabit)
+//        your_rename_to.renameTo(liabit)
+//    }
+//    System.out.println("-------------com.$RENAME_TO. -> com.liabit.-------------")
+//    String newStr = "com.liabit."
+//    String oldStr = "com.$RENAME_TO."
+//    File main = new File(sourceDir, "src/main/")
+//    replaceAll(main, oldStr, newStr)
+//}
+//
+//tasks.whenTaskAdded { task ->
+//    if (task.name == 'preReleaseBuild') {
+//        task.doFirst {
+//            repackage()
+//        }
+//    }
+//}
+//
+//task repackage(dependsOn: 'assembleRelease') {
+//    doLast {
+//        repackageBack()
+//    }
+//}
+//
+//tasks.artifactoryPublish.dependsOn(repackage)
+////tasks.generateMetadataFileForAarPublication.dependsOn(repackage)
+////tasks.generatePomFileForAarPublication.dependsOn(tasks.generateMetadataFileForAarPublication)
+////tasks.artifactoryPublish.dependsOn(tasks.generatePomFileForAarPublication)

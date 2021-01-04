@@ -13,8 +13,8 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.liabit.integratepicker.R
-import cust.app.swipeback.SwipeBackHelper
-import cust.app.swipeback.SwipeBackLayout
+import com.liabit.swipeback.SwipeBackHelper
+import com.liabit.swipeback.SwipeBackLayout
 
 class PhotoViewerActivity : AppCompatActivity(), SwipeBackLayout.OnSwipeBackListener {
 

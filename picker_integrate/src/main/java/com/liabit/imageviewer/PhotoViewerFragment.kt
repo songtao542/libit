@@ -15,7 +15,7 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.liabit.integratepicker.R
-import cust.app.swipeback.SwipeBackLayout
+import com.liabit.swipeback.SwipeBackLayout
 
 @Suppress("unused")
 open class PhotoViewerFragment : Fragment(), PhotoFragment.OnPhotoSingleTapListener, KeyEventListener, SwipeBackLayout.OnSwipeBackListener {

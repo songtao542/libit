@@ -29,7 +29,7 @@ class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
 
     private var mOnAddClickListener: ((size: Int) -> Unit)? = null
 
-    fun setOnAddClickListener(listener: (size: Int) -> Unit): PhotoFlowAdapter {
+    fun setOnAddClickListener(listener: ((size: Int) -> Unit)?): PhotoFlowAdapter {
         mOnAddClickListener = listener
         return this
     }

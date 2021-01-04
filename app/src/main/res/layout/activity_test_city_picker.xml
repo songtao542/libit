@@ -25,5 +25,27 @@
         android:text="Show Photo Viewer"
         android:textAllCaps="false" />
 
+    <Button
+        android:id="@+id/pickPhoto"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Pick Photo"
+        android:textAllCaps="false" />
+
+
+    <com.liabit.integratepicker.FlowLayout
+        android:id="@+id/photos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:alignContent="flex_start"
+        app:alignItems="flex_start"
+        app:column="4"
+        app:flexWrap="wrap"
+        app:justifyContent="flex_start"
+        app:space="5dp"
+        app:square="true" />
+
 
 </LinearLayout>

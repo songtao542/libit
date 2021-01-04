@@ -162,20 +162,51 @@ object Picker {
 
     @JvmStatic
     fun pickPhoto(
-            activity: FragmentActivity? = null,
             fragment: Fragment? = null,
             max: Int = 1,
             crop: Boolean = false,
             requestCode: Int = REQUEST_CODE_CHOOSE,
     ) {
-        if (activity == null && fragment == null) {
+        if (fragment == null) {
             return
         }
-        val matisse = if (activity != null) Matisse.from(activity) else Matisse.from(fragment)
+        val matisse = Matisse.from(fragment)
         val countable = max > 1
         val picker = matisse.choose(MimeType.of(MimeType.JPEG, MimeType.PNG))
                 .showSingleMediaType(true)
-                .theme(R.style.Matisse_Dracula)
+                .theme(R.style.Matisse_Zhihu)
+                .countable(countable) //max == 1，则 countable = false
+                .addFilter(GifSizeFilter(200, 200, 5 * Filter.K * Filter.K))
+                .maxSelectable(max)
+                .spanCount(4)
+                .originalEnable(true)
+                .maxOriginalSize(10)
+                .capture(true)
+                .imageEngine(GlideEngine())
+        if (crop) {
+            picker.crop(1f, 1f)
+        } else {
+            picker.crop(false)
+        }
+        picker.forResult(requestCode)
+    }
+
+
+    @JvmStatic
+    fun pickPhoto(
+            activity: FragmentActivity? = null,
+            max: Int = 1,
+            crop: Boolean = false,
+            requestCode: Int = REQUEST_CODE_CHOOSE,
+    ) {
+        if (activity == null) {
+            return
+        }
+        val matisse = Matisse.from(activity)
+        val countable = max > 1
+        val picker = matisse.choose(MimeType.of(MimeType.JPEG, MimeType.PNG))
+                .showSingleMediaType(true)
+                .theme(R.style.Matisse_Zhihu)
                 .countable(countable) //max == 1，则 countable = false
                 .addFilter(GifSizeFilter(200, 200, 5 * Filter.K * Filter.K))
                 .maxSelectable(max)

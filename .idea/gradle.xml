@@ -21,12 +21,14 @@
             <option value="$PROJECT_DIR$/gesture" />
             <option value="$PROJECT_DIR$/location_picker" />
             <option value="$PROJECT_DIR$/picker" />
+            <option value="$PROJECT_DIR$/picker_integrate" />
             <option value="$PROJECT_DIR$/popup" />
             <option value="$PROJECT_DIR$/recyclerview" />
             <option value="$PROJECT_DIR$/screencapture" />
             <option value="$PROJECT_DIR$/screenrecord" />
             <option value="$PROJECT_DIR$/settings" />
             <option value="$PROJECT_DIR$/shimmer" />
+            <option value="$PROJECT_DIR$/swipeback" />
             <option value="$PROJECT_DIR$/tablayout" />
             <option value="$PROJECT_DIR$/tagview" />
             <option value="$PROJECT_DIR$/timerview" />
@@ -38,7 +40,6 @@
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
-        <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
   </component>

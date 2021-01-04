@@ -351,5 +351,30 @@
       <option name="name" value="maven2" />
       <option name="url" value="https://dl.bintray.com/liabit/imagepicker" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="file:/$PROJECT_DIR$/citypicker/repo" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="file:/$PROJECT_DIR$/widget/repo" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="file:/$PROJECT_DIR$/imageviewer/repo" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="file:/$PROJECT_DIR$/picker_integrate/repo" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="file:/$PROJECT_DIR$/swipeback/repo" />
+    </remote-repository>
   </component>
 </project>

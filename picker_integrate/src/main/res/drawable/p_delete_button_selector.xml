@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="46dp"
+        android:height="46dp">
+        <shape android:shape="oval">
+            <solid android:color="#33ffffff" />
+        </shape>
+    </item>
+    <item>
+        <ripple
+            android:color="?attr/colorControlHighlight"
+            android:radius="23dp" />
+    </item>
+
+    <item
+        android:bottom="15dp"
+        android:drawable="@drawable/p_ic_delete"
+        android:left="15dp"
+        android:right="15dp"
+        android:top="15dp" />
+</layer-list>
+
+

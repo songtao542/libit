@@ -119,7 +119,7 @@ public class DBManager {
     /**
      * sort by a-z
      */
-    private class CityComparator implements Comparator<City>{
+    private static class CityComparator implements Comparator<City>{
         @Override
         public int compare(City lhs, City rhs) {
             String a = lhs.getPinyin().substring(0, 1);

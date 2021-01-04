@@ -77,6 +77,11 @@ dependencies {
     implementation project(':settings')
     implementation project(':timerview')
     implementation project(':color_util')
+    implementation project(':picker_integrate')
+    implementation project(':citypicker')
+    implementation project(':swipeback')
+
+    implementation 'com.liabit.imagepicker:imagepicker:1.0.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.2.0'

@@ -1,16 +1,12 @@
-package com.liabit.picker
+package com.liabit.integratepicker
 
-import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.liabit.citypicker.R
 import java.util.*
 
 class PickerFragment : BottomSheetDialogFragment() {
@@ -66,7 +62,7 @@ class PickerFragment : BottomSheetDialogFragment() {
     private var pickers: View? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.cp_fragment_picker, container, false)
+        val view = inflater.inflate(R.layout.p_fragment_picker, container, false)
         title = view.findViewById(R.id.title)
         confirm = view.findViewById(R.id.confirm)
         progress = view.findViewById(R.id.progress)
@@ -81,15 +77,15 @@ class PickerFragment : BottomSheetDialogFragment() {
         column1View?.let {
             it.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
             it.wrapSelectorWheel = false
-            setDividerHeight(it, 0.4f)
-            setDividerColor(it, colorOf(R.color.cp_picker_title))
+            it.setDividerHeight(0.4f)
+            it.setDividerColor(requireContext().colorOf(R.color.p_picker_title))
         }
 
         column2View?.let {
             it.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
             it.wrapSelectorWheel = false
-            setDividerHeight(it, 0.4f)
-            setDividerColor(it, colorOf(R.color.cp_picker_title))
+            it.setDividerHeight(0.4f)
+            it.setDividerColor(requireContext().colorOf(R.color.p_picker_title))
         }
 
         arguments?.let {
@@ -188,8 +184,8 @@ class PickerFragment : BottomSheetDialogFragment() {
         } else if (columns != null) {
             setColumnInternal(columns)
         }
-        if (mIsColumn2SubOfColumn1) {
-            setColumn2SubOfColumn1Internal(mIsColumn2SubOfColumn1)
+        if (mColumn2SubOfColumn1Type >= 0) {
+            setColumn2SubOfColumn1Internal()
         }
     }
 
@@ -234,21 +230,32 @@ class PickerFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private var mIsColumn2SubOfColumn1 = false
+    private var mColumn2SubOfColumn1Type = -1
 
-    fun setColumn2SubOfColumn1(isColumn2SubOfColumn1: Boolean) {
-        this.mIsColumn2SubOfColumn1 = isColumn2SubOfColumn1
-        setColumn2SubOfColumn1Internal(mIsColumn2SubOfColumn1)
+    /**
+     * @param column2SubOfColumn1Type 0:取前半部分; 大于 0: 取后半部分
+     */
+    fun setColumn2SubOfColumn1(column2SubOfColumn1Type: Int) {
+        this.mColumn2SubOfColumn1Type = column2SubOfColumn1Type
+        setColumn2SubOfColumn1Internal()
     }
 
-    private fun setColumn2SubOfColumn1Internal(isColumn2SubOfColumn1: Boolean) {
-        if (isColumn2SubOfColumn1 && column1Values != null) {
-            val array: Array<String> = column1Values?.copyOfRange(0, 1) ?: emptyArray()
-            setColumnInternal(null, array)
-            column1View?.setOnValueChangedListener { _, _, newVal ->
-                val array2: Array<String> = column1Values?.copyOfRange(0, if (newVal == 0) 1 else newVal) ?: emptyArray()
-                setColumnInternal(null, array2)
+    private fun setColumn2SubOfColumn1Internal() {
+        val column1Values = column1Values ?: return
+        val array: Array<String> = if (mColumn2SubOfColumn1Type == 0) {
+            column1Values.copyOfRange(0, 1)
+        } else {
+            column1Values.copyOfRange(1, column1Values.size)
+        }
+        setColumnInternal(null, array)
+        column1View?.setOnValueChangedListener { _, _, newVal ->
+            val c1vs = this.column1Values ?: return@setOnValueChangedListener
+            val vs: Array<String> = if (mColumn2SubOfColumn1Type == 0) {
+                c1vs.copyOfRange(0, if (newVal == 0) 1 else newVal)
+            } else {
+                c1vs.copyOfRange(newVal, c1vs.size)
             }
+            setColumnInternal(null, vs)
         }
     }
 
@@ -264,12 +271,15 @@ class PickerFragment : BottomSheetDialogFragment() {
         val column1View = column1View ?: return
         if (!columns.isNullOrEmpty()) {
             column1Values = columns.keys.toTypedArray().also {
+                // 设置第一列数据
                 setColumnInternal(it, null)
-                val index = if (value1 >= 0 && value1 < it.size) value1 else 0
-                columns[it[index]]?.toTypedArray()?.let { array ->
+                val index1 = if (value1 >= 0 && value1 < it.size) value1 else 0
+                columns[it[index1]]?.toTypedArray()?.let { array ->
+                    // 设置第二列数据
                     setColumnInternal(null, array)
                 }
                 column1View.setOnValueChangedListener { _, _, newVal ->
+                    // 第一列数据改变后联动更改第二列数据
                     columns[it[newVal]]?.toTypedArray()?.let { array ->
                         setColumnInternal(null, array)
                     }
@@ -277,42 +287,4 @@ class PickerFragment : BottomSheetDialogFragment() {
             }
         }
     }
-
-    private fun colorOf(id: Int): Int {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requireContext().getColor(id)
-        } else {
-            @Suppress("DEPRECATION")
-            requireContext().resources.getColor(id)
-        }
-    }
-
-    /**
-     * 设置picker分割线的颜色
-     */
-    private fun setDividerColor(numberPicker: NumberPicker, color: Int) {
-        NumberPicker::class.java.getDeclaredField("mSelectionDivider")?.let {
-            it.isAccessible = true
-            it.set(numberPicker, ColorDrawable(color))
-        }
-    }
-
-    /**
-     * 设置picker分割线的宽度
-     */
-    private fun setDividerHeight(numberPicker: NumberPicker, height: Float) {
-        val fields = NumberPicker::class.java.declaredFields
-        for (field in fields) {
-            if (field.name == "mSelectionDividerHeight") {
-                field.isAccessible = true
-                field.set(numberPicker, dip(height))
-                break
-            }
-        }
-    }
-
-    private fun dip(dp: Float): Int {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics).toInt()
-    }
-
 }

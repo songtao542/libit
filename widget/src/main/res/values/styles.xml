@@ -1,11 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Widget" />
-
-    <style name="Widget.FlowLayout">
-        <item name="column">4</item>
-        <item name="space">10dp</item>
-    </style>
-
 </resources>

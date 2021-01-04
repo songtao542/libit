@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="FlowLayout">
+        <attr name="column" format="integer" />
+        <attr name="space" format="reference|dimension" />
+        <attr name="square" format="boolean" />
+    </declare-styleable>
+
+</resources>

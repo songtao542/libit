@@ -98,6 +98,10 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, TestLabelViewActivity::class.java))
             }
 
+            R.id.cityPickerTest -> {
+                startActivity(Intent(this, TestCityPickerActivity::class.java))
+            }
+
             R.id.otherTest -> {
                 startActivity(Intent(this, TestFragmentVisibleActivity::class.java))
             }

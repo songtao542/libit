@@ -30,7 +30,6 @@ class TestPickerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.time12Picker.setOnClickListener {
-            Log.d("TTTT", "vvvvvvvvvvvvvvvvvvv: ")
             val dialog = DateTimePickerDialog.Builder(this)
                     .setWithDate(false)
                     .setWithTime(true)

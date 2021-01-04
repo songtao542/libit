@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.liabit.picker.PickerFragment">
+    tools:context="com.liabit.integratepicker.PickerFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:gravity="center"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/cp_textsize_normal" />
+                android:textSize="@dimen/p_textsize_normal" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/confirm"
@@ -33,7 +33,7 @@
                 android:gravity="center"
                 android:text="@string/cp_confirm"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/cp_textsize_normal" />
+                android:textSize="@dimen/p_textsize_normal" />
         </FrameLayout>
 
         <FrameLayout
@@ -44,8 +44,8 @@
             <ProgressBar
                 android:id="@+id/progress"
                 style="@style/Widget.AppCompat.ProgressBar"
-                android:layout_width="@dimen/cp_picker_loading_progress_size"
-                android:layout_height="@dimen/cp_picker_loading_progress_size"
+                android:layout_width="@dimen/p_picker_loading_progress_size"
+                android:layout_height="@dimen/p_picker_loading_progress_size"
                 android:layout_gravity="center"
                 android:visibility="gone" />
 

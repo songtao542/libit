@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.SwipeBack" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimation.AlphaInOut</item>
+    </style>
+
+    <style name="WindowAnimation">
+        <item name="android:activityOpenEnterAnimation">@null</item>
+        <item name="android:activityOpenExitAnimation">@null</item>
+        <item name="android:activityCloseEnterAnimation">@null</item>
+        <item name="android:activityCloseExitAnimation">@null</item>
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
+    </style>
+
+    <style name="WindowAnimation.BottomInOut">
+        <item name="android:windowEnterAnimation">@anim/swipe_slide_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/swipe_slide_bottom_out</item>
+    </style>
+
+
+    <style name="WindowAnimation.BottomIn">
+        <item name="android:windowEnterAnimation">@anim/swipe_slide_bottom_in</item>
+    </style>
+
+    <style name="WindowAnimation.TopInOut">
+        <item name="android:windowEnterAnimation">@anim/swipe_slide_top_in</item>
+        <item name="android:windowExitAnimation">@anim/swipe_slide_top_out</item>
+    </style>
+
+    <style name="WindowAnimation.AlphaInOut">
+        <item name="android:windowEnterAnimation">@anim/swipe_alpha_in</item>
+        <item name="android:windowExitAnimation">@anim/swipe_alpha_out</item>
+    </style>
+
+    <style name="WindowAnimation.EnterRightInOutExitLeftInOut">
+        <item name="android:activityOpenEnterAnimation">@anim/swipe_slide_right_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/swipe_slide_left_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/swipe_slide_left_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/swipe_slide_right_out</item>
+    </style>
+
+
+</resources>

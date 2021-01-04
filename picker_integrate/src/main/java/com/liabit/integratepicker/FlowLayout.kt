@@ -1,4 +1,4 @@
-package com.liabit.widget
+package com.liabit.integratepicker
 
 import android.content.Context
 import android.util.AttributeSet
@@ -9,10 +9,6 @@ import androidx.core.view.forEachIndexed
 import com.google.android.flexbox.*
 
 class FlowLayout : FlexboxLayout {
-    companion object {
-        val TAG_ID = View.generateViewId()
-    }
-
     constructor(context: Context) : super(context) {
         init(context, null)
     }
@@ -39,7 +35,7 @@ class FlowLayout : FlexboxLayout {
         space = dip(10)
 
         attrs?.let {
-            val a = context.obtainStyledAttributes(it, R.styleable.FlowLayout, defStyleAttr, R.style.Widget_FlowLayout)
+            val a = context.obtainStyledAttributes(it, R.styleable.FlowLayout, defStyleAttr, R.style.P_FlowLayout_Widget)
             column = a.getInt(R.styleable.FlowLayout_column, 4)
             space = a.getDimensionPixelSize(R.styleable.FlowLayout_space, dip(10))
             square = a.getBoolean(R.styleable.FlowLayout_square, false)
@@ -126,10 +122,10 @@ class FlowLayout : FlexboxLayout {
             removeAllViews()
             for (index in 0 until it.getItemCount()) {
                 val child = it.create(index)
-                child.setTag(TAG_ID, index)
+                child.setTag(R.id.p_flow_id, index)
                 if (!child.hasOnClickListeners()) {
                     child.setOnClickListener { view ->
-                        mOnItemClickListener?.invoke(view, view.getTag(TAG_ID) as Int)
+                        mOnItemClickListener?.invoke(view, view.getTag(R.id.p_flow_id) as Int)
                     }
                 }
                 addView(child)

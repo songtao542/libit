@@ -25,7 +25,8 @@
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="2cf31abcb4fb2c096567c32f21c2ad47" />
+            android:value="2cf31abcb4fb2c096567c32f21c2ad47"
+            tools:replace="android:value" />
 
         <activity
             android:name="com.liabit.test14.TestMapLocationPicker"

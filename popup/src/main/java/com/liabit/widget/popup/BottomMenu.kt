@@ -60,6 +60,8 @@ class BottomMenu(private val context: Context) {
 
     private var mLastCheckedMenu: MenuItemView? = null
 
+    private var mCancelTitle: CharSequence? = null
+
     fun menu(title: CharSequence, onClickListener: ((view: View) -> Unit)? = null): BottomMenu {
         mMenuItems.add(MenuItem(title, null, null, null, onClickListener))
         return this
@@ -197,10 +199,21 @@ class BottomMenu(private val context: Context) {
         return this
     }
 
+    fun setCancelTitle(cancelTitle: CharSequence): BottomMenu {
+        mCancelTitle = cancelTitle
+        return this
+    }
+
+    fun setCancelTitle(cancelTitleResId: Int): BottomMenu {
+        mCancelTitle = context.getString(cancelTitleResId)
+        return this
+    }
+
     fun show(): AlertDialog {
         val view = CustomLinearLayout(context)
         val cancel = MenuItemView(context)
-        cancel.setMenuItem(this, MenuItem.Builder(context).setTitle(android.R.string.cancel).build())
+        val cancelTitle = mCancelTitle ?: context.getString(android.R.string.cancel)
+        cancel.setMenuItem(this, MenuItem.Builder(context).setTitle(cancelTitle).build())
         cancel.setOnClickListener { mDialog?.dismiss() }
 
         val background = GradientDrawable()
@@ -381,7 +394,7 @@ class BottomMenu(private val context: Context) {
             val endIcon: Drawable?,
             val background: Drawable?,
             internal var checked: Boolean = false,
-            val listener: ((view: View) -> Unit)?
+            val listener: ((view: View) -> Unit)?,
     ) {
 
         val isChecked: Boolean get() = checked
@@ -391,7 +404,7 @@ class BottomMenu(private val context: Context) {
                 startIcon: Drawable?,
                 endIcon: Drawable?,
                 background: Drawable?,
-                listener: ((view: View) -> Unit)?
+                listener: ((view: View) -> Unit)?,
         ) : this(title, null, startIcon, endIcon, background, false, listener)
 
         class Builder(private val context: Context) {

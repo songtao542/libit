@@ -1,5 +1,6 @@
 package com.liabit.integratepicker
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -194,7 +195,7 @@ object Picker {
 
     @JvmStatic
     fun pickPhoto(
-            activity: FragmentActivity? = null,
+            activity: Activity? = null,
             max: Int = 1,
             crop: Boolean = false,
             requestCode: Int = REQUEST_CODE_CHOOSE,

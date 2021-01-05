@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.zhihu.matisse.Matisse
 
 /**
@@ -30,6 +32,8 @@ class PhotoSelector(private val context: Context) {
     private val mUris by lazy { ArrayList<Uri>() }
 
     private var mFlowLayout: FlowLayout? = null
+    private var mFragment: Fragment? = null
+    private var mMaxShow: Int? = null
 
     /**
      * The select photo uri list
@@ -39,10 +43,27 @@ class PhotoSelector(private val context: Context) {
     fun bind(flowLayout: FlowLayout): PhotoSelector {
         mFlowLayout = flowLayout
         mFlowLayout?.setAdapter(mAdapter)
+        mAdapter.setOnAddClickListener {
+            val max = mMaxShow ?: 1
+            mFragment?.also {
+                Picker.pickPhoto(it, max = max)
+            } ?: run {
+                if (context is Activity) {
+                    Picker.pickPhoto(context, max = max)
+                }
+            }
+        }
+        return this
+    }
+
+    fun bind(fragment: Fragment, flowLayout: FlowLayout): PhotoSelector {
+        mFragment = fragment
+        bind(flowLayout)
         return this
     }
 
     fun setMaxShow(max: Int): PhotoSelector {
+        mMaxShow = max
         mAdapter.setMaxShow(max)
         return this
     }

@@ -1,4 +1,4 @@
-package com.liabit.widget
+package com.liabit.widget.popup
 
 import android.animation.Animator
 import android.animation.AnimatorSet

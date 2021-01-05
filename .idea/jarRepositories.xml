@@ -376,5 +376,20 @@
       <option name="name" value="maven" />
       <option name="url" value="file:/$PROJECT_DIR$/swipeback/repo" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven3" />
+      <option name="name" value="maven3" />
+      <option name="url" value="https://dl.bintray.com/liabit/picker" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven5" />
+      <option name="name" value="maven5" />
+      <option name="url" value="https://dl.bintray.com/liabit/swipeback" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven4" />
+      <option name="name" value="maven4" />
+      <option name="url" value="https://dl.bintray.com/liabit/citypicker" />
+    </remote-repository>
   </component>
 </project>

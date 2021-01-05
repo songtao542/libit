@@ -33,6 +33,9 @@ allprojects {
         jcenter()
         maven { url uri('./repo') }
         maven { url 'https://dl.bintray.com/liabit/imagepicker' }
+        maven { url 'https://dl.bintray.com/liabit/picker' }
+        maven { url 'https://dl.bintray.com/liabit/citypicker' }
+        maven { url 'https://dl.bintray.com/liabit/swipeback' }
     }
 }
 

@@ -3,10 +3,10 @@ package com.liabit.test
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.liabit.widget.PopupMenu
+import com.liabit.widget.popup.PopupMenu
 import com.liabit.test.databinding.ActivityPopupMenuTestBinding
 import com.liabit.viewbinding.inflate
-import com.liabit.widget.BottomMenu
+import com.liabit.widget.popup.BottomMenu
 
 class TestPopupActivity : AppCompatActivity() {
 

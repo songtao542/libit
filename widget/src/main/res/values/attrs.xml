@@ -103,9 +103,11 @@
         <attr name="textPaddingVertical" format="reference|dimension" />
         <attr name="startIcon" format="reference" />
         <attr name="startIconSize" format="reference|dimension" />
+        <attr name="startIconColor" format="reference|color" />
         <attr name="startIconPadding" format="reference|dimension" />
         <attr name="endIcon" format="reference" />
         <attr name="endIconSize" format="reference|dimension" />
+        <attr name="endIconColor" format="reference|color" />
         <attr name="endIconPadding" format="reference|dimension" />
         <attr name="labelTextGravity" format="flags">
             <flag name="top" value="0x30" />

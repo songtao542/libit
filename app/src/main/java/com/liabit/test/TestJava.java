@@ -1,6 +1,6 @@
 package com.liabit.test;
 
-import com.liabit.widget.PopupMenu;
+import com.liabit.widget.popup.PopupMenu;
 
 import java.util.List;
 

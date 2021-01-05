@@ -168,6 +168,8 @@ class LabelView : LinearLayout {
             if (startIcon != null) {
                 mStartIconView.visibility = View.VISIBLE
                 mStartIconView.setImageDrawable(startIcon)
+                val startIconColor = typedArray.getColorStateList(R.styleable.LabelView_startIconColor)
+                startIcon.setTintList(startIconColor)
                 val lp = mStartIconView.layoutParams ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
                     gravity = Gravity.CENTER_VERTICAL
                 }
@@ -193,6 +195,8 @@ class LabelView : LinearLayout {
             if (endIcon != null) {
                 mEndIconView.setImageDrawable(endIcon)
                 mEndIconView.visibility = View.VISIBLE
+                val endIconColor = typedArray.getColorStateList(R.styleable.LabelView_endIconColor)
+                endIcon.setTintList(endIconColor)
                 val lp = mEndIconView.layoutParams ?: LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
                     gravity = Gravity.CENTER_VERTICAL
                 }

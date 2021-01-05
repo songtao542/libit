@@ -41,13 +41,16 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
 
-    implementation 'com.liabit.imagepicker:imagepicker:1.0.0'
     //implementation 'com.google.android:flexbox:2.0.1'
     compileOnly files('libs/flexbox-release.aar')
 
-    implementation project(':citypicker')
-    implementation project(':picker')
-    implementation project(':swipeback')
+    //implementation project(':citypicker')
+    //implementation project(':picker')
+    //implementation project(':swipeback')
+    implementation 'com.liabit.imagepicker:imagepicker:1.0.0'
+    implementation 'com.liabit.citypicker:citypicker:1.0.0'
+    implementation 'com.liabit.swipeback:swipeback:1.0.0'
+    implementation 'com.liabit.picker:picker:1.0.0'
 
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
 

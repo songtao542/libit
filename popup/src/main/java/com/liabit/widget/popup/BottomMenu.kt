@@ -1,4 +1,4 @@
-package com.liabit.widget
+package com.liabit.widget.popup
 
 import android.content.Context
 import android.content.res.ColorStateList

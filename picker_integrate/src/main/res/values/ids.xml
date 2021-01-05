@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="p_flow_id" type="id" />
-    <item name="p_photo_tag_id" type="id" />
-    <item name="p_photo_viewer_id" type="id" />
+    <item name="p_index_tag" type="id" />
+    <item name="p_uri_tag" type="id" />
+    <item name="p_photo_viewer_container_id" type="id" />
 </resources>

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.zhihu.matisse.Matisse
@@ -29,11 +30,12 @@ class PhotoSelector(private val context: Context) {
 
     private val mAdapter by lazy { PhotoFlowAdapter(context) }
 
-    private val mUris by lazy { ArrayList<Uri>() }
-
     private var mFlowLayout: FlowLayout? = null
     private var mFragment: Fragment? = null
     private var mMaxShow: Int? = null
+    private var mIncrementalSelection: Boolean = false
+
+    private var mUris = ArrayList<Uri>()
 
     /**
      * The select photo uri list
@@ -42,9 +44,16 @@ class PhotoSelector(private val context: Context) {
 
     fun bind(flowLayout: FlowLayout): PhotoSelector {
         mFlowLayout = flowLayout
-        mFlowLayout?.setAdapter(mAdapter)
         mAdapter.setOnAddClickListener {
-            val max = mMaxShow ?: 1
+            val maxShow = mMaxShow ?: 1
+            val max = if (mMaxShow != null && mIncrementalSelection) {
+                maxShow - uris.size
+            } else {
+                maxShow
+            }
+            if (max <= 0) {
+                return@setOnAddClickListener
+            }
             mFragment?.also {
                 Picker.pickPhoto(it, max = max)
             } ?: run {
@@ -53,6 +62,7 @@ class PhotoSelector(private val context: Context) {
                 }
             }
         }
+        mFlowLayout?.setAdapter(mAdapter)
         return this
     }
 
@@ -65,6 +75,14 @@ class PhotoSelector(private val context: Context) {
     fun setMaxShow(max: Int): PhotoSelector {
         mMaxShow = max
         mAdapter.setMaxShow(max)
+        return this
+    }
+
+    /**
+     * 是否使用增量选择
+     */
+    fun setIncrementalSelection(incrementalSelection: Boolean): PhotoSelector {
+        mIncrementalSelection = incrementalSelection
         return this
     }
 
@@ -85,17 +103,20 @@ class PhotoSelector(private val context: Context) {
 
     fun setOnAddClickListener(listener: ((size: Int) -> Unit)?): PhotoSelector {
         mAdapter.setOnAddClickListener(listener)
+        mFlowLayout?.notifyAdapterSizeChanged()
         return this
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Picker.REQUEST_CODE_CHOOSE && resultCode == Activity.RESULT_OK) {
-            val paths = Matisse.obtainPathResult(data)
             val uris = Matisse.obtainResult(data)
-            paths?.let {
+            if (uris != null) {
+                if (!mIncrementalSelection) {
+                    mUris.clear()
+                }
                 mUris.addAll(uris)
+                mAdapter.setUris(mUris)
                 mFlowLayout?.notifyAdapterSizeChanged()
-                return@let
             }
         }
     }

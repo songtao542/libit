@@ -21,9 +21,13 @@ class FlowLayout : FlexboxLayout {
         init(context, attrs)
     }
 
-    var column: Int = 0
-    var space: Int = 0
-    var square: Boolean = false
+    private var mColumn: Int = 0
+    private var mSpace: Int = 0
+
+    /**
+     * item是否为正方形
+     */
+    private var mSquare: Boolean = false
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int = 0) {
         alignContent = AlignContent.FLEX_START
@@ -31,17 +35,16 @@ class FlowLayout : FlexboxLayout {
         flexWrap = FlexWrap.WRAP
         justifyContent = JustifyContent.FLEX_START
 
-        column = 4
-        space = dip(10)
+        mColumn = 4
+        mSpace = dip(10)
 
         attrs?.let {
             val a = context.obtainStyledAttributes(it, R.styleable.FlowLayout, defStyleAttr, R.style.P_FlowLayout_Widget)
-            column = a.getInt(R.styleable.FlowLayout_column, 4)
-            space = a.getDimensionPixelSize(R.styleable.FlowLayout_space, dip(10))
-            square = a.getBoolean(R.styleable.FlowLayout_square, false)
+            mColumn = a.getInt(R.styleable.FlowLayout_column, 4)
+            mSpace = a.getDimensionPixelSize(R.styleable.FlowLayout_space, dip(10))
+            mSquare = a.getBoolean(R.styleable.FlowLayout_square, false)
             a.recycle()
         }
-
     }
 
     private fun dip(dp: Int): Int {
@@ -60,8 +63,8 @@ class FlowLayout : FlexboxLayout {
 
     private fun resizeChildren(width: Int) {
         forEachIndexed { index, child ->
-            val childWidth = (width - paddingLeft - paddingRight - (space * (column - 1))) / column
-            val childHeight = if (square) childWidth else MarginLayoutParams.WRAP_CONTENT
+            val childWidth = (width - paddingLeft - paddingRight - (mSpace * (mColumn - 1))) / mColumn
+            val childHeight = if (mSquare) childWidth else MarginLayoutParams.WRAP_CONTENT
             val lp = child.layoutParams as? MarginLayoutParams ?: MarginLayoutParams(childWidth, childHeight)
             var shouldResize = false
             if (lp.width != childWidth) {
@@ -73,10 +76,10 @@ class FlowLayout : FlexboxLayout {
                 lp.height = childHeight
             }
 
-            if ((index % column) != column - 1) {
-                if (lp.rightMargin != space) {
+            if ((index % mColumn) != mColumn - 1) {
+                if (lp.rightMargin != mSpace) {
                     shouldResize = true
-                    lp.rightMargin = space
+                    lp.rightMargin = mSpace
                 }
             } else {
                 if (lp.rightMargin != 0) {
@@ -84,10 +87,10 @@ class FlowLayout : FlexboxLayout {
                     lp.rightMargin = 0
                 }
             }
-            if (index > column - 1) {//第一行不要设置topMargin
-                if (lp.topMargin != space) {
+            if (index > mColumn - 1) {//第一行不要设置topMargin
+                if (lp.topMargin != mSpace) {
                     shouldResize = true
-                    lp.topMargin = space
+                    lp.topMargin = mSpace
                 }
             } else {
                 if (lp.topMargin != 0) {
@@ -115,21 +118,23 @@ class FlowLayout : FlexboxLayout {
     }
 
     fun notifyAdapterSizeChanged() {
-        mAdapter?.let {
+        mAdapter?.also {
             forEach { view ->
                 it.onRecycleView(view)
             }
             removeAllViews()
             for (index in 0 until it.getItemCount()) {
                 val child = it.create(index)
-                child.setTag(R.id.p_flow_id, index)
+                child.setTag(R.id.p_index_tag, index)
                 if (!child.hasOnClickListeners()) {
                     child.setOnClickListener { view ->
-                        mOnItemClickListener?.invoke(view, view.getTag(R.id.p_flow_id) as Int)
+                        mOnItemClickListener?.invoke(view, view.getTag(R.id.p_index_tag) as Int)
                     }
                 }
                 addView(child)
             }
+        } ?: run {
+            removeAllViews()
         }
     }
 

@@ -108,7 +108,7 @@ open class PhotoFragment : Fragment() {
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
         BitmapFactory.decodeFile(file.path, options)
-        return options.outMimeType
+        return options.outMimeType ?: "image/png"
     }
 
     override fun onDestroyView() {

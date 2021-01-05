@@ -60,7 +60,7 @@ class PhotoViewerActivity : AppCompatActivity(), SwipeBackLayout.OnSwipeBackList
         if (savedInstanceState == null) {
             theme.applyStyle(R.style.Theme_SwipeBack, true)
             rootView = FrameLayout(this).apply {
-                id = R.id.p_photo_viewer_id
+                id = R.id.p_photo_viewer_container_id
                 setBackgroundColor(Color.TRANSPARENT)
                 layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             }
@@ -76,7 +76,7 @@ class PhotoViewerActivity : AppCompatActivity(), SwipeBackLayout.OnSwipeBackList
             val index = intent.getIntExtra(PhotoViewerFragment.INDEX, 0)
             val deletable = intent.getBooleanExtra(PhotoViewerFragment.DELETABLE, false)
             supportFragmentManager.beginTransaction()
-                    .add(R.id.p_photo_viewer_id, PhotoViewerFragment.newInstance(uris, index, deletable))
+                    .add(R.id.p_photo_viewer_container_id, PhotoViewerFragment.newInstance(uris, index, deletable))
                     .commitAllowingStateLoss()
         }
     }

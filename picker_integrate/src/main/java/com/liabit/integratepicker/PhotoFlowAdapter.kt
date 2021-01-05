@@ -9,7 +9,6 @@ import android.widget.*
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import java.util.*
 
 class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
@@ -19,41 +18,52 @@ class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
         SOLID;
     }
 
-    private var mUris: List<Uri>? = null
+    private val mEmptyList = emptyList<Uri>()
+
+    private var mUris: List<Uri> = mEmptyList
     private var mMaxShow = Int.MAX_VALUE
     private var mShowLastAsAdd = true
     private var mShowAddWhenFull = true
-    private var addStyle: AddButtonStyle = AddButtonStyle.SOLID
-
-    private var viewerIsMember = false
+    private var mAddButtonStyle: AddButtonStyle = AddButtonStyle.SOLID
 
     private var mOnAddClickListener: ((size: Int) -> Unit)? = null
+
+    /**
+     * The uri list
+     */
+    val uris: List<Uri> get() = mUris
 
     fun setOnAddClickListener(listener: ((size: Int) -> Unit)?): PhotoFlowAdapter {
         mOnAddClickListener = listener
         return this
     }
 
-    fun setViewerIsMember(isMember: Boolean): PhotoFlowAdapter {
-        this.viewerIsMember = isMember
+    fun setUris(uris: List<Uri>?): PhotoFlowAdapter {
+        mUris = uris ?: mEmptyList
         return this
     }
 
-    fun setUris(uris: List<Uri>): PhotoFlowAdapter {
-        this.mUris = uris
+    fun clear(): PhotoFlowAdapter {
+        mUris = mEmptyList
         return this
     }
 
+    /**
+     * 最多显示几张图片
+     */
     fun setMaxShow(max: Int): PhotoFlowAdapter {
         mMaxShow = max
         return this
     }
 
     fun setAddButtonStyle(style: AddButtonStyle): PhotoFlowAdapter {
-        this.addStyle = style
+        this.mAddButtonStyle = style
         return this
     }
 
+    /**
+     * 显示数量达到 max [setMaxShow] 之后是否还继续显示添加按钮
+     */
     fun setShowAddWhenFull(show: Boolean): PhotoFlowAdapter {
         this.mShowAddWhenFull = show
         return this
@@ -64,22 +74,11 @@ class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
         return this
     }
 
-    private val cache = ArrayDeque<View>()
-    private var cachedAdd: View? = null
-
-    private fun createImageView(url: String): View {
-        val view = if (cache.size > 0) cache.pop() else AppCompatImageView(context)
-        val imageView = if (view is TextImageView) {
-            view.setTextVisibility(View.INVISIBLE)
-            view.imageView
-        } else view as ImageView
-        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-        Glide.with(context).applyDefaultRequestOptions(RequestOptions().placeholder(R.drawable.p_ic_placeholder)).load(url).into(imageView)
-        return view
-    }
+    private val mCache = ArrayDeque<View>()
+    private var mCachedAdd: View? = null
 
     private fun createImageView(uri: Uri): View {
-        val view = if (cache.size > 0) cache.pop() else AppCompatImageView(context)
+        val view = if (mCache.size > 0) mCache.pop() else AppCompatImageView(context)
         val imageView = if (view is TextImageView) {
             view.setTextVisibility(View.INVISIBLE)
             view.imageView
@@ -90,10 +89,10 @@ class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
     }
 
     private fun createLastAdd(): View {
-        cachedAdd?.let {
-            return cachedAdd!!
+        mCachedAdd?.let {
+            return it
         }
-        val add = AddIconView(context, addStyle)
+        val add = AddIconView(context, mAddButtonStyle)
         if (mOnAddClickListener != null) {
             add.setOnClickListener { mOnAddClickListener?.invoke(getItemCount()) }
         }
@@ -102,24 +101,24 @@ class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
 
     override fun create(index: Int): View {
         if (mShowLastAsAdd && index == getItemCount() - 1) {
-            val size = mUris?.size ?: 0
+            val size = mUris.size
             if (size < mMaxShow || (size >= mMaxShow && mShowAddWhenFull)) {
                 return createLastAdd()
             }
         }
-        val uri = mUris!![index]
-        return createImageView(uri).apply { setTag(R.id.p_photo_tag_id, uri) }
+        val uri = mUris[index]
+        return createImageView(uri).apply { setTag(R.id.p_uri_tag, uri) }
     }
 
     override fun onRecycleView(view: View) {
         when (view) {
-            is AddIconView -> cachedAdd = view
-            else -> cache.add(view)
+            is AddIconView -> mCachedAdd = view
+            else -> mCache.add(view)
         }
     }
 
     override fun getItemCount(): Int {
-        val size = mUris?.size ?: 0
+        val size = mUris.size
         val add = if (mShowLastAsAdd) 1 else 0
         return when {
             size == 0 -> add

@@ -102,9 +102,7 @@ open class PhotoViewerFragment : Fragment(), PhotoFragment.OnPhotoSingleTapListe
                 val item = uris[index]
                 uris.remove(item)
                 deletedUris.add(item)
-                if (mOnDeleteListener != null) {
-                    mOnDeleteListener!!.invoke(index, item)
-                }
+                mOnDeleteListener?.invoke(index, item)
                 if (uris.size == 0) {
                     finish()
                 } else {
@@ -158,7 +156,7 @@ open class PhotoViewerFragment : Fragment(), PhotoFragment.OnPhotoSingleTapListe
 
     private var mOnDeleteListener: ((index: Int, uri: Uri) -> Unit)? = null
 
-    fun setOnDeleteListener(listener: ((index: Int, uri: Uri) -> Unit)) {
+    fun setOnDeleteListener(listener: ((index: Int, uri: Uri) -> Unit)?) {
         this.mOnDeleteListener = listener
     }
 

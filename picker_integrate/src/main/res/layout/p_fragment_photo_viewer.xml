@@ -16,8 +16,8 @@
         android:id="@+id/delete"
         android:layout_width="?attr/actionBarSize"
         android:layout_height="?attr/actionBarSize"
-        android:layout_gravity="top|right"
-        android:layout_marginTop="24dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="24dp"
         android:scaleType="centerInside"
         app:srcCompat="@drawable/p_delete_button_selector" />
 

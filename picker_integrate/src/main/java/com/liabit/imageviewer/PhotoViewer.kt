@@ -8,6 +8,8 @@ import androidx.fragment.app.FragmentManager
 
 object PhotoViewer {
 
+    const val REQUEST_CODE = 920
+
     @JvmStatic
     fun start(
             context: Context,
@@ -15,18 +17,11 @@ object PhotoViewer {
             currentIndex: Int = 0,
             deletable: Boolean = false,
     ) {
-        PhotoViewerActivity.start(context, uris, currentIndex, deletable)
-    }
-
-    @JvmStatic
-    fun startForResult(
-            activity: Activity,
-            requestCode: Int,
-            uris: List<Uri>,
-            currentIndex: Int = 0,
-            deletable: Boolean = false,
-    ) {
-        PhotoViewerActivity.startActivityForResult(activity, requestCode, uris, currentIndex, deletable)
+        if (context is Activity) {
+            PhotoViewerActivity.startActivityForResult(context, REQUEST_CODE, uris, currentIndex, deletable)
+        } else {
+            PhotoViewerActivity.start(context, uris, currentIndex, deletable)
+        }
     }
 
     @JvmStatic
@@ -36,9 +31,12 @@ object PhotoViewer {
             uris: List<Uri>,
             currentIndex: Int = 0,
             deletable: Boolean = false,
+            listener: ((index: Int, uri: Uri) -> Unit)? = null,
     ) {
+        val fragment = PhotoViewerFragment.newInstance(ArrayList(uris), currentIndex, deletable)
+        fragment.setOnDeleteListener(listener)
         fragmentManager.beginTransaction()
-                .add(containerViewId, PhotoViewerFragment.newInstance(ArrayList(uris), currentIndex, deletable))
+                .add(containerViewId, fragment)
                 .commitAllowingStateLoss()
     }
 

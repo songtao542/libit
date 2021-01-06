@@ -93,9 +93,7 @@ class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
             return it
         }
         val add = AddIconView(context, mAddButtonStyle)
-        if (mOnAddClickListener != null) {
-            add.setOnClickListener { mOnAddClickListener?.invoke(getItemCount()) }
-        }
+        add.setOnClickListener { mOnAddClickListener?.invoke(getItemCount()) }
         return add
     }
 

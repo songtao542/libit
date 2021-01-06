@@ -23,8 +23,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/cp_selected"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:layout_gravity="right|center_vertical"
         android:layout_marginRight="40dp"
         android:background="@drawable/cp_unselected_bg"

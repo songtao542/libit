@@ -117,8 +117,8 @@ object Picker {
                 .fragmentManager(activity?.supportFragmentManager)
                 .animationStyle(R.style.DefaultCityPickerAnimation)
                 .multipleMode(multipleMode)
-                .enableHotCities(false)
-                .enableLocation(false)
+                .enableHotCities(true)
+                .enableLocation(true)
                 .useDefaultCities(true)
                 .resultListener {
                     handler.invoke(it)

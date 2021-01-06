@@ -64,9 +64,11 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
             window?.let {
                 //it.attributes?.height = WindowManager.LayoutParams.WRAP_CONTENT
                 it.attributes?.gravity = Gravity.TOP
-                it.attributes?.flags = (it.attributes?.flags ?: 0) or WindowManager.LayoutParams.FLAG_DIM_BEHIND or
+                it.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND or
                         WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
-                        WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+                        WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS or
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                        WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR)
                 it.decorView.systemUiVisibility = it.decorView.systemUiVisibility or
                         View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE

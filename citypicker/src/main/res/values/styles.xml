@@ -7,6 +7,7 @@
 
 
     <style name="DefaultCityPickerTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="cpConfirmTextSize">@dimen/cp_cancel_text_size</item>
         <item name="cpConfirmTextColor">@color/cp_color_gray</item>
 
@@ -15,7 +16,7 @@
         <item name="cpSearchTextColor">@color/cp_color_gray_dark</item>
         <item name="cpSearchHintText">@string/cp_search_hint_text</item>
         <item name="cpSearchHintTextColor">@color/cp_color_gray_light</item>
-        <item name="cpSearchCursorDrawable">@color/cp_color_gray_dark</item>
+        <!--<item name="cpSearchCursorDrawable">@color/cp_color_gray_dark</item>-->
 
         <item name="cpListItemHeight">@dimen/cp_list_item_height</item>
         <item name="cpListItemTextSize">@dimen/cp_list_item_text_size</item>

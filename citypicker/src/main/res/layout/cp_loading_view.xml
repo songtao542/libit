@@ -18,7 +18,7 @@
         android:layout_width="?attr/cpLoadingProgressSize"
         android:layout_height="?attr/cpLoadingProgressSize"
         android:layout_gravity="center"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="5dp"
         android:indeterminate="true"
         android:indeterminateDuration="8000"
         android:maxWidth="30dp"

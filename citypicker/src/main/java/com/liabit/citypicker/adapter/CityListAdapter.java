@@ -12,6 +12,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.liabit.citypicker.R;
 import com.liabit.citypicker.adapter.decoration.GridItemDecoration;
 import com.liabit.citypicker.model.City;
@@ -22,10 +26,6 @@ import com.liabit.citypicker.model.LocatedCity;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 /**
  * @Author: Bro0cL
  * @Date: 2018/2/5 12:06
@@ -34,7 +34,7 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.BaseVi
     private static final int VIEW_TYPE_CURRENT = 10;
     private static final int VIEW_TYPE_HOT = 11;
 
-    private boolean mMultiple = false;
+    private boolean mMultiple;
     private Context mContext;
     private List<City> mData;
     private List<HotCity> mHotData;
@@ -45,19 +45,18 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.BaseVi
 
     private List<City> mSelected;
 
-    public CityListAdapter(Context context, List<City> data, List<HotCity> hotData, int state, boolean multiple) {
-        this.mData = data;
+    public CityListAdapter(Context context, int locateState, boolean multiple) {
         this.mContext = context;
-        this.mHotData = hotData;
-        this.locateState = state;
+        this.locateState = locateState;
         this.mMultiple = multiple;
         if (multiple) {
             mSelected = new ArrayList<>();
         }
     }
 
-    public void setCities(List<City> cities) {
+    public void setCities(List<HotCity> hotCities, List<City> cities) {
         mData = cities;
+        mHotData = hotCities;
         notifyDataSetChanged();
     }
 
@@ -143,22 +142,20 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.BaseVi
             if (data == null) return;
             ((DefaultViewHolder) holder).setSelected(data.isSelected());
             ((DefaultViewHolder) holder).name.setText(data.getName());
-            ((DefaultViewHolder) holder).name.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mMultiple) {
-                        if (mSelected.contains(data)) {
-                            data.setSelected(false);
-                            mSelected.remove(data);
-                        } else {
-                            data.setSelected(true);
-                            mSelected.add(data);
-                        }
-                        notifyDataSetChanged();
+            ((DefaultViewHolder) holder).selected.setVisibility(mMultiple ? View.VISIBLE : View.GONE);
+            ((DefaultViewHolder) holder).name.setOnClickListener(v -> {
+                if (mMultiple) {
+                    if (mSelected.contains(data)) {
+                        data.setSelected(false);
+                        mSelected.remove(data);
                     } else {
-                        if (mInnerListener != null) {
-                            mInnerListener.dismiss(data);
-                        }
+                        data.setSelected(true);
+                        mSelected.add(data);
+                    }
+                    notifyDataSetChanged();
+                } else {
+                    if (mInnerListener != null) {
+                        mInnerListener.dismiss(data);
                     }
                 }
             });
@@ -194,30 +191,27 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.BaseVi
                     ((LocationViewHolder) holder).current.setText(R.string.cp_locate_failed);
                     break;
             }
-            ((LocationViewHolder) holder).container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (locateState == LocateState.SUCCESS) {
-                        if (mMultiple) {
-                            if (mSelected.contains(data)) {
-                                data.setSelected(false);
-                                mSelected.remove(data);
-                            } else {
-                                data.setSelected(true);
-                                mSelected.add(data);
-                            }
-                            notifyDataSetChanged();
+            ((LocationViewHolder) holder).container.setOnClickListener(v -> {
+                if (locateState == LocateState.SUCCESS) {
+                    if (mMultiple) {
+                        if (mSelected.contains(data)) {
+                            data.setSelected(false);
+                            mSelected.remove(data);
                         } else {
-                            if (mInnerListener != null) {
-                                mInnerListener.dismiss(data);
-                            }
+                            data.setSelected(true);
+                            mSelected.add(data);
                         }
-                    } else if (locateState == LocateState.FAILURE) {
-                        locateState = LocateState.LOCATING;
-                        notifyItemChanged(0);
+                        notifyDataSetChanged();
+                    } else {
                         if (mInnerListener != null) {
-                            mInnerListener.requestLocation();
+                            mInnerListener.dismiss(data);
                         }
+                    }
+                } else if (locateState == LocateState.FAILURE) {
+                    locateState = LocateState.LOCATING;
+                    notifyItemChanged(0);
+                    if (mInnerListener != null) {
+                        mInnerListener.requestLocation();
                     }
                 }
             });

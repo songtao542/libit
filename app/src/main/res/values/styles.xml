@@ -71,5 +71,14 @@
         <item name="android:windowTitleStyle">@style/AddSubDialogTitleStyle</item>
     </style>
 
+    <style name="TestCityPickerTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/filter</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+        <item name="colorSecondary">#46ff46</item>
+        <item name="android:windowTitleStyle">@style/AddSubDialogTitleStyle</item>
+    </style>
+
 
 </resources>

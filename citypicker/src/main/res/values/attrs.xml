@@ -8,7 +8,7 @@
     <attr name="cpSearchTextColor" format="color|reference" />
     <attr name="cpSearchHintText" format="string|reference" />
     <attr name="cpSearchHintTextColor" format="color|reference" />
-    <attr name="cpSearchCursorDrawable" format="reference" />
+    <!--<attr name="cpSearchCursorDrawable" format="reference" />-->
 
     <attr name="cpListItemTextSize" format="dimension|reference" />
     <attr name="cpListItemTextColor" format="color|reference" />

@@ -14,15 +14,16 @@
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         tools:ignore="UselessParent">
+
         <TextView
             android:id="@+id/cp_list_item_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/cpGridItemBackground"
+            android:gravity="center"
             android:paddingTop="@dimen/cp_grid_item_padding"
             android:paddingBottom="@dimen/cp_grid_item_padding"
-            android:gravity="center"
-            android:background="?attr/cpGridItemBackground"
-            android:textSize="?attr/cpListItemTextSize"
-            android:textColor="?attr/cpGridItemTextColor"/>
+            android:textColor="?attr/cpGridItemTextColor"
+            android:textSize="?attr/cpListItemTextSize" />
     </FrameLayout>
 </LinearLayout>

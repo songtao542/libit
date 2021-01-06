@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.liabit.extension.layoutUnderSystemUI
 import com.liabit.imageviewer.PhotoViewer
 import com.liabit.integratepicker.PhotoFlowAdapter
 import com.liabit.integratepicker.PhotoSelector
@@ -20,6 +21,7 @@ class TestCityPickerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        layoutUnderSystemUI(true)
         setContentView(binding.root)
 
         binding.showCityPicker.setOnClickListener {

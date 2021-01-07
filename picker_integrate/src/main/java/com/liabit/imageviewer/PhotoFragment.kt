@@ -92,8 +92,9 @@ open class PhotoFragment : Fragment() {
             }
         })
         mPhotoView.setAlphaChangeListener(object : DraggablePhotoView.OnAlphaChangeListener {
-            override fun onAlphaChange(alpha: Int) {
-                mRootView.alpha = alpha / 255f
+            override fun onAlphaChange(status: DraggablePhotoView.Status?, alpha: Int) {
+                //mRootView.alpha = alpha / 255f
+                (parentFragment as? PhotoViewerFragment)?.view?.alpha = alpha / 255f
             }
         })
         mPhotoView.setOnTransformListener(object : DraggablePhotoView.OnTransformListener {

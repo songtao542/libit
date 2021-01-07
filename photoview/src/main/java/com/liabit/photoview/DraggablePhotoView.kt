@@ -192,7 +192,7 @@ class DraggablePhotoView : PhotoView {
                 if (mAlpha < 0) {
                     mAlpha = 0
                 }
-                mAlphaChangeListener?.onAlphaChange(mAlpha)
+                mAlphaChangeListener?.onAlphaChange(mStatus, mAlpha)
                 true
             } else {
                 super.dispatchTouchEvent(event)
@@ -270,7 +270,7 @@ class DraggablePhotoView : PhotoView {
         })
         val alphaAnim = ValueAnimator.ofInt(mAlpha, 255)
         alphaAnim.addUpdateListener { animation ->
-            mAlphaChangeListener?.onAlphaChange(animation.animatedValue as Int)
+            mAlphaChangeListener?.onAlphaChange(mStatus, animation.animatedValue as Int)
         }
         val scaleAnim = ValueAnimator.ofFloat(scaleX, 1f)
         scaleAnim.addUpdateListener { animation ->
@@ -338,7 +338,7 @@ class DraggablePhotoView : PhotoView {
             animTransform.top = animation.getAnimatedValue("animTop") as Float
             animTransform.width = animation.getAnimatedValue("animWidth") as Float
             animTransform.height = animation.getAnimatedValue("animHeight") as Float
-            mAlphaChangeListener?.onAlphaChange(animTransform.alpha)
+            mAlphaChangeListener?.onAlphaChange(mStatus, animTransform.alpha)
             invalidate()
         }
         animator.addListener(object : AnimatorListenerAdapter() {
@@ -355,7 +355,7 @@ class DraggablePhotoView : PhotoView {
                  * 而应该是最后变化的位置，因为当out的时候结束时，不回复视图是Normal，要不然会有一个突然闪动回去的bug
                  */
                 mTransformListener?.onTransformCompleted(mStatus)
-                if (mStatus == Status.STATE_IN) {
+                if (mStatus == Status.STATE_IN || mStatus == Status.STATE_OUT) {
                     mStatus = Status.STATE_NORMAL
                 }
             }
@@ -482,7 +482,7 @@ class DraggablePhotoView : PhotoView {
     }
 
     interface OnAlphaChangeListener {
-        fun onAlphaChange(alpha: Int)
+        fun onAlphaChange(status: Status?, alpha: Int)
     }
 
     fun setOnTransformListener(onTransformListener: OnTransformListener?) {

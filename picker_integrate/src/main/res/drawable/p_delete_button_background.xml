@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <size
+                android:width="@dimen/p_delete_button_size"
+                android:height="@dimen/p_delete_button_size" />
+            <solid android:color="#ffffffff" />
+        </shape>
+    </item>
+    <item>
+        <ripple
+            android:color="?attr/colorControlHighlight"
+            android:radius="@dimen/p_half_delete_button_size" />
+    </item>
+</layer-list>
+
+

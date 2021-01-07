@@ -9,14 +9,11 @@ import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.liabit.integratepicker.R
-import com.liabit.swipeback.SwipeBackHelper
-import com.liabit.swipeback.SwipeBackLayout
 
-class PhotoViewerActivity : AppCompatActivity(), SwipeBackLayout.OnSwipeBackListener {
+class PhotoViewerActivity : AppCompatActivity() {
 
     companion object {
 
@@ -28,10 +25,25 @@ class PhotoViewerActivity : AppCompatActivity(), SwipeBackLayout.OnSwipeBackList
                 deletable: Boolean = false,
         ) {
             val intent = Intent(context, PhotoViewerActivity::class.java)
-            intent.putParcelableArrayListExtra(PhotoViewerFragment.URI_LIST, ArrayList(uris))
+            intent.putParcelableArrayListExtra(PhotoViewerFragment.PHOTO_LIST, Photo.fromUriList(uris))
             intent.putExtra(PhotoViewerFragment.INDEX, currentIndex)
             intent.putExtra(PhotoViewerFragment.DELETABLE, deletable)
             context.startActivity(intent)
+        }
+
+        @JvmStatic
+        fun startActivityForResult(
+                fragment: Fragment,
+                requestCode: Int,
+                uris: List<Uri>,
+                currentIndex: Int = 0,
+                deletable: Boolean = false,
+        ) {
+            val intent = Intent(fragment.requireContext(), PhotoViewerActivity::class.java)
+            intent.putParcelableArrayListExtra(PhotoViewerFragment.PHOTO_LIST, Photo.fromUriList(uris))
+            intent.putExtra(PhotoViewerFragment.INDEX, currentIndex)
+            intent.putExtra(PhotoViewerFragment.DELETABLE, deletable)
+            fragment.startActivityForResult(intent, requestCode)
         }
 
         @JvmStatic
@@ -43,40 +55,66 @@ class PhotoViewerActivity : AppCompatActivity(), SwipeBackLayout.OnSwipeBackList
                 deletable: Boolean = false,
         ) {
             val intent = Intent(activity, PhotoViewerActivity::class.java)
-            intent.putParcelableArrayListExtra(PhotoViewerFragment.URI_LIST, ArrayList(uris))
+            intent.putParcelableArrayListExtra(PhotoViewerFragment.PHOTO_LIST, Photo.fromUriList(uris))
+            intent.putExtra(PhotoViewerFragment.INDEX, currentIndex)
+            intent.putExtra(PhotoViewerFragment.DELETABLE, deletable)
+            activity.startActivityForResult(intent, requestCode)
+        }
+
+        @JvmStatic
+        fun startPhotoViewer(
+                context: Context,
+                photos: ArrayList<Photo>,
+                currentIndex: Int = 0,
+                deletable: Boolean = false,
+        ) {
+            val intent = Intent(context, PhotoViewerActivity::class.java)
+            intent.putParcelableArrayListExtra(PhotoViewerFragment.PHOTO_LIST, photos)
+            intent.putExtra(PhotoViewerFragment.INDEX, currentIndex)
+            intent.putExtra(PhotoViewerFragment.DELETABLE, deletable)
+            context.startActivity(intent)
+        }
+
+        @JvmStatic
+        fun startPhotoViewer(
+                fragment: Fragment,
+                requestCode: Int,
+                photos: ArrayList<Photo>,
+                currentIndex: Int = 0,
+                deletable: Boolean = false,
+        ) {
+            val intent = Intent(fragment.requireContext(), PhotoViewerActivity::class.java)
+            intent.putParcelableArrayListExtra(PhotoViewerFragment.PHOTO_LIST, photos)
+            intent.putExtra(PhotoViewerFragment.INDEX, currentIndex)
+            intent.putExtra(PhotoViewerFragment.DELETABLE, deletable)
+            fragment.startActivityForResult(intent, requestCode)
+        }
+
+        @JvmStatic
+        fun startPhotoViewer(
+                activity: Activity,
+                requestCode: Int,
+                photos: ArrayList<Photo>,
+                currentIndex: Int = 0,
+                deletable: Boolean = false,
+        ) {
+            val intent = Intent(activity, PhotoViewerActivity::class.java)
+            intent.putParcelableArrayListExtra(PhotoViewerFragment.PHOTO_LIST, photos)
             intent.putExtra(PhotoViewerFragment.INDEX, currentIndex)
             intent.putExtra(PhotoViewerFragment.DELETABLE, deletable)
             activity.startActivityForResult(intent, requestCode)
         }
     }
 
-    private lateinit var swipeBackHelper: SwipeBackHelper
-
-    private lateinit var rootView: FrameLayout
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         layoutUnderSystemUI(false)
         if (savedInstanceState == null) {
-            theme.applyStyle(R.style.Theme_SwipeBack, true)
-            rootView = FrameLayout(this).apply {
-                id = R.id.p_photo_viewer_container_id
-                setBackgroundColor(Color.TRANSPARENT)
-                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            }
-            swipeBackHelper = SwipeBackHelper(this)
-            swipeBackHelper.setContentView(rootView)
-            swipeBackHelper.setSwipeBackFactor(0.8f)
-            swipeBackHelper.setMaskAlpha(0)
-            swipeBackHelper.setTrackingDirection(SwipeBackLayout.FROM_TOP)
-            swipeBackHelper.setTrackingEdge(true)
-            swipeBackHelper.setOnSwipeBackListener(this)
-
-            val uris = intent.getParcelableArrayListExtra<Uri>(PhotoViewerFragment.URI_LIST) ?: return
+            val photos = intent.getParcelableArrayListExtra<Photo>(PhotoViewerFragment.PHOTO_LIST) ?: return
             val index = intent.getIntExtra(PhotoViewerFragment.INDEX, 0)
             val deletable = intent.getBooleanExtra(PhotoViewerFragment.DELETABLE, false)
             supportFragmentManager.beginTransaction()
-                    .add(R.id.p_photo_viewer_container_id, PhotoViewerFragment.newInstance(uris, index, deletable))
+                    .add(android.R.id.content, PhotoViewerFragment.fromPhotos(photos, index, deletable))
                     .commitAllowingStateLoss()
         }
     }
@@ -100,35 +138,9 @@ class PhotoViewerActivity : AppCompatActivity(), SwipeBackLayout.OnSwipeBackList
         window.decorView.systemUiVisibility = flags
     }
 
-    override fun onViewPositionChanged(view: View?, swipeBackFraction: Float, swipeBackFactor: Float) {
-        dispatchViewPositionChanged(view, swipeBackFraction, swipeBackFactor)
-    }
-
-    override fun onViewSwipeFinished(view: View?, isEnd: Boolean) {
-        dispatchSwipeFinished(view, isEnd)
-    }
-
-    private fun dispatchViewPositionChanged(view: View?, swipeBackFraction: Float, swipeBackFactor: Float) {
-        val fragmentList = supportFragmentManager.fragments
-        for (fragment in fragmentList) {
-            if (fragment.isVisible && fragment is SwipeBackLayout.OnSwipeBackListener) {
-                (fragment as SwipeBackLayout.OnSwipeBackListener).onViewPositionChanged(view, swipeBackFraction, swipeBackFactor)
-            }
-        }
-    }
-
-    private fun dispatchSwipeFinished(view: View?, isEnd: Boolean) {
-        val fragmentList = supportFragmentManager.fragments
-        for (fragment in fragmentList) {
-            if (fragment.isVisible && fragment is SwipeBackLayout.OnSwipeBackListener) {
-                (fragment as SwipeBackLayout.OnSwipeBackListener).onViewSwipeFinished(view, isEnd)
-            }
-        }
-    }
-
     override fun finish() {
         super.finish()
-        overridePendingTransition(0, android.R.anim.fade_out)
+        overridePendingTransition(0, R.anim.pv_fade_out)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {

@@ -1,6 +1,7 @@
 package com.liabit.imageviewer
 
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -11,12 +12,15 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
-import com.davemorrissey.labs.subscaleview.ImageSource
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.liabit.integratepicker.R
+import com.liabit.photoview.DraggablePhotoView
+import com.liabit.photoview.OnPhotoTapListener
 import kotlinx.coroutines.*
 import java.io.File
+
 
 /**
  */
@@ -24,61 +28,111 @@ open class PhotoFragment : Fragment() {
 
     companion object {
         const val URI = "uri"
+        const val PHOTO = "photo"
+
+        private const val KEY_DRAGGABLE = "draggable"
+        private const val KEY_SENSITIVITY = "sensitivity"
 
         @JvmStatic
-        fun newInstance(uri: Uri, extras: Bundle? = null) = PhotoFragment().apply {
+        fun newInstance(photo: Photo, extras: Bundle? = null) = PhotoFragment().apply {
             arguments = Bundle().apply {
-                putParcelable(URI, uri)
+                putParcelable(PHOTO, photo)
                 extras?.let { putAll(extras) }
             }
         }
     }
 
-    private var onPhotoSingleTapListener: OnPhotoSingleTapListener? = null
-
-    private var loadImageJob: Job? = null
-
-    private var uri: Uri? = null
+    private var mOnPhotoSingleTapListener: OnPhotoSingleTapListener? = null
+    private var mDraggable: Boolean = true
+    private var mSensitivity: Float = 0.5f
+    private var mLoadImageJob: Job? = null
+    private var mPhoto: Photo? = null
+    private var mInitIndex: Int = 0
+    private var mIndex: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            uri = it.getParcelable(URI)
+            mPhoto = it.getParcelable(PHOTO)
+            mInitIndex = it.getInt(PhotoViewerFragment.INDEX, 0)
+            mDraggable = it.getBoolean(KEY_DRAGGABLE, true)
+            mSensitivity = it.getFloat(KEY_SENSITIVITY, 0.5f)
         }
     }
 
-    private lateinit var imageView: ImageView
-    private lateinit var scaleImageView: SubsamplingScaleImageView
+    private lateinit var mPhotoView: DraggablePhotoView
+    private lateinit var mRootView: View
+    private var isTransformOut: Boolean = false
+
+    private val mCrossFadeFactory by lazy { DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.p_fragment_photo_view, container, false)
-        imageView = view.findViewById(R.id.imageView)
-        scaleImageView = view.findViewById(R.id.scaleImageView)
-        return view
+        mRootView = inflater.inflate(R.layout.p_fragment_photo_view, container, false)
+        mPhotoView = mRootView.findViewById(R.id.photoView)
+        return mRootView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        //imageView.displayType = ImageViewTouchBase.DisplayType.FIT_TO_SCREEN
-        imageView.setOnClickListener {
-            onPhotoSingleTapListener?.onPhotoSingleTap()
-        }
+        mPhotoView.setDraggable(mDraggable, mSensitivity)
+        mPhotoView.setMinimumScale(1f)
+        mPhotoView.setThumbRect(mPhoto?.bounds)
+        /*mImageView.setOnViewTapListener(object : OnViewTapListener {
+            override fun onViewTap(view: View, x: Float, y: Float) {
+                if (mImageView.checkMinScale()) {
+                    transformOut()
+                }
+            }
+        })*/
+        mPhotoView.setOnPhotoTapListener(object : OnPhotoTapListener {
+            override fun onPhotoTap(view: ImageView, x: Float, y: Float) {
+                if (mPhotoView.checkMinScale()) {
+                    transformOut()
+                }
+            }
+        })
+        mPhotoView.setAlphaChangeListener(object : DraggablePhotoView.OnAlphaChangeListener {
+            override fun onAlphaChange(alpha: Int) {
+                mRootView.alpha = alpha / 255f
+            }
+        })
+        mPhotoView.setOnTransformListener(object : DraggablePhotoView.OnTransformListener {
+            override fun onTransformCompleted(status: DraggablePhotoView.Status?) {
+                if (status == DraggablePhotoView.Status.STATE_OUT) {
+                    mOnPhotoSingleTapListener?.onPhotoSingleTap()
+                }
+            }
+        })
+        transformInIfNeeded()
+        loadFile(mPhoto?.uri)
+    }
 
-        scaleImageView.setOnClickListener {
-            onPhotoSingleTapListener?.onPhotoSingleTap()
+    private fun transformOut() {
+        if (!isTransformOut && mPhoto?.bounds != null) {
+            isTransformOut = true
+            mPhotoView.transformOut()
+        } else {
+            mOnPhotoSingleTapListener?.onPhotoSingleTap()
         }
+    }
 
-        loadFile(uri)
+    private fun transformInIfNeeded() {
+        if (mInitIndex == mIndex && mPhoto?.bounds != null) {
+            mPhotoView.transformIn()
+        } else {
+            mRootView.setBackgroundColor(Color.BLACK)
+        }
     }
 
     protected open fun loadFile(uri: Uri? = null) {
-        loadImageJob?.cancel()
-        loadImageJob = GlobalScope.launch(Dispatchers.Main) {
+        if (uri == null) return
+        mLoadImageJob?.cancel()
+        mLoadImageJob = GlobalScope.launch(Dispatchers.Main) {
             val file = withContext(Dispatchers.IO) {
                 @Suppress("BlockingMethodInNonBlockingContext")
                 return@withContext try {
                     Glide.with(this@PhotoFragment)
-                            .asFile()
+                            .downloadOnly()
                             .load(uri)
                             .submit()
                             .get()
@@ -88,18 +142,12 @@ open class PhotoFragment : Fragment() {
                 }
             }
             if (isActive && file != null && file.exists()) {
-                if ("image/gif" == getFileMime(file)) {
-                    scaleImageView.visibility = View.GONE
-                    imageView.visibility = View.VISIBLE
-                    Glide.with(this@PhotoFragment)
-                            .load(file)
-                            .apply(RequestOptions().priority(Priority.HIGH).fitCenter())
-                            .into(imageView)
-                } else {
-                    imageView.visibility = View.GONE
-                    scaleImageView.visibility = View.VISIBLE
-                    scaleImageView.setImage(ImageSource.uri(Uri.fromFile(file)))
-                }
+                mPhotoView.isZoomable = "image/gif" != getFileMime(file)
+                Glide.with(this@PhotoFragment)
+                        .load(file)
+                        .apply(RequestOptions().priority(Priority.HIGH).fitCenter())
+                        .transition(withCrossFade(mCrossFadeFactory))
+                        .into(mPhotoView)
             }
         }
     }
@@ -112,12 +160,16 @@ open class PhotoFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        loadImageJob?.cancel()
+        mLoadImageJob?.cancel()
         super.onDestroyView()
     }
 
     fun setOnPhotoSingleTapListener(listener: OnPhotoSingleTapListener?) {
-        onPhotoSingleTapListener = listener
+        mOnPhotoSingleTapListener = listener
+    }
+
+    fun setIndex(index: Int) {
+        mIndex = index
     }
 
     interface OnPhotoSingleTapListener {

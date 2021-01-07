@@ -1,35 +1,40 @@
 package com.liabit.imageviewer
 
-import android.net.Uri
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import java.util.*
 
 class PhotoViewerAdapter(private val parentFragment: PhotoViewerFragment, private val deletable: Boolean)
     : FragmentStateAdapter(parentFragment) {
 
-    private var forceNotify = false
+    private var mPhotos: List<Photo> = Collections.emptyList()
 
-    private val mUris = ArrayList<Uri>()
-
-    fun setUris(uris: List<Uri>?) {
-        if (uris.isNullOrEmpty()) {
-            mUris.clear()
-        } else {
-            mUris.addAll(uris)
-        }
+    fun setPhotos(photos: List<Photo>?) {
+        mPhotos = if (photos.isNullOrEmpty()) Collections.emptyList() else photos
         notifyDataSetChanged()
     }
 
     var onPhotoSingleTapListener: PhotoFragment.OnPhotoSingleTapListener? = null
 
-    fun forceNotifyDataSetChanged() {
-        forceNotify = true
-        notifyDataSetChanged()
+    override fun getItemCount(): Int = mPhotos.size
+
+    override fun getItemId(position: Int): Long {
+        return mPhotos[position].uri.hashCode().toLong()
     }
 
-    override fun getItemCount(): Int = mUris.size
+    override fun containsItem(itemId: Long): Boolean {
+        for (photo in mPhotos) {
+            if (itemId == photo.uri.hashCode().toLong()) {
+                return true
+            }
+        }
+        return false
+    }
 
     override fun createFragment(position: Int): Fragment {
-        return parentFragment.newPhotoViewFragment(mUris[position]).also { it.setOnPhotoSingleTapListener(onPhotoSingleTapListener) }
+        return parentFragment.newPhotoViewFragment(mPhotos[position]).apply {
+            setIndex(position)
+            setOnPhotoSingleTapListener(onPhotoSingleTapListener)
+        }
     }
 }

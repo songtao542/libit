@@ -6,4 +6,16 @@
         <item name="space">10dp</item>
     </style>
 
+    <style name="PhotoViewerTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@style/AlphaInOutWindowAnimation</item>
+    </style>
+
+    <style name="AlphaInOutWindowAnimation">
+        <item name="android:windowEnterAnimation">@anim/pv_fade_in</item>
+        <item name="android:windowExitAnimation">@anim/pv_fade_out</item>
+    </style>
 </resources>

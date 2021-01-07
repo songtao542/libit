@@ -148,23 +148,5 @@
             app:mode="text"
             app:strokeColor="@android:color/white" />
 
-        <com.liabit.widget.LabelView
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:label="验证码"
-            android:orientation="vertical"
-            android:paddingHorizontal="10dp"
-            android:textColor="@android:color/black"
-            app:labelTextColor="@android:color/black"
-            app:rightArrowColor="@android:color/darker_gray"
-            app:rightArrowPadding="1dp"
-            app:rightText="获取验证码"
-            app:rightTextColor="@android:color/darker_gray"
-            app:showRightArrow="true"
-            app:textPaddingBottom="0dp" />
     </LinearLayout>
 </LinearLayout>

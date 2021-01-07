@@ -159,14 +159,14 @@ object Picker {
     }
 
     @JvmStatic
-    val REQUEST_CODE_CHOOSE = 23
+    val REQUEST_CODE_PICK_PHOTO = 23
 
     @JvmStatic
     fun pickPhoto(
             fragment: Fragment? = null,
             max: Int = 1,
             crop: Boolean = false,
-            requestCode: Int = REQUEST_CODE_CHOOSE,
+            requestCode: Int = REQUEST_CODE_PICK_PHOTO,
     ) {
         if (fragment == null) {
             return
@@ -198,7 +198,7 @@ object Picker {
             activity: Activity? = null,
             max: Int = 1,
             crop: Boolean = false,
-            requestCode: Int = REQUEST_CODE_CHOOSE,
+            requestCode: Int = REQUEST_CODE_PICK_PHOTO,
     ) {
         if (activity == null) {
             return

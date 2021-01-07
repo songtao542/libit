@@ -3,10 +3,12 @@ package com.liabit.integratepicker
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.net.Uri
-import android.widget.Toast
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import com.liabit.imageviewer.Photo
+import com.liabit.imageviewer.PhotoViewer
 import com.zhihu.matisse.Matisse
 
 /**
@@ -31,6 +33,7 @@ class PhotoSelector(private val context: Context) {
     private val mAdapter by lazy { PhotoFlowAdapter(context) }
 
     private var mFlowLayout: FlowLayout? = null
+    private var mActivity: Activity? = null
     private var mFragment: Fragment? = null
     private var mMaxShow: Int? = null
     private var mIncrementalSelection: Boolean = false
@@ -62,12 +65,43 @@ class PhotoSelector(private val context: Context) {
                 }
             }
         }
+        mFlowLayout?.setOnItemClickListener { _, index ->
+            mActivity?.also {
+                PhotoViewer.startPhotoViewer(it, computeBounds(uris), index, true)
+            } ?: run {
+                mFragment?.also {
+                    PhotoViewer.startPhotoViewer(it, computeBounds(uris), index, true)
+                } ?: run {
+                    PhotoViewer.startPhotoViewer(context, computeBounds(uris), index, true)
+                }
+            }
+        }
         mFlowLayout?.setAdapter(mAdapter)
         return this
     }
 
+    private fun computeBounds(uris: List<Uri>): ArrayList<Photo> {
+        val flowLayout = mFlowLayout ?: return Photo.fromUriList(uris)
+        val previews = ArrayList<Photo>()
+        for (i in 0 until flowLayout.childCount) {
+            val itemView = flowLayout.getChildAt(i)
+            if (itemView is ImageView) {
+                val bounds = Rect()
+                itemView.getGlobalVisibleRect(bounds)
+                previews.add(Photo(uris[i], bounds))
+            }
+        }
+        return previews
+    }
+
     fun bind(fragment: Fragment, flowLayout: FlowLayout): PhotoSelector {
         mFragment = fragment
+        bind(flowLayout)
+        return this
+    }
+
+    fun bind(activity: Activity, flowLayout: FlowLayout): PhotoSelector {
+        mActivity = activity
         bind(flowLayout)
         return this
     }
@@ -108,13 +142,20 @@ class PhotoSelector(private val context: Context) {
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == Picker.REQUEST_CODE_CHOOSE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Picker.REQUEST_CODE_PICK_PHOTO && resultCode == Activity.RESULT_OK) {
             val uris = Matisse.obtainResult(data)
             if (uris != null) {
                 if (!mIncrementalSelection) {
                     mUris.clear()
                 }
                 mUris.addAll(uris)
+                mAdapter.setUris(mUris)
+                mFlowLayout?.notifyAdapterSizeChanged()
+            }
+        } else if (requestCode == PhotoViewer.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val photos = data?.getParcelableArrayListExtra<Photo>(PhotoViewer.DELETED)
+            if (photos != null) {
+                mUris.removeAll(Photo.toUriList(photos))
                 mAdapter.setUris(mUris)
                 mFlowLayout?.notifyAdapterSizeChanged()
             }

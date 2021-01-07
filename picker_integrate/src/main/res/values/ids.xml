@@ -2,5 +2,4 @@
 <resources>
     <item name="p_index_tag" type="id" />
     <item name="p_uri_tag" type="id" />
-    <item name="p_photo_viewer_container_id" type="id" />
 </resources>

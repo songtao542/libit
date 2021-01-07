@@ -391,5 +391,10 @@
       <option name="name" value="maven4" />
       <option name="url" value="https://dl.bintray.com/liabit/citypicker" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="file:/$PROJECT_DIR$/photoview/repo" />
+    </remote-repository>
   </component>
 </project>

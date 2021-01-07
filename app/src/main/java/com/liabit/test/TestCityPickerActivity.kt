@@ -44,10 +44,6 @@ class TestCityPickerActivity : AppCompatActivity() {
                 .setLastAsAdd(true)
                 .bind(binding.photos)
 
-        binding.photos.setOnItemClickListener { _, index ->
-            PhotoViewer.start(this, photoSelector.uris, index, true)
-        }
-
         binding.pickPhoto.setOnClickListener {
             Picker.pickPhoto(this)
         }

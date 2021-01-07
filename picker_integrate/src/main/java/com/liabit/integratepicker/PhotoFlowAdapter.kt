@@ -18,9 +18,7 @@ class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
         SOLID;
     }
 
-    private val mEmptyList = emptyList<Uri>()
-
-    private var mUris: List<Uri> = mEmptyList
+    private var mUris: List<Uri> = Collections.emptyList()
     private var mMaxShow = Int.MAX_VALUE
     private var mShowLastAsAdd = true
     private var mShowAddWhenFull = true
@@ -39,12 +37,12 @@ class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
     }
 
     fun setUris(uris: List<Uri>?): PhotoFlowAdapter {
-        mUris = uris ?: mEmptyList
+        mUris = uris ?: Collections.emptyList()
         return this
     }
 
     fun clear(): PhotoFlowAdapter {
-        mUris = mEmptyList
+        mUris = Collections.emptyList()
         return this
     }
 

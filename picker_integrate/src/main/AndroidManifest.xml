@@ -7,7 +7,7 @@
         <activity
             android:name="com.liabit.imageviewer.PhotoViewerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.SwipeBack" />
+            android:theme="@style/PhotoViewerTheme" />
 
     </application>
 

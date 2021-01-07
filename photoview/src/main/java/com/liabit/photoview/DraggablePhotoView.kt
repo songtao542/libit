@@ -11,7 +11,6 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import com.gree.photoview.R
 import kotlin.math.abs
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")

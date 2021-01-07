@@ -18,7 +18,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Interpolator
 import android.widget.ImageView
 import android.widget.OverScroller
-import com.gree.photoview.*
+import com.liabit.photoview.*
 import kotlin.math.*
 
 /**

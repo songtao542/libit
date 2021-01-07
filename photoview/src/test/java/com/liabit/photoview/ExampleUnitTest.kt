@@ -1,4 +1,4 @@
-package com.gree.photoview
+package com.liabit.photoview
 
 import org.junit.Test
 

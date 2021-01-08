@@ -48,12 +48,12 @@ dependencies {
     //implementation project(':citypicker')
     //implementation project(':picker')
     //implementation project(':swipeback')
-    implementation project(':photoview')
+    //implementation project(':photoview')
     //implementation 'com.liabit.swipeback:swipeback:1.0.0'
     implementation 'com.liabit.picker:picker:1.0.0'
     implementation 'com.liabit.imagepicker:imagepicker:1.0.0'
     implementation 'com.liabit.citypicker:citypicker:1.0.0'
-//    implementation 'com.liabit.photoview:photoview:1.0.0'
+    implementation 'com.liabit.photoview:photoview:1.0.0'
 
     //implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
 

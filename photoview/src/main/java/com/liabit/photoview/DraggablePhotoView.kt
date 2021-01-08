@@ -351,11 +351,12 @@ class DraggablePhotoView : PhotoView {
 
             override fun onAnimationEnd(animation: Animator?) {
                 /*
-                 * 如果是进入的话，当然是希望最后停留在center_crop的区域。但是如果是out的话，就不应该是center_crop的位置了 ，
+                 * 如果是进入的话，当然是希望最后停留在center_crop的区域。
+                 * 但是如果是out的话，就不应该是center_crop的位置了 ，
                  * 而应该是最后变化的位置，因为当out的时候结束时，不回复视图是Normal，要不然会有一个突然闪动回去的bug
                  */
                 mTransformListener?.onTransformCompleted(mStatus)
-                if (mStatus == Status.STATE_IN || mStatus == Status.STATE_OUT) {
+                if (mStatus == Status.STATE_IN) {
                     mStatus = Status.STATE_NORMAL
                 }
             }

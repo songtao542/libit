@@ -94,7 +94,7 @@ open class PhotoFragment : Fragment() {
         mPhotoView.setAlphaChangeListener(object : DraggablePhotoView.OnAlphaChangeListener {
             override fun onAlphaChange(status: DraggablePhotoView.Status?, alpha: Int) {
                 //mRootView.alpha = alpha / 255f
-                (parentFragment as? PhotoViewerFragment)?.view?.alpha = alpha / 255f
+                (parentFragment as? PhotoViewerFragment)?.view?.setBackgroundColor(Color.argb(alpha, 0, 0, 0))
             }
         })
         mPhotoView.setOnTransformListener(object : DraggablePhotoView.OnTransformListener {

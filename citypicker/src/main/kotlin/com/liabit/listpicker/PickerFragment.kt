@@ -106,8 +106,7 @@ open class PickerFragment<I : Item> : AppCompatDialogFragment(), TextWatcher, Vi
             it.setHasFixedSize(true)
             var index = 0
             mSectionItemDecoration?.let { sd ->
-                it.addItemDecoration(sd, index)
-                index++
+                it.addItemDecoration(sd, index++)
             }
             it.addItemDecoration(DividerItemDecoration(inflater.context), index)
             it.adapter = mAdapter

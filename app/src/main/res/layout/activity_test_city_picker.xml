@@ -42,13 +42,20 @@
         android:text="Pick School"
         android:textAllCaps="false" />
 
-
     <Button
         android:id="@+id/pickCollege"
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:text="Pick College"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/inputDialog"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="InputDialog"
         android:textAllCaps="false" />
 
     <com.liabit.integratepicker.FlowLayout

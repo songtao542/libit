@@ -17,6 +17,7 @@ import com.liabit.listpicker.PickerFragment
 import com.liabit.listpicker.model.Item
 import com.liabit.test.databinding.ActivityTestCityPickerBinding
 import com.liabit.viewbinding.inflate
+import com.liabit.widget.InputDialog
 import com.sport.day.net.Mock
 import com.sport.day.net.MockPicture
 
@@ -85,6 +86,15 @@ class TestCityPickerActivity : AppCompatActivity() {
             Picker.pick(this, "选择院系", mCollegeIndex, values) {
                 Toast.makeText(this@TestCityPickerActivity, it.toString(), Toast.LENGTH_SHORT).show()
             }
+        }
+
+        binding.inputDialog.setOnClickListener {
+            InputDialog(this)
+                    .setTitle("请输入姓名")
+                    .setOnConfirmListener {
+                        Toast.makeText(this@TestCityPickerActivity, it, Toast.LENGTH_SHORT).show()
+                    }
+                    .show()
         }
     }
 

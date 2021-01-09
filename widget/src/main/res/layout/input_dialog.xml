@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/input_dialog_title" />
+
+    <FrameLayout
+        android:id="@+id/dialogContentLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/input_dialog_content_margin_top"
+        android:gravity="center"
+        android:padding="@dimen/input_dialog_content_bg_stroke_width">
+
+        <EditText
+            android:id="@+id/input_dialog_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/input_dialog_edit_text_background"
+            android:gravity="center"
+            android:imeOptions="actionDone"
+            android:inputType="numberSigned"
+            android:maxWidth="220dp"
+            android:minWidth="200dp"
+            android:paddingHorizontal="10dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:textSize="14sp" />
+
+    </FrameLayout>
+
+    <include layout="@layout/input_dialog_button_bar" />
+
+</LinearLayout>

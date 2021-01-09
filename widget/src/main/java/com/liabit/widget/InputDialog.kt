@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 
@@ -33,8 +34,7 @@ class InputDialog(private val context: Context) {
         val context = ContextThemeWrapper(context, mDialogTheme)
         val view = LayoutInflater.from(context).inflate(R.layout.input_dialog, null)
         val editText = view.findViewById<EditText>(R.id.input_dialog_editText)
-
-        return AlertDialog.Builder(context, mDialogTheme)
+        val dialog = AlertDialog.Builder(context, mDialogTheme)
                 .setView(view)
                 .setTitle(mDialogTitle ?: context.getString(R.string.input_dialog_title))
                 .setNegativeButton(R.string.input_dialog_cancel) { d, _ ->
@@ -44,6 +44,14 @@ class InputDialog(private val context: Context) {
                     d.dismiss()
                     mOnConfirmListener?.invoke(editText.text?.toString() ?: "")
                 }
-                .show()
+                .create()
+        editText.requestFocus()
+        dialog.window?.let {
+            it.setLayout((context.resources.displayMetrics.widthPixels / 4f * 3f).toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
+            it.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+            it.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+        }
+        dialog.show()
+        return dialog
     }
 }

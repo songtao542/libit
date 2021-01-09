@@ -41,11 +41,11 @@ object Picker {
      * @param column2SubOfColumn1Type 0:取前半部分; 大于 0: 取后半部分
      */
     @JvmStatic
-    fun <T1> pick(
+    fun <T> pick(
             activity: FragmentActivity?,
             title: String,
             value1: Int,
-            column1: Array<T1>,
+            column1: Array<T>,
             column2SubOfColumn1Type: Int,
             handler: ((value1: Int, value2: Int) -> Unit),
     ) {
@@ -55,6 +55,24 @@ object Picker {
             pickerFragment.setColumn2SubOfColumn1(column2SubOfColumn1Type)
             pickerFragment.value1 = value1
             pickerFragment.show(it, "picker-c")
+        }
+    }
+
+    @JvmStatic
+    fun <T> pick(
+            activity: FragmentActivity?,
+            title: String,
+            value: Int,
+            column: Array<T>,
+            handler: ((value: Int) -> Unit),
+    ) {
+        activity?.supportFragmentManager?.let {
+            val pickerFragment = PickerFragment.newInstance(title, column.toStringArray())
+            pickerFragment.setOnResultListener { v1, _ ->
+                handler.invoke(v1)
+            }
+            pickerFragment.value1 = value
+            pickerFragment.show(it, "picker-cc")
         }
     }
 
@@ -78,33 +96,19 @@ object Picker {
     }
 
     @JvmStatic
-    fun <T1> pick(
-            activity: FragmentActivity?,
-            title: String,
-            value: Int,
-            column: Array<T1>,
-            handler: ((value: Int) -> Unit),
-    ) {
-        activity?.supportFragmentManager?.let {
-            val pickerFragment = PickerFragment.newInstance(title, column.toStringArray())
-            pickerFragment.setOnResultListener { v1, _ ->
-                handler.invoke(v1)
-            }
-            pickerFragment.value1 = value
-            pickerFragment.show(it, "picker-cc")
-        }
-    }
-
-    @JvmStatic
     fun pick(
             activity: FragmentActivity?,
             title: String,
             value: Int,
             provider: ((picker: PickerFragment) -> Unit),
-            handler: ((value1: Int, value2: Int) -> Unit)? = null,
-            valueHandler: ((value1: String, value2: String) -> Unit)? = null,
+            handler: ((value: Int) -> Unit)? = null,
+            valueHandler: ((value: String) -> Unit)? = null,
     ) {
-        pick(activity, title, value, 0, provider, handler, valueHandler)
+        pick(activity, title, value, 0, provider, { v1, _ ->
+            handler?.invoke(v1)
+        }) { v1, _ ->
+            valueHandler?.invoke(v1)
+        }
     }
 
     @JvmStatic

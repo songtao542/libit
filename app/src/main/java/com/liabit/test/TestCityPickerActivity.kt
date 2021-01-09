@@ -69,8 +69,8 @@ class TestCityPickerActivity : AppCompatActivity() {
                     .setMultipleMode(false)
                     .setSectionEnabled(false)
                     .setSearchHint("学校名称")
-                    .setItem(MutableList(10) {
-                        School(Mock.schoolName(), Mock.collegeName())
+                    .setItem(MutableList(40) {
+                        School(Mock.schoolName())
                     })
                     .setOnResultListener(object : OnResultListener<School> {
                         override fun onResult(data: List<School>) {
@@ -93,17 +93,13 @@ class TestCityPickerActivity : AppCompatActivity() {
         photoSelector.onActivityResult(requestCode, resultCode, data)
     }
 
-    class School(private val name: String, private val subname: String) : Item {
+    data class School(private val name: String) : Item {
         override fun getItemTitle(): String {
             return name
         }
 
         override fun getItemSubtitle(): String {
-            return subname
-        }
-
-        override fun toString(): String {
-            return name
+            return ""
         }
     }
 

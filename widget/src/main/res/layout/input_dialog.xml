@@ -23,7 +23,6 @@
             android:background="@drawable/input_dialog_edit_text_background"
             android:gravity="center"
             android:imeOptions="actionDone"
-            android:inputType="numberSigned"
             android:maxWidth="220dp"
             android:minWidth="200dp"
             android:paddingHorizontal="10dp"

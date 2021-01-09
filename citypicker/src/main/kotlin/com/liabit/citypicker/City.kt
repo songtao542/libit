@@ -4,9 +4,6 @@ import android.text.TextUtils
 import com.liabit.listpicker.model.Item
 import java.util.regex.Pattern
 
-/**
- * author Bro0cL on 2016/1/26.
- */
 open class City(
         var name: String,
         var province: String,

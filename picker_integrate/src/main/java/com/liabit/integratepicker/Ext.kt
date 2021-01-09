@@ -31,9 +31,15 @@ fun Context.dip(dp: Float): Int {
  */
 fun NumberPicker.setDividerColor(color: Int) {
     try {
-        NumberPicker::class.java.getDeclaredField("mSelectionDivider").let {
-            it.isAccessible = true
-            it.set(this, ColorDrawable(color))
+        NumberPicker::class.java.declaredFields.let {
+            for (field in it) {
+                Log.d("TTTT", "field.name=${field.name}")
+                if (field.name == "mSelectionDivider") {
+                    field.isAccessible = true
+                    field.set(this, ColorDrawable(color))
+                    break
+                }
+            }
         }
     } catch (e: Throwable) {
         Log.d("NumberPickerExt", "NumberPicker.setDividerColor error: ", e)

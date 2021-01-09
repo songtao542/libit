@@ -9,5 +9,7 @@
     <string name="cp_locating">正在定位…</string>
     <string name="cp_please_select">请选择</string>
     <string name="cp_hot_city">热门城市</string>
+    <string name="cp_hot">热门 </string>
     <string name="cp_unknown">未知</string>
+    <string name="cp_located">定位</string>
 </resources>

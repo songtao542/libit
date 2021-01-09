@@ -61,6 +61,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:selectionDividerHeight="1px"
+                    android:theme="@style/NumberPickStyle"
+                    tools:ignore="UnusedAttribute"
                     tools:targetApi="honeycomb" />
 
                 <NumberPicker
@@ -68,7 +71,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:selectionDividerHeight="1px"
+                    android:theme="@style/NumberPickStyle"
                     android:visibility="gone"
+                    tools:ignore="UnusedAttribute"
                     tools:targetApi="honeycomb" />
 
             </LinearLayout>

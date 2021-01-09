@@ -4,9 +4,11 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.liabit.citypicker.City
 import com.liabit.citypicker.CityPickerFragment
-import com.liabit.citypicker.adapter.CityPicker
-import com.liabit.citypicker.model.City
+import com.liabit.citypicker.OnRequestLocationListener
+import com.liabit.listpicker.IPicker
+import com.liabit.listpicker.OnResultListener
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
@@ -14,6 +16,7 @@ import com.zhihu.matisse.filter.Filter
 import com.zhihu.matisse.filter.GifSizeFilter
 import java.util.*
 
+@Suppress("unused")
 object Picker {
 
     @JvmStatic
@@ -75,15 +78,33 @@ object Picker {
     }
 
     @JvmStatic
+    fun <T1> pick(
+            activity: FragmentActivity?,
+            title: String,
+            value: Int,
+            column: Array<T1>,
+            handler: ((value: Int) -> Unit),
+    ) {
+        activity?.supportFragmentManager?.let {
+            val pickerFragment = PickerFragment.newInstance(title, column.toStringArray())
+            pickerFragment.setOnResultListener { v1, _ ->
+                handler.invoke(v1)
+            }
+            pickerFragment.value1 = value
+            pickerFragment.show(it, "picker-cc")
+        }
+    }
+
+    @JvmStatic
     fun pick(
             activity: FragmentActivity?,
             title: String,
-            value1: Int,
+            value: Int,
             provider: ((picker: PickerFragment) -> Unit),
             handler: ((value1: Int, value2: Int) -> Unit)? = null,
             valueHandler: ((value1: String, value2: String) -> Unit)? = null,
     ) {
-        pick(activity, title, value1, 0, provider, handler, valueHandler)
+        pick(activity, title, value, 0, provider, handler, valueHandler)
     }
 
     @JvmStatic
@@ -114,22 +135,24 @@ object Picker {
             handler: ((cities: List<City>) -> Unit),
     ) {
         CityPickerFragment.Builder()
-                .fragmentManager(activity?.supportFragmentManager)
-                .animationStyle(R.style.DefaultCityPickerAnimation)
-                .multipleMode(multipleMode)
-                .enableHotCities(true)
-                .enableLocation(true)
-                .useDefaultCities(true)
-                .resultListener {
-                    handler.invoke(it)
-                }
+                .setFragmentManager(activity?.supportFragmentManager)
+                .setAnimationStyle(R.style.DefaultCityPickerAnimation)
+                .setMultipleMode(multipleMode)
+                .setDefaultHotCitiesEnabled(true)
+                .setLocatedCityEnable(true)
+                .setUseDefaultCities(true)
+                .setOnResultListener(object : OnResultListener<City> {
+                    override fun onResult(data: List<City>) {
+                        handler.invoke(data)
+                    }
+                })
                 .show()
     }
 
     @JvmStatic
     fun pickCity(
             activity: FragmentActivity?,
-            provider: ((picker: CityPicker) -> Unit),
+            provider: ((picker: IPicker<City>) -> Unit),
             handler: ((cities: List<City>) -> Unit),
     ) {
         pickCity(activity, true, provider, handler)
@@ -139,22 +162,26 @@ object Picker {
     fun pickCity(
             activity: FragmentActivity?,
             multipleMode: Boolean,
-            provider: ((picker: CityPicker) -> Unit),
+            provider: ((picker: IPicker<City>) -> Unit),
             handler: ((cities: List<City>) -> Unit),
     ) {
         CityPickerFragment.Builder()
-                .fragmentManager(activity?.supportFragmentManager)
-                .animationStyle(R.style.DefaultCityPickerAnimation)
-                .multipleMode(multipleMode)
-                .enableHotCities(false)
-                .enableLocation(false)
-                .useDefaultCities(false)
-                .requestCitiesListener { cityPicker ->
-                    provider.invoke(cityPicker)
-                }
-                .resultListener {
-                    handler.invoke(it)
-                }
+                .setFragmentManager(activity?.supportFragmentManager)
+                .setAnimationStyle(R.style.DefaultCityPickerAnimation)
+                .setMultipleMode(multipleMode)
+                .setDefaultHotCitiesEnabled(false)
+                .setLocatedCityEnable(false)
+                .setUseDefaultCities(false)
+                .setOnRequestLocationListener(object : OnRequestLocationListener {
+                    override fun requestLocation(picker: IPicker<City>) {
+                        provider.invoke(picker)
+                    }
+                })
+                .setOnResultListener(object : OnResultListener<City> {
+                    override fun onResult(data: List<City>) {
+                        handler.invoke(data)
+                    }
+                })
                 .show()
     }
 

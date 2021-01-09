@@ -34,6 +34,22 @@
         android:text="Pick Photo"
         android:textAllCaps="false" />
 
+    <Button
+        android:id="@+id/pickSchool"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Pick School"
+        android:textAllCaps="false" />
+
+
+    <Button
+        android:id="@+id/pickCollege"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Pick College"
+        android:textAllCaps="false" />
 
     <com.liabit.integratepicker.FlowLayout
         android:id="@+id/photos"

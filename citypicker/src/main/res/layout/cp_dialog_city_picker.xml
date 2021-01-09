@@ -26,13 +26,12 @@
             android:layout_centerInParent="true"
             android:background="?attr/cpOverlayBackground"
             android:gravity="center"
-            android:paddingStart="@dimen/cp_content_padding_start"
             android:textColor="?attr/cpOverlayTextColor"
             android:textSize="?attr/cpOverlayTextSize"
             android:visibility="gone" />
 
         <!--右侧字母导航-->
-        <com.liabit.citypicker.view.SideIndexBar
+        <com.liabit.listpicker.SideIndexBar
             android:id="@+id/cp_side_index_bar"
             android:layout_width="@dimen/cp_index_bar_width"
             android:layout_height="match_parent"

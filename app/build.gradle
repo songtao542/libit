@@ -81,6 +81,7 @@ dependencies {
     implementation project(':citypicker')
     implementation project(':swipeback')
     implementation project(':photoview')
+    implementation project(':dialog')
 
     implementation 'com.liabit.imagepicker:imagepicker:1.0.0'
 

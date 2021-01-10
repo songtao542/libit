@@ -140,7 +140,6 @@ object Picker {
     ) {
         CityPickerFragment.Builder()
                 .setFragmentManager(activity?.supportFragmentManager)
-                .setAnimationStyle(R.style.DefaultCityPickerAnimation)
                 .setMultipleMode(multipleMode)
                 .setDefaultHotCitiesEnabled(true)
                 .setLocatedCityEnable(true)
@@ -171,7 +170,6 @@ object Picker {
     ) {
         CityPickerFragment.Builder()
                 .setFragmentManager(activity?.supportFragmentManager)
-                .setAnimationStyle(R.style.DefaultCityPickerAnimation)
                 .setMultipleMode(multipleMode)
                 .setDefaultHotCitiesEnabled(false)
                 .setLocatedCityEnable(false)

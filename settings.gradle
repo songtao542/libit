@@ -1,3 +1,4 @@
+include ':dialog'
 include ':citypicker'
 include ':color_util'
 include ':timerview'

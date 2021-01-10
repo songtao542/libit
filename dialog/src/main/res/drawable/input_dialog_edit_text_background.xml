@@ -4,19 +4,19 @@
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <stroke android:width="1dp" android:color="@color/input_dialog_light_blue" />
-            <corners android:radius="@dimen/input_dialog_edit_view_radius" />
+            <corners android:radius="@dimen/dialog_edit_view_radius" />
         </shape>
     </item>
     <item android:state_focused="true">
         <shape android:shape="rectangle">
             <stroke android:width="1dp" android:color="@color/input_dialog_light_blue" />
-            <corners android:radius="@dimen/input_dialog_edit_view_radius" />
+            <corners android:radius="@dimen/dialog_edit_view_radius" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
             <stroke android:width="1dp" android:color="#cccccc" />
-            <corners android:radius="@dimen/input_dialog_edit_view_radius" />
+            <corners android:radius="@dimen/dialog_edit_view_radius" />
         </shape>
     </item>
 

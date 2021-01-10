@@ -1,31 +1,30 @@
-package com.liabit.widget
+package com.liabit.dialog
 
 import android.content.Context
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
-import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 
-class InputDialog(private val context: Context) {
+class InputDialogBuilder(private val context: Context) {
 
-    private var mDialogTheme = R.style.InputDialog
+    private var mDialogTheme = R.style.DefaultDialogTheme
     private var mDialogTitle: String? = null
 
     private var mOnConfirmListener: ((text: String) -> Unit)? = null
 
-    fun setTheme(themeResId: Int): InputDialog {
+    fun setTheme(themeResId: Int): InputDialogBuilder {
         mDialogTheme = themeResId
         return this
     }
 
-    fun setTitle(title: String): InputDialog {
+    fun setTitle(title: String): InputDialogBuilder {
         mDialogTitle = title
         return this
     }
 
-    fun setOnConfirmListener(listener: ((text: String) -> Unit)? = null): InputDialog {
+    fun setOnConfirmListener(listener: ((text: String) -> Unit)? = null): InputDialogBuilder {
         mOnConfirmListener = listener
         return this
     }
@@ -37,10 +36,10 @@ class InputDialog(private val context: Context) {
         val dialog = AlertDialog.Builder(context, mDialogTheme)
                 .setView(view)
                 .setTitle(mDialogTitle ?: context.getString(R.string.input_dialog_title))
-                .setNegativeButton(R.string.input_dialog_cancel) { d, _ ->
+                .setNegativeButton(R.string.dialog_cancel) { d, _ ->
                     d.dismiss()
                 }
-                .setPositiveButton(R.string.input_dialog_confirm) { d, _ ->
+                .setPositiveButton(R.string.dialog_confirm) { d, _ ->
                     d.dismiss()
                     mOnConfirmListener?.invoke(editText.text?.toString() ?: "")
                 }

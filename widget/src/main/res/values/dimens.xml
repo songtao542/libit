@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="input_dialog_edit_view_height">40dp</dimen>
-    <dimen name="input_dialog_edit_view_radius">8dp</dimen>
-    <dimen name="input_dialog_buttonbar_height">48dp</dimen>
-    <dimen name="input_action_bar_content_inset">15dp</dimen>
-    <dimen name="input_dialog_content_bg_stroke_width">1dp</dimen>
-    <dimen name="input_dialog_content_bg_radius">0dp</dimen>
-    <dimen name="input_dialog_content_bg_radius_big">8dp</dimen>
-    <dimen name="input_dialog_title_text_size">17sp</dimen>
-    <dimen name="input_dialog_title_padding">20dp</dimen>
-    <dimen name="input_dialog_content_margin_top">24dp</dimen>
-
 </resources>

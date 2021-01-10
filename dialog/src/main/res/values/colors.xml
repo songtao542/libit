@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="input_dialog_light_blue">#007cee</color>
+    <color name="input_dialog_light_blue_pressed">#0372d9</color>
+    <color name="input_dialog_divider_color">#c9c9c9</color>
+    <color name="input_editor_bg_color">#eee</color>
+    <color name="input_dialog_content_bg_stroke_color">#ddd</color>
+</resources>

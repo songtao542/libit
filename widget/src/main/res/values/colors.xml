@@ -3,11 +3,4 @@
     <color name="progress_color">#FFFFD600</color>
     <color name="state_button_gradient_start_color">#FF2D3547</color>
     <color name="state_button_gradient_end_color">#902D3547</color>
-
-
-    <color name="input_dialog_light_blue">#007cee</color>
-    <color name="input_dialog_light_blue_pressed">#0372d9</color>
-    <color name="input_dialog_divider_color">#c9c9c9</color>
-    <color name="input_editor_bg_color">#eee</color>
-    <color name="input_dialog_content_bg_stroke_color">#ddd</color>
 </resources>

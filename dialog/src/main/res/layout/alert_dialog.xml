@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/input_dialog_title" />
+
+    <FrameLayout
+        android:id="@+id/dialogContentLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/dialog_content_margin_top"
+        android:gravity="center"
+        android:padding="@dimen/dialog_content_bg_stroke_width">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dialog_message_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:maxWidth="220dp"
+            android:minWidth="200dp"
+            android:paddingHorizontal="10dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:textSize="14sp" />
+
+    </FrameLayout>
+
+    <include layout="@layout/input_dialog_button_bar" />
+
+</LinearLayout>

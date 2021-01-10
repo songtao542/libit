@@ -11,9 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/input_dialog_content_margin_top"
+        android:layout_marginBottom="@dimen/dialog_content_margin_top"
         android:gravity="center"
-        android:padding="@dimen/input_dialog_content_bg_stroke_width">
+        android:padding="@dimen/dialog_content_bg_stroke_width">
 
         <EditText
             android:id="@+id/input_dialog_editText"

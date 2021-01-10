@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.liabit.dialog.AlertDialogBuilder
+import com.liabit.dialog.InputDialogBuilder
 import com.liabit.extension.layoutUnderSystemUI
 import com.liabit.imageviewer.PhotoViewer
 import com.liabit.integratepicker.PhotoFlowAdapter
@@ -17,7 +19,6 @@ import com.liabit.listpicker.PickerFragment
 import com.liabit.listpicker.model.Item
 import com.liabit.test.databinding.ActivityTestCityPickerBinding
 import com.liabit.viewbinding.inflate
-import com.liabit.widget.InputDialog
 import com.sport.day.net.Mock
 import com.sport.day.net.MockPicture
 
@@ -89,10 +90,19 @@ class TestCityPickerActivity : AppCompatActivity() {
         }
 
         binding.inputDialog.setOnClickListener {
-            InputDialog(this)
+            InputDialogBuilder(this)
                     .setTitle("请输入姓名")
                     .setOnConfirmListener {
                         Toast.makeText(this@TestCityPickerActivity, it, Toast.LENGTH_SHORT).show()
+                    }
+                    .show()
+        }
+        binding.alertDialog.setOnClickListener {
+            AlertDialogBuilder(this)
+                    .setTitle("温馨提示")
+                    .setMessage("确定要删除吗？")
+                    .setOnConfirmListener {
+                        Toast.makeText(this@TestCityPickerActivity, "alert dialog", Toast.LENGTH_SHORT).show()
                     }
                     .show()
         }

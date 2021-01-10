@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="DefaultDialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/input_dialog_light_blue</item>
+    </style>
+
+    <style name="DefaultDialogTitleStyle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/input_dialog_light_blue</item>
+    </style>
+
+    <style name="DefaultDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@drawable/input_dialog_background</item>
+        <item name="android:windowMinWidthMajor">80%</item>
+        <item name="android:windowMinWidthMinor">80%</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/DefaultDialogButtonStyle</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/DefaultDialogButtonStyle</item>
+        <item name="android:windowTitleStyle">@style/DefaultDialogTitleStyle</item>
+    </style>
+
+</resources>

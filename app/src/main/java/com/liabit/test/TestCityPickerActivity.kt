@@ -66,7 +66,7 @@ class TestCityPickerActivity : AppCompatActivity() {
         binding.pickSchool.setOnClickListener {
             PickerFragment.Builder<School>()
                     .setFragmentManager(supportFragmentManager)
-                    .setAnimationStyle(R.style.DefaultCityPickerAnimation)
+                    .setAnimationStyle(R.style.DefaultListPickerAnimation)
                     .setMultipleMode(false)
                     .setSectionEnabled(false)
                     .setSearchHint("学校名称")

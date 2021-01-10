@@ -41,7 +41,7 @@ open class PickerFragment<I : Item> : AppCompatDialogFragment(), TextWatcher, Vi
     private var mUserDefaultCities = true
     private var mResults: List<Item>? = null
     private var mEnableAnim = false
-    private var mAnimStyle: Int = R.style.DefaultCityPickerAnimation
+    private var mAnimStyle: Int = R.style.DefaultListPickerAnimation
     private var mMultipleMode = false
     private var mSearchHint: String? = null
     private var mEnableSection = true
@@ -70,7 +70,7 @@ open class PickerFragment<I : Item> : AppCompatDialogFragment(), TextWatcher, Vi
     @SuppressLint("ResourceType")
     fun setAnimationStyle(@StyleRes style: Int) {
         mEnableAnim = true
-        mAnimStyle = if (style <= 0) R.style.DefaultCityPickerAnimation else style
+        mAnimStyle = if (style <= 0) R.style.DefaultListPickerAnimation else style
     }
 
     fun setMultipleMode(multipleMode: Boolean) {
@@ -89,7 +89,7 @@ open class PickerFragment<I : Item> : AppCompatDialogFragment(), TextWatcher, Vi
         //Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.DefaultCityPickerTheme);
         //LayoutInflater themeInflater = inflater.cloneInContext(contextThemeWrapper);
         //view = themeInflater.inflate(R.layout.cp_dialog_city_picker, container, false);
-        inflater.context.theme.applyStyle(R.style.DefaultCityPickerTheme, false)
+        inflater.context.theme.applyStyle(R.style.DefaultListPickerTheme, false)
         val view: View = inflater.inflate(R.layout.cp_dialog_city_picker, container, false)
         view.findViewById<View>(R.id.toolbar).setPadding(0, getStatusBarHeight(requireContext()), 0, 0)
 
@@ -129,7 +129,7 @@ open class PickerFragment<I : Item> : AppCompatDialogFragment(), TextWatcher, Vi
             it.visibility = if (mEnableSection) View.VISIBLE else View.GONE
         }
         mSearchBox = view.findViewById(R.id.cp_search_box)
-        mSearchHint?.let { mSearchBox.setHint(it) }
+        mSearchHint?.let { mSearchBox.hint = it }
         mSearchBox.addTextChangedListener(this)
         val confirmBtn: TextView = view.findViewById(R.id.cp_confirm)
         confirmBtn.setOnClickListener(this)

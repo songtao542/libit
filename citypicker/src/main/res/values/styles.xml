@@ -1,12 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="DefaultCityPickerAnimation" parent="@android:style/Animation">
+    <style name="DefaultListPickerAnimation" parent="@android:style/Animation">
         <item name="android:windowEnterAnimation">@anim/cp_push_bottom_in</item>
         <item name="android:windowExitAnimation">@anim/cp_push_bottom_out</item>
     </style>
 
-
-    <style name="DefaultCityPickerTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="DefaultListPickerTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="cpConfirmTextSize">@dimen/cp_cancel_text_size</item>
         <item name="cpConfirmTextColor">@color/cp_color_gray</item>

@@ -33,7 +33,6 @@ fun NumberPicker.setDividerColor(color: Int) {
     try {
         NumberPicker::class.java.declaredFields.let {
             for (field in it) {
-                Log.d("TTTT", "field.name=${field.name}")
                 if (field.name == "mSelectionDivider") {
                     field.isAccessible = true
                     field.set(this, ColorDrawable(color))

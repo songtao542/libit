@@ -131,7 +131,7 @@ class ItemListAdapter<I : Item>(val context: Context, val multiple: Boolean) : R
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
             0 -> {
-                VariableViewHolder(LayoutInflater.from(context).inflate(R.layout.cp_list_item_location_layout, parent, false))
+                VariableViewHolder(LayoutInflater.from(context).inflate(R.layout.cp_list_item_variable_layout, parent, false))
             }
             1 -> {
                 HotViewHolder(LayoutInflater.from(context).inflate(R.layout.cp_list_item_hot_layout, parent, false))

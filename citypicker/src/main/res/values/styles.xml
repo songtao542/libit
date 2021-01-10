@@ -11,10 +11,15 @@
         <item name="cpConfirmTextColor">@color/cp_color_gray</item>
 
         <item name="cpClearTextIcon">@drawable/cp_clear</item>
+        <item name="cpTitle">@string/cp_please_select</item>
+        <item name="cpTitleTextSize">@dimen/cp_title_text_size</item>
+        <item name="cpTitleTextColor">@color/cp_color_gray_dark</item>
         <item name="cpSearchTextSize">@dimen/cp_search_text_size</item>
         <item name="cpSearchTextColor">@color/cp_color_gray_dark</item>
         <item name="cpSearchHintText">@string/cp_search_hint_text</item>
         <item name="cpSearchHintTextColor">@color/cp_color_gray_light</item>
+        <item name="cpSearchBackground">@drawable/cp_search_edit_text_background</item>
+        <item name="cpSearchDrawableStart">@drawable/cp_ic_search</item>
         <!--<item name="cpSearchCursorDrawable">@color/cp_color_gray_dark</item>-->
 
         <item name="cpListItemHeight">@dimen/cp_list_item_height</item>

@@ -8,49 +8,71 @@
     android:background="@android:color/white"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    tools:showIn="@layout/cp_dialog_city_picker">
+    tools:showIn="@layout/cp_dialog_list_picker">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/cp_back"
         android:layout_width="?attr/actionBarSize"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/selectableItemBackground"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
+        android:focusable="true"
         android:scaleType="centerInside"
         app:srcCompat="?attr/cpBackIcon" />
 
-    <androidx.appcompat.widget.AppCompatEditText
+    <FrameLayout
         android:id="@+id/cp_search_box"
         android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_weight="1"
-        android:background="@null"
-        android:hint="?attr/cpSearchHintText"
-        android:maxLength="20"
-        android:maxLines="1"
-        android:paddingLeft="16dp"
-        android:textColor="?attr/cpSearchTextColor"
-        android:textColorHint="?attr/cpSearchHintTextColor"
-        android:textSize="?attr/cpSearchTextSize" />
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1">
 
-    <!--android:textCursorDrawable="?attr/cpSearchCursorDrawable"-->
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/cp_search_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/cp_search_height"
+            android:layout_gravity="center_vertical"
+            android:background="?attr/cpSearchBackground"
+            android:drawableStart="?attr/cpSearchDrawableStart"
+            android:drawablePadding="5dp"
+            android:hint="?attr/cpSearchHintText"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:paddingStart="8dp"
+            android:textColor="?attr/cpSearchTextColor"
+            android:textColorHint="?attr/cpSearchHintTextColor"
+            android:textSize="?attr/cpSearchTextSize" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/cp_clear_all"
-        android:layout_width="?attr/actionBarSize"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:padding="2dp"
-        android:scaleType="centerInside"
-        android:visibility="gone"
-        app:srcCompat="?attr/cpClearTextIcon" />
+        <!--android:textCursorDrawable="?attr/cpSearchCursorDrawable"-->
 
-    <View
-        android:id="@+id/cp_divider"
-        android:layout_width="1px"
-        android:layout_height="14dp"
-        android:background="@color/cp_color_gray_light" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cp_search_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:paddingStart="8dp"
+            android:text="?attr/cpTitle"
+            android:textColor="?attr/cpTitleTextColor"
+            android:textColorHint="?attr/cpSearchHintTextColor"
+            android:textSize="?attr/cpTitleTextSize"
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cp_clear_all"
+            android:layout_width="@dimen/cp_search_height"
+            android:layout_height="@dimen/cp_search_height"
+            android:layout_gravity="center_vertical|end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="2dp"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            app:srcCompat="?attr/cpClearTextIcon" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/cp_confirm"

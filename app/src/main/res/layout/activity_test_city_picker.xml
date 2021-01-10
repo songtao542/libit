@@ -17,6 +17,13 @@
         android:layout_marginTop="2dp"
         android:text="Show City Picker"
         android:textAllCaps="false" />
+    <Button
+        android:id="@+id/showMultiCityPicker"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Show Multi City Picker"
+        android:textAllCaps="false" />
 
     <Button
         android:id="@+id/testPhotoViewer"

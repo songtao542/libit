@@ -46,6 +46,13 @@ class TestCityPickerActivity : AppCompatActivity() {
             }
         }
 
+        binding.showMultiCityPicker.setOnClickListener {
+            Picker.pickCity(this, true) {
+                Log.d("TTTT", "result===>$it")
+                Toast.makeText(this@TestCityPickerActivity, it.toString(), Toast.LENGTH_SHORT).show()
+            }
+        }
+
         val uris = MutableList(MockPicture.size) {
             Uri.parse(MockPicture[it])
         }

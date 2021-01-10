@@ -11,6 +11,7 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.*
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.StyleRes
@@ -30,7 +31,9 @@ import com.liabit.listpicker.model.VariableState
 open class PickerFragment<I : Item> : AppCompatDialogFragment(), TextWatcher, View.OnClickListener, SideIndexBar.OnIndexTouchedChangedListener, InnerListener<I>, IPicker<I> {
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mEmptyView: View
-    private lateinit var mSearchBox: EditText
+    private lateinit var mSearchEditText: EditText
+    private lateinit var mSearchTitle: TextView
+    private lateinit var mSearchBox: FrameLayout
     private lateinit var mClearAllBtn: ImageView
     private var mLoadingView: View? = null
     private var mSideIndexBar: SideIndexBar? = null
@@ -45,6 +48,9 @@ open class PickerFragment<I : Item> : AppCompatDialogFragment(), TextWatcher, Vi
     private var mMultipleMode = false
     private var mSearchHint: String? = null
     private var mEnableSection = true
+    private var mEnableSearch = true
+    private var mTitle: String? = null
+    private var mTitleResId = 0
     private var mHotItem: HotItem<I>? = null
     private var mVariableItem: I? = null
     private var mVariableState = 0
@@ -85,12 +91,24 @@ open class PickerFragment<I : Item> : AppCompatDialogFragment(), TextWatcher, Vi
         mEnableSection = enable
     }
 
+    fun setSearchEnabled(enable: Boolean) {
+        mEnableSearch = enable
+    }
+
+    fun setTitle(title: String?) {
+        mTitle = title
+    }
+
+    fun setTitle(resId: Int) {
+        mTitleResId = resId
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         //Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.DefaultCityPickerTheme);
         //LayoutInflater themeInflater = inflater.cloneInContext(contextThemeWrapper);
         //view = themeInflater.inflate(R.layout.cp_dialog_city_picker, container, false);
         inflater.context.theme.applyStyle(R.style.DefaultListPickerTheme, false)
-        val view: View = inflater.inflate(R.layout.cp_dialog_city_picker, container, false)
+        val view: View = inflater.inflate(R.layout.cp_dialog_list_picker, container, false)
         view.findViewById<View>(R.id.toolbar).setPadding(0, getStatusBarHeight(requireContext()), 0, 0)
 
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
@@ -129,19 +147,34 @@ open class PickerFragment<I : Item> : AppCompatDialogFragment(), TextWatcher, Vi
             it.visibility = if (mEnableSection) View.VISIBLE else View.GONE
         }
         mSearchBox = view.findViewById(R.id.cp_search_box)
-        mSearchHint?.let { mSearchBox.hint = it }
-        mSearchBox.addTextChangedListener(this)
+        mSearchEditText = view.findViewById(R.id.cp_search_edit_text)
+        mSearchTitle = view.findViewById(R.id.cp_search_text)
+        mSearchHint?.let { mSearchEditText.hint = it }
+        mSearchEditText.addTextChangedListener(this)
         val confirmBtn: TextView = view.findViewById(R.id.cp_confirm)
         confirmBtn.setOnClickListener(this)
         mClearAllBtn = view.findViewById(R.id.cp_clear_all)
         mClearAllBtn.setOnClickListener(this)
         view.findViewById<View>(R.id.cp_back).setOnClickListener(this)
         if (mMultipleMode) {
+            mSearchBox.setPaddingRelative(0, 0, 0, 0)
             confirmBtn.visibility = View.VISIBLE
-            view.findViewById<View>(R.id.cp_divider).visibility = View.VISIBLE
         } else {
+            val paddingEnd = resources.getDimension(R.dimen.cp_search_margin_start).toInt()
+            mSearchBox.setPaddingRelative(0, 0, paddingEnd, 0)
             confirmBtn.visibility = View.GONE
-            view.findViewById<View>(R.id.cp_divider).visibility = View.GONE
+        }
+        if (mEnableSearch) {
+            mSearchEditText.visibility = View.VISIBLE
+            mSearchTitle.visibility = View.GONE
+        } else {
+            mSearchEditText.visibility = View.GONE
+            mSearchTitle.visibility = View.VISIBLE
+        }
+
+        mTitle?.let { mSearchTitle.text = it }
+        if (mTitleResId != 0) {
+            mSearchTitle.setText(mTitleResId)
         }
 
         mSectionItemDecoration?.setItem(mVariableItem, mHotItem, mItems)
@@ -292,7 +325,7 @@ open class PickerFragment<I : Item> : AppCompatDialogFragment(), TextWatcher, Vi
                 mOnResultListener?.onResult(mAdapter?.selected ?: emptyList())
             }
             R.id.cp_clear_all -> {
-                mSearchBox.setText("")
+                mSearchEditText.setText("")
             }
         }
     }
@@ -352,6 +385,9 @@ open class PickerFragment<I : Item> : AppCompatDialogFragment(), TextWatcher, Vi
         private var mMultipleMode = false
         private var mSearchHint: String? = null
         private var mEnableSection = true
+        private var mEnableSearch = true
+        private var mTitle: String? = null
+        private var mTitleResId = 0
         private var mAnimStyle = 0
         private var mVariableItem: I? = null
         private var mHotItem: HotItem<I>? = null
@@ -412,6 +448,21 @@ open class PickerFragment<I : Item> : AppCompatDialogFragment(), TextWatcher, Vi
             return this
         }
 
+        fun setSearchEnabled(enable: Boolean): Builder<I> {
+            mEnableSearch = enable
+            return this
+        }
+
+        fun setTitle(title: String): Builder<I> {
+            mTitle = title
+            return this
+        }
+
+        fun setTitle(resId: Int): Builder<I> {
+            mTitleResId = resId
+            return this
+        }
+
         /**
          * 设置选择结果的监听器
          *
@@ -449,6 +500,9 @@ open class PickerFragment<I : Item> : AppCompatDialogFragment(), TextWatcher, Vi
             val pickerFragment = PickerFragment<I>()
             pickerFragment.setItem(mVariableItem, mHotItem, mItems)
             pickerFragment.setSearchHint(mSearchHint)
+            pickerFragment.setSearchEnabled(mEnableSearch)
+            pickerFragment.setTitle(mTitle)
+            pickerFragment.setTitle(mTitleResId)
             pickerFragment.setSectionEnabled(mEnableSection)
             pickerFragment.setAnimationStyle(mAnimStyle)
             pickerFragment.setMultipleMode(mMultipleMode)

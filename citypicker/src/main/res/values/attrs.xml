@@ -6,8 +6,13 @@
     <attr name="cpClearTextIcon" format="reference" />
     <attr name="cpSearchTextSize" format="dimension|reference" />
     <attr name="cpSearchTextColor" format="color|reference" />
+    <attr name="cpTitle" format="reference|string" />
+    <attr name="cpTitleTextSize" format="reference|dimension" />
+    <attr name="cpTitleTextColor" format="reference|color" />
     <attr name="cpSearchHintText" format="string|reference" />
     <attr name="cpSearchHintTextColor" format="color|reference" />
+    <attr name="cpSearchBackground" format="color|reference" />
+    <attr name="cpSearchDrawableStart" format="reference" />
     <!--<attr name="cpSearchCursorDrawable" format="reference" />-->
 
     <attr name="cpListItemTextSize" format="dimension|reference" />

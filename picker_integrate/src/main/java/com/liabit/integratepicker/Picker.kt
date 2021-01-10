@@ -144,6 +144,7 @@ object Picker {
                 .setDefaultHotCitiesEnabled(true)
                 .setLocatedCityEnable(true)
                 .setUseDefaultCities(true)
+                .setSearchEnabled(false)
                 .setOnResultListener(object : OnResultListener<City> {
                     override fun onResult(data: List<City>) {
                         handler.invoke(data)

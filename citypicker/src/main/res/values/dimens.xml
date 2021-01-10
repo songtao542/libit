@@ -6,7 +6,8 @@
     <dimen name="cp_index_bar_text_size">13sp</dimen>
 
     <dimen name="cp_cancel_text_size">15sp</dimen>
-    <dimen name="cp_search_text_size">15sp</dimen>
+    <dimen name="cp_search_text_size">14sp</dimen>
+    <dimen name="cp_title_text_size">18sp</dimen>
 
     <dimen name="cp_empty_icon_width">56dp</dimen>
     <dimen name="cp_empty_icon_height">56dp</dimen>
@@ -28,8 +29,10 @@
     <dimen name="cp_overlay_height">100dp</dimen>
     <dimen name="cp_overlay_text_size">28sp</dimen>
     <dimen name="cp_content_padding_start">16dp</dimen>
+    <dimen name="cp_search_margin_start">30dp</dimen>
 
     <dimen name="cp_textsize_normal">14sp</dimen>
     <dimen name="cp_picker_loading_progress_size">30dp</dimen>
     <dimen name="cp_underline">1px</dimen>
+    <dimen name="cp_search_height">32dp</dimen>
 </resources>

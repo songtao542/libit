@@ -104,6 +104,9 @@ class CityPickerFragment : PickerFragment<City>() {
         private var mTargetFragment: Fragment? = null
         private var mMultipleMode = false
         private var mAnimStyle = 0
+        private var mTitle: String? = null
+        private var mTitleResId = 0
+        private var mEnableSearch = true
         private var mLocatedCity: LocatedCity? = null
         private var mHotCities: HotCities? = null
         private var mCities: List<City>? = null
@@ -204,6 +207,21 @@ class CityPickerFragment : PickerFragment<City>() {
             return this
         }
 
+        fun setTitle(title: String): Builder {
+            mTitle = title
+            return this
+        }
+
+        fun setTitle(resId: Int): Builder {
+            mTitleResId = resId
+            return this
+        }
+
+        fun setSearchEnabled(enable: Boolean): Builder {
+            mEnableSearch = enable
+            return this
+        }
+
         fun show(): CityPickerFragment {
             val cityPickerFragment = CityPickerFragment()
             cityPickerFragment.setUseDefaultCities(mUserDefaultCities)
@@ -212,6 +230,9 @@ class CityPickerFragment : PickerFragment<City>() {
             cityPickerFragment.setItem(mLocatedCity, mHotCities, mCities)
             cityPickerFragment.setAnimationStyle(mAnimStyle)
             cityPickerFragment.setMultipleMode(mMultipleMode)
+            cityPickerFragment.setSearchEnabled(mEnableSearch)
+            cityPickerFragment.setTitle(mTitle)
+            cityPickerFragment.setTitle(mTitleResId)
             cityPickerFragment.setOnResultListener(mOnResultListener)
             cityPickerFragment.setOnRequestLocationListener(mOnRequestLocationListener)
             cityPickerFragment.setOnRequestCitiesListener(mOnPickerReadyListener)

@@ -8,11 +8,13 @@ import androidx.appcompat.app.AlertDialog
 
 class AlertDialogBuilder(private val context: Context) {
 
-    private var mDialogTheme = R.style.DefaultDialogTheme
+    private var mDialogTheme = R.style.DefaultAlertDialogTheme
     private var mDialogTitle: String? = null
     private var mDialogMessage: String? = null
+    private var mCancelable: Boolean = true
 
     private var mOnConfirmListener: (() -> Unit)? = null
+    private var mOnCancelListener: (() -> Unit)? = null
 
     fun setTheme(themeResId: Int): AlertDialogBuilder {
         mDialogTheme = themeResId
@@ -29,8 +31,18 @@ class AlertDialogBuilder(private val context: Context) {
         return this
     }
 
+    fun setCancelable(cancelable: Boolean): AlertDialogBuilder {
+        mCancelable = cancelable
+        return this
+    }
+
     fun setOnConfirmListener(listener: (() -> Unit)? = null): AlertDialogBuilder {
         mOnConfirmListener = listener
+        return this
+    }
+
+    fun setOnCancelListener(listener: (() -> Unit)? = null): AlertDialogBuilder {
+        mOnCancelListener = listener
         return this
     }
 
@@ -41,9 +53,11 @@ class AlertDialogBuilder(private val context: Context) {
         textView.text = mDialogMessage
         return AlertDialog.Builder(context, mDialogTheme)
                 .setView(view)
+                .setCancelable(mCancelable)
                 .setTitle(mDialogTitle ?: context.getString(R.string.alert_dialog_title))
                 .setNegativeButton(R.string.dialog_cancel) { d, _ ->
                     d.dismiss()
+                    mOnCancelListener?.invoke()
                 }
                 .setPositiveButton(R.string.dialog_confirm) { d, _ ->
                     d.dismiss()

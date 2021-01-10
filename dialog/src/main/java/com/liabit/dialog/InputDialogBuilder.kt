@@ -9,7 +9,7 @@ import androidx.appcompat.app.AlertDialog
 
 class InputDialogBuilder(private val context: Context) {
 
-    private var mDialogTheme = R.style.DefaultDialogTheme
+    private var mDialogTheme = R.style.DefaultInputDialogTheme
     private var mDialogTitle: String? = null
 
     private var mOnConfirmListener: ((text: String) -> Unit)? = null

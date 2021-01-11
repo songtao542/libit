@@ -24,6 +24,7 @@
         android:text="@string/tag_test"
         android:textAlignment="center"
         android:textColor="#eeff41"
+        app:autoSplit="true"
         app:tagColor="#ff03A9F4"
         app:tagPaddingHorizontal="10dp"
         app:tagRadius="50dp" />

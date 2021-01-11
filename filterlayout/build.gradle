@@ -49,6 +49,6 @@ dependencies {
 
 }
 
-if (file('internal-config.gradle').exists() && file('../binary-common.gradle').exists()) {
+if (file('binary-config.gradle').exists() && file('../binary-common.gradle').exists()) {
     apply from: '../binary-common.gradle'
 }

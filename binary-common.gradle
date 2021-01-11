@@ -1,5 +1,5 @@
-if (file(project.projectDir.getAbsolutePath() + File.separator + 'internal-config.gradle').exists()) {
-    apply from: project.projectDir.getAbsolutePath() + File.separator + 'internal-config.gradle'
+if (file(project.projectDir.getAbsolutePath() + File.separator + 'binary-config.gradle').exists()) {
+    apply from: project.projectDir.getAbsolutePath() + File.separator + 'binary-config.gradle'
 }
 
 Properties properties = new Properties()

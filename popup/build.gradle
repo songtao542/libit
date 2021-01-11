@@ -41,6 +41,6 @@ dependencies {
     testImplementation 'androidx.test:monitor:1.3.0'
 }
 
-if (file('internal-config.gradle').exists() && file('../binary-common.gradle').exists()) {
+if (file('binary-config.gradle').exists() && file('../binary-common.gradle').exists()) {
     apply from: '../binary-common.gradle'
 }

@@ -55,6 +55,21 @@
         <item>各种各样</item>
     </string-array>
 
+    <string-array name="dao">
+        <item>道可道</item>
+        <item>非常道</item>
+        <item>名可名</item>
+        <item>非常名</item>
+        <item>无名</item>
+        <item>天地之始</item>
+        <item>有名</item>
+        <item>万物之母</item>
+        <item>故常无欲</item>
+        <item>以观其妙</item>
+        <item>常有欲</item>
+        <item>以观其徼</item>
+    </string-array>
+
     <string-array name="words1">
         <item>红颜</item>
         <item>小家碧玉</item>

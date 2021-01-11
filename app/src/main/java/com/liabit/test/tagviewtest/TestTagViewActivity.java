@@ -28,17 +28,23 @@ public class TestTagViewActivity extends AppCompatActivity {
     private class FragmentAdapter extends FragmentStatePagerAdapter {
 
         public FragmentAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @Override
         public Fragment getItem(int i) {
-            return i == 0 ? new TagViewTestFragment() : new TagViewTestListFragment();
+            if (i == 0) {
+                return new TagViewTestFragment();
+            } else if (i == 1) {
+                return new TagViewTestFragment1();
+            } else {
+                return new TagViewTestListFragment();
+            }
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
     }
 

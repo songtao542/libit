@@ -35,7 +35,8 @@ class TagView : AppCompatTextView {
     private var mTagRadius = 0
     private var mTagUppercase = false
     private var mTagColor: Int = Color.TRANSPARENT
-    private var mTagSeparator: String = DEFAULT_SEPARATOR
+    private var mTagSeparator: String? = null
+    private var mAutoSplit = false
     private var mTags: MutableList<Tag> = ArrayList()
 
     private var mScrollable = false
@@ -59,33 +60,37 @@ class TagView : AppCompatTextView {
         mTagPaddingTop = dp2px(5f)
         mTagPaddingRight = mTagPaddingLeft
         mTagPaddingBottom = mTagPaddingTop
+        mTagSeparator = DEFAULT_SEPARATOR
         if (attrs != null) {
             val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.TagView, defStyleAttr, 0)
             mTagRadius = typedArray.getDimensionPixelSize(R.styleable.TagView_tagRadius, 0)
-            mTagPaddingLeft = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingLeft, mTagPaddingLeft)
-            mTagPaddingTop = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingTop, mTagPaddingTop)
-            mTagPaddingRight = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingRight, mTagPaddingRight)
-            mTagPaddingBottom = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingBottom, mTagPaddingBottom)
-            val padding = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPadding, 0)
-            if (padding > 0) {
+            val padding = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPadding, -1)
+            if (padding >= 0) {
                 mTagPaddingLeft = padding
                 mTagPaddingTop = padding
                 mTagPaddingRight = padding
                 mTagPaddingBottom = padding
             }
-            val paddingHorizontal = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingHorizontal, 0)
-            if (paddingHorizontal > 0) {
+
+            mTagPaddingLeft = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingLeft, mTagPaddingLeft)
+            mTagPaddingTop = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingTop, mTagPaddingTop)
+            mTagPaddingRight = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingRight, mTagPaddingRight)
+            mTagPaddingBottom = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingBottom, mTagPaddingBottom)
+
+            val paddingHorizontal = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingHorizontal, -1)
+            if (paddingHorizontal >= 0) {
                 mTagPaddingLeft = paddingHorizontal
                 mTagPaddingRight = paddingHorizontal
             }
-            val paddingVertical = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingVertical, 0)
-            if (paddingVertical > 0) {
+            val paddingVertical = typedArray.getDimensionPixelSize(R.styleable.TagView_tagPaddingVertical, -1)
+            if (paddingVertical >= 0) {
                 mTagPaddingTop = paddingVertical
                 mTagPaddingBottom = paddingVertical
             }
             mTagUppercase = typedArray.getBoolean(R.styleable.TagView_tagUppercase, false)
             mTagColor = typedArray.getColor(R.styleable.TagView_tagColor, Color.TRANSPARENT)
             mTagSeparator = typedArray.getString(R.styleable.TagView_tagSeparator) ?: mTagSeparator
+            mAutoSplit = typedArray.getBoolean(R.styleable.TagView_autoSplit, false)
 
             typedArray.getTextArray(R.styleable.TagView_tags)?.let { tags ->
                 setStringList(MutableList(tags.size) { tags[it].toString() })
@@ -160,7 +165,7 @@ class TagView : AppCompatTextView {
             val tagColor = tag.color ?: mTagColor
             val tagTextColor = tag.textColor ?: currentTextColor
             sb.append(text).setSpan(createSpan(tag, tagTextColor, tagColor), sb.length - text.length, sb.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            if (iterator.hasNext() && mTagSeparator.isNotEmpty()) {
+            if (iterator.hasNext() && !mTagSeparator.isNullOrEmpty()) {
                 sb.append(mTagSeparator)
             }
         }
@@ -169,17 +174,13 @@ class TagView : AppCompatTextView {
 
     @Suppress("SENSELESS_COMPARISON")
     override fun setText(text: CharSequence?, type: BufferType?) {
-        if (text != null && text !is InnerSpannableStringBuilder) {
-            // 此处 mTagSeparator 虽然为不可空类型，但由于父类构造函数中调用setText方法时，
-            // mTagSeparator 还未被初始化，所以会报空指针异常
-            if (mTagSeparator == null) {
-                mTagSeparator = DEFAULT_SEPARATOR
-            }
+        val tagSeparator = mTagSeparator
+        if (mAutoSplit && text != null && text !is InnerSpannableStringBuilder && tagSeparator != null) {
             // mTags 也可能由于构造函数的先后顺序问题而为null
             if (mTags == null) {
                 mTags = ArrayList()
             }
-            setStringList(text.split(mTagSeparator))
+            setStringList(text.split(tagSeparator))
         } else {
             super.setText(text, type)
         }
@@ -222,7 +223,8 @@ class TagView : AppCompatTextView {
     data class Tag(
             val tag: String,
             var color: Int? = null,
-            val textColor: Int? = null) {
+            val textColor: Int? = null,
+    ) {
         constructor(tag: String, color: Int) : this(tag, color, null)
 
         override fun toString(): String {
@@ -258,7 +260,8 @@ class TagView : AppCompatTextView {
             private val mTagPaddingTop: Int,
             private val mTagPaddingRight: Int,
             private val mTagPaddingBottom: Int,
-            private val mTagRadius: Float) : Drawable() {
+            private val mTagRadius: Float,
+    ) : Drawable() {
 
         private val mTextPaint: TextPaint = TextPaint(TextPaint.ANTI_ALIAS_FLAG)
         private val mTagPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -273,7 +276,6 @@ class TagView : AppCompatTextView {
 
             mTagPaint.color = mTagColor
             mTagPaint.style = Paint.Style.FILL
-
             val textWidth = (mTextPaint.measureText(mText) + mTagPaddingLeft + mTagPaddingRight).toInt()
             val textHeight = (mTextPaint.textSize + mTagPaddingTop + mTagPaddingBottom).toInt()
             setBounds(0, 0, textWidth, textHeight)
@@ -287,9 +289,7 @@ class TagView : AppCompatTextView {
             val width = mTagBounds.width()
             val height = mTagBounds.height()
             val textCenterVerticalBaselineY: Float = height / 2f - fm.descent + (fm.descent - fm.ascent) / 2f
-            val x = (width - textWidth) / 2f
-            val y = textCenterVerticalBaselineY
-            canvas.drawText(mText, x, y + 2, mTextPaint)
+            canvas.drawText(mText, (width - textWidth) / 2f, textCenterVerticalBaselineY + 2, mTextPaint)
         }
 
         override fun setAlpha(alpha: Int) {

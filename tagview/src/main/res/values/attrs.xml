@@ -11,6 +11,7 @@
         <attr name="tagPaddingHorizontal" format="dimension|reference" />
         <attr name="tagPaddingVertical" format="dimension|reference" />
         <attr name="tagSeparator" format="string|reference" />
+        <attr name="autoSplit" format="boolean|reference" />
         <attr name="tagUppercase" format="boolean" />
         <attr name="tags" format="reference" />
     </declare-styleable>

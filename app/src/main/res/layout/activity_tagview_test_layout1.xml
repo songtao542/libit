@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.liabit.tagview.TagView
+        android:id="@+id/tagView1"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="#eeff41"
+        app:tagColor="#ff03A9F4"
+        app:tagPaddingHorizontal="10dp"
+        app:tagRadius="50dp" />
+
+    <com.liabit.tagview.TagView
+        android:id="@+id/tagView2"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="@string/tag_test"
+        android:textAlignment="center"
+        android:textColor="#eeff41"
+        app:tagColor="#ff03A9F4"
+        app:tagPaddingHorizontal="10dp"
+        app:tagRadius="50dp" />
+
+    <com.liabit.tagview.TagView
+        android:id="@+id/tagView3"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:paddingHorizontal="30dp"
+        android:textAlignment="center"
+        android:textColor="#ffffffff"
+        app:tagColor="#ff03A9F4"
+        app:tagPaddingHorizontal="15dp"
+        app:tagRadius="50dp"
+        app:tags="@array/words" />
+
+    <com.liabit.tagview.TagView
+        android:id="@+id/tagView4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:padding="16dp"
+        android:textColor="#ff000000"
+        app:tagPaddingHorizontal="0dp"
+        app:tagRadius="50dp"
+        app:tagSeparator="，"
+        app:tags="@array/dao" />
+
+</LinearLayout>

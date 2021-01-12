@@ -10,26 +10,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import java.lang.IllegalStateException
 
 /**
  * 在不改动 RecyclerView 原有 adapter 的情况下，使其拥有加载更多功能和自定义底部视图。
  */
 @Suppress("unused")
-class LoadMoreAdapter(val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Adapter<VH>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         private const val TYPE_FOOTER = -2
         private const val TYPE_NO_MORE = -3
         private const val TYPE_LOAD_FAILED = -4
 
         @JvmStatic
-        fun wrap(recyclerView: RecyclerView) {
-            val adapter = recyclerView.adapter ?: throw IllegalStateException("RecyclerView has not adapter!")
-            recyclerView.adapter = LoadMoreAdapter(adapter)
+        fun <VH : RecyclerView.ViewHolder> wrap(adapter: RecyclerView.Adapter<VH>): LoadMoreAdapter<VH> {
+            return LoadMoreAdapter(adapter)
         }
 
         @JvmStatic
-        fun attach(recyclerView: RecyclerView, adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>) {
+        fun <VH : RecyclerView.ViewHolder> attach(recyclerView: RecyclerView, adapter: RecyclerView.Adapter<VH>) {
             recyclerView.adapter = LoadMoreAdapter(adapter)
         }
 
@@ -152,11 +150,11 @@ class LoadMoreAdapter(val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
         adapter.registerAdapterDataObserver(mObserver)
     }
 
-    constructor(adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, footerView: View) : this(adapter) {
+    constructor(adapter: RecyclerView.Adapter<VH>, footerView: View) : this(adapter) {
         this.footerView = footerView
     }
 
-    constructor(adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>, @LayoutRes resId: Int) : this(adapter) {
+    constructor(adapter: RecyclerView.Adapter<VH>, @LayoutRes resId: Int) : this(adapter) {
         mFooterResId = resId
     }
 
@@ -196,7 +194,7 @@ class LoadMoreAdapter(val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {}
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
-        if (holder is FooterHolder) {
+        if (holder is LoadMoreAdapter<*>.FooterHolder) {
             // 当 recyclerView 不能滚动的时候(item 不能铺满屏幕的时候也是不能滚动的) call loadMore
             if (!canScroll() && mOnLoadMoreListener != null && !mIsLoading) {
                 mIsLoading = true
@@ -205,10 +203,11 @@ class LoadMoreAdapter(val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
                     mOnLoadMoreListener?.onLoadMore(loadMore)
                 }
             }
-        } else if (holder is NoMoreHolder || holder is LoadFailedHolder) {
+        } else if (holder is LoadMoreAdapter<*>.NoMoreHolder || holder is LoadMoreAdapter<*>.LoadFailedHolder) {
             // ignore
         } else {
-            adapter.onBindViewHolder(holder, position, payloads)
+            @Suppress("UNCHECKED_CAST")
+            adapter.onBindViewHolder(holder as VH, position, payloads)
         }
     }
 
@@ -267,7 +266,7 @@ class LoadMoreAdapter(val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
         mLoadFailedResId = resId
     }
 
-    class FooterHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private inner class FooterHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
             //当为StaggeredGridLayoutManager的时候,设置footerView占据整整一行
             val layoutParams = itemView.layoutParams
@@ -277,7 +276,7 @@ class LoadMoreAdapter(val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    class NoMoreHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private inner class NoMoreHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
             //当为StaggeredGridLayoutManager的时候,设置footerView占据整整一行
             val layoutParams = itemView.layoutParams
@@ -287,7 +286,7 @@ class LoadMoreAdapter(val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    class LoadFailedHolder(itemView: View, enabled: LoadMore, listener: OnLoadMoreListener?)
+    private inner class LoadFailedHolder(itemView: View, enabled: LoadMore, listener: OnLoadMoreListener?)
         : RecyclerView.ViewHolder(itemView) {
         init {
             //当为StaggeredGridLayoutManager的时候,设置footerView占据整整一行
@@ -375,8 +374,20 @@ class LoadMoreAdapter(val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
         mOnLoadMoreListener = listener
     }
 
+    fun setLoadMoreListener(listener: ((loadMore: LoadMore) -> Unit)? = null) {
+        mOnLoadMoreListener = if (listener != null) {
+            object : OnLoadMoreListener {
+                override fun onLoadMore(loadMore: LoadMore) {
+                    listener.invoke(loadMore)
+                }
+            }
+        } else {
+            null
+        }
+    }
+
     interface OnLoadMoreListener {
-        fun onLoadMore(enabled: LoadMore?)
+        fun onLoadMore(loadMore: LoadMore)
     }
 
     var isLoadMoreEnabled: Boolean
@@ -450,7 +461,7 @@ class LoadMoreAdapter(val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
              */
             val position = adapter.itemCount
             val viewHolder = mRecyclerView?.findViewHolderForAdapterPosition(position)
-            if (viewHolder is FooterHolder) {
+            if (viewHolder is LoadMoreAdapter<*>.FooterHolder) {
                 notifyItemRemoved(position)
             } else {
                 this@LoadMoreAdapter.notifyItemChanged(position)

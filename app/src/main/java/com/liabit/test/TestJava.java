@@ -1,5 +1,8 @@
 package com.liabit.test;
 
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.liabit.widget.popup.PopupMenu;
@@ -24,14 +27,24 @@ class TestJava {
     }
 
 
-    class V {
+    class V <VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH>{
 
-        RecyclerView.Adapter<? extends RecyclerView.ViewHolder> mAda;
 
-        void setAda(RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter) {
-            mAda = adapter;
+        @NonNull
+        @Override
+        public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return null;
         }
 
+        @Override
+        public int getItemCount() {
+            return 0;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+        }
     }
 
 }

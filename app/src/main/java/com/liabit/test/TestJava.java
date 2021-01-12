@@ -1,5 +1,7 @@
 package com.liabit.test;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.liabit.widget.popup.PopupMenu;
 
 import java.util.List;
@@ -21,5 +23,15 @@ class TestJava {
         int[][] b = new int[4][4];
     }
 
+
+    class V {
+
+        RecyclerView.Adapter<? extends RecyclerView.ViewHolder> mAda;
+
+        void setAda(RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter) {
+            mAda = adapter;
+        }
+
+    }
 
 }

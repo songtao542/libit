@@ -1,0 +1,25 @@
+project.ext {
+    PROJ_NAME = "loadmore"
+
+    PROJ_ARTIFACTID = "loadmore"
+    PROJ_VERSION = "0.0.1"
+
+    BINTRAY_REPO = ""
+    BINTRAY_USER_ORG = "liabit"
+    BINTRAY_USER = ""
+    BINTRAY_KEY = ""
+
+    CONTEXT_URL = ""
+    ARTIFACTORY_REPOKEY = ""
+    ARTIFACTORY_USERNAME = ""
+    ARTIFACTORY_PASSWORD = ""
+
+    PROJ_WEBSITEURL = "https://github.com/songtao542/mylib"
+    PROJ_ISSUETRACKERURL = ""
+    PROJ_VCSURL = "https://github.com/songtao542/mylib.git"
+    PROJ_DESCRIPTION = "Android ViewBinding,ViewModel extension"
+
+    DEVELOPER_ID = "songtao"
+    DEVELOPER_NAME = "songtao"
+    DEVELOPER_EMAIL = "songtao542@gmail.com"
+}

@@ -49,9 +49,10 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
     var noMoreView: View? = null
     var loadFailedView: View? = null
 
-    private var mFooterResId = View.NO_ID
-    private var mNoMoreResId = View.NO_ID
-    private var mLoadFailedResId = View.NO_ID
+    private var mFooterResId: Int? = null
+    private var mNoMoreResId: Int? = null
+    private var mLoadFailedResId: Int? = null
+
     private var mRecyclerView: RecyclerView? = null
     private var mOnLoadMoreListener: OnLoadMoreListener? = null
 
@@ -161,27 +162,27 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
             TYPE_FOOTER -> {
-                val view = footerView ?: if (mFooterResId != 0) {
-                    LayoutInflater.from(parent.context).inflate(mFooterResId, parent, false)
-                } else {
+                val view = footerView ?: mFooterResId?.let {
+                    LayoutInflater.from(parent.context).inflate(it, parent, false)
+                } ?: kotlin.run {
                     LayoutInflater.from(parent.context).inflate(R.layout.load_more_base_footer, parent, false)
                 }
                 footerView = view
                 return FooterHolder(view)
             }
             TYPE_NO_MORE -> {
-                val view = noMoreView ?: if (mNoMoreResId != 0) {
-                    LayoutInflater.from(parent.context).inflate(mNoMoreResId, parent, false)
-                } else {
+                val view = noMoreView ?: mNoMoreResId?.let {
+                    LayoutInflater.from(parent.context).inflate(it, parent, false)
+                } ?: kotlin.run {
                     LayoutInflater.from(parent.context).inflate(R.layout.load_more_base_no_more, parent, false)
                 }
                 noMoreView = view
                 return NoMoreHolder(view)
             }
             TYPE_LOAD_FAILED -> {
-                val view = loadFailedView ?: if (mLoadFailedResId != 0) {
-                    LayoutInflater.from(parent.context).inflate(mLoadFailedResId, parent, false)
-                } else {
+                val view = loadFailedView ?: mLoadFailedResId?.let {
+                    LayoutInflater.from(parent.context).inflate(it, parent, false)
+                } ?: kotlin.run {
                     LayoutInflater.from(parent.context).inflate(R.layout.load_more_base_load_failed, parent, false)
                 }
                 loadFailedView = view

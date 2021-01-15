@@ -9,6 +9,7 @@ import com.liabit.test.decorationtest.TestRecyclerViewDecorationActivity
 import com.liabit.test.filtertest.TestFilterActivity
 import com.liabit.test.gesturetest.TestDragActivity
 import com.liabit.test.gesturetest.TestSwipeActivity
+import com.liabit.test.nested.TestNestedRecyclerViewActivity
 import com.liabit.test.tablayouttest.TestTabLayoutActivity
 import com.liabit.test.tagviewtest.TestTagViewActivity
 import com.liabit.test.viewbinding.TestBindingActivity
@@ -100,6 +101,10 @@ class MainActivity : AppCompatActivity() {
 
             R.id.cityPickerTest -> {
                 startActivity(Intent(this, TestCityPickerActivity::class.java))
+            }
+
+            R.id.nestedRecyclerView -> {
+                startActivity(Intent(this, TestNestedRecyclerViewActivity::class.java))
             }
 
             R.id.otherTest -> {

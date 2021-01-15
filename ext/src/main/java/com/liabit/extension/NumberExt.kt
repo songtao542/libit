@@ -65,8 +65,9 @@ fun Float.convert2dp(context: Context): Float {
  * @return The value converted to dp
  */
 fun Int.convert2dp(resources: Resources): Float {
-    val scale = resources.displayMetrics.density
-    return this / scale + 0.5f
+    /*val scale = resources.displayMetrics.density
+    return this / scale + 0.5f*/
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), resources.displayMetrics)
 }
 
 /**
@@ -74,8 +75,9 @@ fun Int.convert2dp(resources: Resources): Float {
  * @return The value converted to dp
  */
 fun Float.convert2dp(resources: Resources): Float {
-    val scale = resources.displayMetrics.density
-    return this / scale + 0.5f
+    /*val scale = resources.displayMetrics.density
+    return this / scale + 0.5f*/
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, resources.displayMetrics)
 }
 
 /**

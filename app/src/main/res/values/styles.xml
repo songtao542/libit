@@ -80,5 +80,12 @@
         <item name="android:windowTitleStyle">@style/AddSubDialogTitleStyle</item>
     </style>
 
+    <style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+        <item name="android:windowTitleStyle">@style/AddSubDialogTitleStyle</item>
+    </style>
+
 
 </resources>

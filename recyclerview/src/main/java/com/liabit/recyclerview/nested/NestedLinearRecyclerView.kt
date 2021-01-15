@@ -12,11 +12,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.liabit.recyclerview.R
 
+@Suppress("unused")
 class NestedLinearRecyclerView : RecyclerView {
 
+    private var mScrollDX = 0
     private var mScrollDY = 0
 
     private var mFixedHeight = 0f
+
+    private var mOnScrollChangeListener: OnScrollChangeListener? = null
 
     constructor(context: Context) : super(context)
 
@@ -59,7 +63,9 @@ class NestedLinearRecyclerView : RecyclerView {
     }
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
+        mScrollDX += (l - oldl)
         mScrollDY += (t - oldt)
+        mOnScrollChangeListener?.onScrollChange(mScrollDX, mScrollDY)
         super.onScrollChanged(l, t, oldl, oldt)
     }
 
@@ -180,11 +186,31 @@ class NestedLinearRecyclerView : RecyclerView {
         return mFixedHeight
     }
 
+    fun setOnScrollChangeListener(listener: OnScrollChangeListener?) {
+        mOnScrollChangeListener = listener
+    }
+
+    fun setOnScrollChangeListener(listener: ((scrollX: Int, scrollY: Int) -> Unit)?) {
+        mOnScrollChangeListener = if (listener != null) {
+            object : OnScrollChangeListener {
+                override fun onScrollChange(scrollX: Int, scrollY: Int) {
+                    listener.invoke(scrollX, scrollY)
+                }
+            }
+        } else {
+            null
+        }
+    }
+
     fun <VH : ViewHolder> setAdapter(adapter: Adapter<VH>, pagerAdapter: PagerAdapter) {
         setAdapter(NestedLinearAdapter(adapter, pagerAdapter))
     }
 
     fun <VH : ViewHolder> setAdapter(adapter: Adapter<VH>, pagerAdapter: PagerAdapter, fixedViewAdapter: FixedViewAdapter) {
         setAdapter(NestedLinearAdapter(adapter, pagerAdapter, fixedViewAdapter))
+    }
+
+    interface OnScrollChangeListener {
+        fun onScrollChange(scrollX: Int, scrollY: Int)
     }
 }

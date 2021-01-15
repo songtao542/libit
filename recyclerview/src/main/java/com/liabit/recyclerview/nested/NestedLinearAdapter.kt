@@ -63,6 +63,10 @@ internal class NestedLinearAdapter<VH : RecyclerView.ViewHolder>() : RecyclerVie
         return mPagerTabHolder?.getCurrentNestedChildRecyclerView()
     }
 
+    fun getPagerTabView(): View? {
+        return mPagerTabHolder?.itemView
+    }
+
     @Suppress("MemberVisibilityCanBePrivate")
     fun setAdapter(adapter: RecyclerView.Adapter<VH>, pagerAdapter: PagerAdapter) {
         mTopAdapter = adapter

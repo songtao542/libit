@@ -2,9 +2,9 @@ package com.liabit.recyclerview.nested
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.widget.LinearLayout
 
+@Suppress("unused")
 class FixedLinearLayout : LinearLayout {
     private var mFixedHeight = 0f
 
@@ -14,8 +14,8 @@ class FixedLinearLayout : LinearLayout {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val mode = MeasureSpec.getMode(heightMeasureSpec)
         val size = MeasureSpec.getSize(heightMeasureSpec)
+        val mode = MeasureSpec.getMode(heightMeasureSpec)
         val newHeightMeasureSpec = MeasureSpec.makeMeasureSpec((size - mFixedHeight).toInt(), mode)
         super.onMeasure(widthMeasureSpec, newHeightMeasureSpec)
     }

@@ -29,7 +29,7 @@ class TestFragment : Fragment() {
 
         private val random = Random(System.currentTimeMillis())
 
-        private var mData = MutableList(20/*random.nextInt(2, 50)*/) {
+        private var mData = MutableList(random.nextInt(2, 50)) {
             return@MutableList it
         }
 

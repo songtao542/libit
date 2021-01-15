@@ -4,9 +4,11 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.liabit.extension.dip
+import com.liabit.extension.dp
 import com.liabit.extension.layoutUnderSystemUI
 import com.liabit.test.databinding.ActivityNestedrecyclerviewTestBinding
 import com.liabit.viewbinding.inflate
+import kotlin.math.min
 
 class TestNestedRecyclerViewActivity : AppCompatActivity() {
 
@@ -21,9 +23,12 @@ class TestNestedRecyclerViewActivity : AppCompatActivity() {
         val pagerAdapter = TestPagerAdapter(supportFragmentManager)
         val fixedAdapter = TestFixedAdapter()
 
-        binding.recyclerView.setFixedHeight(100.dip(this))
-
+        binding.recyclerView.setFixedHeight(80.dp(this))
+        binding.recyclerView.setOnScrollChangeListener { _, scrollY ->
+            binding.searchView.setBackgroundColor(Color.argb(min((scrollY * 0.5f).toInt(), 255), 55, 0xff, 55))
+        }
         binding.recyclerView.setAdapter(topAdapter, pagerAdapter, fixedAdapter)
+
 
         binding.swipeRefreshLayout.setColorSchemeColors(Color.RED)
         binding.swipeRefreshLayout.setOnRefreshListener {

@@ -18,11 +18,15 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                style="?android:attr/windowTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif"
                 android:gravity="center"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/p_textsize_normal" />
+                android:singleLine="true"
+                android:textSize="@dimen/p_textsize_title" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/confirm"

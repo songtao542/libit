@@ -1,5 +1,6 @@
 <resources>
     <dimen name="p_textsize_normal">14sp</dimen>
+    <dimen name="p_textsize_title">17sp</dimen>
     <dimen name="p_picker_loading_progress_size">30dp</dimen>
     <dimen name="p_underline">1px</dimen>
 

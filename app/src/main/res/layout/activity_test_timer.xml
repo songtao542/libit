@@ -8,76 +8,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#00fff0"
+        android:background="@android:color/holo_blue_light"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:paddingTop="30dp"
         tools:context=".TestTimerActivity">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="20dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|center_horizontal"
-                android:fontFamily="@font/digi"
-                android:gravity="center"
-                android:text="1234567890"
-                android:textSize="30sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|center_horizontal"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/digib"
-                android:gravity="center"
-                android:text="1234567890"
-                android:textSize="30sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|center_horizontal"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/digii"
-                android:gravity="center"
-                android:text="1234567890"
-                android:textSize="30sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|center_horizontal"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/digit"
-                android:gravity="center"
-                android:text="1234567890"
-                android:textSize="30sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|center_horizontal"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/yournamed7generalhalf"
-                android:gravity="center"
-                android:text="1234567890"
-                android:textSize="30sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|center_horizontal"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/yournamed7homehalf"
-                android:gravity="center"
-                android:text="1234567890"
-                android:textSize="30sp" />
-        </LinearLayout>
 
         <com.liabit.timerview.TimerView
             android:id="@+id/timerView"
@@ -246,5 +181,74 @@
                 android:layout_weight="1" />
 
         </LinearLayout>
+
+        <!-- 用于查看一些字体的显示效果 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:fontFamily="@font/digi"
+                android:gravity="center"
+                android:text="1234567890"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/digib"
+                android:gravity="center"
+                android:text="1234567890"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/digii"
+                android:gravity="center"
+                android:text="1234567890"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/digit"
+                android:gravity="center"
+                android:text="1234567890"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/yournamed7generalhalf"
+                android:gravity="center"
+                android:text="1234567890"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/yournamed7homehalf"
+                android:gravity="center"
+                android:text="1234567890"
+                android:textSize="30sp" />
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -10,14 +10,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="推荐"
+        android:paddingVertical="8dp"
+        android:text="推荐宠物"
         android:textColor="#333333"
         android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/tabImage"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="90dp"
         android:paddingBottom="2dp"
         android:scaleType="centerCrop"
         android:src="@mipmap/cat1" />

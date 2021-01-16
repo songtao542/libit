@@ -2,7 +2,11 @@ package com.liabit.test.nested
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import com.liabit.extension.dip
 import com.liabit.extension.dp
 import com.liabit.extension.layoutUnderSystemUI
@@ -25,7 +29,7 @@ class TestNestedRecyclerViewActivity : AppCompatActivity() {
 
         binding.recyclerView.setFixedHeight(80.dp(this))
         binding.recyclerView.setOnScrollChangeListener { _, scrollY ->
-            binding.searchView.setBackgroundColor(Color.argb(min((scrollY * 0.5f).toInt(), 255), 55, 0xff, 55))
+            binding.searchView.setBackgroundColor(Color.argb(min((scrollY * 0.2f).toInt(), 255), 0x60, 0x7D, 0x8B))
         }
         binding.recyclerView.setAdapter(topAdapter, pagerAdapter, fixedAdapter)
 

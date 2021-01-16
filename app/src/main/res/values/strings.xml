@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">LibTest</string>
+    <string name="app_name">Libit Demo</string>
     <string name="text_test">既有格局，又有布局；既有大气，更有静气。精谨细腻，笔笔有章法，这样一幅“工笔画”，怎能不让人期待？</string>
-    <!--    <string name="shimmer">Shimmer</string>-->
-    <!--    <string name="picker">Picker</string>-->
-    <!--    <string name="add_and_sub">AddAndSub</string>-->
     <string name="ml_confirm">确定</string>
     <string name="cancel">取消</string>
     <string name="refresh">刷新</string>
@@ -101,7 +98,7 @@
         <item>惊艳</item>
         <item>琪花瑶草</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="click_to_show_filter">点击弹出PopupWindow Filter</string>
     <string name="skip">跳过\n</string>

@@ -166,18 +166,18 @@ CityPickerFragment.Builder()
        .show()
 
 // 选择
-PickerFragment.Builder<School>()
+PickerFragment.Builder<>()
         .setFragmentManager(supportFragmentManager)
         .setAnimationStyle(R.style.DefaultListPickerAnimation)
         .setMultipleMode(false)
         .setSectionEnabled(false)
         .setSearchHint("学校名称")
         .setItem(MutableList(40) {
-            School(Mock.schoolName())
+            (Mock.schoolName())
         })
-        .setOnResultListener(object : OnResultListener<School> {
-            override fun onResult(data: List<School>) {
-                Toast.makeText(this@TestCityPickerActivity, data.toString(), Toast.LENGTH_SHORT).show()
+        .setOnResultListener(object : OnResultListener<> {
+            override fun onResult(data: List<>) {
+                .makeText(this@TestCityPickerActivity, data.toString(), .LENGTH_SHORT).show()
             }
         })
         .show()
@@ -190,12 +190,13 @@ PickerFragment.Builder<School>()
 |:------------------------------:|
 |<img src="https://github.com/songtao542/libit/blob/master/screenshot/%E5%80%92%E8%AE%A1%E6%97%B6.png" width="160"/>|
 
+</br>
 RecyclerView列表嵌套(仿京东主页效果)</br>
 
 | RecyclerView列表嵌套(仿京东主页效果)                 |
 |:------------------------------:|
 |<img src="https://github.com/songtao542/libit/blob/master/screenshot/%E4%BB%BF%E4%BA%AC%E4%B8%9C%E4%B8%BB%E9%A1%B5.gif" width="160"/>|
-RecyclerView列表嵌套(仿京东主页效果)</br>
+
 
 </br>
 TagView</br>

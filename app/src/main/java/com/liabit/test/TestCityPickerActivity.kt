@@ -19,8 +19,8 @@ import com.liabit.listpicker.PickerFragment
 import com.liabit.listpicker.model.Item
 import com.liabit.test.databinding.ActivityTestCityPickerBinding
 import com.liabit.viewbinding.inflate
-import com.sport.day.net.Mock
-import com.sport.day.net.MockPicture
+import com.liabit.test.mock.Mock
+import com.liabit.test.mock.MockPicture
 
 class TestCityPickerActivity : AppCompatActivity() {
 

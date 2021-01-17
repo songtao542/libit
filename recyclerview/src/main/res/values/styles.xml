@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="DefaultLoadMoreStyle">
+        <item name="loadMoreTextColor">@color/load_more_text_color</item>
+        <item name="loadMoreText">@string/load_more_loading</item>
+        <item name="loadMoreTextSize">14sp</item>
+        <item name="loadMoreProgressColor">@color/load_more_text_color</item>
+        <item name="loadMoreFailedTextColor">@color/load_more_text_color</item>
+        <item name="loadMoreFailedTextSize">14sp</item>
+        <item name="loadMoreFailedText">@string/load_more_retry</item>
+        <item name="loadMoreFailedIcon">@drawable/load_more_ic_reload</item>
+        <item name="loadMoreFailedIconColor">@color/load_more_text_color</item>
+        <item name="loadNoMoreTextColor">@color/load_more_text_color</item>
+        <item name="loadNoMoreTextSize">14sp</item>
+        <item name="loadNoMoreText">@string/load_more_no_more</item>
+        <item name="loadNoMoreIcon">@null</item>
+    </style>
+
+</resources>

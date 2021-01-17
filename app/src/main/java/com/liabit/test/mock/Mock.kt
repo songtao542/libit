@@ -1,4 +1,4 @@
-package com.sport.day.net
+package com.liabit.test.mock
 
 import kotlin.math.abs
 import kotlin.random.Random
@@ -78,5 +78,10 @@ object Mock {
     @JvmStatic
     fun collegeNameArray(): Array<String> {
         return cArray
+    }
+
+    @JvmStatic
+    fun nextInt(from: Int, until: Int): Int {
+        return random.nextInt(from, until)
     }
 }

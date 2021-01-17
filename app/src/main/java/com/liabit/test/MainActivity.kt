@@ -107,6 +107,10 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, TestNestedRecyclerViewActivity::class.java))
             }
 
+            R.id.loadMoreTest -> {
+                startActivity(Intent(this, TestLoadMoreActivity::class.java))
+            }
+
             R.id.otherTest -> {
                 startActivity(Intent(this, TestFragmentVisibleActivity::class.java))
             }

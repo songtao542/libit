@@ -1,15 +1,24 @@
-package com.liabit.widget.loadmore
+package com.liabit.recyclerview.loadmore
 
+import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.liabit.recyclerview.R
 
 /**
  * 在不改动 RecyclerView 原有 adapter 的情况下，使其拥有加载更多功能和自定义底部视图。
@@ -53,6 +62,27 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
     private var mNoMoreResId: Int? = null
     private var mLoadFailedResId: Int? = null
 
+    private var mStyleResId: Int = R.style.DefaultLoadMoreStyle
+
+    private var mLoadingText: String? = null
+    private var mLoadFailedText: String? = null
+    private var mLoadNoMoreText: String? = null
+
+    private var mLoadingTextColor: ColorStateList? = null
+    private var mLoadFailedTextColor: ColorStateList? = null
+    private var mLoadNoMoreTextColor: ColorStateList? = null
+
+    private var mLoadFailedIcon: Drawable? = null
+    private var mLoadNoMoreIcon: Drawable? = null
+
+    private var mLoadMoreProgressColor: ColorStateList? = null
+    private var mLoadFailedIconColor: ColorStateList? = null
+    private var mLoadNoMoreIconColor: ColorStateList? = null
+
+    private var mLoadMoreTextSize: Float? = null
+    private var mLoadFailedTextSize: Float? = null
+    private var mLoadNoMoreTextSize: Float? = null
+
     private var mRecyclerView: RecyclerView? = null
     private var mOnLoadMoreListener: OnLoadMoreListener? = null
 
@@ -73,7 +103,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
         }
     }
 
-    private val loadMore = LoadMore(mOnEnabledListener)
+    private val loadMore = LoadMoreImpl(mOnEnabledListener)
 
     private val mObserver: AdapterDataObserver = object : AdapterDataObserver() {
         override fun onChanged() {
@@ -159,13 +189,141 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
         mFooterResId = resId
     }
 
+    /**
+     *  <style name="DefaultLoadMoreStyle">
+     *      <item name="loadMoreTextColor">@color/load_more_text_color</item>
+     *      <item name="loadMoreText">@string/load_more_loading</item>
+     *      <item name="loadMoreFailedTextColor">@color/load_more_text_color</item>
+     *      <item name="loadMoreFailedText">@string/load_more_retry</item>
+     *      <item name="loadMoreFailedIcon">@drawable/load_more_ic_reload</item>
+     *      <item name="loadMoreFailedIconColor">@color/load_more_text_color</item>
+     *      <item name="loadNoMoreTextColor">@color/load_more_text_color</item>
+     *      <item name="loadNoMoreText">@string/load_more_no_more</item>
+     *      <item name="loadNoMoreIcon">@null</item>
+     *  </style>
+     */
+    fun setStyle(context: Context, styleResId: Int) {
+        mStyleResId = styleResId
+
+        val typedArray = context.obtainStyledAttributes(styleResId, R.styleable.LoadMoreStyle)
+        mLoadingText = typedArray.getString(R.styleable.LoadMoreStyle_loadMoreText)
+        mLoadFailedText = typedArray.getString(R.styleable.LoadMoreStyle_loadMoreFailedText)
+        mLoadNoMoreText = typedArray.getString(R.styleable.LoadMoreStyle_loadNoMoreText)
+
+        val defaultColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.load_more_text_color))
+        mLoadingTextColor = typedArray.getColorStateList(R.styleable.LoadMoreStyle_loadMoreTextColor) ?: defaultColor
+        mLoadFailedTextColor = typedArray.getColorStateList(R.styleable.LoadMoreStyle_loadMoreFailedTextColor) ?: defaultColor
+        mLoadNoMoreTextColor = typedArray.getColorStateList(R.styleable.LoadMoreStyle_loadNoMoreTextColor) ?: defaultColor
+
+        val defaultFailedIcon = ContextCompat.getDrawable(context, R.drawable.load_more_ic_reload)
+        mLoadFailedIcon = typedArray.getDrawable(R.styleable.LoadMoreStyle_loadMoreFailedIcon) ?: defaultFailedIcon
+        mLoadNoMoreIcon = typedArray.getDrawable(R.styleable.LoadMoreStyle_loadNoMoreIcon)
+
+        mLoadMoreProgressColor = typedArray.getColorStateList(R.styleable.LoadMoreStyle_loadMoreProgressColor) ?: defaultColor
+        mLoadFailedIconColor = typedArray.getColorStateList(R.styleable.LoadMoreStyle_loadMoreFailedIconColor) ?: defaultColor
+        mLoadNoMoreIconColor = typedArray.getColorStateList(R.styleable.LoadMoreStyle_loadNoMoreIconColor) ?: defaultColor
+
+        val defaultTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14f, context.resources.displayMetrics)
+        mLoadMoreTextSize = typedArray.getDimension(R.styleable.LoadMoreStyle_loadMoreTextSize, defaultTextSize)
+        mLoadFailedTextSize = typedArray.getDimension(R.styleable.LoadMoreStyle_loadMoreFailedTextSize, defaultTextSize)
+        mLoadNoMoreTextSize = typedArray.getDimension(R.styleable.LoadMoreStyle_loadNoMoreTextSize, defaultTextSize)
+
+        footerView?.findViewById<TextView>(R.id.loadMoreTextView)?.let {
+            mLoadingText?.let { text ->
+                it.text = text
+            }
+            mLoadingTextColor?.let { textColor ->
+                it.setTextColor(textColor)
+            }
+            mLoadMoreTextSize?.let { textSize ->
+                it.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+            }
+        }
+        loadFailedView?.findViewById<TextView>(R.id.loadMoreFailedTextView)?.let {
+            mLoadFailedText?.let { text ->
+                it.text = text
+            }
+            mLoadFailedTextColor?.let { textColor ->
+                it.setTextColor(textColor)
+            }
+            mLoadFailedTextSize?.let { textSize ->
+                it.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+            }
+        }
+        noMoreView?.findViewById<TextView>(R.id.loadMoreNoMoreTextView)?.let {
+            mLoadNoMoreText?.let { text ->
+                it.text = text
+            }
+            mLoadNoMoreTextColor?.let { textColor ->
+                it.setTextColor(textColor)
+            }
+            mLoadNoMoreTextSize?.let { textSize ->
+                it.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+            }
+        }
+        footerView?.findViewById<ProgressBar>(R.id.loadMoreProgressBar)?.let {
+            mLoadMoreProgressColor?.let { color ->
+                it.indeterminateTintList = color
+            }
+        }
+        loadFailedView?.findViewById<ImageView>(R.id.loadMoreFailedIcon)?.let {
+            mLoadFailedIcon?.let { icon ->
+                it.setImageDrawable(icon)
+            }
+            mLoadFailedIconColor?.let { iconColor ->
+                it.imageTintList = iconColor
+            }
+        }
+        noMoreView?.findViewById<ImageView>(R.id.loadMoreNoMoreIcon)?.let {
+            mLoadNoMoreIcon?.let { icon ->
+                it.setImageDrawable(icon)
+            }
+            mLoadNoMoreIconColor?.let { iconColor ->
+                it.imageTintList = iconColor
+            }
+        }
+        typedArray.recycle()
+    }
+
+    fun setLoadingText(loadingText: String) {
+        mLoadingText = loadingText
+        footerView?.findViewById<TextView>(R.id.loadMoreTextView)?.text = mLoadingText
+    }
+
+    fun setLoadFailedText(loadFailedText: String) {
+        mLoadFailedText = loadFailedText
+        loadFailedView?.findViewById<TextView>(R.id.loadMoreFailedTextView)?.text = mLoadFailedText
+    }
+
+    fun setLoadNoMoreText(loadNoMoreText: String) {
+        mLoadNoMoreText = loadNoMoreText
+        noMoreView?.findViewById<TextView>(R.id.loadMoreNoMoreTextView)?.text = mLoadNoMoreText
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        setStyle(parent.context, mStyleResId)
         when (viewType) {
             TYPE_FOOTER -> {
                 val view = footerView ?: mFooterResId?.let {
                     LayoutInflater.from(parent.context).inflate(it, parent, false)
                 } ?: kotlin.run {
                     LayoutInflater.from(parent.context).inflate(R.layout.load_more_base_footer, parent, false)
+                }
+                view?.findViewById<TextView>(R.id.loadMoreTextView)?.let {
+                    mLoadingText?.let { text ->
+                        it.text = text
+                    }
+                    mLoadingTextColor?.let { textColor ->
+                        it.setTextColor(textColor)
+                    }
+                    mLoadMoreTextSize?.let { textSize ->
+                        it.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+                    }
+                }
+                view?.findViewById<ProgressBar>(R.id.loadMoreProgressBar)?.let {
+                    mLoadMoreProgressColor?.let { color ->
+                        it.indeterminateTintList = color
+                    }
                 }
                 footerView = view
                 return FooterHolder(view)
@@ -176,6 +334,25 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
                 } ?: kotlin.run {
                     LayoutInflater.from(parent.context).inflate(R.layout.load_more_base_no_more, parent, false)
                 }
+                view?.findViewById<TextView>(R.id.loadMoreNoMoreTextView)?.let {
+                    mLoadNoMoreText?.let { text ->
+                        it.text = text
+                    }
+                    mLoadNoMoreTextColor?.let { textColor ->
+                        it.setTextColor(textColor)
+                    }
+                    mLoadNoMoreTextSize?.let { textSize ->
+                        it.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+                    }
+                }
+                view?.findViewById<ImageView>(R.id.loadMoreNoMoreIcon)?.let {
+                    mLoadNoMoreIcon?.let { icon ->
+                        it.setImageDrawable(icon)
+                    }
+                    mLoadNoMoreIconColor?.let { iconColor ->
+                        it.imageTintList = iconColor
+                    }
+                }
                 noMoreView = view
                 return NoMoreHolder(view)
             }
@@ -184,6 +361,25 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
                     LayoutInflater.from(parent.context).inflate(it, parent, false)
                 } ?: kotlin.run {
                     LayoutInflater.from(parent.context).inflate(R.layout.load_more_base_load_failed, parent, false)
+                }
+                view?.findViewById<TextView>(R.id.loadMoreFailedTextView)?.let {
+                    mLoadFailedText?.let { text ->
+                        it.text = text
+                    }
+                    mLoadFailedTextColor?.let { textColor ->
+                        it.setTextColor(textColor)
+                    }
+                    mLoadNoMoreTextSize?.let { textSize ->
+                        it.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+                    }
+                }
+                view?.findViewById<ImageView>(R.id.loadMoreFailedIcon)?.let {
+                    mLoadFailedIcon?.let { icon ->
+                        it.setImageDrawable(icon)
+                    }
+                    mLoadFailedIconColor?.let { iconColor ->
+                        it.imageTintList = iconColor
+                    }
                 }
                 loadFailedView = view
                 return LoadFailedHolder(view, loadMore, mOnLoadMoreListener)
@@ -417,27 +613,27 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
     /**
      * 控制加载更多的开关, 作为 [的参数][OnLoadMoreListener.onLoadMore]
      */
-    class LoadMore(private val mListener: OnEnabledListener) {
+    private class LoadMoreImpl(private val mListener: OnEnabledListener) : LoadMore {
         private var mLoadMoreEnable = true
         private var mIsLoadFailed = false
 
         /**
          * 设置是否加载失败
          */
-        var isLoadFailed: Boolean
+        override var isLoadFailed: Boolean
             get() = mIsLoadFailed
             set(isLoadFailed) {
                 if (mIsLoadFailed != isLoadFailed) {
                     mIsLoadFailed = isLoadFailed
                     mListener.notifyLoadFailed(isLoadFailed)
-                    isEnable = !mIsLoadFailed
+                    //isEnable = !mIsLoadFailed
                 }
             }
 
         /**
          * 获取是否启用了加载更多,默认是 true
          */
-        var isEnable: Boolean
+        override var isEnable: Boolean
             get() = mLoadMoreEnable
             set(enable) {
                 val canNotify = mLoadMoreEnable
@@ -446,6 +642,21 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
                     mListener.notifyChanged()
                 }
             }
+    }
+
+    /**
+     * 可以对加载状态进行操作
+     */
+    interface LoadMore {
+        /**
+         * 设置是否加载失败
+         */
+        var isLoadFailed: Boolean
+
+        /**
+         * 获取是否启用了加载更多,默认是 true
+         */
+        var isEnable: Boolean
     }
 
     /**

@@ -103,5 +103,7 @@
     <string name="click_to_show_filter">点击弹出PopupWindow Filter</string>
     <string name="skip">跳过\n</string>
 
-
+    <string name="loadinging">努力加载中...</string>
+    <string name="load_failed">加载出错了，点击重试</string>
+    <string name="no_more">已全部加载了</string>
 </resources>

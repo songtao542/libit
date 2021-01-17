@@ -5,4 +5,25 @@
         <attr name="fixedHeight" format="reference|dimension" />
     </declare-styleable>
 
+
+    <declare-styleable name="LoadMoreStyle">
+        <attr name="loadMoreTextColor" format="color|reference" />
+        <attr name="loadMoreTextSize" format="dimension|reference" />
+        <attr name="loadMoreText" format="string|reference" />
+        <attr name="loadMoreProgressColor" format="color|reference" />
+
+        <attr name="loadMoreFailedTextColor" format="color|reference" />
+        <attr name="loadMoreFailedTextSize" format="dimension|reference" />
+        <attr name="loadMoreFailedText" format="string|reference" />
+        <attr name="loadMoreFailedIcon" format="reference" />
+        <attr name="loadMoreFailedIconColor" format="color|reference" />
+
+        <attr name="loadNoMoreTextColor" format="color|reference" />
+        <attr name="loadNoMoreTextSize" format="dimension|reference" />
+        <attr name="loadNoMoreText" format="string|reference" />
+        <attr name="loadNoMoreIcon" format="reference" />
+        <attr name="loadNoMoreIconColor" format="color|reference" />
+    </declare-styleable>
+
+
 </resources>

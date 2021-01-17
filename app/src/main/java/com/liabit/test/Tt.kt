@@ -1,7 +1,7 @@
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.liabit.test.TestAddSubViewActivity
-import com.liabit.widget.loadmore.LoadMoreAdapter
+import com.liabit.recyclerview.loadmore.LoadMoreAdapter
 
 internal class V {
     var mAda: RecyclerView.Adapter<out RecyclerView.ViewHolder>? = null

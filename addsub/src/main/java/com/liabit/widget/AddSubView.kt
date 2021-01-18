@@ -182,6 +182,22 @@ class AddSubView : LinearLayout, TextWatcher {
         }
         mNumEditor.layoutParams = lp
 
+        var tlp = mNumTextView.layoutParams
+        if (tlp != null) {
+            if (editTextWidth > 0) {
+                tlp.width = editTextWidth.toInt()
+            }
+            if (editTextHeight > 0) {
+                tlp.height = editTextHeight.toInt()
+            }
+        } else {
+            val defaultWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40f, context.resources.displayMetrics).toInt()
+            val w: Int = if (editTextWidth > 0) editTextWidth.toInt() else defaultWidth
+            val h: Int = if (editTextHeight > 0) editTextHeight.toInt() else defaultWidth / 5 * 3
+            tlp = LayoutParams(w, h)
+        }
+        mNumTextView.layoutParams = tlp
+
         if (textColor != null) {
             mNumEditor.setTextColor(textColor)
             mNumTextView.setTextColor(textColor)

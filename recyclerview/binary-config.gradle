@@ -2,7 +2,7 @@ project.ext {
     PROJ_NAME = "recyclerviewdecor"
 
     PROJ_ARTIFACTID = "recyclerviewdecor"
-    PROJ_VERSION = "1.0.8"
+    PROJ_VERSION = "1.0.9"
 
     BINTRAY_REPO = "recyclerviewdecor"
     BINTRAY_USER_ORG = "liabit"

@@ -2,7 +2,7 @@ project.ext {
     PROJ_NAME = "addsubview"
 
     PROJ_ARTIFACTID = "addsubview"
-    PROJ_VERSION = "1.1.2"
+    PROJ_VERSION = "1.1.3"
 
     BINTRAY_REPO = ""
     BINTRAY_USER_ORG = ""

@@ -29,7 +29,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
@@ -608,28 +607,11 @@ public class NumberPicker extends LinearLayout {
         // directly (see ViewGroup.drawChild()). However, this class uses
         // the fading edge effect implemented by View and we need our
         // draw() method to be called. Therefore, we declare we will draw.
-        setWillNotDraw(!mHasSelectorWheel);
+        setWillNotDraw(false);
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(layoutResId, this, true);
-
-        OnClickListener onClickListener = new OnClickListener() {
-            public void onClick(View v) {
-                hideSoftInput();
-                mInputText.clearFocus();
-                changeValueByOne(false);
-            }
-        };
-
-        OnLongClickListener onLongClickListener = new OnLongClickListener() {
-            public boolean onLongClick(View v) {
-                hideSoftInput();
-                mInputText.clearFocus();
-                postChangeCurrentByOneFromLongPress(false, 0);
-                return true;
-            }
-        };
 
         // input text
         mInputText = findViewById(R.id.numberpicker_input);
@@ -1916,13 +1898,8 @@ public class NumberPicker extends LinearLayout {
      * @return The selected index given its displayed <code>value</code>.
      */
     private int getSelectedPos(String value) {
-        if (mDisplayedValues == null) {
-            try {
-                return Integer.parseInt(value);
-            } catch (NumberFormatException e) {
-                // Ignore as if it's not a number we don't care
-            }
-        } else {
+        // Ignore as if it's not a number we don't care
+        if (mDisplayedValues != null) {
             for (int i = 0; i < mDisplayedValues.length; i++) {
                 // Don't force the user to type in jan when ja will do
                 value = value.toLowerCase();
@@ -1930,17 +1907,11 @@ public class NumberPicker extends LinearLayout {
                     return mMinValue + i;
                 }
             }
-
-            /*
-             * The user might have typed in a number into the month field i.e.
-             * 10 instead of OCT so support that too.
-             */
-            try {
-                return Integer.parseInt(value);
-            } catch (NumberFormatException e) {
-
-                // Ignore as if it's not a number we don't care
-            }
+        }
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            // Ignore as if it's not a number we don't care
         }
         return mMinValue;
     }

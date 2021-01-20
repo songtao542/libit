@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="p_picker_title">#e5e5e7</color>
+
     <color name="p_gray_underline">#e5e5e7</color>
     <color name="p_darker">#444444</color>
     <color name="p_white">#ffffff</color>

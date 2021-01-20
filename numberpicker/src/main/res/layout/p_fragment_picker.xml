@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.liabit.integratepicker.PickerFragment">
+    tools:context=".PickerFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/cp_gray_underline">
+            android:background="@drawable/np_gray_underline">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/title"
@@ -35,7 +35,7 @@
                 android:layout_gravity="right"
                 android:background="?attr/selectableItemBackground"
                 android:gravity="center"
-                android:text="@string/cp_confirm"
+                android:text="@string/np_confirm"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/p_textsize_normal" />
         </FrameLayout>
@@ -60,7 +60,7 @@
                 android:layout_gravity="center"
                 android:orientation="horizontal">
 
-                <NumberPicker
+                <com.liabit.numberpicker.NumberPicker
                     android:id="@+id/column1View"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                     tools:ignore="UnusedAttribute"
                     tools:targetApi="honeycomb" />
 
-                <NumberPicker
+                <com.liabit.numberpicker.NumberPicker
                     android:id="@+id/column2View"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

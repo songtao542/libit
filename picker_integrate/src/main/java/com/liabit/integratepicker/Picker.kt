@@ -9,6 +9,8 @@ import com.liabit.citypicker.CityPickerFragment
 import com.liabit.citypicker.OnRequestLocationListener
 import com.liabit.listpicker.IPicker
 import com.liabit.listpicker.OnResultListener
+import com.liabit.numberpicker.PickerFragment
+import com.liabit.numberpicker.toStringArray
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
@@ -102,7 +104,7 @@ object Picker {
             value: Int,
             provider: ((picker: PickerFragment) -> Unit),
             handler: ((value: Int) -> Unit)? = null,
-            valueHandler: ((value: String) -> Unit)? = null,
+            valueHandler: ((value: CharSequence) -> Unit)? = null,
     ) {
         pick(activity, title, value, 0, provider, { v1, _ ->
             handler?.invoke(v1)
@@ -119,7 +121,7 @@ object Picker {
             value2: Int = 0,
             provider: ((picker: PickerFragment) -> Unit),
             handler: ((value1: Int, value2: Int) -> Unit)? = null,
-            valueHandler: ((value1: String, value2: String) -> Unit)? = null,
+            valueHandler: ((value1: CharSequence, value2: CharSequence) -> Unit)? = null,
     ) {
         activity?.supportFragmentManager?.let { fragmentManager ->
             val pickerFragment = PickerFragment.newInstance(title)

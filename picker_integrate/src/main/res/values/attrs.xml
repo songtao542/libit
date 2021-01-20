@@ -7,4 +7,6 @@
         <attr name="square" format="boolean" />
     </declare-styleable>
 
+    <attr name="pickerViewStyle" format="reference" />
+
 </resources>

@@ -49,6 +49,7 @@ dependencies {
     //implementation project(':picker')
     //implementation project(':swipeback')
     //implementation project(':photoview')
+    implementation project(':numberpicker')
     //implementation 'com.liabit.swipeback:swipeback:1.0.0'
     compileOnly 'com.liabit.picker:picker:1.0.0'
     compileOnly 'com.liabit.imagepicker:imagepicker:1.0.0'

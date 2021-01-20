@@ -1,14 +1,14 @@
-package com.liabit.integratepicker
+package com.liabit.numberpicker
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.NumberPicker
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.*
 
+@Suppress("unused")
 class PickerFragment : BottomSheetDialogFragment() {
 
     companion object {
@@ -90,7 +90,7 @@ class PickerFragment : BottomSheetDialogFragment() {
 
         arguments?.let {
             val title = it.getString(EXTRA_TITLE)
-            this.title?.text = title ?: getString(R.string.cp_please_select)
+            this.title?.text = title ?: getString(R.string.np_please_select)
             val showProgress = it.getBoolean(EXTRA_SHOW_PROGRESS, false)
             showProgress(showProgress)
 
@@ -130,9 +130,9 @@ class PickerFragment : BottomSheetDialogFragment() {
         this.onResultListener = onResultListener
     }
 
-    private var onValueListener: ((value1: String, value2: String) -> Unit)? = null
+    private var onValueListener: ((value1: CharSequence, value2: CharSequence) -> Unit)? = null
 
-    fun setOnValueListener(onValueListener: ((value: String, value2: String) -> Unit)) {
+    fun setOnValueListener(onValueListener: ((value: CharSequence, value2: CharSequence) -> Unit)) {
         this.onValueListener = onValueListener
     }
 
@@ -142,10 +142,10 @@ class PickerFragment : BottomSheetDialogFragment() {
     private var minValue: Int = -1
     private var maxValue: Int = -1
 
-    private var column1Values: Array<String>? = null
-    private var column2Values: Array<String>? = null
+    private var column1Values: Array<out CharSequence>? = null
+    private var column2Values: Array<out CharSequence>? = null
 
-    private var columns: LinkedHashMap<String, out List<String>>? = null
+    private var columns: LinkedHashMap<out CharSequence, out List<CharSequence>>? = null
 
     private fun showProgress(show: Boolean) {
         if (show) {
@@ -189,13 +189,13 @@ class PickerFragment : BottomSheetDialogFragment() {
         }
     }
 
-    fun setColumn(column1Values: Array<String>?, column2Values: Array<String>? = null) {
+    fun setColumn(column1Values: Array<CharSequence>?, column2Values: Array<CharSequence>? = null) {
         this.column1Values = column1Values
         this.column2Values = column2Values
         setColumnInternal(column1Values, column2Values)
     }
 
-    private fun setColumnInternal(column1Values: Array<String>?, column2Values: Array<String>? = null) {
+    private fun setColumnInternal(column1Values: Array<out CharSequence>?, column2Values: Array<out CharSequence>? = null) {
         if (column1Values != null) {
             //先置空，以免数组越界
             column1View?.let {
@@ -242,7 +242,7 @@ class PickerFragment : BottomSheetDialogFragment() {
 
     private fun setColumn2SubOfColumn1Internal() {
         val column1Values = column1Values ?: return
-        val array: Array<String> = if (mColumn2SubOfColumn1Type == 0) {
+        val array: Array<out CharSequence> = if (mColumn2SubOfColumn1Type == 0) {
             column1Values.copyOfRange(0, 1)
         } else {
             column1Values.copyOfRange(1, column1Values.size)
@@ -250,7 +250,7 @@ class PickerFragment : BottomSheetDialogFragment() {
         setColumnInternal(null, array)
         column1View?.setOnValueChangedListener { _, _, newVal ->
             val c1vs = this.column1Values ?: return@setOnValueChangedListener
-            val vs: Array<String> = if (mColumn2SubOfColumn1Type == 0) {
+            val vs: Array<out CharSequence> = if (mColumn2SubOfColumn1Type == 0) {
                 c1vs.copyOfRange(0, if (newVal == 0) 1 else newVal)
             } else {
                 c1vs.copyOfRange(newVal, c1vs.size)
@@ -262,12 +262,12 @@ class PickerFragment : BottomSheetDialogFragment() {
     /**
      * 使用 LinkedHashMap 是为了保持插入顺序
      */
-    fun setColumn(columns: LinkedHashMap<String, out List<String>>) {
+    fun setColumn(columns: LinkedHashMap<out CharSequence, out List<CharSequence>>) {
         this.columns = columns
         setColumnInternal(columns)
     }
 
-    private fun setColumnInternal(columns: LinkedHashMap<String, out List<String>>?) {
+    private fun setColumnInternal(columns: LinkedHashMap<out CharSequence, out List<CharSequence>>?) {
         val column1View = column1View ?: return
         if (!columns.isNullOrEmpty()) {
             column1Values = columns.keys.toTypedArray().also {
@@ -287,4 +287,5 @@ class PickerFragment : BottomSheetDialogFragment() {
             }
         }
     }
+
 }

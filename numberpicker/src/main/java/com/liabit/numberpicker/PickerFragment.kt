@@ -101,6 +101,11 @@ class PickerFragment : BottomSheetDialogFragment() {
         mTitleTextView?.setText(titleResId)
     }
 
+    fun setValue(value1: Int, value2: Int) {
+        mValue1 = value1
+        mValue2 = value2
+    }
+
     fun setShowProgress(showProgress: Boolean) {
         mShowProgress = showProgress
     }
@@ -149,9 +154,9 @@ class PickerFragment : BottomSheetDialogFragment() {
         }
     }
 
-    fun setColumn(column1Values: Array<CharSequence>?, column2Values: Array<CharSequence>? = null) {
-        this.mColumn1Values = column1Values
-        this.mColumn2Values = column2Values
+    fun setColumn(column1Values: Array<out CharSequence>?, column2Values: Array<out CharSequence>? = null) {
+        mColumn1Values = column1Values
+        mColumn2Values = column2Values
         setColumnInternal(column1Values, column2Values)
     }
 
@@ -276,6 +281,16 @@ class PickerFragment : BottomSheetDialogFragment() {
 
         fun setColumn(minValue: Int, maxValue: Int): Builder {
             mPicker.setColumn(minValue, maxValue)
+            return this
+        }
+
+        fun setColumn(column1Values: Array<out CharSequence>?, column2Values: Array<out CharSequence>? = null): Builder {
+            mPicker.setColumn(column1Values, column2Values)
+            return this
+        }
+
+        fun setValue(value1: Int, value2: Int = 0): Builder {
+            mPicker.setValue(value1, value2)
             return this
         }
 

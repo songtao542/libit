@@ -82,27 +82,27 @@ class BadgeIcon : AppCompatImageView {
     private inner class BadgeDrawable : Drawable() {
 
         private val mTextPaint: TextPaint = TextPaint(TextPaint.ANTI_ALIAS_FLAG)
-        private val mTagPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        private var mTagBounds: RectF = RectF()
+        private val mBadgePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        private var mBadgeBounds: RectF = RectF()
 
         private var mText: String = ""
 
         private var mTextSize: Float = sp2px(9f)
         private var mTextColor: Int = Color.WHITE
         private var mBold: Boolean = false
-        private var mTagColor: Int = Color.RED
-        private var mTagPaddingLeft: Int
-        private var mTagPaddingTop: Int
-        private var mTagPaddingRight: Int
-        private var mTagPaddingBottom: Int
-        private var mTagRadius: Float = 0f
+        private var mBadgeColor: Int = Color.RED
+        private var mBadgePaddingLeft: Int
+        private var mBadgePaddingTop: Int
+        private var mBadgePaddingRight: Int
+        private var mBadgePaddingBottom: Int
+        private var mBadgeRadius: Float = 0f
 
         init {
             val padding = dp2px(2f)
-            mTagPaddingLeft = padding
-            mTagPaddingTop = padding
-            mTagPaddingRight = padding
-            mTagPaddingBottom = padding
+            mBadgePaddingLeft = padding
+            mBadgePaddingTop = padding
+            mBadgePaddingRight = padding
+            mBadgePaddingBottom = padding
 
             mTextPaint.color = mTextColor
             mTextPaint.textSize = mTextSize
@@ -110,29 +110,29 @@ class BadgeIcon : AppCompatImageView {
             mTextPaint.style = Paint.Style.FILL
             mTextPaint.textAlign = Paint.Align.LEFT
 
-            mTagPaint.color = mTagColor
-            mTagPaint.style = Paint.Style.FILL
+            mBadgePaint.color = mBadgeColor
+            mBadgePaint.style = Paint.Style.FILL
         }
 
         fun setBadge(badge: String) {
             mText = badge
-            var textWidth = (mTextPaint.measureText(mText) + mTagPaddingLeft + mTagPaddingRight).toInt()
-            val textHeight = (mTextPaint.textSize + mTagPaddingTop + mTagPaddingBottom).toInt()
+            var textWidth = (mTextPaint.measureText(mText) + mBadgePaddingLeft + mBadgePaddingRight).toInt()
+            val textHeight = (mTextPaint.textSize + mBadgePaddingTop + mBadgePaddingBottom).toInt()
             if (textWidth < textHeight) {
                 textWidth = textHeight
             }
             setBounds(0, 0, textWidth, textHeight)
-            mTagBounds.set(bounds)
-            mTagRadius = max(textWidth, textHeight).toFloat()
+            mBadgeBounds.set(bounds)
+            mBadgeRadius = max(textWidth, textHeight).toFloat()
         }
 
         override fun draw(canvas: Canvas) {
             if (mText.isBlank()) return
-            canvas.drawRoundRect(mTagBounds, mTagRadius, mTagRadius, mTagPaint)
+            canvas.drawRoundRect(mBadgeBounds, mBadgeRadius, mBadgeRadius, mBadgePaint)
             val fm = mTextPaint.fontMetrics
             val textWidth: Float = mTextPaint.measureText(mText)
-            val width = mTagBounds.width()
-            val height = mTagBounds.height()
+            val width = mBadgeBounds.width()
+            val height = mBadgeBounds.height()
             val x = (width - textWidth) / 2f
             val y = height / 2f - fm.descent + (fm.descent - fm.ascent) / 2f - fm.descent / 5f
             canvas.drawText(mText, x, y + 2, mTextPaint)
@@ -140,7 +140,7 @@ class BadgeIcon : AppCompatImageView {
 
         override fun setAlpha(alpha: Int) {
             mTextPaint.alpha = alpha
-            mTagPaint.alpha = alpha
+            mBadgePaint.alpha = alpha
         }
 
         override fun setColorFilter(colorFilter: ColorFilter?) {

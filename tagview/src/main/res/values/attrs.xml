@@ -15,4 +15,10 @@
         <attr name="tagUppercase" format="boolean" />
         <attr name="tags" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="BadgeIcon">
+        <attr name="badge" format="reference|string" />
+        <attr name="badgeTopOffset" format="reference|dimension" />
+        <attr name="badgeRightOffset" format="reference|dimension" />
+    </declare-styleable>
 </resources>

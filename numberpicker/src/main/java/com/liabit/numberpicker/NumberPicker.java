@@ -1031,6 +1031,10 @@ public class NumberPicker extends LinearLayout {
         mOnValueChangeListener = onValueChangedListener;
     }
 
+    public OnValueChangeListener getOnValueChangedListener() {
+        return mOnValueChangeListener;
+    }
+
     /**
      * Set listener to be notified for scroll state changes.
      *

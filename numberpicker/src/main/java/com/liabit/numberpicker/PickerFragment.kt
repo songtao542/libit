@@ -16,8 +16,8 @@ class PickerFragment : BottomSheetDialogFragment() {
         fun onValueChanged(value1: CharSequence, value2: CharSequence)
     }
 
-    interface OnResultListener {
-        fun onResult(value1: Int, value2: Int)
+    interface OnIndexChangeListener {
+        fun onIndexChanged(index1: Int, index2: Int)
     }
 
     private var mColumn1View: NumberPicker? = null
@@ -27,7 +27,7 @@ class PickerFragment : BottomSheetDialogFragment() {
     private var mProgressView: View? = null
     private var mPickersWrapLayout: View? = null
     private var mOnValueChangeListener: ((value1: CharSequence, value2: CharSequence) -> Unit)? = null
-    private var mOnResultListener: ((value1: Int, value2: Int) -> Unit)? = null
+    private var mOnIndexChangeListener: ((index1: Int, index2: Int) -> Unit)? = null
     private var mTitle: CharSequence? = null
     private var mTitleResId: Int? = null
     private var mShowProgress: Boolean = false
@@ -39,6 +39,7 @@ class PickerFragment : BottomSheetDialogFragment() {
     private var mColumn2Values: Array<out CharSequence>? = null
     private var mColumns: LinkedHashMap<out CharSequence, out List<CharSequence>>? = null
     private var mColumn2SubOfColumn1Type = -1
+    private var mRealtimeNotify = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.p_fragment_picker, container, false)
@@ -82,24 +83,36 @@ class PickerFragment : BottomSheetDialogFragment() {
 
         mConfirmButton?.setOnClickListener {
             dismiss()
-            val index1 = mColumn1View?.value ?: return@setOnClickListener
-            val index2 = mColumn2View?.value ?: return@setOnClickListener
-            mOnResultListener?.invoke(index1, index2)
-            val value1 = mColumn1View?.displayedValues?.get(index1) ?: return@setOnClickListener
-            val value2 = mColumn2View?.displayedValues?.get(index2) ?: return@setOnClickListener
-            mOnValueChangeListener?.invoke(value1, value2)
+            notifyListener(false)
         }
     }
 
-    fun setOnResultListener(onResultListener: ((value: Int, value2: Int) -> Unit)) {
-        this.mOnResultListener = onResultListener
+    private fun notifyListener(onValueChange: Boolean) {
+        if (!mRealtimeNotify && onValueChange) return
+        val index1 = mColumn1View?.value ?: return
+        val index2 = mColumn2View?.value ?: return
+        mOnIndexChangeListener?.invoke(index1, index2)
+        val value1 = mColumn1View?.displayedValues?.get(index1) ?: return
+        val value2 = mColumn2View?.displayedValues?.get(index2) ?: return
+        mOnValueChangeListener?.invoke(value1, value2)
     }
 
-    fun setOnResultListener(onResultListener: OnResultListener?) {
+    /**
+     * 是否实时通知
+     */
+    fun setRealtimeNotify(realtimeNotify: Boolean) {
+        mRealtimeNotify = realtimeNotify
+    }
+
+    fun setOnResultListener(onResultListener: ((value: Int, value2: Int) -> Unit)) {
+        this.mOnIndexChangeListener = onResultListener
+    }
+
+    fun setOnIndexChangeListener(onResultListener: OnIndexChangeListener?) {
         if (onResultListener != null) {
-            mOnResultListener = onResultListener::onResult
+            mOnIndexChangeListener = onResultListener::onIndexChanged
         } else {
-            this.mOnResultListener = null
+            this.mOnIndexChangeListener = null
         }
     }
 
@@ -198,6 +211,11 @@ class PickerFragment : BottomSheetDialogFragment() {
                     it.value = 0
                 }
                 showProgress(false)
+                if (it.onValueChangedListener == null) {
+                    it.setOnValueChangedListener { _, _, _ ->
+                        notifyListener(true)
+                    }
+                }
             }
         }
 
@@ -215,6 +233,9 @@ class PickerFragment : BottomSheetDialogFragment() {
                     it.value = 0
                 }
                 showProgress(false)
+                it.setOnValueChangedListener { _, _, _ ->
+                    notifyListener(true)
+                }
             }
         }
     }
@@ -243,6 +264,7 @@ class PickerFragment : BottomSheetDialogFragment() {
                 c1vs.copyOfRange(newVal, c1vs.size)
             }
             setColumnInternal(null, vs)
+            notifyListener(true)
         }
     }
 
@@ -270,6 +292,7 @@ class PickerFragment : BottomSheetDialogFragment() {
                     columns[it[newVal]]?.toTypedArray()?.let { array ->
                         setColumnInternal(null, array)
                     }
+                    notifyListener(true)
                 }
             }
         }
@@ -325,6 +348,14 @@ class PickerFragment : BottomSheetDialogFragment() {
 
         fun setColumn(columns: LinkedHashMap<out CharSequence, out List<CharSequence>>): Builder {
             mPicker.setColumn(columns)
+            return this
+        }
+
+        /**
+         * 是否实时通知
+         */
+        fun setRealtimeNotify(realtimeNotify: Boolean): Builder {
+            mPicker.setRealtimeNotify(realtimeNotify)
             return this
         }
 

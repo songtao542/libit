@@ -12,13 +12,21 @@ import java.util.*
 @Suppress("unused")
 class PickerFragment : BottomSheetDialogFragment() {
 
+    interface OnValueChangeListener {
+        fun onValueChanged(value1: CharSequence, value2: CharSequence)
+    }
+
+    interface OnResultListener {
+        fun onResult(value1: Int, value2: Int)
+    }
+
     private var mColumn1View: NumberPicker? = null
     private var mColumn2View: NumberPicker? = null
     private var mTitleTextView: TextView? = null
     private var mConfirmButton: TextView? = null
     private var mProgressView: View? = null
     private var mPickersWrapLayout: View? = null
-    private var mOnValueListener: ((value1: CharSequence, value2: CharSequence) -> Unit)? = null
+    private var mOnValueChangeListener: ((value1: CharSequence, value2: CharSequence) -> Unit)? = null
     private var mOnResultListener: ((value1: Int, value2: Int) -> Unit)? = null
     private var mTitle: CharSequence? = null
     private var mTitleResId: Int? = null
@@ -79,7 +87,7 @@ class PickerFragment : BottomSheetDialogFragment() {
             mOnResultListener?.invoke(index1, index2)
             val value1 = mColumn1View?.displayedValues?.get(index1) ?: return@setOnClickListener
             val value2 = mColumn2View?.displayedValues?.get(index2) ?: return@setOnClickListener
-            mOnValueListener?.invoke(value1, value2)
+            mOnValueChangeListener?.invoke(value1, value2)
         }
     }
 
@@ -87,8 +95,24 @@ class PickerFragment : BottomSheetDialogFragment() {
         this.mOnResultListener = onResultListener
     }
 
-    fun setOnValueListener(onValueListener: ((value: CharSequence, value2: CharSequence) -> Unit)) {
-        this.mOnValueListener = onValueListener
+    fun setOnResultListener(onResultListener: OnResultListener?) {
+        if (onResultListener != null) {
+            mOnResultListener = onResultListener::onResult
+        } else {
+            this.mOnResultListener = null
+        }
+    }
+
+    fun setOnValueListener(onValueChangeListener: ((value: CharSequence, value2: CharSequence) -> Unit)) {
+        this.mOnValueChangeListener = onValueChangeListener
+    }
+
+    fun setOnValueListener(onValueChangeListener: OnValueChangeListener?) {
+        if (onValueChangeListener != null) {
+            this.mOnValueChangeListener = onValueChangeListener::onValueChanged
+        } else {
+            this.mOnValueChangeListener = null
+        }
     }
 
     fun setTitle(title: CharSequence) {

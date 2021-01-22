@@ -8,12 +8,10 @@ import android.graphics.Paint
 import android.os.CountDownTimer
 import android.os.SystemClock
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import androidx.appcompat.widget.AppCompatTextView
 import java.text.DecimalFormat
-import java.text.NumberFormat
 import java.util.concurrent.TimeUnit
 import kotlin.math.ceil
 
@@ -68,6 +66,11 @@ class TimerTextView : AppCompatTextView {
         }
         dayUnit = resources.getString(R.string.days)
         if (attrs != null) {
+            val gravityAttr = intArrayOf(android.R.attr.gravity)
+            val gravityTypedArray = context.obtainStyledAttributes(attrs, gravityAttr)
+            gravity = gravityTypedArray.getInt(0, Gravity.CENTER)
+            gravityTypedArray.recycle()
+
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerTextView, defStyleAttr, 0)
             tickInterval = typedArray.getInt(R.styleable.TimerTextView_tickInterval, tickInterval)
             prefix = typedArray.getString(R.styleable.TimerTextView_prefix) ?: ""

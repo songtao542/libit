@@ -557,16 +557,12 @@ class FilterLayout : RelativeLayout {
                         filterItem.getStartInputFilters()?.let {
                             filters.addAll(it)
                         }
-                        if (filterItem.getStartText().isNotBlank()) {
-                            editText.setText(filterItem.getStartText())
-                        }
+                        editText.setText(filterItem.getStartText())
                     } else {
                         filterItem.getEndInputFilters()?.let {
                             filters.addAll(it)
                         }
-                        if (filterItem.getEndText().isNotBlank()) {
-                            editText.setText(filterItem.getEndText())
-                        }
+                        editText.setText(filterItem.getEndText())
                     }
                     if (filters.isNotEmpty()) {
                         editText.filters = filters.toTypedArray()
@@ -583,9 +579,7 @@ class FilterLayout : RelativeLayout {
                     filterItem.getInputFilters()?.let {
                         editText.filters = it
                     }
-                    if (filterItem.getText().isNotBlank()) {
-                        editText.setText(filterItem.getText())
-                    }
+                    editText.setText(filterItem.getText())
                     (editText.getTag(R.integer.watcher_tag) as? TextWatcher)?.let {
                         editText.removeTextChangedListener(it)
                     }

@@ -247,8 +247,10 @@ class FilterLayout : RelativeLayout {
             (footer.parent as? ViewGroup)?.removeView(footer)
             if (!mLeftPageClickToReturn) {
                 mLeftPage?.addView(footer)
+                mViewPager?.setPadding(0, 0, 0, 0)
             } else if (!mRightPageClickToReturn) {
                 mRightPage?.addView(footer)
+                mViewPager?.setPadding(0, 0, 0, 0)
             }
         }
     }

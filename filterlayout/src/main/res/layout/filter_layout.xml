@@ -24,19 +24,13 @@
         android:layout_below="@+id/tabLayout"
         android:paddingBottom="60dp" />
 
-    <View
-        android:id="@+id/bottomDivider"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_above="@+id/footer"
-        android:background="#eeeeee" />
-
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignBottom="@+id/viewpager"
         android:layout_gravity="bottom"
+        android:background="@drawable/filter_top_line"
         android:gravity="center"
         android:orientation="horizontal">
 

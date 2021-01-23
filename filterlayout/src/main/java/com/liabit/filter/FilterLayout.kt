@@ -296,6 +296,7 @@ class FilterLayout : RelativeLayout {
             mLeftPageListPadding = Rect()
         }
         mLeftPageListPadding?.set(left, top, right, bottom)
+        mLeftPageRecycleView?.setPadding(left, top, right, bottom)
     }
 
     fun setRightPageListPadding(left: Int, top: Int, right: Int, bottom: Int) {
@@ -303,6 +304,7 @@ class FilterLayout : RelativeLayout {
             mRightPageListPadding = Rect()
         }
         mRightPageListPadding?.set(left, top, right, bottom)
+        mRightPageRecycleView?.setPadding(left, top, right, bottom)
     }
 
     fun setClickToReturnMode(leftPageClickToReturn: Boolean, rightPageClickToReturn: Boolean = false) {

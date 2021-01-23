@@ -2,7 +2,7 @@ project.ext {
     PROJ_NAME = "timerview"
 
     PROJ_ARTIFACTID = "timerview"
-    PROJ_VERSION = "1.0.0"
+    PROJ_VERSION = "1.1.2"
 
     BINTRAY_REPO = "timerview"
     BINTRAY_USER_ORG = "liabit"

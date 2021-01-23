@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.util.TypedValue
 import android.view.*
 import android.widget.FrameLayout
+import androidx.annotation.AnimRes
+import androidx.annotation.AnimatorRes
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
@@ -31,6 +33,11 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
 
     private var mShowAsDialog: Boolean = true
     private var mMatchParentHeight: Boolean = true
+
+    private var mEnterAnim: Int? = null
+    private var mExitAnim: Int? = null
+    private var mPopEnterAnim: Int? = null
+    private var mPopExitAnim: Int? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.filter_dialog_fragment, container, false)?.apply {
@@ -78,7 +85,7 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
                 }
                 val gestureDetector = GestureDetector(it.context, object : GestureDetector.SimpleOnGestureListener() {
                     override fun onSingleTapUp(e: MotionEvent?): Boolean {
-                        back()
+                        handleBack()
                         return true
                     }
                 })
@@ -98,16 +105,24 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
             }
         }
         view.findViewById<View>(R.id.backButton).setOnClickListener {
-            back()
+            handleBack()
         }
         val filterLayout: FilterLayout = view.findViewById(R.id.filterLayout) ?: return
         setup(filterLayout)
         filterLayout.setOnConfirmListener(object : FilterLayout.OnConfirmListener {
             override fun onConfirm(view: View) {
-                back()
+                handleBack()
                 getOnConfirmListener()?.onConfirm(view)
             }
         })
+    }
+
+    private fun handleBack() {
+        if (mShowAsDialog) {
+            dismiss()
+        } else {
+            activity?.onBackPressed()
+        }
     }
 
     private fun getStatusBarHeight(): Int {
@@ -124,60 +139,59 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
         return height
     }
 
+    /**
+     * add to [android.R.id.content]
+     * not addToBackStack
+     */
     fun show(activity: FragmentActivity) {
+        show(activity, true, null)
+    }
+
+    /**
+     * add to [containerViewId]
+     * not addToBackStack
+     */
+    fun show(activity: FragmentActivity, containerViewId: Int) {
+        show(activity, true, containerViewId)
+    }
+
+    /**
+     * add to [android.R.id.content]
+     */
+    fun show(activity: FragmentActivity, addToBackStack: Boolean) {
+        show(activity, addToBackStack, null)
+    }
+
+    fun show(activity: FragmentActivity, addToBackStack: Boolean, containerViewId: Int?) {
+        val fragmentManager = activity.supportFragmentManager
         if (mShowAsDialog) {
-            val transaction = activity.supportFragmentManager.beginTransaction()
-            transaction.addToBackStack(FILTER_TAG)
-            show(transaction, FILTER_TAG)
+            show(fragmentManager, FILTER_TAG)
         } else {
-            if (activity.supportFragmentManager.findFragmentByTag(FILTER_TAG) == null) {
-                activity.supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(
-                                R.anim.filter_anim_right_enter, R.anim.filter_anim_right_exit,
-                                R.anim.filter_anim_right_enter, R.anim.filter_anim_right_exit
-                        )
-                        .add(android.R.id.content, this, FILTER_TAG)
-                        .addToBackStack(FILTER_TAG)
-                        .commitAllowingStateLoss()
-            } else {
-                activity.supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(
-                                R.anim.filter_anim_right_enter, R.anim.filter_anim_right_exit,
-                                R.anim.filter_anim_right_enter, R.anim.filter_anim_right_exit
-                        )
-                        .addToBackStack(FILTER_TAG)
-                        .show(this)
-                        .commitAllowingStateLoss()
+            val transition = fragmentManager.beginTransaction()
+                    .setCustomAnimations(
+                            mEnterAnim ?: R.anim.filter_anim_right_enter,
+                            mExitAnim ?: R.anim.filter_anim_right_exit,
+                            mPopEnterAnim ?: R.anim.filter_anim_right_enter,
+                            mPopExitAnim ?: R.anim.filter_anim_right_exit
+                    )
+                    .add(containerViewId ?: android.R.id.content, this, FILTER_TAG)
+            if (addToBackStack) {
+                transition.addToBackStack(FILTER_TAG)
             }
+            transition.commitAllowingStateLoss()
         }
     }
 
-    fun onBackPressed(): Boolean {
-        val activity = activity ?: return false
-        if (isVisible) {
-            if (mShowAsDialog) {
-                back()
-            } else {
-                activity.supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.filter_anim_right_enter, R.anim.filter_anim_right_exit,
-                                R.anim.filter_anim_right_enter, R.anim.filter_anim_right_exit)
-                        .hide(this)
-                        .commitAllowingStateLoss()
-                return true
-            }
-        }
-        return false
-    }
-
-    private fun back() {
-        val activity = activity ?: return
-        if (activity.supportFragmentManager.backStackEntryCount > 0) {
-            dialog?.let { dia ->
-                dia.setOnDismissListener(null)
-                dia.dismiss()
-            }
-            activity.supportFragmentManager.popBackStack()
-        }
+    fun setCustomAnimations(
+            @AnimatorRes @AnimRes enter: Int,
+            @AnimatorRes @AnimRes exit: Int,
+            @AnimatorRes @AnimRes popEnter: Int,
+            @AnimatorRes @AnimRes popExit: Int,
+    ) {
+        mEnterAnim = enter
+        mExitAnim = exit
+        mPopEnterAnim = popEnter
+        mPopExitAnim = popExit
     }
 
     fun setShowAsDialog(showAsDialog: Boolean) {

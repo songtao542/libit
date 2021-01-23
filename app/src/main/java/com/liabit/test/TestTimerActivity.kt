@@ -49,7 +49,7 @@ class TestTimerActivity : AppCompatActivity() {
         binding.timerTextView.setTimeEndListener(object : TimerTextView.OnTimeEndListener {
             override fun onTimeEnd() {
                 Toast.makeText(this@TestTimerActivity, "Finished", Toast.LENGTH_SHORT).show()
-                binding.timerTextView.reset()
+                binding.timerTextView.cancel()
             }
         })
     }

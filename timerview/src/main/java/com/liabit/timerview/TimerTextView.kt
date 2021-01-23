@@ -168,21 +168,22 @@ class TimerTextView : AppCompatTextView {
     }
 
     fun setTimeEndListener(countdownListener: (() -> Unit)?) {
-        this.timeEndListener = if (countdownListener == null)
-            null
-        else
+        this.timeEndListener = if (countdownListener != null) {
             object : OnTimeEndListener {
                 override fun onTimeEnd() {
-                    countdownListener?.invoke()
+                    countdownListener.invoke()
                 }
             }
+        } else {
+            null
+        }
     }
 
     interface OnTimeEndListener {
         fun onTimeEnd()
     }
 
-    fun reset() {
+    fun cancel() {
         countDownTimer?.cancel()
     }
 

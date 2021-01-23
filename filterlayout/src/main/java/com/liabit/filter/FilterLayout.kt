@@ -402,6 +402,13 @@ class FilterLayout : RelativeLayout {
                 if (filterItem is AddressFilterItem) {
                     filterItem.setAddress(null)
                 }
+                if (filterItem is EditableFilterItem) {
+                    filterItem.setText("")
+                }
+                if (filterItem is EditableRangeFilterItem) {
+                    filterItem.setStartText("")
+                    filterItem.setEndText("")
+                }
             }
         }
 

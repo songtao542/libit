@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 
-
 /**
  * Author:         songtao
  * CreateDate:     2020/9/12 16:32
@@ -85,7 +84,7 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
                 }
                 val gestureDetector = GestureDetector(it.context, object : GestureDetector.SimpleOnGestureListener() {
                     override fun onSingleTapUp(e: MotionEvent?): Boolean {
-                        handleBack()
+                        dismiss()
                         return true
                     }
                 })
@@ -105,24 +104,16 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
             }
         }
         view.findViewById<View>(R.id.backButton).setOnClickListener {
-            handleBack()
+            dismiss()
         }
         val filterLayout: FilterLayout = view.findViewById(R.id.filterLayout) ?: return
         setup(filterLayout)
         filterLayout.setOnConfirmListener(object : FilterLayout.OnConfirmListener {
             override fun onConfirm(view: View) {
-                handleBack()
+                dismiss()
                 getOnConfirmListener()?.onConfirm(view)
             }
         })
-    }
-
-    private fun handleBack() {
-        if (mShowAsDialog) {
-            dismiss()
-        } else {
-            activity?.onBackPressed()
-        }
     }
 
     private fun getStatusBarHeight(): Int {
@@ -196,6 +187,14 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
 
     fun setShowAsDialog(showAsDialog: Boolean) {
         mShowAsDialog = showAsDialog
+    }
+
+    override fun dismiss() {
+        if (mShowAsDialog) {
+            super.dismiss()
+        } else {
+            activity?.onBackPressed()
+        }
     }
 
 }

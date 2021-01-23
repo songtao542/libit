@@ -361,16 +361,19 @@ class FilterLayout : RelativeLayout {
 
     class FilterViewAdapter : RecyclerView.Adapter<FilterViewAdapter.ViewHolder>() {
 
-        private val mDefaultLayoutId = R.layout.filter_text
-
         var mOriginData: List<Filter>? = null
-        private val mData = ArrayList<Filter>()
 
         var mFilterAdapter: FilterAdapter? = null
 
-        var mClickToBackListener: ((item: Filter) -> Unit)? = null
+        private val mDefaultLayoutId = R.layout.filter_text
 
-        var mFilterPicker: IPicker? = null
+        private val mData = ArrayList<Filter>()
+
+        private var mClickToBackListener: ((item: Filter) -> Unit)? = null
+
+        private var mFilterPicker: IPicker? = null
+
+        private var mMargins = IntArray(4) { -1 }
 
         fun setFilterPicker(filterPicker: IPicker?) {
             mFilterPicker = filterPicker
@@ -437,6 +440,9 @@ class FilterLayout : RelativeLayout {
                 Log.d(TAG, "can't find layout resource for view type: $viewType")
                 resId = mDefaultLayoutId
             }
+            val marginVertical = parent.context.resources.getDimension(R.dimen.filter_item_vertical_margin).toInt()
+            mMargins.fill(-1)
+            mFilterAdapter?.getLayoutMargins(mMargins)
             val view = LayoutInflater.from(parent.context).inflate(resId, parent, false)
             val lp = view.layoutParams ?: FlexboxLayoutManager.LayoutParams(
                     FlexboxLayoutManager.LayoutParams.WRAP_CONTENT,
@@ -444,9 +450,10 @@ class FilterLayout : RelativeLayout {
             (lp as? FlexboxLayoutManager.LayoutParams)?.let {
                 it.flexGrow = if (viewType == Filter.TYPE_GROUP) 1f else 0f
                 it.alignSelf = AlignItems.FLEX_START
-                val margin = parent.context.resources.getDimension(R.dimen.filter_item_vertical_margin).toInt()
-                it.topMargin = margin
-                it.bottomMargin = margin
+                it.leftMargin = if (mMargins[0] >= 0) mMargins[0] else 0
+                it.topMargin = if (mMargins[1] >= 0) mMargins[1] else marginVertical
+                it.rightMargin = if (mMargins[2] >= 0) mMargins[2] else 0
+                it.bottomMargin = if (mMargins[3] >= 0) mMargins[3] else marginVertical
             }
             view.layoutParams = lp
             return ViewHolder(view)

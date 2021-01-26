@@ -74,6 +74,7 @@ class AddSubView : LinearLayout, TextWatcher {
     private var mDialogTitle: CharSequence? = null
 
     private var mImm: InputMethodManager? = null
+    private var mIgnoreZeroWhenShowInputDialog = true
 
     constructor(context: Context) : super(context) {
         init(context, null, 0, 0)
@@ -128,6 +129,7 @@ class AddSubView : LinearLayout, TextWatcher {
             mDialogTitle = typedArray.getString(R.styleable.AddSubView_editDialogTitle)
             mAddIcon = typedArray.getDrawable(R.styleable.AddSubView_addIcon) ?: mAddIcon
             mSubIcon = typedArray.getDrawable(R.styleable.AddSubView_subIcon) ?: mSubIcon
+            mIgnoreZeroWhenShowInputDialog = typedArray.getBoolean(R.styleable.AddSubView_ignoreZeroWhenShowInputDialog, true)
             editable = if (mShowEditDialog) false else typedArray.getBoolean(R.styleable.AddSubView_editable, true)
             editTextBackground = typedArray.getDrawable(R.styleable.AddSubView_editBackground)
             editTextWidth = typedArray.getDimension(R.styleable.AddSubView_editWidth, 0f)
@@ -394,7 +396,9 @@ class AddSubView : LinearLayout, TextWatcher {
         mMin?.let { min ->
             subButton?.isEnabled = value > min
         }
-        editText.setText(value.toString())
+        if (!mIgnoreZeroWhenShowInputDialog || value != 0) {
+            editText.setText(value.toString())
+        }
         editText.addTextChangedListener(onTextChanged = { text: CharSequence?, _, _, _ ->
             val txt = text?.toString() ?: return@addTextChangedListener
             txt.toLongOrNull()?.also {

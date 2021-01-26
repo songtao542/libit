@@ -2,7 +2,7 @@ project.ext {
     PROJ_NAME = "numberpicker"
 
     PROJ_ARTIFACTID = "numberpicker"
-    PROJ_VERSION = "0.0.4"
+    PROJ_VERSION = "0.0.5"
 
     BINTRAY_REPO = "numberpicker"
     BINTRAY_USER_ORG = "liabit"

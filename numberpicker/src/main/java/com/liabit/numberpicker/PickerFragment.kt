@@ -104,13 +104,13 @@ class PickerFragment : BottomSheetDialogFragment() {
         mRealtimeNotify = realtimeNotify
     }
 
-    fun setOnResultListener(onResultListener: ((value: Int, value2: Int) -> Unit)) {
-        this.mOnIndexChangeListener = onResultListener
+    fun setOnIndexChangeListener(onIndexChangeListener: ((value: Int, value2: Int) -> Unit)) {
+        this.mOnIndexChangeListener = onIndexChangeListener
     }
 
-    fun setOnIndexChangeListener(onResultListener: OnIndexChangeListener?) {
-        if (onResultListener != null) {
-            mOnIndexChangeListener = onResultListener::onIndexChanged
+    fun setOnIndexChangeListener(onIndexChangeListener: OnIndexChangeListener?) {
+        if (onIndexChangeListener != null) {
+            mOnIndexChangeListener = onIndexChangeListener::onIndexChanged
         } else {
             this.mOnIndexChangeListener = null
         }
@@ -316,13 +316,23 @@ class PickerFragment : BottomSheetDialogFragment() {
             return this
         }
 
-        fun setOnResultListener(onResultListener: ((value: Int, value2: Int) -> Unit)): Builder {
-            mPicker.setOnResultListener(onResultListener)
+        fun setOnIndexChangeListener(onIndexChangeListener: ((value: Int, value2: Int) -> Unit)): Builder {
+            mPicker.setOnIndexChangeListener(onIndexChangeListener)
+            return this
+        }
+
+        fun setOnIndexChangeListener(onIndexChangeListener: OnIndexChangeListener?): Builder {
+            mPicker.setOnIndexChangeListener(onIndexChangeListener)
             return this
         }
 
         fun setOnValueListener(onValueListener: ((value: CharSequence, value2: CharSequence) -> Unit)): Builder {
             mPicker.setOnValueListener(onValueListener)
+            return this
+        }
+
+        fun setOnValueListener(onValueChangeListener: OnValueChangeListener?): Builder {
+            mPicker.setOnValueListener(onValueChangeListener)
             return this
         }
 

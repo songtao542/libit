@@ -542,7 +542,9 @@ public class NumberPicker extends LinearLayout {
 
         // process style attributes
         final TypedArray attributesArray = context.obtainStyledAttributes(attrs, R.styleable.NumberPicker, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.NumberPicker, attrs, attributesArray, defStyleAttr, defStyleRes);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            saveAttributeDataForStyleable(context, R.styleable.NumberPicker, attrs, attributesArray, defStyleAttr, defStyleRes);
+        }
         final int layoutResId = attributesArray.getResourceId(R.styleable.NumberPicker_pickerInternalLayout, DEFAULT_LAYOUT_RESOURCE_ID);
 
         mHasSelectorWheel = true;

@@ -2,7 +2,7 @@ project.ext {
     PROJ_NAME = "filterlayout"
 
     PROJ_ARTIFACTID = "filterlayout"
-    PROJ_VERSION = "1.1.6"
+    PROJ_VERSION = "1.1.7"
 
     BINTRAY_REPO = ""
     BINTRAY_USER_ORG = ""

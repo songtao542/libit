@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.graphics.Outline
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.StateListDrawable
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextUtils
@@ -55,10 +54,7 @@ class AddSubView : LinearLayout, TextWatcher {
     private var mOnValueChangedListener: ((view: AddSubView, value: Int, causeByEdit: Boolean) -> Unit)? = null
     private var mOnValueOutOfRangeListener: ((view: AddSubView, value: Int) -> Unit)? = null
     private var mOnEmptyListener: ((view: AddSubView) -> Unit)? = null
-    private var mValueChangedListener: OnValueChangedListener? = null
-
-    private var mValueOutOfRangeListener: OnValueOutOfRangeListener? = null
-    private var mEmptyListener: OnEmptyListener? = null
+    private var mOnDialogActionListener: ((which: Int, value: Int) -> Unit)? = null
     private var mTextClickListener: OnClickListener? = null
     private var mShowEditDialog = false
     private var mShowEditDialogOptButton = false
@@ -244,7 +240,6 @@ class AddSubView : LinearLayout, TextWatcher {
                 if (mValue < it) {
                     setValue(mValue + 1, false)
                     mOnValueChangedListener?.invoke(this, mValue, false)
-                    mValueChangedListener?.onValueChanged(this, mValue, edited = false)
                 }
             }
         }
@@ -256,7 +251,6 @@ class AddSubView : LinearLayout, TextWatcher {
                 if (mValue > it) {
                     setValue(mValue - 1, false)
                     mOnValueChangedListener?.invoke(this, mValue, false)
-                    mValueChangedListener?.onValueChanged(this, mValue, edited = false)
                 }
             }
         }
@@ -475,14 +469,16 @@ class AddSubView : LinearLayout, TextWatcher {
         dialog = AlertDialog.Builder(context, mDialogTheme)
                 .setView(view)
                 .setTitle(mDialogTitle ?: context.getString(R.string.add_sub_dialog_title))
-                .setNegativeButton(R.string.add_sub_dialog_cancel) { d, _ ->
+                .setNegativeButton(R.string.add_sub_dialog_cancel) { d, which ->
                     d.dismiss()
+                    mOnDialogActionListener?.invoke(which, mValue)
                 }
-                .setPositiveButton(R.string.add_sub_dialog_confirm) { d, _ ->
+                .setPositiveButton(R.string.add_sub_dialog_confirm) { d, which ->
                     d.dismiss()
                     editText?.text?.let {
                         setAndCheckValue(it.toString(), updateTextView = true, actionDone = true)
                     }
+                    mOnDialogActionListener?.invoke(which, mValue)
                 }
                 .setOnDismissListener {
                     mDialog = null
@@ -549,20 +545,17 @@ class AddSubView : LinearLayout, TextWatcher {
             }
             if (notifyValueChange) {
                 mOnValueChangedListener?.invoke(this, mValue, true)
-                mValueChangedListener?.onValueChanged(this, mValue, true)
             }
         } else {
             mOnEmptyListener?.invoke(this)
-            mEmptyListener?.onEmpty(this)
             mNumEditor.hint = mValue.toString()
             mNumTextView.text = mValue.toString()
         }
     }
 
     private fun notifyOutOfRangeOrUpdateText(number: Int, updateToNumber: Int, editText: EditText) {
-        if (mValueOutOfRangeListener != null || mValueOutOfRangeListener != null) {
+        if (mOnValueOutOfRangeListener != null) {
             mOnValueOutOfRangeListener?.invoke(this, number)
-            mValueOutOfRangeListener?.onValueOutOfRange(this, number)
         } else {
             updateTextWithoutNotify(updateToNumber.toString(), editText)
         }
@@ -692,16 +685,16 @@ class AddSubView : LinearLayout, TextWatcher {
         mOnEmptyListener = listener
     }
 
-    fun setOnValueChangedListener(listener: OnValueChangedListener) {
-        mValueChangedListener = listener
+    fun setOnValueChangedListener(listener: OnValueChangedListener?) {
+        mOnValueChangedListener = if (listener != null) listener::onValueChanged else null
     }
 
-    fun setOnValueOutOfRangeListener(listener: OnValueOutOfRangeListener) {
-        mValueOutOfRangeListener = listener
+    fun setOnValueOutOfRangeListener(listener: OnValueOutOfRangeListener?) {
+        mOnValueOutOfRangeListener = if (listener != null) listener::onValueOutOfRange else null
     }
 
-    fun setOnEmptyListener(listener: OnEmptyListener) {
-        mEmptyListener = listener
+    fun setOnEmptyListener(listener: OnEmptyListener?) {
+        mOnEmptyListener = if (listener != null) listener::onEmpty else null
     }
 
     fun setOnTextViewClickListener(listener: OnClickListener?) {
@@ -713,6 +706,28 @@ class AddSubView : LinearLayout, TextWatcher {
         } else {
             configEditDialog()
         }
+    }
+
+    /**
+     * @param listener which the button that was clicked
+     * [android.content.DialogInterface.BUTTON_POSITIVE] if the position of the item clicked;
+     * [android.content.DialogInterface.BUTTON_NEGATIVE] if the negative of the item clicked;
+     */
+    fun setOnDialogActionListener(listener: ((which: Int, value: Int) -> Unit)?) {
+        mOnDialogActionListener = listener
+    }
+
+    fun setOnDialogActionListener(listener: OnDialogActionListener?) {
+        mOnDialogActionListener = if (listener != null) listener::onAction else null
+    }
+
+    interface OnDialogActionListener {
+        /**
+         * @param which the button that was clicked
+         * [android.content.DialogInterface.BUTTON_POSITIVE] if the position of the item clicked;
+         * [android.content.DialogInterface.BUTTON_NEGATIVE] if the negative of the item clicked;
+         */
+        fun onAction(which: Int, value: Int)
     }
 
     interface OnValueChangedListener {

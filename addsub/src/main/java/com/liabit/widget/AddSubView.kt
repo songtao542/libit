@@ -415,20 +415,20 @@ class AddSubView : LinearLayout, TextWatcher {
                 val min = mMin
                 val max = mMax
                 if (min != null && max != null && min <= max && (number < min || number > max)) {
-                    val updateValue = if (mAllowOutOfRange) {
+                    val updatedValue = if (mAllowOutOfRange) {
                         number
                     } else {
                         if (number < min) min else max
                     }
-                    notifyOutOfRangeOrUpdateText(number, updateValue, editText)
+                    notifyOutOfRangeOrUpdateText(number, updatedValue, editText)
                     return@addTextChangedListener
                 } else if (min != null && max == null && number < min) {
-                    val updateValue = if (mAllowOutOfRange) number else min
-                    notifyOutOfRangeOrUpdateText(number, updateValue, editText)
+                    val updatedValue = if (mAllowOutOfRange) number else min
+                    notifyOutOfRangeOrUpdateText(number, updatedValue, editText)
                     return@addTextChangedListener
                 } else if (min == null && max != null && number > max) {
-                    val updateValue = if (mAllowOutOfRange) number else max
-                    notifyOutOfRangeOrUpdateText(number, updateValue, editText)
+                    val updatedValue = if (mAllowOutOfRange) number else max
+                    notifyOutOfRangeOrUpdateText(number, updatedValue, editText)
                     return@addTextChangedListener
                 }
                 if (it > MAX_VALUE) {
@@ -532,20 +532,20 @@ class AddSubView : LinearLayout, TextWatcher {
             val min = mMin
             val max = mMax
             if (min != null && max != null && min <= max && (number < min || number > max)) {
-                val updateValue = if (mAllowOutOfRange) {
+                val updatedValue = if (mAllowOutOfRange) {
                     number
                 } else {
                     if (number < min) min else max
                 }
-                notifyOutOfRangeOrUpdateText(number, updateValue, mNumEditor)
+                notifyOutOfRangeOrUpdateText(number, updatedValue, mNumEditor)
                 return
             } else if (min != null && max == null && number < min) {
-                val updateValue = if (mAllowOutOfRange) number else min
-                notifyOutOfRangeOrUpdateText(number, updateValue, mNumEditor)
+                val updatedValue = if (mAllowOutOfRange) number else min
+                notifyOutOfRangeOrUpdateText(number, updatedValue, mNumEditor)
                 return
             } else if (min == null && max != null && number > max) {
-                val updateValue = if (mAllowOutOfRange) number else max
-                notifyOutOfRangeOrUpdateText(number, updateValue, mNumEditor)
+                val updatedValue = if (mAllowOutOfRange) number else max
+                notifyOutOfRangeOrUpdateText(number, updatedValue, mNumEditor)
                 return
             }
 

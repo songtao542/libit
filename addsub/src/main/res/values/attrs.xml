@@ -23,6 +23,7 @@
         <attr name="android:textColor" />
         <attr name="android:textColorHint" />
         <attr name="ignoreZeroWhenShowInputDialog" format="reference|boolean" />
+        <attr name="allowEditOutOfRange" format="reference|boolean" />
     </declare-styleable>
 
 </resources>

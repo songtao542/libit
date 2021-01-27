@@ -71,6 +71,7 @@ class AddSubView : LinearLayout, TextWatcher {
 
     private var mImm: InputMethodManager? = null
     private var mIgnoreZeroWhenShowInputDialog = true
+    private var mAllowOutOfRange = false
 
     constructor(context: Context) : super(context) {
         init(context, null, 0, 0)
@@ -126,6 +127,7 @@ class AddSubView : LinearLayout, TextWatcher {
             mAddIcon = typedArray.getDrawable(R.styleable.AddSubView_addIcon) ?: mAddIcon
             mSubIcon = typedArray.getDrawable(R.styleable.AddSubView_subIcon) ?: mSubIcon
             mIgnoreZeroWhenShowInputDialog = typedArray.getBoolean(R.styleable.AddSubView_ignoreZeroWhenShowInputDialog, true)
+            mAllowOutOfRange = typedArray.getBoolean(R.styleable.AddSubView_allowEditOutOfRange, false)
             editable = if (mShowEditDialog) false else typedArray.getBoolean(R.styleable.AddSubView_editable, true)
             editTextBackground = typedArray.getDrawable(R.styleable.AddSubView_editBackground)
             editTextWidth = typedArray.getDimension(R.styleable.AddSubView_editWidth, 0f)
@@ -413,13 +415,20 @@ class AddSubView : LinearLayout, TextWatcher {
                 val min = mMin
                 val max = mMax
                 if (min != null && max != null && min <= max && (number < min || number > max)) {
-                    notifyOutOfRangeOrUpdateText(number, if (number < min) min else max, editText)
+                    val updateValue = if (mAllowOutOfRange) {
+                        number
+                    } else {
+                        if (number < min) min else max
+                    }
+                    notifyOutOfRangeOrUpdateText(number, updateValue, editText)
                     return@addTextChangedListener
                 } else if (min != null && max == null && number < min) {
-                    notifyOutOfRangeOrUpdateText(number, min, editText)
+                    val updateValue = if (mAllowOutOfRange) number else min
+                    notifyOutOfRangeOrUpdateText(number, updateValue, editText)
                     return@addTextChangedListener
                 } else if (min == null && max != null && number > max) {
-                    notifyOutOfRangeOrUpdateText(number, max, editText)
+                    val updateValue = if (mAllowOutOfRange) number else max
+                    notifyOutOfRangeOrUpdateText(number, updateValue, editText)
                     return@addTextChangedListener
                 }
                 if (it > MAX_VALUE) {
@@ -523,13 +532,20 @@ class AddSubView : LinearLayout, TextWatcher {
             val min = mMin
             val max = mMax
             if (min != null && max != null && min <= max && (number < min || number > max)) {
-                notifyOutOfRangeOrUpdateText(number, if (number < min) min else max, mNumEditor)
+                val updateValue = if (mAllowOutOfRange) {
+                    number
+                } else {
+                    if (number < min) min else max
+                }
+                notifyOutOfRangeOrUpdateText(number, updateValue, mNumEditor)
                 return
             } else if (min != null && max == null && number < min) {
-                notifyOutOfRangeOrUpdateText(number, min, mNumEditor)
+                val updateValue = if (mAllowOutOfRange) number else min
+                notifyOutOfRangeOrUpdateText(number, updateValue, mNumEditor)
                 return
             } else if (min == null && max != null && number > max) {
-                notifyOutOfRangeOrUpdateText(number, max, mNumEditor)
+                val updateValue = if (mAllowOutOfRange) number else max
+                notifyOutOfRangeOrUpdateText(number, updateValue, mNumEditor)
                 return
             }
 

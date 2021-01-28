@@ -51,16 +51,18 @@ class SettingsProvider : ContentProvider() {
     }
 
     private val mLock = Any()
-    private val mSettingsRegistry by lazy(mLock) { SettingsRegistry() }
+    private val mSettingsRegistry by lazy(mLock) { context?.let { SettingsRegistry(it) } }
 
     override fun onCreate(): Boolean {
-        CONTENT_URI = Uri.parse("content://${requireContext().packageName}.settings/settings")
+        context?.let {
+            CONTENT_URI = Uri.parse("content://${it.packageName}.settings/settings")
+        }
         return true
     }
 
-    fun requireContext(): Context {
+    /*fun requireContext(): Context {
         return context ?: throw IllegalStateException("Cannot find context from the provider.")
-    }
+    }*/
 
     override fun call(method: String, name: String?, args: Bundle?): Bundle? {
         if (name == null) return null
@@ -177,21 +179,24 @@ class SettingsProvider : ContentProvider() {
             Log.d(TAG, "getAllSettings()")
         }
         synchronized(mLock) {
-            // Get the settings.
-            val settingsState = mSettingsRegistry.settingsLocked
-            val names = settingsState.settingNamesLocked
-            val nameCount = names.size
             val normalizedProjection = normalizeProjection(ALL_COLUMNS)
-            val result = MatrixCursor(normalizedProjection, nameCount)
-            // Anyone can get the global settings, so no security checks.
-            for (i in 0 until nameCount) {
-                val name = names[i]
-                val setting = settingsState.getSettingLocked(name)
-                if (setting != null) {
-                    appendSettingToCursor(result, setting)
+            mSettingsRegistry?.let {
+                // Get the settings.
+                val settingsState = it.settingsLocked
+                val names = settingsState.settingNamesLocked
+                val nameCount = names.size
+                val result = MatrixCursor(normalizedProjection, nameCount)
+                // Anyone can get the global settings, so no security checks.
+                for (i in 0 until nameCount) {
+                    val name = names[i]
+                    val setting = settingsState.getSettingLocked(name)
+                    if (setting != null) {
+                        appendSettingToCursor(result, setting)
+                    }
                 }
+                return result
             }
-            return result
+            return MatrixCursor(normalizedProjection)
         }
     }
 
@@ -199,7 +204,9 @@ class SettingsProvider : ContentProvider() {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "getSetting($name)")
         }
-        synchronized(mLock) { return mSettingsRegistry.getSettingLocked(name) }
+        synchronized(mLock) {
+            return mSettingsRegistry?.getSettingLocked(name)
+        }
     }
 
     private fun updateSetting(name: String, value: String?): Boolean {
@@ -228,21 +235,19 @@ class SettingsProvider : ContentProvider() {
         // enforceWritePermission(Manifest.permission.WRITE_SECURE_SETTINGS);
         // Perform the mutation.
         synchronized(mLock) {
-            when (operation) {
+            return when (operation) {
                 MUTATION_OPERATION_INSERT -> {
-                    return mSettingsRegistry.insertSettingLocked(name, value)
+                    mSettingsRegistry?.insertSettingLocked(name, value) ?: false
                 }
                 MUTATION_OPERATION_DELETE -> {
-                    return mSettingsRegistry.deleteSettingLocked(name)
+                    mSettingsRegistry?.deleteSettingLocked(name) ?: false
                 }
                 MUTATION_OPERATION_UPDATE -> {
-                    return mSettingsRegistry.updateSettingLocked(name, value)
+                    mSettingsRegistry?.updateSettingLocked(name, value) ?: false
                 }
-                else -> {
-                }
+                else -> false
             }
         }
-        return false
     }
 
     private fun enforceWritePermission(permission: String) {
@@ -372,10 +377,10 @@ class SettingsProvider : ContentProvider() {
                     val userId = msg.arg1
                     val uri = msg.obj as Uri
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        requireContext().contentResolver.notifyChange(uri, null, 0)
+                        context?.contentResolver?.notifyChange(uri, null, 0)
                     } else {
                         @Suppress("DEPRECATION")
-                        requireContext().contentResolver.notifyChange(uri, null, false)
+                        context?.contentResolver?.notifyChange(uri, null, false)
                     }
                     if (BuildConfig.DEBUG) {
                         Log.d(TAG, "Notifying for $userId: $uri")
@@ -385,10 +390,10 @@ class SettingsProvider : ContentProvider() {
         }
     }
 
-    internal inner class SettingsRegistry {
+    internal inner class SettingsRegistry(private val context: Context) {
         private var mSettingsState: SettingsState? = null
-        private val mHandler by lazy { NotifyUriHandler(requireContext().mainLooper) }
-        private val mSettingsFile by lazy { File(requireContext().filesDir, SETTINGS_FILE) }
+        private val mHandler by lazy { NotifyUriHandler(context.mainLooper) }
+        private val mSettingsFile by lazy { File(context.filesDir, SETTINGS_FILE) }
 
         val settingsLocked: SettingsState get() = peekSettingsStateLocked()
 

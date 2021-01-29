@@ -194,9 +194,11 @@ class TimerView : LinearLayout {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        remainingTime -= (SystemClock.elapsedRealtime() - pauseTime)
-        if (countDownTimer == null) {
-            start(remainingTime)
+        if (remainingTime > 0) {
+            remainingTime -= (SystemClock.elapsedRealtime() - pauseTime)
+            if (countDownTimer == null) {
+                start(remainingTime)
+            }
         }
     }
 

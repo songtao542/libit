@@ -110,9 +110,11 @@ class TimerTextView : AppCompatTextView {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        remainingTime -= (SystemClock.elapsedRealtime() - pauseTime)
-        if (countDownTimer == null && remainingTime > 0) {
-            start(remainingTime)
+        if (remainingTime > 0) {
+            remainingTime -= (SystemClock.elapsedRealtime() - pauseTime)
+            if (countDownTimer == null && remainingTime > 0) {
+                start(remainingTime)
+            }
         }
     }
 

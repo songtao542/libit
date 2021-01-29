@@ -38,6 +38,8 @@ class TimerTextView : AppCompatTextView {
     private var strokeWidth = 0f
     private lateinit var strokePaint: Paint
 
+    private var millisInFutureChanged = false
+
     private var dayFormat = FORMAT_TWO
     private var timeFormat = FORMAT
 
@@ -111,7 +113,7 @@ class TimerTextView : AppCompatTextView {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         remainingTime -= (SystemClock.elapsedRealtime() - pauseTime)
-        if (countDownTimer == null) {
+        if (countDownTimer == null && remainingTime > 0) {
             start(remainingTime)
         }
     }
@@ -186,6 +188,8 @@ class TimerTextView : AppCompatTextView {
 
     fun cancel() {
         countDownTimer?.cancel()
+        remainingTime = 0L
+        millisInFuture = 0L
     }
 
     fun pause() {

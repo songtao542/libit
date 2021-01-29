@@ -124,6 +124,7 @@ class TimerTextView : AppCompatTextView {
     }
 
     fun start(millisInFuture: Long) {
+        if (millisInFuture <= 0) return
         this.millisInFuture = millisInFuture
         countDownTimer?.cancel()
         remainingTime = millisInFuture

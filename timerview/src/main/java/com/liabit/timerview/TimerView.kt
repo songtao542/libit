@@ -223,6 +223,7 @@ class TimerView : LinearLayout {
     }
 
     fun start(millisInFuture: Long) {
+        if (millisInFuture <= 0) return
         countDownTimer?.cancel()
         val days = TimeUnit.MILLISECONDS.toDays(millisInFuture)
         when {

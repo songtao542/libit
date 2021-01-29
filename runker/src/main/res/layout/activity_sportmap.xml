@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sport_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f8f9fa">
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/sport_panel_bg"
+        android:elevation="3dp"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/distance_mile_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@string/distance_mile"
+            android:textColor="@color/sport_panel_text_color"
+            android:textSize="@dimen/sport_panel_label_text_size"
+            app:layout_constraintEnd_toStartOf="@+id/time_label"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/time_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@string/time"
+            android:textColor="@color/sport_panel_text_color"
+            android:textSize="@dimen/sport_panel_label_text_size"
+            app:layout_constraintEnd_toStartOf="@+id/peisu_label"
+            app:layout_constraintHorizontal_weight="1.5"
+            app:layout_constraintStart_toEndOf="@id/distance_mile_label"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/peisu_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@string/peisu"
+            android:textColor="@color/sport_panel_text_color"
+            android:textSize="@dimen/sport_panel_label_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/time_label"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/mileage_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sport_panel_label_text_margin"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="0.00"
+            android:textColor="@color/sport_panel_text_color"
+            android:textSize="@dimen/sport_panel_text_size"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/passed_time_text_view"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/distance_mile_label" />
+
+        <Chronometer
+            android:id="@+id/passed_time_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="@dimen/sport_panel_label_text_margin"
+            android:ellipsize="end"
+            android:format="00:00:00"
+
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/sport_panel_text_color"
+            android:textSize="@dimen/sport_panel_text_size"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/speed_text_view"
+            app:layout_constraintHorizontal_weight="1.5"
+            app:layout_constraintStart_toEndOf="@id/mileage_text_view"
+            app:layout_constraintTop_toBottomOf="@id/time_label" />
+
+
+        <TextView
+            android:id="@+id/speed_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sport_panel_label_text_margin"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="0.00"
+            android:textColor="@color/sport_panel_text_color"
+            android:textSize="@dimen/sport_panel_text_size"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/passed_time_text_view"
+            app:layout_constraintTop_toBottomOf="@id/peisu_label" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:paddingHorizontal="30dp"
+        android:paddingTop="30dp"
+        android:paddingBottom="50dp">
+
+        <com.liabit.widget.SpringButton
+            android:id="@+id/finishButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:background="@drawable/spring_finish_button_selector"
+            android:elevation="3dp"
+            android:text="@string/finish"
+            android:textColor="#ffffff"
+            android:translationY="150dp"
+            app:icon="@drawable/ic_stop"
+            app:iconSize="30dp" />
+
+        <com.liabit.widget.SpringButton
+            android:id="@+id/pauseButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="15dp"
+            android:background="@drawable/spring_pause_button_selector"
+            android:elevation="3dp"
+            android:onClick="onClick"
+            android:text="@string/pause"
+            android:textColor="#ffffff"
+            android:translationY="150dp"
+            app:icon="@drawable/ic_pause"
+            app:iconSize="30dp" />
+
+        <com.liabit.widget.SpringButton
+            android:id="@+id/continueButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:background="@drawable/spring_continue_button_selector"
+            android:elevation="3dp"
+            android:onClick="onClick"
+            android:text="@string/continue_text"
+            android:textColor="#ffffff"
+            android:translationY="150dp"
+            app:icon="@drawable/ic_play"
+            app:iconSize="30dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/countdown_text_view"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/sport_panel_countdown_text_color"
+        android:textSize="130sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

@@ -27,6 +27,7 @@
             <option value="$PROJECT_DIR$/picker_integrate" />
             <option value="$PROJECT_DIR$/popup" />
             <option value="$PROJECT_DIR$/recyclerview" />
+            <option value="$PROJECT_DIR$/runker" />
             <option value="$PROJECT_DIR$/screencapture" />
             <option value="$PROJECT_DIR$/screenrecord" />
             <option value="$PROJECT_DIR$/settings" />
@@ -43,6 +44,7 @@
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
+        <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
   </component>

@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">runker</string>
+    <string name="school">学校</string>
+    <string name="movement">动态</string>
+    <string name="teach">教学</string>
+    <string name="me">我的</string>
+    <string name="peisu">配速(分/公里)</string>
+    <string name="mile">公里</string>
+    <string name="distance_mile">距离(km)</string>
+    <string name="time">时间</string>
+    <string name="continue_text">继续</string>
+    <string name="finish">结束</string>
+    <string name="pause">暂停</string>
+    <string name="long_press_to_finish">长按结束</string>
+    <string name="please_pause_and_finish_to_quit">请点击暂停按钮，并结束运动</string>
+    <string name="please_finish_to_quit">请长按结束按钮退出</string>
+    <string name="confirm_to_quit">确定退出</string>
+    <string name="quit_tip">退出将删除本次运动记录,如要保留运动数据,请点击完成!</string>
+    <string name="confirm">确定</string>
+    <string name="two_decimal_zero">0.00</string>
+    <string name="save_success">保存成功</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+</resources>

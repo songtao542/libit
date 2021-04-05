@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="StateButton示例"
         android:textColor="@android:color/white"
@@ -23,7 +23,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="30dp" />
+        android:layout_height="10dp" />
 
     <com.liabit.widget.CircleStateButton
         android:id="@+id/circleStateButton"
@@ -34,7 +34,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="30dp" />
+        android:layout_height="10dp" />
 
     <com.liabit.widget.RoundCornerStateButton
         android:id="@+id/roundedStateButton"
@@ -146,6 +146,37 @@
             android:text="获取验证码"
             android:textColor="@android:color/white"
             app:mode="text"
+            app:strokeColor="@android:color/white" />
+
+        <com.liabit.widget.ProgressButton
+            android:id="@+id/progressButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/test_button_selector"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:text="获取验证码"
+            android:textColor="@android:color/white"
+            app:fixedSize="true"
+            app:strokeColor="@android:color/white" />
+
+        <com.liabit.widget.ProgressButton
+            android:id="@+id/progressButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/test_button_selector"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:text="获取验证码"
+            android:textColor="@android:color/white"
+            app:fixedSize="true"
+            app:progressPosition="start"
             app:strokeColor="@android:color/white" />
 
     </LinearLayout>

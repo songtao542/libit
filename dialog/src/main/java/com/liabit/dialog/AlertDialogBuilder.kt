@@ -4,30 +4,42 @@ import android.content.Context
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
 
 class AlertDialogBuilder(private val context: Context) {
 
     private var mDialogTheme = R.style.DefaultAlertDialogTheme
-    private var mDialogTitle: String? = null
-    private var mDialogMessage: String? = null
+    private var mDialogTitle: CharSequence? = null
+    private var mDialogMessage: CharSequence? = null
     private var mCancelable: Boolean = true
 
     private var mOnConfirmListener: (() -> Unit)? = null
     private var mOnCancelListener: (() -> Unit)? = null
 
-    fun setTheme(themeResId: Int): AlertDialogBuilder {
+    fun setTheme(@StyleRes themeResId: Int): AlertDialogBuilder {
         mDialogTheme = themeResId
         return this
     }
 
-    fun setTitle(title: String): AlertDialogBuilder {
+    fun setTitle(title: CharSequence): AlertDialogBuilder {
         mDialogTitle = title
         return this
     }
 
-    fun setMessage(message: String): AlertDialogBuilder {
+    fun setTitle(@StringRes resId: Int): AlertDialogBuilder {
+        mDialogTitle = context.getString(resId)
+        return this
+    }
+
+    fun setMessage(message: CharSequence): AlertDialogBuilder {
         mDialogMessage = message
+        return this
+    }
+
+    fun setMessage(@StringRes resId: Int): AlertDialogBuilder {
+        mDialogMessage = context.getString(resId)
         return this
     }
 

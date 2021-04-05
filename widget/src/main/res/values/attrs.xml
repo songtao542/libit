@@ -45,6 +45,7 @@
             <enum name="end" value="1" />
         </attr>
         <attr name="progressSize" format="reference|dimension" />
+        <attr name="fixedSize" format="reference|boolean" />
     </declare-styleable>
 
     <declare-styleable name="MaterialProgressView">

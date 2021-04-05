@@ -1,10 +1,10 @@
 project.ext {
-    PROJ_NAME = "widget"
+    PROJ_NAME = "dialog"
 
-    PROJ_ARTIFACTID = "widget"
+    PROJ_ARTIFACTID = "dialog"
     PROJ_VERSION = "1.0.1"
 
-    BINTRAY_REPO = "widget"
+    BINTRAY_REPO = "dialog"
     BINTRAY_USER_ORG = "liabit"
     BINTRAY_USER = ""
     BINTRAY_KEY = ""
@@ -17,7 +17,7 @@ project.ext {
     PROJ_WEBSITEURL = "https://github.com/songtao542/mylib"
     PROJ_ISSUETRACKERURL = ""
     PROJ_VCSURL = "https://github.com/songtao542/mylib.git"
-    PROJ_DESCRIPTION = "Android widget."
+    PROJ_DESCRIPTION = "Android dialog widget."
 
     DEVELOPER_ID = "songtao"
     DEVELOPER_NAME = "songtao"

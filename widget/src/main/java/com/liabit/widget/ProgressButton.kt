@@ -1,18 +1,21 @@
 package com.liabit.widget
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.IntDef
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatTextView
 
 /**
  * Author:         songtao
  * CreateDate:     2020/12/8 10:00
  */
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 class ProgressButton : LinearLayout {
 
     companion object {
@@ -27,6 +30,8 @@ class ProgressButton : LinearLayout {
 
     private lateinit var mProgressView: MaterialProgressView
     private lateinit var mTextView: AppCompatTextView
+
+    private var mFixedSize = false
 
     constructor(context: Context) : super(context) {
         init(context, null, 0, 0)
@@ -47,9 +52,12 @@ class ProgressButton : LinearLayout {
     @Suppress("UNUSED_PARAMETER")
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         isClickable = true
-
         mProgressView = MaterialProgressView(context, attrs)
         mTextView = AppCompatTextView(context, attrs)
+        mProgressView.isClickable = false
+        mTextView.isClickable = false
+        mProgressView.setBackgroundColor(Color.TRANSPARENT)
+        mTextView.setBackgroundColor(Color.TRANSPARENT)
         var progressPosition = 1
         var progressVisibility = 1
         var progressSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, context.resources.displayMetrics)
@@ -60,8 +68,10 @@ class ProgressButton : LinearLayout {
             progressVisibility = typedArray.getInt(R.styleable.ProgressButton_progressVisibility, View.GONE)
             progressSize = typedArray.getDimension(R.styleable.ProgressButton_progressSize, progressSize)
             progressMode = typedArray.getInt(R.styleable.ProgressButton_mode, -1)
+            mFixedSize = typedArray.getBoolean(R.styleable.ProgressButton_fixedSize, false)
             typedArray.recycle()
         }
+
         val tlp = LayoutParams(LayoutParams.WRAP_CONTENT, progressSize.toInt())
         tlp.gravity = Gravity.CENTER
 
@@ -75,6 +85,26 @@ class ProgressButton : LinearLayout {
             addView(mTextView, tlp)
             addView(mProgressView, plp)
         }
+
+        /* mProgressView.id = generateViewId()
+         mTextView.id = generateViewId()
+         val tlp = LayoutParams(LayoutParams.WRAP_CONTENT, progressSize.toInt())
+         tlp.addRule(CENTER_IN_PARENT)
+
+         val plp = LayoutParams(progressSize.toInt(), progressSize.toInt())
+         plp.addRule(CENTER_IN_PARENT)
+
+         if (progressPosition == 0) {
+             //tlp.addRule(RIGHT_OF, mProgressView.id)
+             plp.addRule(LEFT_OF, mTextView.id)
+             addView(mTextView, tlp)
+             addView(mProgressView, plp)
+         } else {
+             plp.addRule(RIGHT_OF, mTextView.id)
+             addView(mTextView, tlp)
+             addView(mProgressView, plp)
+         }*/
+
         mProgressView.setStrokeWidth(progressSize / 24)
         mTextView.setPadding(0, 0, 0, 0)
         mTextView.gravity = Gravity.CENTER
@@ -125,6 +155,7 @@ class ProgressButton : LinearLayout {
                 mProgressView.pause()
             }
             PROGRESS -> {
+                //mTextView.visibility = if (mFixedSize) View.INVISIBLE else View.GONE
                 mTextView.visibility = View.GONE
                 mProgressView.visibility = View.VISIBLE
                 mProgressView.resume()
@@ -135,5 +166,13 @@ class ProgressButton : LinearLayout {
                 mProgressView.resume()
             }
         }
+    }
+
+    fun setText(text: CharSequence) {
+        mTextView.text = text
+    }
+
+    fun setText(@StringRes resId: Int) {
+        mTextView.setText(resId)
     }
 }

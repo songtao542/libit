@@ -3,6 +3,7 @@ package com.liabit.test.viewbinding
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import androidx.databinding.DataBindingUtil
 import com.liabit.test.R
 import com.liabit.test.databinding.ActivityTestDataBindingBinding
 import com.liabit.autoclear.autoCleared

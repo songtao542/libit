@@ -15,6 +15,8 @@ class TestStateButtonActivity : AppCompatActivity() {
 
     private var mProgressVisibility1 = View.GONE
     private var mProgressVisibility2 = View.GONE
+    private var mProgressVisibility3 = View.GONE
+    private var mProgressVisibility4 = View.GONE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +68,26 @@ class TestStateButtonActivity : AppCompatActivity() {
             } else {
                 mProgressVisibility2 = View.GONE
                 binding.progressButton2.setMode(ProgressButton.TEXT)
+            }
+        }
+
+        binding.progressButton3.setOnClickListener {
+            if (mProgressVisibility3 == View.GONE) {
+                mProgressVisibility3 = View.VISIBLE
+                binding.progressButton3.setMode(ProgressButton.PROGRESS)
+            } else {
+                mProgressVisibility3 = View.GONE
+                binding.progressButton3.setMode(ProgressButton.TEXT)
+            }
+        }
+
+        binding.progressButton4.setOnClickListener {
+            if (mProgressVisibility4 == View.GONE) {
+                mProgressVisibility4 = View.VISIBLE
+                binding.progressButton4.setMode(ProgressButton.TEXT_PROGRESS)
+            } else {
+                mProgressVisibility4 = View.GONE
+                binding.progressButton4.setMode(ProgressButton.TEXT)
             }
         }
     }

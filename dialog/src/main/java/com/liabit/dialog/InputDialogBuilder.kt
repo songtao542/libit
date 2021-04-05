@@ -5,23 +5,39 @@ import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.EditText
+import androidx.annotation.StringRes
+import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
 
 class InputDialogBuilder(private val context: Context) {
 
     private var mDialogTheme = R.style.DefaultInputDialogTheme
-    private var mDialogTitle: String? = null
+    private var mDialogTitle: CharSequence? = null
+    private var mText: CharSequence? = null
 
     private var mOnConfirmListener: ((text: String) -> Unit)? = null
 
-    fun setTheme(themeResId: Int): InputDialogBuilder {
+    fun setTheme(@StyleRes themeResId: Int): InputDialogBuilder {
         mDialogTheme = themeResId
         return this
     }
 
-    fun setTitle(title: String): InputDialogBuilder {
+    fun setTitle(title: CharSequence): InputDialogBuilder {
         mDialogTitle = title
         return this
+    }
+
+    fun setTitle(@StringRes resId: Int): InputDialogBuilder {
+        mDialogTitle = context.getString(resId)
+        return this
+    }
+
+    fun setText(text: CharSequence) {
+        mText = text
+    }
+
+    fun setText(@StringRes resId: Int) {
+        mText = context.getString(resId)
     }
 
     fun setOnConfirmListener(listener: ((text: String) -> Unit)? = null): InputDialogBuilder {
@@ -33,6 +49,7 @@ class InputDialogBuilder(private val context: Context) {
         val context = ContextThemeWrapper(context, mDialogTheme)
         val view = LayoutInflater.from(context).inflate(R.layout.input_dialog, null)
         val editText = view.findViewById<EditText>(R.id.input_dialog_editText)
+        mText?.let { editText.setText(mText) }
         val dialog = AlertDialog.Builder(context, mDialogTheme)
                 .setView(view)
                 .setTitle(mDialogTitle ?: context.getString(R.string.input_dialog_title))

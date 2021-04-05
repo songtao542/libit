@@ -1,6 +1,3 @@
 <resources>
-    <string name="p_please_select">请选择</string>
-
     <string name="p_add_image">添加图片</string>
-
 </resources>

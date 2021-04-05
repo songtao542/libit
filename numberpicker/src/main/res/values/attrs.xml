@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="pickerViewStyle" format="reference" />
+
+    <declare-styleable name="NumberPicker">
+        <!-- Color for the solid color background if such for optimized rendering. -->
+        <attr name="pickerSolidColor" format="color|reference" />
+        <!-- The divider for making the selection area. -->
+        <attr name="pickerSelectionDivider" format="reference" />
+        <!-- The height of the selection divider. -->
+        <attr name="pickerDividerHeight" format="reference|dimension" />
+        <!-- The distance between the two selection dividers. -->
+        <attr name="pickerDividersDistance" format="reference|dimension" />
+        <!-- The min height of the PickerView. -->
+        <attr name="pickerMinHeight" format="reference|dimension" />
+        <!-- The max height of the PickerView. -->
+        <attr name="pickerMaxHeight" format="reference|dimension" />
+        <!-- The min width of the PickerView. -->
+        <attr name="pickerMinWidth" format="reference|dimension" />
+        <!-- The max width of the PickerView. -->
+        <attr name="pickerMaxWidth" format="reference|dimension" />
+        <!-- The layout of the number picker. -->
+        <attr name="pickerInternalLayout" format="reference" />
+        <!-- The drawable for pressed virtual (increment/decrement) buttons. -->
+        <attr name="pickerButtonPressedDrawable" format="reference" />
+        <!-- If true then the selector wheel is hidden until the picker has focus. -->
+        <attr name="pickerHideWheelUntilFocused" format="reference|boolean" />
+    </declare-styleable>
+
+</resources>

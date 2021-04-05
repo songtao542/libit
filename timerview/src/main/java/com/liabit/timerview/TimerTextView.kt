@@ -8,12 +8,10 @@ import android.graphics.Paint
 import android.os.CountDownTimer
 import android.os.SystemClock
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import androidx.appcompat.widget.AppCompatTextView
 import java.text.DecimalFormat
-import java.text.NumberFormat
 import java.util.concurrent.TimeUnit
 import kotlin.math.ceil
 
@@ -68,6 +66,11 @@ class TimerTextView : AppCompatTextView {
         }
         dayUnit = resources.getString(R.string.days)
         if (attrs != null) {
+            val gravityAttr = intArrayOf(android.R.attr.gravity)
+            val gravityTypedArray = context.obtainStyledAttributes(attrs, gravityAttr)
+            gravity = gravityTypedArray.getInt(0, Gravity.CENTER)
+            gravityTypedArray.recycle()
+
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerTextView, defStyleAttr, 0)
             tickInterval = typedArray.getInt(R.styleable.TimerTextView_tickInterval, tickInterval)
             prefix = typedArray.getString(R.styleable.TimerTextView_prefix) ?: ""
@@ -107,9 +110,11 @@ class TimerTextView : AppCompatTextView {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        remainingTime -= (SystemClock.elapsedRealtime() - pauseTime)
-        if (countDownTimer == null) {
-            start(remainingTime)
+        if (remainingTime > 0) {
+            remainingTime -= (SystemClock.elapsedRealtime() - pauseTime)
+            if (countDownTimer == null && remainingTime > 0) {
+                start(remainingTime)
+            }
         }
     }
 
@@ -121,6 +126,7 @@ class TimerTextView : AppCompatTextView {
     }
 
     fun start(millisInFuture: Long) {
+        if (millisInFuture <= 0) return
         this.millisInFuture = millisInFuture
         countDownTimer?.cancel()
         remainingTime = millisInFuture
@@ -165,22 +171,25 @@ class TimerTextView : AppCompatTextView {
     }
 
     fun setTimeEndListener(countdownListener: (() -> Unit)?) {
-        this.timeEndListener = if (countdownListener == null)
-            null
-        else
+        this.timeEndListener = if (countdownListener != null) {
             object : OnTimeEndListener {
                 override fun onTimeEnd() {
-                    countdownListener?.invoke()
+                    countdownListener.invoke()
                 }
             }
+        } else {
+            null
+        }
     }
 
     interface OnTimeEndListener {
         fun onTimeEnd()
     }
 
-    fun reset() {
+    fun cancel() {
         countDownTimer?.cancel()
+        remainingTime = 0L
+        millisInFuture = 0L
     }
 
     fun pause() {

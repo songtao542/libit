@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/one"
+        android:icon="@drawable/ic_home"
+        android:title="@string/school" />
+    <item
+        android:id="@+id/two"
+        android:icon="@drawable/ic_movement"
+        android:title="@string/movement" />
+    <item
+        android:id="@+id/three"
+        android:icon="@drawable/ic_run" />
+    <item
+        android:id="@+id/four"
+        android:icon="@drawable/ic_play"
+        android:title="@string/teach" />
+    <item
+        android:id="@+id/five"
+        android:icon="@drawable/ic_me"
+        android:title="@string/me" />
+
+</menu>

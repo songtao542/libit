@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="NumberPickerInputText">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="NumberPickStyle">
+        <item name="colorControlNormal">@color/p_picker_title</item>
+        <item name="android:colorControlNormal">@color/p_picker_title</item>
+    </style>
+
+    <style name="DefaultNumberPickerStyle">
+        <item name="pickerSolidColor">@android:color/transparent</item>
+        <item name="pickerSelectionDivider">@drawable/np_gray_underline</item>
+        <item name="pickerDividerHeight">2dp</item>
+        <item name="pickerDividersDistance">48dp</item>
+        <item name="pickerMinWidth">64dp</item>
+        <item name="pickerMaxHeight">180dp</item>
+        <item name="pickerInternalLayout">@layout/p_number_picker_material</item>
+        <item name="pickerButtonPressedDrawable">?attr/selectableItemBackground</item>
+    </style>
+
+</resources>

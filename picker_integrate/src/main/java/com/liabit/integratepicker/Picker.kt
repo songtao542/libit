@@ -9,6 +9,8 @@ import com.liabit.citypicker.CityPickerFragment
 import com.liabit.citypicker.OnRequestLocationListener
 import com.liabit.listpicker.IPicker
 import com.liabit.listpicker.OnResultListener
+import com.liabit.numberpicker.PickerFragment
+import com.liabit.numberpicker.toStringArray
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
@@ -29,10 +31,12 @@ object Picker {
             handler: ((value: Int, _: Int) -> Unit),
     ) {
         activity?.supportFragmentManager?.let {
-            val pickerFragment = PickerFragment.newInstance(title, minValue, maxValue)
-            pickerFragment.setOnResultListener(handler)
-            pickerFragment.value1 = value
-            pickerFragment.show(it, "picker-mm")
+            PickerFragment.Builder()
+                    .setTitle(title)
+                    .setColumn(minValue, maxValue)
+                    .setOnResultListener(handler)
+                    .setValue(value1 = value)
+                    .show(it)
         }
     }
 
@@ -50,11 +54,13 @@ object Picker {
             handler: ((value1: Int, value2: Int) -> Unit),
     ) {
         activity?.supportFragmentManager?.let {
-            val pickerFragment = PickerFragment.newInstance(title, column1.toStringArray())
-            pickerFragment.setOnResultListener(handler)
-            pickerFragment.setColumn2SubOfColumn1(column2SubOfColumn1Type)
-            pickerFragment.value1 = value1
-            pickerFragment.show(it, "picker-c")
+            PickerFragment.Builder()
+                    .setTitle(title)
+                    .setColumn(column1Values = column1.toStringArray())
+                    .setOnResultListener(handler)
+                    .setColumn2SubOfColumn1(column2SubOfColumn1Type)
+                    .setValue(value1 = value1)
+                    .show(it)
         }
     }
 
@@ -67,12 +73,14 @@ object Picker {
             handler: ((value: Int) -> Unit),
     ) {
         activity?.supportFragmentManager?.let {
-            val pickerFragment = PickerFragment.newInstance(title, column.toStringArray())
-            pickerFragment.setOnResultListener { v1, _ ->
-                handler.invoke(v1)
-            }
-            pickerFragment.value1 = value
-            pickerFragment.show(it, "picker-cc")
+            PickerFragment.Builder()
+                    .setTitle(title)
+                    .setColumn(column1Values = column.toStringArray())
+                    .setOnResultListener { v1, _ ->
+                        handler.invoke(v1)
+                    }
+                    .setValue(value1 = value)
+                    .show(it)
         }
     }
 
@@ -87,11 +95,12 @@ object Picker {
             handler: ((value1: Int, value2: Int) -> Unit),
     ) {
         activity?.supportFragmentManager?.let {
-            val pickerFragment = PickerFragment.newInstance(title, column1 = column1.toStringArray(), column2 = column2.toStringArray())
-            pickerFragment.setOnResultListener(handler)
-            pickerFragment.value1 = value1
-            pickerFragment.value2 = value2
-            pickerFragment.show(it, "picker-cc")
+            PickerFragment.Builder()
+                    .setTitle(title)
+                    .setColumn(column1Values = column1.toStringArray(), column2Values = column2.toStringArray())
+                    .setOnResultListener(handler)
+                    .setValue(value1 = value1, value2 = value2)
+                    .show(it)
         }
     }
 
@@ -102,7 +111,7 @@ object Picker {
             value: Int,
             provider: ((picker: PickerFragment) -> Unit),
             handler: ((value: Int) -> Unit)? = null,
-            valueHandler: ((value: String) -> Unit)? = null,
+            valueHandler: ((value: CharSequence) -> Unit)? = null,
     ) {
         pick(activity, title, value, 0, provider, { v1, _ ->
             handler?.invoke(v1)
@@ -119,15 +128,15 @@ object Picker {
             value2: Int = 0,
             provider: ((picker: PickerFragment) -> Unit),
             handler: ((value1: Int, value2: Int) -> Unit)? = null,
-            valueHandler: ((value1: String, value2: String) -> Unit)? = null,
+            valueHandler: ((value1: CharSequence, value2: CharSequence) -> Unit)? = null,
     ) {
         activity?.supportFragmentManager?.let { fragmentManager ->
-            val pickerFragment = PickerFragment.newInstance(title)
-            handler?.let { pickerFragment.setOnResultListener(it) }
-            valueHandler?.let { pickerFragment.setOnValueListener(it) }
-            pickerFragment.value1 = value1
-            pickerFragment.value2 = value2
-            pickerFragment.show(fragmentManager, "picker-vv")
+            val builder = PickerFragment.Builder()
+                    .setTitle(title)
+                    .setValue(value1 = value1, value2 = value2)
+            handler?.let { builder.setOnResultListener(it) }
+            valueHandler?.let { builder.setOnValueListener(it) }
+            val pickerFragment = builder.show(fragmentManager)
             provider.invoke(pickerFragment)
         }
     }

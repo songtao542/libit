@@ -247,4 +247,8 @@ interface FilterAdapter {
      */
     fun configure(filterType: Int, itemView: View, filter: Filter) {
     }
+
+    fun getLayoutMargins(margins: IntArray) {
+    }
+
 }

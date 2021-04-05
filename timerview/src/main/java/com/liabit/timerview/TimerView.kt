@@ -90,7 +90,7 @@ class TimerView : LinearLayout {
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TimerView, defStyleAttr, 0)
             resetSymbol = typedArray.getInt(R.styleable.TimerView_resetSymbol, 0)
-            reset()
+            cancel()
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 typedArray.getFont(R.styleable.TimerView_android_fontFamily)?.let {
@@ -194,9 +194,11 @@ class TimerView : LinearLayout {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        remainingTime -= (SystemClock.elapsedRealtime() - pauseTime)
-        if (countDownTimer == null) {
-            start(remainingTime)
+        if (remainingTime > 0) {
+            remainingTime -= (SystemClock.elapsedRealtime() - pauseTime)
+            if (countDownTimer == null) {
+                start(remainingTime)
+            }
         }
     }
 
@@ -223,6 +225,7 @@ class TimerView : LinearLayout {
     }
 
     fun start(millisInFuture: Long) {
+        if (millisInFuture <= 0) return
         countDownTimer?.cancel()
         val days = TimeUnit.MILLISECONDS.toDays(millisInFuture)
         when {
@@ -364,8 +367,9 @@ class TimerView : LinearLayout {
         fun onTimeEnd()
     }
 
-    fun reset() {
+    fun cancel() {
         countDownTimer?.cancel()
+        remainingTime = 0L
         val symbol = resetSymbol.toString()
         day0.text = symbol
         day1.setText(symbol)

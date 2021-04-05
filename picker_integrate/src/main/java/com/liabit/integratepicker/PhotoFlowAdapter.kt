@@ -9,6 +9,8 @@ import android.widget.*
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import com.bumptech.glide.Glide
+import com.liabit.numberpicker.colorOf
+import com.liabit.numberpicker.dip
 import java.util.*
 
 class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {

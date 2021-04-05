@@ -105,7 +105,7 @@ if (domainName == "liabit") {
             }
         }
     }
-} else if (!domainContextUrl.isEmpty()) {
+} else if (domainContextUrl != null && !domainContextUrl.isEmpty()) {
     //以下内容用于发布SNAPSHOT版本，如果不需要可以移除。
     //参考自：https://www.jfrog.com/confluence/display/RTF/Gradle+Artifactory+Plugin
     apply plugin: "com.jfrog.artifactory"

@@ -12,7 +12,6 @@
         android:layout_weight="1"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:paddingHorizontal="@dimen/filter_list_padding_horizontal"
-        android:paddingVertical="@dimen/filter_list_padding_vertical" />
+        android:paddingHorizontal="@dimen/filter_list_padding_horizontal" />
 
 </LinearLayout>

@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.graphics.Outline
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.StateListDrawable
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextUtils
@@ -55,10 +54,7 @@ class AddSubView : LinearLayout, TextWatcher {
     private var mOnValueChangedListener: ((view: AddSubView, value: Int, causeByEdit: Boolean) -> Unit)? = null
     private var mOnValueOutOfRangeListener: ((view: AddSubView, value: Int) -> Unit)? = null
     private var mOnEmptyListener: ((view: AddSubView) -> Unit)? = null
-    private var mValueChangedListener: OnValueChangedListener? = null
-
-    private var mValueOutOfRangeListener: OnValueOutOfRangeListener? = null
-    private var mEmptyListener: OnEmptyListener? = null
+    private var mOnDialogActionListener: ((which: Int, value: Int) -> Unit)? = null
     private var mTextClickListener: OnClickListener? = null
     private var mShowEditDialog = false
     private var mShowEditDialogOptButton = false
@@ -74,6 +70,8 @@ class AddSubView : LinearLayout, TextWatcher {
     private var mDialogTitle: CharSequence? = null
 
     private var mImm: InputMethodManager? = null
+    private var mIgnoreZeroWhenShowInputDialog = true
+    private var mAllowOutOfRange = false
 
     constructor(context: Context) : super(context) {
         init(context, null, 0, 0)
@@ -128,6 +126,8 @@ class AddSubView : LinearLayout, TextWatcher {
             mDialogTitle = typedArray.getString(R.styleable.AddSubView_editDialogTitle)
             mAddIcon = typedArray.getDrawable(R.styleable.AddSubView_addIcon) ?: mAddIcon
             mSubIcon = typedArray.getDrawable(R.styleable.AddSubView_subIcon) ?: mSubIcon
+            mIgnoreZeroWhenShowInputDialog = typedArray.getBoolean(R.styleable.AddSubView_ignoreZeroWhenShowInputDialog, true)
+            mAllowOutOfRange = typedArray.getBoolean(R.styleable.AddSubView_allowEditOutOfRange, false)
             editable = if (mShowEditDialog) false else typedArray.getBoolean(R.styleable.AddSubView_editable, true)
             editTextBackground = typedArray.getDrawable(R.styleable.AddSubView_editBackground)
             editTextWidth = typedArray.getDimension(R.styleable.AddSubView_editWidth, 0f)
@@ -182,6 +182,22 @@ class AddSubView : LinearLayout, TextWatcher {
         }
         mNumEditor.layoutParams = lp
 
+        var tlp = mNumTextView.layoutParams
+        if (tlp != null) {
+            if (editTextWidth > 0) {
+                tlp.width = editTextWidth.toInt()
+            }
+            if (editTextHeight > 0) {
+                tlp.height = editTextHeight.toInt()
+            }
+        } else {
+            val defaultWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40f, context.resources.displayMetrics).toInt()
+            val w: Int = if (editTextWidth > 0) editTextWidth.toInt() else defaultWidth
+            val h: Int = if (editTextHeight > 0) editTextHeight.toInt() else defaultWidth / 5 * 3
+            tlp = LayoutParams(w, h)
+        }
+        mNumTextView.layoutParams = tlp
+
         if (textColor != null) {
             mNumEditor.setTextColor(textColor)
             mNumTextView.setTextColor(textColor)
@@ -226,7 +242,6 @@ class AddSubView : LinearLayout, TextWatcher {
                 if (mValue < it) {
                     setValue(mValue + 1, false)
                     mOnValueChangedListener?.invoke(this, mValue, false)
-                    mValueChangedListener?.onValueChanged(this, mValue, edited = false)
                 }
             }
         }
@@ -238,7 +253,6 @@ class AddSubView : LinearLayout, TextWatcher {
                 if (mValue > it) {
                     setValue(mValue - 1, false)
                     mOnValueChangedListener?.invoke(this, mValue, false)
-                    mValueChangedListener?.onValueChanged(this, mValue, edited = false)
                 }
             }
         }
@@ -378,7 +392,9 @@ class AddSubView : LinearLayout, TextWatcher {
         mMin?.let { min ->
             subButton?.isEnabled = value > min
         }
-        editText.setText(value.toString())
+        if (!mIgnoreZeroWhenShowInputDialog || value != 0) {
+            editText.setText(value.toString())
+        }
         editText.addTextChangedListener(onTextChanged = { text: CharSequence?, _, _, _ ->
             val txt = text?.toString() ?: return@addTextChangedListener
             txt.toLongOrNull()?.also {
@@ -399,13 +415,20 @@ class AddSubView : LinearLayout, TextWatcher {
                 val min = mMin
                 val max = mMax
                 if (min != null && max != null && min <= max && (number < min || number > max)) {
-                    notifyOutOfRangeOrUpdateText(number, if (number < min) min else max, editText)
+                    val updatedValue = if (mAllowOutOfRange) {
+                        number
+                    } else {
+                        if (number < min) min else max
+                    }
+                    notifyOutOfRangeOrUpdateText(number, updatedValue, editText)
                     return@addTextChangedListener
                 } else if (min != null && max == null && number < min) {
-                    notifyOutOfRangeOrUpdateText(number, min, editText)
+                    val updatedValue = if (mAllowOutOfRange) number else min
+                    notifyOutOfRangeOrUpdateText(number, updatedValue, editText)
                     return@addTextChangedListener
                 } else if (min == null && max != null && number > max) {
-                    notifyOutOfRangeOrUpdateText(number, max, editText)
+                    val updatedValue = if (mAllowOutOfRange) number else max
+                    notifyOutOfRangeOrUpdateText(number, updatedValue, editText)
                     return@addTextChangedListener
                 }
                 if (it > MAX_VALUE) {
@@ -455,14 +478,16 @@ class AddSubView : LinearLayout, TextWatcher {
         dialog = AlertDialog.Builder(context, mDialogTheme)
                 .setView(view)
                 .setTitle(mDialogTitle ?: context.getString(R.string.add_sub_dialog_title))
-                .setNegativeButton(R.string.add_sub_dialog_cancel) { d, _ ->
+                .setNegativeButton(R.string.add_sub_dialog_cancel) { d, which ->
                     d.dismiss()
+                    mOnDialogActionListener?.invoke(which, mValue)
                 }
-                .setPositiveButton(R.string.add_sub_dialog_confirm) { d, _ ->
+                .setPositiveButton(R.string.add_sub_dialog_confirm) { d, which ->
                     d.dismiss()
                     editText?.text?.let {
                         setAndCheckValue(it.toString(), updateTextView = true, actionDone = true)
                     }
+                    mOnDialogActionListener?.invoke(which, mValue)
                 }
                 .setOnDismissListener {
                     mDialog = null
@@ -507,13 +532,20 @@ class AddSubView : LinearLayout, TextWatcher {
             val min = mMin
             val max = mMax
             if (min != null && max != null && min <= max && (number < min || number > max)) {
-                notifyOutOfRangeOrUpdateText(number, if (number < min) min else max, mNumEditor)
+                val updatedValue = if (mAllowOutOfRange) {
+                    number
+                } else {
+                    if (number < min) min else max
+                }
+                notifyOutOfRangeOrUpdateText(number, updatedValue, mNumEditor)
                 return
             } else if (min != null && max == null && number < min) {
-                notifyOutOfRangeOrUpdateText(number, min, mNumEditor)
+                val updatedValue = if (mAllowOutOfRange) number else min
+                notifyOutOfRangeOrUpdateText(number, updatedValue, mNumEditor)
                 return
             } else if (min == null && max != null && number > max) {
-                notifyOutOfRangeOrUpdateText(number, max, mNumEditor)
+                val updatedValue = if (mAllowOutOfRange) number else max
+                notifyOutOfRangeOrUpdateText(number, updatedValue, mNumEditor)
                 return
             }
 
@@ -529,20 +561,17 @@ class AddSubView : LinearLayout, TextWatcher {
             }
             if (notifyValueChange) {
                 mOnValueChangedListener?.invoke(this, mValue, true)
-                mValueChangedListener?.onValueChanged(this, mValue, true)
             }
         } else {
             mOnEmptyListener?.invoke(this)
-            mEmptyListener?.onEmpty(this)
             mNumEditor.hint = mValue.toString()
             mNumTextView.text = mValue.toString()
         }
     }
 
     private fun notifyOutOfRangeOrUpdateText(number: Int, updateToNumber: Int, editText: EditText) {
-        if (mValueOutOfRangeListener != null || mValueOutOfRangeListener != null) {
+        if (mOnValueOutOfRangeListener != null) {
             mOnValueOutOfRangeListener?.invoke(this, number)
-            mValueOutOfRangeListener?.onValueOutOfRange(this, number)
         } else {
             updateTextWithoutNotify(updateToNumber.toString(), editText)
         }
@@ -672,16 +701,16 @@ class AddSubView : LinearLayout, TextWatcher {
         mOnEmptyListener = listener
     }
 
-    fun setOnValueChangedListener(listener: OnValueChangedListener) {
-        mValueChangedListener = listener
+    fun setOnValueChangedListener(listener: OnValueChangedListener?) {
+        mOnValueChangedListener = if (listener != null) listener::onValueChanged else null
     }
 
-    fun setOnValueOutOfRangeListener(listener: OnValueOutOfRangeListener) {
-        mValueOutOfRangeListener = listener
+    fun setOnValueOutOfRangeListener(listener: OnValueOutOfRangeListener?) {
+        mOnValueOutOfRangeListener = if (listener != null) listener::onValueOutOfRange else null
     }
 
-    fun setOnEmptyListener(listener: OnEmptyListener) {
-        mEmptyListener = listener
+    fun setOnEmptyListener(listener: OnEmptyListener?) {
+        mOnEmptyListener = if (listener != null) listener::onEmpty else null
     }
 
     fun setOnTextViewClickListener(listener: OnClickListener?) {
@@ -693,6 +722,28 @@ class AddSubView : LinearLayout, TextWatcher {
         } else {
             configEditDialog()
         }
+    }
+
+    /**
+     * @param listener which the button that was clicked
+     * [android.content.DialogInterface.BUTTON_POSITIVE] if the position of the item clicked;
+     * [android.content.DialogInterface.BUTTON_NEGATIVE] if the negative of the item clicked;
+     */
+    fun setOnDialogActionListener(listener: ((which: Int, value: Int) -> Unit)?) {
+        mOnDialogActionListener = listener
+    }
+
+    fun setOnDialogActionListener(listener: OnDialogActionListener?) {
+        mOnDialogActionListener = if (listener != null) listener::onAction else null
+    }
+
+    interface OnDialogActionListener {
+        /**
+         * @param which the button that was clicked
+         * [android.content.DialogInterface.BUTTON_POSITIVE] if the position of the item clicked;
+         * [android.content.DialogInterface.BUTTON_NEGATIVE] if the negative of the item clicked;
+         */
+        fun onAction(which: Int, value: Int)
     }
 
     interface OnValueChangedListener {

@@ -2,7 +2,7 @@ project.ext {
     PROJ_NAME = "pickerintegrate"
 
     PROJ_ARTIFACTID = "pickerintegrate"
-    PROJ_VERSION = "1.0.0"
+    PROJ_VERSION = "1.0.1"
 
     BINTRAY_REPO = "pickerintegrate"
     BINTRAY_USER_ORG = "liabit"

@@ -2,7 +2,10 @@ package com.liabit.widget
 
 import android.content.Context
 import android.graphics.Color
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -32,6 +35,7 @@ class ProgressButton : LinearLayout {
     private lateinit var mTextView: AppCompatTextView
 
     private var mFixedSize = false
+    private var mCurrentMode = TEXT
 
     constructor(context: Context) : super(context) {
         init(context, null, 0, 0)
@@ -86,25 +90,6 @@ class ProgressButton : LinearLayout {
             addView(mProgressView, plp)
         }
 
-        /* mProgressView.id = generateViewId()
-         mTextView.id = generateViewId()
-         val tlp = LayoutParams(LayoutParams.WRAP_CONTENT, progressSize.toInt())
-         tlp.addRule(CENTER_IN_PARENT)
-
-         val plp = LayoutParams(progressSize.toInt(), progressSize.toInt())
-         plp.addRule(CENTER_IN_PARENT)
-
-         if (progressPosition == 0) {
-             //tlp.addRule(RIGHT_OF, mProgressView.id)
-             plp.addRule(LEFT_OF, mTextView.id)
-             addView(mTextView, tlp)
-             addView(mProgressView, plp)
-         } else {
-             plp.addRule(RIGHT_OF, mTextView.id)
-             addView(mTextView, tlp)
-             addView(mProgressView, plp)
-         }*/
-
         mProgressView.setStrokeWidth(progressSize / 24)
         mTextView.setPadding(0, 0, 0, 0)
         mTextView.gravity = Gravity.CENTER
@@ -148,6 +133,7 @@ class ProgressButton : LinearLayout {
     }
 
     fun setMode(@Mode mode: Int) {
+        mCurrentMode = mode
         when (mode) {
             TEXT -> {
                 mTextView.visibility = View.VISIBLE
@@ -155,7 +141,6 @@ class ProgressButton : LinearLayout {
                 mProgressView.pause()
             }
             PROGRESS -> {
-                //mTextView.visibility = if (mFixedSize) View.INVISIBLE else View.GONE
                 mTextView.visibility = View.GONE
                 mProgressView.visibility = View.VISIBLE
                 mProgressView.resume()
@@ -174,5 +159,14 @@ class ProgressButton : LinearLayout {
 
     fun setText(@StringRes resId: Int) {
         mTextView.setText(resId)
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        if (mFixedSize && mTextView.visibility == View.GONE && !mTextView.text.isNullOrEmpty()) {
+            mTextView.measure(widthMeasureSpec, heightMeasureSpec)
+            val width = mTextView.measuredWidth
+            setMeasuredDimension(width + paddingLeft + paddingRight, measuredHeight)
+        }
     }
 }

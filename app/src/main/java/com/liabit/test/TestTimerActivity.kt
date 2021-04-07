@@ -26,7 +26,7 @@ class TestTimerActivity : AppCompatActivity() {
         binding.timerView.setTimeEndListener(object : TimerView.OnTimeEndListener {
             override fun onTimeEnd() {
                 Toast.makeText(this@TestTimerActivity, "Finished", Toast.LENGTH_SHORT).show()
-                binding.timerView.reset()
+                binding.timerView.cancel()
                 isRunning = false
                 binding.pauseButton.isEnabled = false
             }

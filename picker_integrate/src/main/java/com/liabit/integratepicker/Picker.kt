@@ -34,7 +34,7 @@ object Picker {
             PickerFragment.Builder()
                     .setTitle(title)
                     .setColumn(minValue, maxValue)
-                    .setOnResultListener(handler)
+                    .setOnIndexChangeListener(handler)
                     .setValue(value1 = value)
                     .show(it)
         }
@@ -57,7 +57,7 @@ object Picker {
             PickerFragment.Builder()
                     .setTitle(title)
                     .setColumn(column1Values = column1.toStringArray())
-                    .setOnResultListener(handler)
+                    .setOnIndexChangeListener(handler)
                     .setColumn2SubOfColumn1(column2SubOfColumn1Type)
                     .setValue(value1 = value1)
                     .show(it)
@@ -76,7 +76,7 @@ object Picker {
             PickerFragment.Builder()
                     .setTitle(title)
                     .setColumn(column1Values = column.toStringArray())
-                    .setOnResultListener { v1, _ ->
+                    .setOnIndexChangeListener { v1, _ ->
                         handler.invoke(v1)
                     }
                     .setValue(value1 = value)
@@ -98,7 +98,7 @@ object Picker {
             PickerFragment.Builder()
                     .setTitle(title)
                     .setColumn(column1Values = column1.toStringArray(), column2Values = column2.toStringArray())
-                    .setOnResultListener(handler)
+                    .setOnIndexChangeListener(handler)
                     .setValue(value1 = value1, value2 = value2)
                     .show(it)
         }
@@ -134,7 +134,7 @@ object Picker {
             val builder = PickerFragment.Builder()
                     .setTitle(title)
                     .setValue(value1 = value1, value2 = value2)
-            handler?.let { builder.setOnResultListener(it) }
+            handler?.let { builder.setOnIndexChangeListener(it) }
             valueHandler?.let { builder.setOnValueListener(it) }
             val pickerFragment = builder.show(fragmentManager)
             provider.invoke(pickerFragment)
@@ -264,7 +264,7 @@ object Picker {
 
     @JvmStatic
     fun pickDate(
-            activity: FragmentActivity? = null,
+            activity: Activity? = null,
             handler: ((year: Int, monthOfYear: Int, dayOfMonth: Int) -> Unit),
     ) {
         if (activity == null) {

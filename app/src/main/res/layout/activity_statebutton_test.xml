@@ -1,183 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#181E2E"
-    android:orientation="vertical"
-    tools:context="com.liabit.test.TestStateButtonActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="StateButton示例"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
-
-    <com.liabit.widget.CircleStateButton
-        android:id="@+id/circleStateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:icon="@drawable/ic_charge" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
-
-    <com.liabit.widget.RoundCornerStateButton
-        android:id="@+id/roundedStateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:icon="@drawable/ic_charge" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="30dp" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:orientation="horizontal">
-
-        <FrameLayout
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:clipChildren="false"
-            android:clipToPadding="false">
-
-            <com.liabit.widget.SpringButton
-                android:id="@+id/finishButton"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:background="@drawable/spring_finish_button_selector"
-                android:text="结束"
-                android:textColor="#ffffff"
-                android:visibility="gone"
-                app:icon="@drawable/ic_stop"
-                app:iconSize="30dp" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:clipChildren="false"
-            android:clipToPadding="false">
-
-            <com.liabit.widget.SpringButton
-                android:id="@+id/pauseButton"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="30dp"
-                android:background="@drawable/spring_pause_button_selector"
-                android:text="暂停"
-                android:textColor="#ffffff"
-                app:icon="@drawable/ic_pause"
-                app:iconSize="30dp" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:clipChildren="false"
-            android:clipToPadding="false">
-
-            <com.liabit.widget.SpringButton
-                android:id="@+id/continueButton"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:background="@drawable/spring_continue_button_selector"
-                android:text="继续"
-                android:textColor="#ffffff"
-                android:visibility="gone"
-                app:icon="@drawable/ic_play"
-                app:iconSize="30dp" />
-        </FrameLayout>
-    </LinearLayout>
+    android:paddingBottom="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="#181E2E"
+        android:orientation="vertical"
+        tools:context="com.liabit.test.TestStateButtonActivity">
 
-        <com.liabit.widget.ProgressButton
-            android:id="@+id/progressButton1"
-            android:layout_width="180dp"
-            android:layout_height="40dp"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/test_button_selector"
+            android:layout_marginTop="10dp"
             android:gravity="center"
-            android:paddingHorizontal="10dp"
-            android:text="获取验证码"
+            android:text="StateButton示例"
             android:textColor="@android:color/white"
-            app:strokeColor="@android:color/white" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <com.liabit.widget.ProgressButton
-            android:id="@+id/progressButton2"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/test_button_selector"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="20dp"
-            android:text="获取验证码"
-            android:textColor="@android:color/white"
-            app:mode="text"
-            app:strokeColor="@android:color/white" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
-        <com.liabit.widget.ProgressButton
-            android:id="@+id/progressButton3"
+        <com.liabit.widget.CircleStateButton
+            android:id="@+id/circleStateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/test_button_selector"
-            android:gravity="center"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="10dp"
-            android:text="获取验证码"
-            android:textColor="@android:color/white"
-            app:fixedSize="true"
-            app:strokeColor="@android:color/white" />
+            app:icon="@drawable/ic_charge" />
 
-        <com.liabit.widget.ProgressButton
-            android:id="@+id/progressButton4"
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <com.liabit.widget.RoundCornerStateButton
+            android:id="@+id/roundedStateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/test_button_selector"
-            android:gravity="center"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="10dp"
-            android:text="获取验证码"
-            android:textColor="@android:color/white"
-            app:fixedSize="true"
-            app:progressPosition="start"
-            app:strokeColor="@android:color/white" />
+            app:icon="@drawable/ic_charge" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <com.liabit.widget.SpringButton
+                    android:id="@+id/finishButton"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/spring_finish_button_selector"
+                    android:text="结束"
+                    android:textColor="#ffffff"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_stop"
+                    app:iconSize="30dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <com.liabit.widget.SpringButton
+                    android:id="@+id/pauseButton"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="30dp"
+                    android:background="@drawable/spring_pause_button_selector"
+                    android:text="暂停"
+                    android:textColor="#ffffff"
+                    app:icon="@drawable/ic_pause"
+                    app:iconSize="30dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <com.liabit.widget.SpringButton
+                    android:id="@+id/continueButton"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/spring_continue_button_selector"
+                    android:text="继续"
+                    android:textColor="#ffffff"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_play"
+                    app:iconSize="30dp" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <com.liabit.widget.ProgressButton
+                android:id="@+id/progressButton1"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/test_button_selector"
+                android:gravity="center"
+                android:paddingHorizontal="10dp"
+                android:text="获取验证码"
+                android:textColor="@android:color/white"
+                app:strokeColor="@android:color/white" />
+
+            <com.liabit.widget.ProgressButton
+                android:id="@+id/progressButton2"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/test_button_selector"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="20dp"
+                android:text="获取验证码"
+                android:textColor="@android:color/white"
+                app:mode="text"
+                app:strokeColor="@android:color/white" />
+
+            <com.liabit.widget.ProgressButton
+                android:id="@+id/progressButton3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/test_button_selector"
+                android:gravity="center"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:text="Fix获取验证码"
+                android:textColor="@android:color/white"
+                app:fixedSize="true"
+                app:strokeColor="@android:color/white" />
+
+            <com.liabit.widget.ProgressButton
+                android:id="@+id/progressButton4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/test_button_selector"
+                android:gravity="center"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:text="Fix获取验证码2"
+                android:textColor="@android:color/white"
+                app:fixedSize="true"
+                app:progressPosition="start"
+                app:strokeColor="@android:color/white" />
+
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

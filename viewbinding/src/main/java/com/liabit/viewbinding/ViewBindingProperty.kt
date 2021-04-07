@@ -118,14 +118,6 @@ class ViewBindingProperty<VB : ViewBinding>(private val viewProvider: (() -> Vie
     private val mainHandler = Handler(Looper.getMainLooper())
     private val lifecycleObserver = object : DefaultLifecycleObserver {
         override fun onDestroy(owner: LifecycleOwner) {
-            /*thisRef?.let {
-                when (it) {
-                    is Fragment -> it.lifecycle
-                    is ComponentActivity -> it.lifecycle
-                    is LifecycleOwner -> it.lifecycle
-                    else -> null
-                }?.removeObserver(this)
-            }*/
             owner.lifecycle.removeObserver(this)
             mainHandler.post { viewBinding = null }
         }
@@ -137,7 +129,7 @@ class ViewBindingProperty<VB : ViewBinding>(private val viewProvider: (() -> Vie
         this.thisRef = thisRef
 
         when (thisRef) {
-            is Fragment -> thisRef.lifecycle
+            is Fragment -> thisRef.viewLifecycleOwner.lifecycle
             is ComponentActivity -> thisRef.lifecycle
             is LifecycleOwner -> thisRef.lifecycle
             else -> null

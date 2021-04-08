@@ -2,6 +2,7 @@ package com.liabit.picker.address
 
 import android.content.Context
 import android.os.Parcelable
+import android.util.Log
 import com.liabit.picker.R
 import com.liabit.picker.cascade.Cascade
 import kotlinx.android.parcel.Parcelize
@@ -21,33 +22,38 @@ object AddressProvider {
         if (!ps.isNullOrEmpty()) {
             return ps
         }
-        val inputStream: InputStream = context.resources.openRawResource(R.raw.city_data)
-        val provinceList = ArrayList<Province>()
-        val provinceArray = JSONArray(inputStream.bufferedReader().readText())
-        for (i in 0 until provinceArray.length()) {
-            val provinceObj = provinceArray.getJSONObject(i)
-            val cityList = ArrayList<City>()
-            val cityArray = provinceObj.getJSONArray("cities")
-            for (j in 0 until cityArray.length()) {
-                val cityObj = cityArray.getJSONObject(j)
-                val districtList = ArrayList<District>()
-                val districtArray = cityObj.getJSONArray("districts")
-                for (k in 0 until districtArray.length()) {
-                    val districtObj = districtArray.getJSONObject(k)
-                    val streetList = ArrayList<Street>()
-                    val streetArray = districtObj.getJSONArray("streets")
-                    for (l in 0 until streetArray.length()) {
-                        val streetObj = streetArray.getJSONObject(l)
-                        streetList.add(Street(streetObj.getString("code"), streetObj.getString("name")))
+        try {
+            val inputStream: InputStream = context.resources.openRawResource(R.raw.city_data)
+            val provinceList = ArrayList<Province>()
+            val provinceArray = JSONArray(inputStream.bufferedReader().readText())
+            for (i in 0 until provinceArray.length()) {
+                val provinceObj = provinceArray.getJSONObject(i)
+                val cityList = ArrayList<City>()
+                val cityArray = provinceObj.getJSONArray("cities")
+                for (j in 0 until cityArray.length()) {
+                    val cityObj = cityArray.getJSONObject(j)
+                    val districtList = ArrayList<District>()
+                    val districtArray = cityObj.getJSONArray("districts")
+                    for (k in 0 until districtArray.length()) {
+                        val districtObj = districtArray.getJSONObject(k)
+                        val streetList = ArrayList<Street>()
+                        val streetArray = districtObj.getJSONArray("streets")
+                        for (l in 0 until streetArray.length()) {
+                            val streetObj = streetArray.getJSONObject(l)
+                            streetList.add(Street(streetObj.getString("code"), streetObj.getString("name")))
+                        }
+                        districtList.add(District(districtObj.getString("code"), districtObj.getString("name"), streetList))
                     }
-                    districtList.add(District(districtObj.getString("code"), districtObj.getString("name"), streetList))
+                    cityList.add(City(cityObj.getString("code"), cityObj.getString("name"), districtList))
                 }
-                cityList.add(City(cityObj.getString("code"), cityObj.getString("name"), districtList))
+                provinceList.add(Province(provinceObj.getString("code"), provinceObj.getString("name"), cityList))
             }
-            provinceList.add(Province(provinceObj.getString("code"), provinceObj.getString("name"), cityList))
+            provinces = provinceList
+            return provinceList
+        } catch (e: Throwable) {
+            Log.d("AddressProvider", "getProvince error: ", e)
+            return emptyList()
         }
-        provinces = provinceList
-        return provinceList
     }
 }
 

@@ -9,7 +9,6 @@ import android.os.Build
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import com.liabit.ext.R
 
 /**
  *  extend the layout to the status bar,

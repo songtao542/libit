@@ -34,8 +34,30 @@ android {
         main {
             //java.srcDirs = ['src/main/java', 'src/main/kotlin']
             java.srcDirs = ['src/main/kotlin']
-            //res.srcDirs = ['other/res1', 'other/res2']
-            //manifest.srcFile 'other/AndroidManifest.xml'
+            //res.srcDirs = ['src/main/res']
+            //manifest.srcFile 'src/main/AndroidManifest.xml'
+        }
+    }
+
+    libraryVariants.all { variant ->
+        variant.assemble.doLast {
+            variant.outputs.all { output ->
+                if (output.outputFileName.contains("debug")) {
+                    // output project-directory/build/outputs/aar/debug
+                    def outputPath = [project.rootDir.absolutePath, "build", "outputs", "aar", "debug"].join(File.separator)
+                    copy {
+                        from output.outputFile
+                        into outputPath
+                    }
+                } else {
+                    // output project-directory/build/outputs/aar/release
+                    def outputPath = [project.rootDir.absolutePath, "build", "outputs", "aar", "release"].join(File.separator)
+                    copy {
+                        from output.outputFile
+                        into outputPath
+                    }
+                }
+            }
         }
     }
 }
@@ -49,7 +71,7 @@ dependencies {
 
     //implementation "androidx.recyclerview:recyclerview:1.2.0-beta01"
     implementation 'com.github.promeg:tinypinyin:2.0.3'
-    implementation 'com.liabit.imagepicker:imagepicker:1.0.0'
+    compileOnly files('../common_libs/imagepicker-1.0.0.aar')
 
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

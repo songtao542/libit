@@ -10,7 +10,7 @@ import com.liabit.citypicker.OnRequestLocationListener
 import com.liabit.listpicker.IPicker
 import com.liabit.listpicker.OnResultListener
 import com.liabit.numberpicker.PickerFragment
-import com.liabit.numberpicker.toStringArray
+import com.liabit.extension.toStringArray
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine

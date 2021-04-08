@@ -4,6 +4,9 @@
     <attr name="tickInterval" format="reference|integer" />
     <attr name="dayUnit" format="reference|string" />
 
+    <attr name="strokeColor" format="reference|color" />
+    <attr name="strokeWidth" format="reference|dimension" />
+
     <declare-styleable name="HalfTextView">
         <attr name="showPart" format="enum">
             <enum name="top" value="0" />
@@ -42,8 +45,8 @@
         <attr name="showAsCountDownButton" format="reference|boolean" />
         <attr name="showCountDownText" format="reference|boolean" />
         <attr name="showStrokeProgress" format="reference|boolean" />
-        <attr name="strokeColor" format="reference|color" />
-        <attr name="strokeWidth" format="reference|dimension" />
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
         <attr name="millisInFuture" format="reference|integer" />
     </declare-styleable>
 </resources>

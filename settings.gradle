@@ -1,3 +1,5 @@
+include ':build_as_one'
+include ':libit'
 include ':runker'
 include ':dialog'
 include ':citypicker'

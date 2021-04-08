@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <attr name="icon" format="reference" />
     <attr name="iconWidth" format="reference|dimension" />
     <attr name="iconHeight" format="reference|dimension" />
     <attr name="iconSize" format="reference|dimension" />
+    <attr name="strokeColor" format="reference|color" />
+    <attr name="strokeWidth" format="reference|dimension" tools:override="true" />
 
     <declare-styleable name="StateButton">
         <attr name="icon" />
@@ -50,9 +52,9 @@
 
     <declare-styleable name="MaterialProgressView">
         <attr name="size" format="reference|dimension" />
-        <attr name="strokeColor" format="reference|color" />
+        <attr name="strokeColor" />
         <attr name="strokeColorScheme" format="reference" />
-        <attr name="strokeWidth" format="reference|dimension" />
+        <attr name="strokeWidth" />
         <attr name="strokeLineCap" format="enum">
             <!--The stroke ends with the path, and does not project beyond it.-->
             <enum name="butt" value="0" />

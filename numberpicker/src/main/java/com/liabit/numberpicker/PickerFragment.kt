@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.liabit.extension.color
 import java.util.*
 
 @Suppress("unused")
@@ -58,14 +59,14 @@ class PickerFragment : BottomSheetDialogFragment() {
             it.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
             it.wrapSelectorWheel = false
             it.setDividerHeight(0.4f)
-            it.setDividerColor(requireContext().colorOf(R.color.p_picker_title))
+            it.setDividerColor(requireContext().color(R.color.p_picker_title))
         }
 
         mColumn2View?.let {
             it.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
             it.wrapSelectorWheel = false
             it.setDividerHeight(0.4f)
-            it.setDividerColor(requireContext().colorOf(R.color.p_picker_title))
+            it.setDividerColor(requireContext().color(R.color.p_picker_title))
         }
 
         mTitleTextView?.text = mTitle ?: getString(mTitleResId ?: R.string.np_please_select)

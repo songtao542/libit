@@ -29,14 +29,38 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    libraryVariants.all { variant ->
+        variant.assemble.doLast {
+            variant.outputs.all { output ->
+                if (output.outputFileName.contains("debug")) {
+                    // output project-directory/build/outputs/aar/debug
+                    def outputPath = [project.rootDir.absolutePath, "build", "outputs", "aar", "debug"].join(File.separator)
+                    copy {
+                        from output.outputFile
+                        into outputPath
+                    }
+                } else {
+                    // output project-directory/build/outputs/aar/release
+                    def outputPath = [project.rootDir.absolutePath, "build", "outputs", "aar", "release"].join(File.separator)
+                    copy {
+                        from output.outputFile
+                        into outputPath
+                    }
+                }
+            }
+        }
+    }
 }
 
 dependencies {
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
+
+    implementation project(':ext')
+
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

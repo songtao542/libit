@@ -14,12 +14,14 @@
             <option value="$PROJECT_DIR$/addsub" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/app_api14" />
+            <option value="$PROJECT_DIR$/build_as_one" />
             <option value="$PROJECT_DIR$/citypicker" />
             <option value="$PROJECT_DIR$/color_util" />
             <option value="$PROJECT_DIR$/dialog" />
             <option value="$PROJECT_DIR$/ext" />
             <option value="$PROJECT_DIR$/filterlayout" />
             <option value="$PROJECT_DIR$/gesture" />
+            <option value="$PROJECT_DIR$/libit" />
             <option value="$PROJECT_DIR$/location_picker" />
             <option value="$PROJECT_DIR$/numberpicker" />
             <option value="$PROJECT_DIR$/photoview" />

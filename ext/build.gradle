@@ -29,6 +29,28 @@ android {
         jvmTarget = '1.8'
     }
 
+    libraryVariants.all { variant ->
+        variant.assemble.doLast {
+            variant.outputs.all { output ->
+                if (output.outputFileName.contains("debug")) {
+                    // output project-directory/build/outputs/aar/debug
+                    def outputPath = [project.rootDir.absolutePath, "build", "outputs", "aar", "debug"].join(File.separator)
+                    copy {
+                        from output.outputFile
+                        into outputPath
+                    }
+                } else {
+                    // output project-directory/build/outputs/aar/release
+                    def outputPath = [project.rootDir.absolutePath, "build", "outputs", "aar", "release"].join(File.separator)
+                    copy {
+                        from output.outputFile
+                        into outputPath
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 dependencies {

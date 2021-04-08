@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">CityPicker</string>
     <string name="cp_search_hint_text">城市中文名或拼音</string>
     <string name="cp_cancel">取消</string>
     <string name="cp_confirm">确定</string>

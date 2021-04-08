@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.8" />
+    <bytecodeTargetLevel target="1.7">
+      <module name="libit.addsub" target="1.8" />
+      <module name="libit.app" target="1.8" />
+      <module name="libit.app_api14" target="1.8" />
+      <module name="libit.citypicker" target="1.8" />
+      <module name="libit.color_util" target="1.8" />
+      <module name="libit.dialog" target="1.8" />
+      <module name="libit.ext" target="1.8" />
+      <module name="libit.filterlayout" target="1.8" />
+      <module name="libit.gesture" target="1.8" />
+      <module name="libit.libit" target="1.8" />
+      <module name="libit.location_picker" target="1.8" />
+      <module name="libit.numberpicker" target="1.8" />
+      <module name="libit.photoview" target="1.8" />
+      <module name="libit.picker" target="1.8" />
+      <module name="libit.picker_integrate" target="1.8" />
+      <module name="libit.popup" target="1.8" />
+      <module name="libit.recyclerview" target="1.8" />
+      <module name="libit.runker" target="1.8" />
+      <module name="libit.screencapture" target="1.8" />
+      <module name="libit.screenrecord" target="1.8" />
+      <module name="libit.settings" target="1.8" />
+      <module name="libit.shimmer" target="1.8" />
+      <module name="libit.swipeback" target="1.8" />
+      <module name="libit.tablayout" target="1.8" />
+      <module name="libit.tagview" target="1.8" />
+      <module name="libit.timerview" target="1.8" />
+      <module name="libit.util" target="1.8" />
+      <module name="libit.viewbinding" target="1.8" />
+      <module name="libit.wallpaper_cropper" target="1.8" />
+      <module name="libit.wallpaper_cropper_lite" target="1.8" />
+      <module name="libit.widget" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

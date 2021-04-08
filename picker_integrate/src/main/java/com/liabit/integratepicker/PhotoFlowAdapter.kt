@@ -9,8 +9,8 @@ import android.widget.*
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import com.bumptech.glide.Glide
-import com.liabit.numberpicker.colorOf
-import com.liabit.numberpicker.dip
+import com.liabit.extension.color
+import com.liabit.extension.dip
 import java.util.*
 
 class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
@@ -136,7 +136,7 @@ class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
             addView(imageView)
 
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
-            textView.setTextColor(context.colorOf(android.R.color.white))
+            textView.setTextColor(context.color(android.R.color.white))
 
             val dip5 = context.dip(5f)
             textView.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
@@ -154,7 +154,7 @@ class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
                 textView.setBackgroundResource(R.drawable.p_button_primary_circle_corner_selector)
             } else {
                 textView.setPadding(0, 0, 0, 0)
-                textView.setBackgroundColor(context.colorOf(android.R.color.transparent))
+                textView.setBackgroundColor(context.color(android.R.color.transparent))
             }
         }
 
@@ -195,7 +195,7 @@ class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
     inner class AddIconView(context: Context, addStyle: AddButtonStyle) : LinearLayout(context) {
         init {
             if (addStyle == AddButtonStyle.SOLID) {
-                setBackgroundColor(context.colorOf(R.color.p_dddddd))
+                setBackgroundColor(context.color(R.color.p_dddddd))
             } else {
                 setBackgroundResource(R.drawable.p_add_button_border)
             }
@@ -228,9 +228,9 @@ class PhotoFlowAdapter(private val context: Context) : FlowLayout.ViewAdapter {
             tlp.topMargin = context.dip(10f)
             text.layoutParams = tlp
             if (addStyle == AddButtonStyle.SOLID) {
-                text.setTextColor(context.colorOf(R.color.p_white))
+                text.setTextColor(context.color(R.color.p_white))
             } else {
-                text.setTextColor(context.colorOf(R.color.p_darker))
+                text.setTextColor(context.color(R.color.p_darker))
             }
             text.setText(R.string.p_add_image)
 

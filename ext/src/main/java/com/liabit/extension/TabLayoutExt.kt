@@ -4,7 +4,6 @@ import android.graphics.drawable.RippleDrawable
 import android.view.ViewGroup
 import androidx.core.view.forEach
 import com.google.android.material.tabs.TabLayout
-import com.liabit.ext.R
 
 fun TabLayout.setupStyle() {
     (getChildAt(0) as? ViewGroup)?.forEach {

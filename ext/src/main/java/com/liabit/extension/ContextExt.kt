@@ -2,6 +2,8 @@ package com.liabit.extension
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.util.TypedValue
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 /**
@@ -27,4 +29,17 @@ fun Context.getNavigationBarHeight(): Int {
         resourceId > 0 -> resources.getDimensionPixelSize(resourceId)
         else -> 48.dip(this)
     }
+}
+
+fun Context.color(id: Int): Int {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        getColor(id)
+    } else {
+        @Suppress("DEPRECATION")
+        resources.getColor(id)
+    }
+}
+
+fun Context.dip(dp: Float): Int {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics).toInt()
 }

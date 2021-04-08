@@ -45,7 +45,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
 
-@SuppressWarnings({"FieldMayBeFinal", "unused", "UnusedReturnValue"})
+@SuppressWarnings({"FieldMayBeFinal", "unused", "UnusedReturnValue", "RedundantSuppression"})
 public class NumberPicker extends LinearLayout {
 
     /**

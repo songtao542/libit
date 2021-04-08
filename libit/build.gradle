@@ -1,0 +1,85 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main {
+//            java.srcDirs = [
+//                    '../viewbinding/src/main/java', // viewbinding
+//                    '../widget/src/main/java', // widget
+//                    '../recyclerview/src/main/java', // recyclerview
+//                    '../timerview/src/main/java', // timerview
+//                    '../ext/src/main/java', // ext
+//                    '../popup/src/main/java', // popup
+//                    '../citypicker/src/main/java', // citypicker
+//                    '../photoview/src/main/java', // photoview
+//                    '../picker/src/main/java', // picker
+//                    '../dialog/src/main/java', // dialog
+//                    '../picker_integrate/src/main/java', // picker_integrate
+//            ]
+//            res.srcDirs = [
+//                    '../common_res/res',  // 公用res
+//                    '../viewbinding/src/main/res', // viewbinding
+//                    '../widget/src/main/res', // widget
+//                    '../recyclerview/src/main/res', // recyclerview
+//                    '../timerview/src/main/res', // timerview
+//                    '../ext/src/main/res', // ext
+//                    '../popup/src/main/res', // popup
+//                    '../citypicker/src/main/res', // citypicker
+//                    '../photoview/src/main/res', // photoview
+//                    '../picker/src/main/res', // picker
+//                    '../dialog/src/main/res', // dialog
+//                    '../picker_integrate/src/main/res', // picker_integrate
+//            ]
+//            manifest.srcFile './src/main/AndroidManifest.xml'
+        }
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0-alpha04'
+
+    implementation "androidx.dynamicanimation:dynamicanimation:1.0.0"
+    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'androidx.interpolator:interpolator:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    //implementation 'com.google.android:flexbox:2.0.1'
+    compileOnly files('../common_libs/flexbox-release.aar')
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}

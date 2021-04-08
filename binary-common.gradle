@@ -226,37 +226,37 @@ def repackageBackMethod() {
     replaceAll(main, oldStr, newStr)
 }
 
-if (domainName != "liabit") {
-    tasks.whenTaskAdded { task ->
-        if (task.name == 'preReleaseBuild') {
-            task.doFirst {
-                // 编译之前先 重命名 文件
-                repackageMethod()
-            }
-        }
-    }
-
-    task repackage(dependsOn: 'assembleRelease') {
-        doLast {
-            // 编译打包完成后 再将文件名改回去
-            repackageBackMethod()
-        }
-    }
-
-    task repackageBack() {
-        doLast {
-            repackageBackMethod()
-        }
-    }
-
-    /*tasks.register("repackageBack", {
-        doLast {
-            repackageBackMethod()
-        }
-    })*/
-
-    if (tasks.findByPath("artifactoryPublish") != null) {
-        // 发布 artifact 之前先将文件名改回去
-        tasks.artifactoryPublish.dependsOn(repackage)
-    }
-}
+//if (domainName != "liabit") {
+//    tasks.whenTaskAdded { task ->
+//        if (task.name == 'preReleaseBuild') {
+//            task.doFirst {
+//                // 编译之前先 重命名 文件
+//                repackageMethod()
+//            }
+//        }
+//    }
+//
+//    task repackage(dependsOn: 'assembleRelease') {
+//        doLast {
+//            // 编译打包完成后 再将文件名改回去
+//            repackageBackMethod()
+//        }
+//    }
+//
+//    task repackageBack() {
+//        doLast {
+//            repackageBackMethod()
+//        }
+//    }
+//
+//    /*tasks.register("repackageBack", {
+//        doLast {
+//            repackageBackMethod()
+//        }
+//    })*/
+//
+//    if (tasks.findByPath("artifactoryPublish") != null) {
+//        // 发布 artifact 之前先将文件名改回去
+//        tasks.artifactoryPublish.dependsOn(repackage)
+//    }
+//}

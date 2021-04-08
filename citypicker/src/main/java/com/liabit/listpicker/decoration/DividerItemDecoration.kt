@@ -8,6 +8,7 @@ import android.util.TypedValue
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.liabit.citypicker.R
 
 class DividerItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     private val mDividerHeight: Float
@@ -15,7 +16,7 @@ class DividerItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
 
     init {
         val typedValue = TypedValue()
-        context.theme.resolveAttribute(com.liabit.citypicker.R.attr.cpSectionBackground, typedValue, true)
+        context.theme.resolveAttribute(R.attr.cpSectionBackground, typedValue, true)
         mPaint.color = ResourcesCompat.getColor(context.resources, typedValue.resourceId, context.theme)
         mDividerHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0.5f, context.resources.displayMetrics)
     }

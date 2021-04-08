@@ -29,24 +29,25 @@ object AddressProvider {
             for (i in 0 until provinceArray.length()) {
                 val provinceObj = provinceArray.getJSONObject(i)
                 val cityList = ArrayList<City>()
-                val cityArray = provinceObj.getJSONArray("cities")
+                val cityArray = provinceObj.getJSONArray("cs")//cities
                 for (j in 0 until cityArray.length()) {
                     val cityObj = cityArray.getJSONObject(j)
                     val districtList = ArrayList<District>()
-                    val districtArray = cityObj.getJSONArray("districts")
+                    val districtArray = cityObj.getJSONArray("ds")//districts
                     for (k in 0 until districtArray.length()) {
                         val districtObj = districtArray.getJSONObject(k)
                         val streetList = ArrayList<Street>()
-                        val streetArray = districtObj.getJSONArray("streets")
+                        val streetArray = districtObj.getJSONArray("ss")//streets
                         for (l in 0 until streetArray.length()) {
                             val streetObj = streetArray.getJSONObject(l)
-                            streetList.add(Street(streetObj.getString("code"), streetObj.getString("name")))
+                            // c:code, n:name
+                            streetList.add(Street(streetObj.getString("c"), streetObj.getString("n")))
                         }
-                        districtList.add(District(districtObj.getString("code"), districtObj.getString("name"), streetList))
+                        districtList.add(District(districtObj.getString("c"), districtObj.getString("n"), streetList))
                     }
-                    cityList.add(City(cityObj.getString("code"), cityObj.getString("name"), districtList))
+                    cityList.add(City(cityObj.getString("c"), cityObj.getString("n"), districtList))
                 }
-                provinceList.add(Province(provinceObj.getString("code"), provinceObj.getString("name"), cityList))
+                provinceList.add(Province(provinceObj.getString("c"), provinceObj.getString("n"), cityList))
             }
             provinces = provinceList
             return provinceList

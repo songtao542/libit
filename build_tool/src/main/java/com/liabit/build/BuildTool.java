@@ -22,28 +22,46 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-class BuildAsOne {
+/**
+ * 执行 main 方法将所有模块儿的源码拷贝的 libit 模块儿中，以方便编译出一个完整的 aar
+ */
+class BuildTool {
 
     static String[] mergeList = {
-            "../viewbinding/src/main", // viewbinding
-            "../widget/src/main", // widget
-            "../recyclerview/src/main", // recyclerview
-            "../timerview/src/main", // timerview
-            "../ext/src/main", // ext
-            "../popup/src/main", // popup
-            "../citypicker/src/main", // citypicker
-            "../photoview/src/main", // photoview
-            "../numberpicker/src/main", // picker
-            "../picker/src/main", // picker
-            "../dialog/src/main", // dialog
-            "../picker_integrate/src/main" // picker_integrate
-//            "../screenrecord/src/main" // screenrecord
+            /*"../wallpaper_cropper/src/main",
+            "../wallpaper_cropper_lite/src/main",
+            "../color_util/src/main",
+            "../settings/src/main",
+            "../gesture/src/main",
+            "../tagview/src/main",
+            "../filterlayout/src/main",
+            "../swipeback/src/main",
+            "../addsub/src/main",
+            "../screenrecord/src/main",
+            "../screencapture/src/main",
+            "../location_picker/src/main",
+            "../tablayout/src/main",
+            "../util/src/main",
+            "../shimmer/src/main",*/
+            "../dialog/src/main",
+            "../citypicker/src/main",
+            "../timerview/src/main",
+            "../viewbinding/src/main",
+            "../recyclerview/src/main",
+            "../popup/src/main",
+            "../picker/src/main",
+            "../widget/src/main",
+            "../ext/src/main",
+            "../picker_integrate/src/main",
+            "../photoview/src/main",
+            "../numberpicker/src/main",
     };
 
+
     public static void main(String[] args) throws DocumentException, IOException {
-        String path = BuildAsOne.class.getResource("").getFile();
-        int index = path.indexOf("build_as_one");
-        String rootPath = path.substring(0, index + "build_as_one".length());
+        String path = BuildTool.class.getResource("").getFile();
+        int index = path.indexOf("build_tool");
+        String rootPath = path.substring(0, index + "build_tool".length());
         File destDir = new File(rootPath, "../libit/src/main/");
         File resDir = new File(destDir, "res/values/");
 

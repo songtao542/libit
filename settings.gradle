@@ -1,4 +1,4 @@
-include ':build_as_one'
+include ':build_tool'
 include ':libit'
 include ':runker'
 include ':dialog'

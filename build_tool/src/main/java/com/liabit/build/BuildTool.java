@@ -113,8 +113,10 @@ class BuildTool {
     static void addImportR(File file, String replace, String replacement) throws IOException {
         if (file.isDirectory()) {
             File[] files = file.listFiles();
-            for (File f : files) {
-                addImportR(f, replace, replacement);
+            if (files != null) {
+                for (File f : files) {
+                    addImportR(f, replace, replacement);
+                }
             }
         } else if (file.exists()) {
             boolean isJava = file.getAbsolutePath().endsWith(".java");
@@ -153,8 +155,10 @@ class BuildTool {
     static void mergeAttr(SAXReader saxReader, Document attrXml, File file, ArrayList<String> names) throws DocumentException, IOException {
         if (file.isDirectory()) {
             File[] files = file.listFiles();
-            for (File f : files) {
-                mergeAttr(saxReader, attrXml, f, names);
+            if (files != null) {
+                for (File f : files) {
+                    mergeAttr(saxReader, attrXml, f, names);
+                }
             }
         } else if (file.exists()) {
             boolean isXml = file.getAbsolutePath().endsWith(".xml");

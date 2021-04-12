@@ -127,12 +127,13 @@ class BuildTool {
                 CharArrayWriter caw = new CharArrayWriter();
                 String line;
                 String importR = replacement + (isJava ? ";" : "");
+                String lineSeparator = System.getProperty("line.separator");
                 while ((line = br.readLine()) != null) {
                     boolean isPackageRow = line.contains("package ");
                     if (isPackageRow) {
                         // 如果是 package 所在行，则在该行之后添加 import R 语句
                         caw.write(line);
-                        caw.append(System.getProperty("line.separator"));
+                        caw.append(lineSeparator).append(lineSeparator);
                         caw.write(importR);
                     } else {
                         // 如果是 import R 的行，则直接跳过
@@ -141,7 +142,7 @@ class BuildTool {
                         }
                         caw.write(line);
                     }
-                    caw.append(System.getProperty("line.separator"));
+                    caw.append(lineSeparator);
                 }
                 br.close();
                 FileWriter fw = new FileWriter(file);

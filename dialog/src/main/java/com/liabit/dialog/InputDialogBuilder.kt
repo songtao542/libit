@@ -1,6 +1,7 @@
 package com.liabit.dialog
 
 import android.content.Context
+import android.content.DialogInterface
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.WindowManager
@@ -9,13 +10,18 @@ import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
 
+@Suppress("unused")
 class InputDialogBuilder(private val context: Context) {
 
     private var mDialogTheme = R.style.DefaultInputDialogTheme
     private var mDialogTitle: CharSequence? = null
     private var mText: CharSequence? = null
 
-    private var mOnConfirmListener: ((text: String) -> Unit)? = null
+    private var mOnConfirmListener: ((dialog: DialogInterface, text: String) -> Unit)? = null
+    private var mOnCancelListener: ((dialog: DialogInterface) -> Unit)? = null
+
+    private var mAutoDismissWhenCancel = true
+    private var mAutoDismissWhenConfirm = true
 
     fun setTheme(@StyleRes themeResId: Int): InputDialogBuilder {
         mDialogTheme = themeResId
@@ -40,8 +46,23 @@ class InputDialogBuilder(private val context: Context) {
         mText = context.getString(resId)
     }
 
-    fun setOnConfirmListener(listener: ((text: String) -> Unit)? = null): InputDialogBuilder {
+    fun setOnConfirmListener(listener: ((dialog: DialogInterface, text: String) -> Unit)? = null): InputDialogBuilder {
         mOnConfirmListener = listener
+        return this
+    }
+
+    fun setOnCancelListener(listener: ((dialog: DialogInterface) -> Unit)? = null): InputDialogBuilder {
+        mOnCancelListener = listener
+        return this
+    }
+
+    fun setDismissWhenCancel(dismiss: Boolean = true): InputDialogBuilder {
+        mAutoDismissWhenCancel = dismiss
+        return this
+    }
+
+    fun setDismissWhenConfirm(dismiss: Boolean = true): InputDialogBuilder {
+        mAutoDismissWhenConfirm = dismiss
         return this
     }
 
@@ -54,11 +75,16 @@ class InputDialogBuilder(private val context: Context) {
                 .setView(view)
                 .setTitle(mDialogTitle ?: context.getString(R.string.input_dialog_title))
                 .setNegativeButton(R.string.dialog_cancel) { d, _ ->
-                    d.dismiss()
+                    if (mAutoDismissWhenCancel) {
+                        d.dismiss()
+                    }
+                    mOnCancelListener?.invoke(d)
                 }
                 .setPositiveButton(R.string.dialog_confirm) { d, _ ->
-                    d.dismiss()
-                    mOnConfirmListener?.invoke(editText.text?.toString() ?: "")
+                    if (mAutoDismissWhenConfirm) {
+                        d.dismiss()
+                    }
+                    mOnConfirmListener?.invoke(d, editText.text?.toString() ?: "")
                 }
                 .create()
         editText.requestFocus()

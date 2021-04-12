@@ -1,6 +1,7 @@
 package com.liabit.widget.popup
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.res.ColorStateList
 import android.graphics.Canvas
 import android.graphics.Color
@@ -40,7 +41,7 @@ class BottomMenu(private val context: Context) {
 
     private val mMenuItems = ArrayList<MenuItem>()
 
-    private var mMenuItemClickListener: ((menu: MenuItem) -> Unit)? = null
+    private var mMenuItemClickListener: ((dialog: DialogInterface?, menu: MenuItem) -> Unit)? = null
 
     private var mTopLeftRadius: Float = 0f
     private var mTopRightRadius: Float = 0f
@@ -62,44 +63,61 @@ class BottomMenu(private val context: Context) {
 
     private var mCancelTitle: CharSequence? = null
 
-    fun menu(title: CharSequence, onClickListener: ((view: View) -> Unit)? = null): BottomMenu {
+    fun menu(title: CharSequence,
+             onClickListener: ((dialog: DialogInterface?, view: View) -> Unit)? = null): BottomMenu {
         mMenuItems.add(MenuItem(title, null, null, null, onClickListener))
         return this
     }
 
-    fun menu(@StringRes titleResId: Int, onClickListener: ((view: View) -> Unit)? = null): BottomMenu {
+    fun menu(@StringRes titleResId: Int,
+             onClickListener: ((dialog: DialogInterface?, view: View) -> Unit)? = null): BottomMenu {
         mMenuItems.add(MenuItem(context.getString(titleResId), null, null, null, onClickListener))
         return this
     }
 
-    fun menu(@StringRes titleResId: Int, endIcon: Drawable, onClickListener: ((view: View) -> Unit)? = null): BottomMenu {
+    fun menu(@StringRes titleResId: Int,
+             endIcon: Drawable,
+             onClickListener: ((dialog: DialogInterface?, view: View) -> Unit)? = null): BottomMenu {
         mMenuItems.add(MenuItem(context.getString(titleResId), null, endIcon, null, onClickListener))
         return this
     }
 
-    fun menu(@StringRes titleResId: Int, startIcon: Drawable, endIcon: Drawable, onClickListener: ((view: View) -> Unit)? = null): BottomMenu {
+    fun menu(@StringRes titleResId: Int,
+             startIcon: Drawable,
+             endIcon: Drawable,
+             onClickListener: ((dialog: DialogInterface?, view: View) -> Unit)? = null): BottomMenu {
         mMenuItems.add(MenuItem(context.getString(titleResId), startIcon, endIcon, null, onClickListener))
         return this
     }
 
-    fun menu(title: CharSequence, endIcon: Drawable, onClickListener: ((view: View) -> Unit)? = null): BottomMenu {
+    fun menu(title: CharSequence,
+             endIcon: Drawable,
+             onClickListener: ((dialog: DialogInterface?, view: View) -> Unit)? = null): BottomMenu {
         mMenuItems.add(MenuItem(title, null, endIcon, null, onClickListener))
         return this
     }
 
-    fun menu(title: CharSequence, startIcon: Drawable, endIcon: Drawable, onClickListener: ((view: View) -> Unit)? = null): BottomMenu {
+    fun menu(title: CharSequence,
+             startIcon: Drawable,
+             endIcon: Drawable,
+             onClickListener: ((dialog: DialogInterface?, view: View) -> Unit)? = null): BottomMenu {
         mMenuItems.add(MenuItem(title, startIcon, endIcon, null, onClickListener))
         return this
     }
 
-    fun menu(@StringRes titleResId: Int, @DrawableRes endIconResId: Int, onClickListener: ((view: View) -> Unit)? = null): BottomMenu {
+    fun menu(@StringRes titleResId: Int,
+             @DrawableRes endIconResId: Int,
+             onClickListener: ((dialog: DialogInterface?, view: View) -> Unit)? = null): BottomMenu {
         val title = context.getString(titleResId)
         val endIcon = ResourcesCompat.getDrawable(context.resources, endIconResId, context.theme)
         mMenuItems.add(MenuItem(title, null, endIcon, null, onClickListener))
         return this
     }
 
-    fun menu(@StringRes titleResId: Int, @DrawableRes startIconResId: Int, @DrawableRes endIconResId: Int, onClickListener: ((view: View) -> Unit)? = null): BottomMenu {
+    fun menu(@StringRes titleResId: Int,
+             @DrawableRes startIconResId: Int,
+             @DrawableRes endIconResId: Int,
+             onClickListener: ((dialog: DialogInterface?, view: View) -> Unit)? = null): BottomMenu {
         val title = context.getString(titleResId)
         val startIcon = ResourcesCompat.getDrawable(context.resources, startIconResId, context.theme)
         val endIcon = ResourcesCompat.getDrawable(context.resources, endIconResId, context.theme)
@@ -107,13 +125,18 @@ class BottomMenu(private val context: Context) {
         return this
     }
 
-    fun menu(title: CharSequence, @DrawableRes endIconResId: Int, onClickListener: ((view: View) -> Unit)? = null): BottomMenu {
+    fun menu(title: CharSequence,
+             @DrawableRes endIconResId: Int,
+             onClickListener: ((dialog: DialogInterface?, view: View) -> Unit)? = null): BottomMenu {
         val endIcon = ResourcesCompat.getDrawable(context.resources, endIconResId, context.theme)
         mMenuItems.add(MenuItem(title, null, endIcon, null, onClickListener))
         return this
     }
 
-    fun menu(title: CharSequence, @DrawableRes startIconResId: Int, @DrawableRes endIconResId: Int, onClickListener: ((view: View) -> Unit)? = null): BottomMenu {
+    fun menu(title: CharSequence,
+             @DrawableRes startIconResId: Int,
+             @DrawableRes endIconResId: Int,
+             onClickListener: ((dialog: DialogInterface?, view: View) -> Unit)? = null): BottomMenu {
         val startIcon = ResourcesCompat.getDrawable(context.resources, startIconResId, context.theme)
         val endIcon = ResourcesCompat.getDrawable(context.resources, endIconResId, context.theme)
         mMenuItems.add(MenuItem(title, startIcon, endIcon, null, onClickListener))
@@ -125,7 +148,7 @@ class BottomMenu(private val context: Context) {
         return this
     }
 
-    fun setOnMenuItemClickListener(listener: ((menu: MenuItem) -> Unit)?): BottomMenu {
+    fun setOnMenuItemClickListener(listener: ((dialog: DialogInterface?, menu: MenuItem) -> Unit)?): BottomMenu {
         mMenuItemClickListener = listener
         return this
     }
@@ -256,8 +279,8 @@ class BottomMenu(private val context: Context) {
                     mLastCheckedMenu?.setChecked(false)
                 }
                 mLastCheckedMenu = it
-                item.listener?.invoke(it)
-                mMenuItemClickListener?.invoke(item)
+                item.listener?.invoke(mDialog, it)
+                mMenuItemClickListener?.invoke(mDialog, item)
             }
             view.addView(menuView, 0)
         }
@@ -394,7 +417,7 @@ class BottomMenu(private val context: Context) {
             val endIcon: Drawable?,
             val background: Drawable?,
             internal var checked: Boolean = false,
-            val listener: ((view: View) -> Unit)?,
+            val listener: ((dialog: DialogInterface?, view: View) -> Unit)?,
     ) {
 
         val isChecked: Boolean get() = checked
@@ -404,7 +427,7 @@ class BottomMenu(private val context: Context) {
                 startIcon: Drawable?,
                 endIcon: Drawable?,
                 background: Drawable?,
-                listener: ((view: View) -> Unit)?,
+                listener: ((dialog: DialogInterface?, view: View) -> Unit)?,
         ) : this(title, null, startIcon, endIcon, background, false, listener)
 
         class Builder(private val context: Context) {
@@ -414,7 +437,7 @@ class BottomMenu(private val context: Context) {
             private var endIcon: Drawable? = null
             private var background: Drawable? = null
             private var checked: Boolean = false
-            private var listener: ((view: View) -> Unit)? = null
+            private var listener: ((dialog: DialogInterface?, view: View) -> Unit)? = null
 
             private var textColor: ColorStateList? = null
 
@@ -473,7 +496,7 @@ class BottomMenu(private val context: Context) {
                 return this
             }
 
-            fun setListener(listener: ((view: View) -> Unit)): Builder {
+            fun setListener(listener: ((dialog: DialogInterface?, view: View) -> Unit)): Builder {
                 this.listener = listener
                 return this
             }

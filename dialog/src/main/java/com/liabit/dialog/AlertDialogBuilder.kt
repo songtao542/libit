@@ -1,6 +1,7 @@
 package com.liabit.dialog
 
 import android.content.Context
+import android.content.DialogInterface
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.widget.TextView
@@ -8,6 +9,7 @@ import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
 
+@Suppress("unused")
 class AlertDialogBuilder(private val context: Context) {
 
     private var mDialogTheme = R.style.DefaultAlertDialogTheme
@@ -15,8 +17,10 @@ class AlertDialogBuilder(private val context: Context) {
     private var mDialogMessage: CharSequence? = null
     private var mCancelable: Boolean = true
 
-    private var mOnConfirmListener: (() -> Unit)? = null
-    private var mOnCancelListener: (() -> Unit)? = null
+    private var mOnConfirmListener: ((dialog: DialogInterface) -> Unit)? = null
+    private var mOnCancelListener: ((dialog: DialogInterface) -> Unit)? = null
+    private var mAutoDismissWhenCancel = true
+    private var mAutoDismissWhenConfirm = true
 
     fun setTheme(@StyleRes themeResId: Int): AlertDialogBuilder {
         mDialogTheme = themeResId
@@ -48,13 +52,23 @@ class AlertDialogBuilder(private val context: Context) {
         return this
     }
 
-    fun setOnConfirmListener(listener: (() -> Unit)? = null): AlertDialogBuilder {
+    fun setOnConfirmListener(listener: ((dialog: DialogInterface) -> Unit)? = null): AlertDialogBuilder {
         mOnConfirmListener = listener
         return this
     }
 
-    fun setOnCancelListener(listener: (() -> Unit)? = null): AlertDialogBuilder {
+    fun setOnCancelListener(listener: ((dialog: DialogInterface) -> Unit)? = null): AlertDialogBuilder {
         mOnCancelListener = listener
+        return this
+    }
+
+    fun setDismissWhenCancel(dismiss: Boolean = true): AlertDialogBuilder {
+        mAutoDismissWhenCancel = dismiss
+        return this
+    }
+
+    fun setDismissWhenConfirm(dismiss: Boolean = true): AlertDialogBuilder {
+        mAutoDismissWhenConfirm = dismiss
         return this
     }
 
@@ -68,12 +82,16 @@ class AlertDialogBuilder(private val context: Context) {
                 .setCancelable(mCancelable)
                 .setTitle(mDialogTitle ?: context.getString(R.string.alert_dialog_title))
                 .setNegativeButton(R.string.dialog_cancel) { d, _ ->
-                    d.dismiss()
-                    mOnCancelListener?.invoke()
+                    if (mAutoDismissWhenCancel) {
+                        d.dismiss()
+                    }
+                    mOnCancelListener?.invoke(d)
                 }
                 .setPositiveButton(R.string.dialog_confirm) { d, _ ->
-                    d.dismiss()
-                    mOnConfirmListener?.invoke()
+                    if (mAutoDismissWhenConfirm) {
+                        d.dismiss()
+                    }
+                    mOnConfirmListener?.invoke(d)
                 }
                 .show()
     }

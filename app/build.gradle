@@ -82,6 +82,7 @@ dependencies {
     implementation project(':swipeback')
     implementation project(':photoview')
     implementation project(':dialog')
+    implementation project(':addsub')
 
     implementation files('../common_libs/imagepicker-1.0.0.aar')
 

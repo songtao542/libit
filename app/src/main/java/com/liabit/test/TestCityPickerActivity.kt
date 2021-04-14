@@ -99,8 +99,8 @@ class TestCityPickerActivity : AppCompatActivity() {
         binding.inputDialog.setOnClickListener {
             InputDialogBuilder(this)
                     .setTitle("请输入姓名")
-                    .setOnConfirmListener {
-                        Toast.makeText(this@TestCityPickerActivity, it, Toast.LENGTH_SHORT).show()
+                    .setOnConfirmListener { _, text ->
+                        Toast.makeText(this@TestCityPickerActivity, text, Toast.LENGTH_SHORT).show()
                     }
                     .show()
         }

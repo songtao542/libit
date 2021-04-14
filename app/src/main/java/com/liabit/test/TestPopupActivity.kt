@@ -45,10 +45,10 @@ class TestPopupActivity : AppCompatActivity() {
             BottomMenu(this)
                     .setRadius(20f, 0f)
                     .setTitleMatchParentWidth(false)
-                    .menu("允许评论") {
+                    .menu("允许评论") { _, _ ->
 
                     }
-                    .menu("不允许评论") {
+                    .menu("不允许评论") { _, _ ->
 
                     }
                     .show()
@@ -57,10 +57,10 @@ class TestPopupActivity : AppCompatActivity() {
             BottomMenu(this)
                     .setRadius(20f, 0f)
                     .setTitleMatchParentWidth(false)
-                    .menu("允许评论", R.drawable.ic_charge_black) {
+                    .menu("允许评论", R.drawable.ic_charge_black) { _, _ ->
 
                     }
-                    .menu("不允许评论") {
+                    .menu("不允许评论") { _, _ ->
 
                     }
                     .show()
@@ -104,7 +104,7 @@ class TestPopupActivity : AppCompatActivity() {
                     .setCancelDividerMargin(10f)
                     .setCancelDividerHeightPx(1f)
                     .setItemHeight(50f)
-                    .setOnMenuItemClickListener {
+                    .setOnMenuItemClickListener { _, _ ->
 
                     }
                     .show()

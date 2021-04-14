@@ -23,7 +23,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
-import com.liabit.addsub.R
 
 /**
  * Author:         songtao

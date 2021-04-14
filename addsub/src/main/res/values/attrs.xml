@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <attr name="iconSize" format="reference|dimension" />
     <declare-styleable name="AddSubView">
         <attr name="addIcon" format="reference" />
         <attr name="subIcon" format="reference" />
@@ -14,7 +14,7 @@
         <attr name="editBackground" format="reference" />
         <attr name="editHeight" format="dimension|reference" />
         <attr name="editWidth" format="dimension|reference" />
-        <attr name="iconSize" format="dimension|reference" />
+        <attr name="iconSize" />
         <attr name="iconPadding" format="dimension|reference" />
         <attr name="iconColor" format="reference|color" />
         <attr name="value" format="integer" />

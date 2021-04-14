@@ -41,6 +41,9 @@ android {
     sourceSets {
         main {
             java.srcDirs = [
+                    './src/main/addsub', // addsub
+                    './src/main/tagview', // tagview
+                    './src/main/filterlayout', // filterlayout
                     './src/main/viewbinding', // viewbinding
                     './src/main/widget', // widget
                     './src/main/recyclerview', // recyclerview
@@ -57,6 +60,9 @@ android {
             ]
             res.srcDirs = [
                     './src/main/res', // viewbinding
+                    './src/main/addsub_res', // addsub
+                    './src/main/tagview_res', // tagview
+                    './src/main/filterlayout_res', // filterlayout
                     './src/main/viewbinding_res', // viewbinding
                     './src/main/widget_res', // widget
                     './src/main/recyclerview_res', // recyclerview

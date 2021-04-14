@@ -33,28 +33,28 @@ class BuildTool {
             "../color_util/src/main",
             "../settings/src/main",
             "../gesture/src/main",
-            "../tagview/src/main",
-            "../filterlayout/src/main",
             "../swipeback/src/main",
-            "../addsub/src/main",
             "../screenrecord/src/main",
             "../screencapture/src/main",
             "../location_picker/src/main",
             "../tablayout/src/main",
             "../util/src/main",
-            "../shimmer/src/main",*/
-            "../dialog/src/main",
+            "../photoview/src/main",
+            "../numberpicker/src/main",
+            "../picker_integrate/src/main",
             "../citypicker/src/main",
+            "../picker/src/main",
+            "../shimmer/src/main",*/
+            "../addsub/src/main",
+            "../tagview/src/main",
+            "../filterlayout/src/main",
+            "../dialog/src/main",
             "../timerview/src/main",
             "../viewbinding/src/main",
             "../recyclerview/src/main",
             "../popup/src/main",
-            "../picker/src/main",
             "../widget/src/main",
             "../ext/src/main",
-            "../picker_integrate/src/main",
-            "../photoview/src/main",
-            "../numberpicker/src/main",
     };
 
 
@@ -71,10 +71,13 @@ class BuildTool {
         attrXml.addElement("resources");
         ArrayList<String> attrNames = new ArrayList<>();
 
+        String packageName = "com.liabit.";
+        String dirName = "liabit";
+
         File manifestFile = new File(destDir, "AndroidManifest.xml");
         Document manifestXml = DocumentHelper.createDocument();
         Element manifestRootElement = manifestXml.addElement("manifest");
-        manifestRootElement.addAttribute("package", "com.liabit");
+        manifestRootElement.addAttribute("package", packageName.substring(0, packageName.length() - 1));
         manifestRootElement.addNamespace("android", "http://schemas.android.com/apk/res/android");
         Element manifestApplicationElement = manifestRootElement.addElement("application");
         ArrayList<String> manifestNames = new ArrayList<>();
@@ -93,6 +96,15 @@ class BuildTool {
 
             addImportR(destJavaDir, "import com\\.liabit\\..*\\.R", "import com.liabit.R");
 
+            if (!"com.liabit.".equals(packageName)) {
+                // 重命名
+                renamePackage(destJavaDir, "com.liabit.", packageName);
+            }
+            if (!"liabit".equals(dirName)) {
+                // 重命名文件夹
+                renameDir(destJavaDir, "liabit", dirName);
+            }
+
             File resSourceDir = new File(source.getCanonicalFile(), "res");
             if (resSourceDir.exists()) {
                 File destResDir = new File(destDir, destName + "_res").getCanonicalFile();
@@ -100,14 +112,103 @@ class BuildTool {
                 System.out.println(resSourceDir + " -> " + destResDir);
                 FileUtils.copyDirectory(resSourceDir, destResDir);
                 mergeAttr(saxReader, attrXml, destResDir, attrNames);
+
+                if (!"com.liabit.".equals(packageName)) {
+                    // 重命名
+                    renameXmlPackage(destResDir, "com.liabit.", packageName);
+                }
             }
             File manifestSourceFile = new File(source.getCanonicalFile(), "AndroidManifest.xml");
 
             mergeManifest(saxReader, manifestRootElement, manifestApplicationElement, manifestSourceFile, manifestNames);
         }
 
+        if (!resDir.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            resDir.mkdirs();
+        }
+        if (!attrFile.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            attrFile.createNewFile();
+        }
         saveXml(attrXml, attrFile);
         saveXml(manifestXml, manifestFile);
+    }
+
+    static void renameDir(File file, String oldName, String newName) throws IOException {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    renameDir(f, oldName, newName);
+                }
+            }
+            if (file.getName().equals(oldName)) {
+                //noinspection ResultOfMethodCallIgnored
+                file.renameTo(new File(file.getParentFile(), newName));
+            }
+        }
+    }
+
+    static void renamePackage(File file, String replace, String replacement) throws IOException {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    renamePackage(f, replace, replacement);
+                }
+            }
+        } else if (file.exists()) {
+            boolean isJava = file.getAbsolutePath().endsWith(".java");
+            boolean isKt = file.getAbsolutePath().endsWith(".kt");
+            if (isJava || isKt) {
+                System.out.println("file: " + file);
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
+                CharArrayWriter caw = new CharArrayWriter();
+                String line;
+                String lineSeparator = System.getProperty("line.separator");
+                while ((line = br.readLine()) != null) {
+                    line = line.replaceAll(replace, replacement);
+                    caw.write(line);
+                    caw.append(lineSeparator);
+                }
+                br.close();
+                FileWriter fw = new FileWriter(file);
+                caw.writeTo(fw);
+                fw.close();
+            }
+
+        }
+    }
+
+    static void renameXmlPackage(File file, String replace, String replacement) throws IOException {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    renameXmlPackage(f, replace, replacement);
+                }
+            }
+        } else if (file.exists()) {
+            boolean isRes = file.getAbsolutePath().endsWith(".xml");
+            if (isRes) {
+                System.out.println("file: " + file);
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
+                CharArrayWriter caw = new CharArrayWriter();
+                String line;
+                String lineSeparator = System.getProperty("line.separator");
+                while ((line = br.readLine()) != null) {
+                    line = line.replaceAll(replace, replacement);
+                    caw.write(line);
+                    caw.append(lineSeparator);
+                }
+                br.close();
+                FileWriter fw = new FileWriter(file);
+                caw.writeTo(fw);
+                fw.close();
+            }
+
+        }
     }
 
     static void addImportR(File file, String replace, String replacement) throws IOException {

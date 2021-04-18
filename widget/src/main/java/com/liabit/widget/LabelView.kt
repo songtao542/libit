@@ -73,15 +73,18 @@ class LabelView : LinearLayout {
 
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelView, defStyleAttr, defStyleRes)
             mEditable = typedArray.getBoolean(R.styleable.LabelView_android_editable, false)
+            val textVisibility = typedArray.getInt(R.styleable.LabelView_textVisibility, View.VISIBLE)
             if (mEditable) {
-                mEditTextView.visibility = View.VISIBLE
+                mEditTextView.visibility = textVisibility
                 mTextView.visibility = View.GONE
             } else {
-                mTextView.visibility = View.VISIBLE
+                mTextView.visibility = textVisibility
                 mEditTextView.visibility = View.GONE
             }
             mLabelWithColon = typedArray.getBoolean(R.styleable.LabelView_labelWithColon, false)
             mLabelText = typedArray.getText(R.styleable.LabelView_android_label) ?: ""
+            val labelVisibility = typedArray.getInt(R.styleable.LabelView_labelVisibility, View.VISIBLE)
+            mLabelTextView.visibility = labelVisibility
             if (mLabelWithColon) {
                 mLabelTextView.text = "$mLabelText${context.resources.getString(R.string.colon)}"
             } else {

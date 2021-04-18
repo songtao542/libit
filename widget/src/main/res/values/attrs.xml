@@ -91,6 +91,22 @@
         <attr name="labelTextSize" format="dimension" />
         <attr name="android:textColorHint" />
         <attr name="android:editable" />
+        <attr name="textVisibility" format="enum">
+            <!-- Visible on screen; the default value. -->
+            <enum name="visible" value="0" />
+            <!-- Not displayed, but taken into account during layout (space is left for it). -->
+            <enum name="invisible" value="4" />
+            <!-- Completely hidden, as if the view had not been added. -->
+            <enum name="gone" value="8" />
+        </attr>
+        <attr name="labelVisibility" format="enum">
+            <!-- Visible on screen; the default value. -->
+            <enum name="visible" value="0" />
+            <!-- Not displayed, but taken into account during layout (space is left for it). -->
+            <enum name="invisible" value="4" />
+            <!-- Completely hidden, as if the view had not been added. -->
+            <enum name="gone" value="8" />
+        </attr>
         <attr name="labelClickable" format="boolean" />
         <attr name="labelWithColon" format="boolean" />
         <attr name="showRightArrow" format="boolean" />

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.liabit.extension.color
@@ -23,6 +24,7 @@ class PickerFragment : BottomSheetDialogFragment() {
 
     private var mColumn1View: NumberPicker? = null
     private var mColumn2View: NumberPicker? = null
+    private var mCenterTextView: TextView? = null
     private var mTitleTextView: TextView? = null
     private var mConfirmButton: TextView? = null
     private var mProgressView: View? = null
@@ -30,6 +32,8 @@ class PickerFragment : BottomSheetDialogFragment() {
     private var mOnValueChangeListener: ((value1: CharSequence, value2: CharSequence) -> Unit)? = null
     private var mOnIndexChangeListener: ((index1: Int, index2: Int) -> Unit)? = null
     private var mTitle: CharSequence? = null
+    private var mCenterText: CharSequence? = null
+    private var mCenterTextResId: Int? = null
     private var mTitleResId: Int? = null
     private var mShowProgress: Boolean = false
     private var mValue1: Int = 0
@@ -50,6 +54,7 @@ class PickerFragment : BottomSheetDialogFragment() {
         mPickersWrapLayout = view.findViewById(R.id.pickers)
         mColumn1View = view.findViewById(R.id.column1View)
         mColumn2View = view.findViewById(R.id.column2View)
+        mCenterTextView = view.findViewById(R.id.centerText)
         return view
     }
 
@@ -71,6 +76,19 @@ class PickerFragment : BottomSheetDialogFragment() {
 
         mTitleTextView?.text = mTitle ?: getString(mTitleResId ?: R.string.np_please_select)
         showProgress(mShowProgress)
+
+        mCenterText?.let { text ->
+            mCenterTextView?.let {
+                it.visibility = View.VISIBLE
+                it.text = text
+            }
+        }
+        mCenterTextResId?.let { resId ->
+            mCenterTextView?.let {
+                it.visibility = View.VISIBLE
+                it.setText(resId)
+            }
+        }
 
         val minValue = mMinValue
         val maxValue = mMaxValue
@@ -134,9 +152,25 @@ class PickerFragment : BottomSheetDialogFragment() {
         mTitleTextView?.text = title
     }
 
-    fun setTitle(titleResId: Int) {
-        mTitleResId = titleResId
-        mTitleTextView?.setText(titleResId)
+    fun setTitle(@StringRes resId: Int) {
+        mTitleResId = resId
+        mTitleTextView?.setText(resId)
+    }
+
+    fun setCenterText(centerText: CharSequence) {
+        mCenterText = centerText
+        mCenterTextView?.let {
+            it.visibility = View.VISIBLE
+            it.text = centerText
+        }
+    }
+
+    fun setCenterText(@StringRes resId: Int) {
+        mCenterTextResId = resId
+        mCenterTextView?.let {
+            it.visibility = View.VISIBLE
+            it.setText(resId)
+        }
     }
 
     fun setValue(value1: Int, value2: Int) {

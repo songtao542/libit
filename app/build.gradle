@@ -79,6 +79,7 @@ dependencies {
     implementation project(':color_util')
     implementation project(':picker_integrate')
     implementation project(':citypicker')
+    implementation project(':numberpicker')
     implementation project(':swipeback')
     implementation project(':photoview')
     implementation project(':dialog')

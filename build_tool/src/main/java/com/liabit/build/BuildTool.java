@@ -39,13 +39,13 @@ class BuildTool {
             "../location_picker/src/main",
             "../tablayout/src/main",
             "../util/src/main",
+            "../shimmer/src/main",*/
+            "../addsub/src/main",
             "../photoview/src/main",
             "../picker_integrate/src/main",
             "../citypicker/src/main",
             "../picker/src/main",
-            "../shimmer/src/main",*/
             "../numberpicker/src/main",
-            "../addsub/src/main",
             "../tagview/src/main",
             "../filterlayout/src/main",
             "../dialog/src/main",
@@ -74,9 +74,17 @@ class BuildTool {
         String packageName = "com.liabit.";
         String dirName = "liabit";
 
+        if (!destDir.exists()) {
+            boolean result = destDir.mkdirs();
+            System.out.println("Create dest dir " + result);
+        }
         FileUtils.cleanDirectory(destDir);
 
         File manifestFile = new File(destDir, "AndroidManifest.xml");
+        if (!manifestFile.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            manifestFile.createNewFile();
+        }
         Document manifestXml = DocumentHelper.createDocument();
         Element manifestRootElement = manifestXml.addElement("manifest");
         manifestRootElement.addAttribute("package", packageName.substring(0, packageName.length() - 1));

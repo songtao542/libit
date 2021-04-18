@@ -20,6 +20,7 @@
         <attr name="pickerMinWidth" format="reference|dimension" />
         <!-- The max width of the PickerView. -->
         <attr name="pickerMaxWidth" format="reference|dimension" />
+        <attr name="pickerTextSize" format="reference|dimension" />
         <!-- The layout of the number picker. -->
         <attr name="pickerInternalLayout" format="reference" />
         <!-- The drawable for pressed virtual (increment/decrement) buttons. -->

@@ -2,6 +2,8 @@
 <resources>
 
     <attr name="autoTextSize" format="reference|boolean" />
+    <attr name="maxValue" format="reference|integer" />
+    <attr name="minValue" format="reference|integer" />
 
     <declare-styleable name="CascadePickerView">
         <attr name="autoTextSize" />
@@ -24,8 +26,8 @@
         <attr name="textSizeSelected" format="reference|dimension" />
         <attr name="textSizeHint" format="reference|dimension" />
         <attr name="textArray" format="reference" />
-        <attr name="minValue" format="reference|integer" />
-        <attr name="maxValue" format="reference|integer" />
+        <attr name="minValue" />
+        <attr name="maxValue" />
         <attr name="wrapSelectorWheel" format="reference|boolean" />
         <attr name="respondChangeOnDetached" format="reference|boolean" />
         <attr name="hintText" format="reference|string" />

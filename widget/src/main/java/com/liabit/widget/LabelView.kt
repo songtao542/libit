@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.annotation.StringRes
 
 /**
  * Author:         songtao
@@ -361,8 +362,22 @@ class LabelView : LinearLayout {
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    fun setLabel(@StringRes resId: Int) {
+        if (mLabelWithColon) {
+            mLabelTextView.text = "$${context.resources.getString(resId)}${context.resources.getString(R.string.colon)}"
+        } else {
+            mLabelTextView.text = context.resources.getString(resId)
+        }
+    }
+
     fun setText(text: CharSequence) {
         mText = text
+        textView.text = mText
+    }
+
+    fun setText(@StringRes resId: Int) {
+        mText = context.resources.getString(resId)
         textView.text = mText
     }
 
@@ -371,8 +386,18 @@ class LabelView : LinearLayout {
         textView.hint = mHint
     }
 
+    fun setHint(@StringRes resId: Int) {
+        mHint = context.resources.getString(resId)
+        textView.hint = mHint
+    }
+
     fun setRightText(text: CharSequence) {
         mRightText = text
+        mRightTextView.text = mRightText
+    }
+
+    fun setRightText(@StringRes resId: Int) {
+        mRightText = context.resources.getString(resId)
         mRightTextView.text = mRightText
     }
 

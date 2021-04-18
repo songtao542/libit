@@ -19,7 +19,6 @@
         <item name="pickerMinWidth">64dp</item>
         <item name="pickerMaxHeight">180dp</item>
         <item name="pickerInternalLayout">@layout/p_number_picker_material</item>
-        <item name="pickerButtonPressedDrawable">?attr/selectableItemBackground</item>
     </style>
 
 </resources>

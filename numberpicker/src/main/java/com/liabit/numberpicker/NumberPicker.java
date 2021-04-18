@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -208,11 +209,6 @@ public class NumberPicker extends LinearLayout {
     private final Paint mSelectorWheelPaint;
 
     /**
-     * The {@link Drawable} for pressed virtual (increment/decrement) buttons.
-     */
-    private final Drawable mVirtualButtonPressedDrawable;
-
-    /**
      * The height of a selector element (text + gap).
      */
     private int mSelectorElementHeight;
@@ -226,6 +222,11 @@ public class NumberPicker extends LinearLayout {
      * The current offset of the scroll selector.
      */
     private int mCurrentScrollOffset;
+
+    /**
+     * The text gravity.
+     */
+    private int mTextGravity;
 
     /**
      * The {@link Scroller} responsible for flinging the selector.
@@ -520,6 +521,7 @@ public class NumberPicker extends LinearLayout {
 
 
         int textSize = (int) attributesArray.getDimension(R.styleable.NumberPicker_pickerTextSize, -1);
+        mTextGravity = attributesArray.getInt(R.styleable.NumberPicker_pickerTextGravity, Gravity.CENTER);
 
         mMaxHeight = attributesArray.getDimensionPixelSize(
                 R.styleable.NumberPicker_pickerMaxHeight, SIZE_UNSPECIFIED);
@@ -537,9 +539,6 @@ public class NumberPicker extends LinearLayout {
         }
 
         mComputeMaxWidth = (mMaxWidth == SIZE_UNSPECIFIED);
-
-        mVirtualButtonPressedDrawable = attributesArray.getDrawable(
-                R.styleable.NumberPicker_pickerButtonPressedDrawable);
 
         attributesArray.recycle();
 
@@ -1319,22 +1318,6 @@ public class NumberPicker extends LinearLayout {
             mSelectionDivider.draw(canvas);
         }
 
-        // draw the virtual buttons pressed state if needed
-        if (showSelectorWheel && mVirtualButtonPressedDrawable != null
-                && mScrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-            if (mDecrementVirtualButtonPressed) {
-                mVirtualButtonPressedDrawable.setState(PRESSED_STATE_SET);
-                mVirtualButtonPressedDrawable.setBounds(0, 0, getRight(), mTopSelectionDividerTop);
-                mVirtualButtonPressedDrawable.draw(canvas);
-            }
-            if (mIncrementVirtualButtonPressed) {
-                mVirtualButtonPressedDrawable.setState(PRESSED_STATE_SET);
-                mVirtualButtonPressedDrawable.setBounds(0, mBottomSelectionDividerBottom, getRight(),
-                        getBottom());
-                mVirtualButtonPressedDrawable.draw(canvas);
-            }
-        }
-
         // draw the selector wheel
         int[] selectorIndices = mSelectorIndices;
         for (int i = 0; i < selectorIndices.length; i++) {
@@ -1347,7 +1330,15 @@ public class NumberPicker extends LinearLayout {
             // with the new one.
             if ((showSelectorWheel && i != SELECTOR_MIDDLE_ITEM_INDEX) ||
                     (i == SELECTOR_MIDDLE_ITEM_INDEX && mInputText.getVisibility() != VISIBLE)) {
-                canvas.drawText(scrollSelectorValue.toString(), x, y, mSelectorWheelPaint);
+                String text = scrollSelectorValue.toString();
+                float textWidth = mSelectorWheelPaint.measureText(text);
+                float ox = x;
+                if (mTextGravity == Gravity.LEFT) {
+                    ox = getLeft() + textWidth / 2;
+                } else if (mTextGravity == Gravity.RIGHT) {
+                    ox = getRight() - textWidth / 2;
+                }
+                canvas.drawText(text, ox, y, mSelectorWheelPaint);
             }
             y += mSelectorElementHeight;
         }
@@ -1854,5 +1845,15 @@ public class NumberPicker extends LinearLayout {
     public void setDividerHeight(float height) {
         mSelectionDividerHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, height, getResources().getDisplayMetrics());
         invalidate();
+    }
+
+    public void setTextGravity(int gravity) {
+        if (gravity == Gravity.START) {
+            mTextGravity = Gravity.START;
+        } else if (gravity == Gravity.END) {
+            mTextGravity = Gravity.END;
+        } else {
+            mTextGravity = Gravity.CENTER;
+        }
     }
 }

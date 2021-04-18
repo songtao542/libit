@@ -21,10 +21,13 @@
         <!-- The max width of the PickerView. -->
         <attr name="pickerMaxWidth" format="reference|dimension" />
         <attr name="pickerTextSize" format="reference|dimension" />
+        <attr name="pickerTextGravity" format="enum">
+            <enum name="left" value="3" />
+            <enum name="center" value="17" />
+            <enum name="right" value="5" />
+        </attr>
         <!-- The layout of the number picker. -->
         <attr name="pickerInternalLayout" format="reference" />
-        <!-- The drawable for pressed virtual (increment/decrement) buttons. -->
-        <attr name="pickerButtonPressedDrawable" format="reference" />
         <!-- If true then the selector wheel is hidden until the picker has focus. -->
         <attr name="pickerHideWheelUntilFocused" format="reference|boolean" />
     </declare-styleable>

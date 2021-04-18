@@ -67,7 +67,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:theme="@style/NumberPickStyle"
-                    app:pickerDividerHeight="1px" />
+                    app:pickerDividerHeight="1px"
+                    app:pickerTextGravity="center" />
 
                 <TextView
                     android:id="@+id/centerText"
@@ -84,7 +85,8 @@
                     android:layout_weight="1"
                     android:theme="@style/NumberPickStyle"
                     android:visibility="gone"
-                    app:pickerDividerHeight="1px" />
+                    app:pickerDividerHeight="1px"
+                    app:pickerTextGravity="center" />
 
             </LinearLayout>
         </FrameLayout>

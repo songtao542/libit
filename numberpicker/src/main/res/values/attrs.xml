@@ -22,9 +22,9 @@
         <attr name="pickerMaxWidth" format="reference|dimension" />
         <attr name="pickerTextSize" format="reference|dimension" />
         <attr name="pickerTextGravity" format="enum">
-            <enum name="left" value="3" />
+            <enum name="start" value="8388611" />
             <enum name="center" value="17" />
-            <enum name="right" value="5" />
+            <enum name="end" value="8388613" />
         </attr>
         <!-- The layout of the number picker. -->
         <attr name="pickerInternalLayout" format="reference" />

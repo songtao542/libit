@@ -4,11 +4,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.liabit.dialog.AlertDialogBuilder
 import com.liabit.dialog.InputDialogBuilder
 import com.liabit.extension.layoutUnderSystemUI
+import com.liabit.extension.toStringArray
 import com.liabit.imageviewer.PhotoViewer
 import com.liabit.integratepicker.PhotoFlowAdapter
 import com.liabit.integratepicker.PhotoSelector
@@ -94,6 +96,24 @@ class TestCityPickerActivity : AppCompatActivity() {
             Picker.pick(this, "选择院系", mCollegeIndex, values) {
                 Toast.makeText(this@TestCityPickerActivity, it.toString(), Toast.LENGTH_SHORT).show()
             }
+        }
+        binding.pickWeight.setOnClickListener {
+            val weight1 = Array(71) {
+                "${30 + it}"
+            }
+            val weight2 = Array(10) {
+                "$it"
+            }
+            com.liabit.numberpicker.PickerFragment.Builder()
+                    .setTitle("选择体重")
+                    .setColumn(column1Values = weight1.toStringArray(), column2Values = weight2.toStringArray())
+                    .setCenterText(".")
+                    .setColumnTextGravity(Gravity.END, Gravity.START)
+                    .setOnIndexChangeListener { i1, i2 ->
+                        Toast.makeText(this@TestCityPickerActivity, "${weight1[i1]}.${weight2[i2]}", Toast.LENGTH_SHORT).show()
+                    }
+                    .setValue(value1 = 0, value2 = 0)
+                    .show(supportFragmentManager)
         }
 
         binding.inputDialog.setOnClickListener {

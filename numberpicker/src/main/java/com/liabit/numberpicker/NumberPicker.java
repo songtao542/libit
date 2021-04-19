@@ -1,5 +1,6 @@
 package com.liabit.numberpicker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
@@ -1332,11 +1333,24 @@ public class NumberPicker extends LinearLayout {
                     (i == SELECTOR_MIDDLE_ITEM_INDEX && mInputText.getVisibility() != VISIBLE)) {
                 String text = scrollSelectorValue.toString();
                 float textWidth = mSelectorWheelPaint.measureText(text);
-                float ox = x;
-                if (mTextGravity == Gravity.LEFT) {
-                    ox = getLeft() + textWidth / 2;
-                } else if (mTextGravity == Gravity.RIGHT) {
-                    ox = getRight() - textWidth / 2;
+                float ox;
+                int d = getLayoutDirection();
+                if (d == LAYOUT_DIRECTION_RTL) {
+                    if (mTextGravity == Gravity.START) {
+                        ox = getWidth() - textWidth / 2;
+                    } else if (mTextGravity == Gravity.END) {
+                        ox = textWidth / 2;
+                    } else {
+                        ox = x;
+                    }
+                } else {
+                    if (mTextGravity == Gravity.START) {
+                        ox = textWidth / 2;
+                    } else if (mTextGravity == Gravity.END) {
+                        ox = getWidth() - textWidth / 2;
+                    } else {
+                        ox = x;
+                    }
                 }
                 canvas.drawText(text, ox, y, mSelectorWheelPaint);
             }

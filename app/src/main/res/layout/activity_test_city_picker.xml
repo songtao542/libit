@@ -58,6 +58,14 @@
         android:textAllCaps="false" />
 
     <Button
+        android:id="@+id/pickWeight"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Pick Weight"
+        android:textAllCaps="false" />
+
+    <Button
         android:id="@+id/inputDialog"
         android:layout_width="280dp"
         android:layout_height="wrap_content"

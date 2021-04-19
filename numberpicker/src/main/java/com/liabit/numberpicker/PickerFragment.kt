@@ -47,8 +47,8 @@ class PickerFragment : BottomSheetDialogFragment() {
     private var mColumn2SubOfColumn1Type = -1
     private var mRealtimeNotify = false
 
-    private var gravity1 = Gravity.CENTER
-    private var gravity2 = Gravity.CENTER
+    private var mGravity1 = Gravity.CENTER
+    private var mGravity2 = Gravity.CENTER
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.p_fragment_picker, container, false)
@@ -94,8 +94,8 @@ class PickerFragment : BottomSheetDialogFragment() {
             }
         }
 
-        mColumn1View?.setTextGravity(gravity1)
-        mColumn2View?.setTextGravity(gravity2)
+        mColumn1View?.setTextGravity(mGravity1)
+        mColumn2View?.setTextGravity(mGravity2)
 
         val minValue = mMinValue
         val maxValue = mMaxValue
@@ -319,8 +319,8 @@ class PickerFragment : BottomSheetDialogFragment() {
     }
 
     fun setColumnTextGravity(gravity1: Int, gravity2: Int) {
-        this.gravity1 = gravity1
-        this.gravity2 = gravity2
+        this.mGravity1 = gravity1
+        this.mGravity2 = gravity2
         mColumn1View?.setTextGravity(gravity1)
         mColumn2View?.setTextGravity(gravity2)
     }
@@ -412,6 +412,16 @@ class PickerFragment : BottomSheetDialogFragment() {
 
         fun setColumnTextGravity(gravity1: Int, gravity2: Int): Builder {
             mPicker.setColumnTextGravity(gravity1, gravity2)
+            return this
+        }
+
+        fun setCenterText(text: CharSequence): Builder {
+            mPicker.setCenterText(text)
+            return this
+        }
+
+        fun setCenterText(@StringRes resId: Int): Builder {
+            mPicker.setCenterText(resId)
             return this
         }
 

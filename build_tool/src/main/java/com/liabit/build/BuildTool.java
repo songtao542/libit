@@ -39,11 +39,11 @@ class BuildTool {
             "../location_picker/src/main",
             "../tablayout/src/main",
             "../util/src/main",
+            "../shimmer/src/main",*/
             "../photoview/src/main",
             "../picker_integrate/src/main",
             "../citypicker/src/main",
             "../picker/src/main",
-            "../shimmer/src/main",*/
             "../numberpicker/src/main",
             "../addsub/src/main",
             "../tagview/src/main",

@@ -74,7 +74,8 @@ android {
                     './src/main/numberpicker', // picker
                     './src/main/dialog', // dialog
                     './src/main/picker_integrate', // picker_integrate
-                    './src/main/screenrecord', // picker_integrate
+                    './src/main/screenrecord', // screenrecord
+                    './src/main/autoclear', // autoclear
             ]
             res.srcDirs = [
                     './src/main/res', // viewbinding
@@ -93,7 +94,7 @@ android {
                     './src/main/numberpicker_res', // picker
                     './src/main/dialog_res', // dialog
                     './src/main/picker_integrate_res', // picker_integrate
-                    './src/main/screenrecord_res', // picker_integrate
+                    './src/main/screenrecord_res', // screenrecord
             ]
             manifest.srcFile './src/main/AndroidManifest.xml'
         }

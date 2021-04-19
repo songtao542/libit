@@ -94,6 +94,9 @@ class PickerFragment : BottomSheetDialogFragment() {
             }
         }
 
+        mColumn1View?.setTextGravity(gravity1)
+        mColumn2View?.setTextGravity(gravity2)
+
         val minValue = mMinValue
         val maxValue = mMaxValue
         if (minValue != null && maxValue != null) {
@@ -318,7 +321,8 @@ class PickerFragment : BottomSheetDialogFragment() {
     fun setColumnTextGravity(gravity1: Int, gravity2: Int) {
         this.gravity1 = gravity1
         this.gravity2 = gravity2
-        //mColumn1View.setg
+        mColumn1View?.setTextGravity(gravity1)
+        mColumn2View?.setTextGravity(gravity2)
     }
 
     private fun setColumnInternal(columns: LinkedHashMap<out CharSequence, out List<CharSequence>>?) {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="iconSize" format="reference|dimension" />
-    <attr name="minValue" format="integer" />
-    <attr name="maxValue" format="integer" />
+    <attr name="maxValue" format="reference|integer" />
+    <attr name="minValue" format="reference|integer" />
 
     <declare-styleable name="AddSubView">
         <attr name="addIcon" format="reference" />
@@ -20,7 +20,17 @@
         <attr name="iconSize" />
         <attr name="iconPadding" format="dimension|reference" />
         <attr name="iconColor" format="reference|color" />
+        <
+        <
+        <
+        <
+        <
+        <
+        < HEAD
         <attr name="value" format="integer" />
+        =======
+        <attr name="value" format="reference|integer" />
+        >>>>>>> f10604a6317e753581e351be76c3d820aeb46021
         <attr name="minValue" />
         <attr name="maxValue" />
         <attr name="android:textColor" />

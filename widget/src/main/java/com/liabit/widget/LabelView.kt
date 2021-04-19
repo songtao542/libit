@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.annotation.StringRes
 
 /**
  * Author:         songtao
@@ -73,15 +74,18 @@ class LabelView : LinearLayout {
 
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelView, defStyleAttr, defStyleRes)
             mEditable = typedArray.getBoolean(R.styleable.LabelView_android_editable, false)
+            val textVisibility = typedArray.getInt(R.styleable.LabelView_textVisibility, View.VISIBLE)
             if (mEditable) {
-                mEditTextView.visibility = View.VISIBLE
+                mEditTextView.visibility = textVisibility
                 mTextView.visibility = View.GONE
             } else {
-                mTextView.visibility = View.VISIBLE
+                mTextView.visibility = textVisibility
                 mEditTextView.visibility = View.GONE
             }
             mLabelWithColon = typedArray.getBoolean(R.styleable.LabelView_labelWithColon, false)
             mLabelText = typedArray.getText(R.styleable.LabelView_android_label) ?: ""
+            val labelVisibility = typedArray.getInt(R.styleable.LabelView_labelVisibility, View.VISIBLE)
+            mLabelTextView.visibility = labelVisibility
             if (mLabelWithColon) {
                 mLabelTextView.text = "$mLabelText${context.resources.getString(R.string.colon)}"
             } else {
@@ -358,8 +362,22 @@ class LabelView : LinearLayout {
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    fun setLabel(@StringRes resId: Int) {
+        if (mLabelWithColon) {
+            mLabelTextView.text = "$${context.resources.getString(resId)}${context.resources.getString(R.string.colon)}"
+        } else {
+            mLabelTextView.text = context.resources.getString(resId)
+        }
+    }
+
     fun setText(text: CharSequence) {
         mText = text
+        textView.text = mText
+    }
+
+    fun setText(@StringRes resId: Int) {
+        mText = context.resources.getString(resId)
         textView.text = mText
     }
 
@@ -368,8 +386,18 @@ class LabelView : LinearLayout {
         textView.hint = mHint
     }
 
+    fun setHint(@StringRes resId: Int) {
+        mHint = context.resources.getString(resId)
+        textView.hint = mHint
+    }
+
     fun setRightText(text: CharSequence) {
         mRightText = text
+        mRightTextView.text = mRightText
+    }
+
+    fun setRightText(@StringRes resId: Int) {
+        mRightText = context.resources.getString(resId)
         mRightTextView.text = mRightText
     }
 

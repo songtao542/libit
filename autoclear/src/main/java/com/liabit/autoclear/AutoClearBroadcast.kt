@@ -15,10 +15,14 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 /**
  *
  */
-@Suppress("unused")
-class BroadcastRegistry : Clearable {
+open class BroadcastRegistry : Clearable, DefaultLifecycleObserver {
 
-    private var receivers = ArrayMap<Context, BroadcastReceiver>()
+    private val receivers = ArrayMap<Context, BroadcastReceiver>()
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        owner.lifecycle.removeObserver(this)
+        clear()
+    }
 
     override fun clear() {
         for ((context, receiver) in receivers) {
@@ -27,11 +31,22 @@ class BroadcastRegistry : Clearable {
         receivers.clear()
     }
 
-    fun registerReceiver(context: Context, action: String, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
+    open fun clear(context: Context) {
+        val iterator = receivers.iterator()
+        while (iterator.hasNext()) {
+            val entry = iterator.next()
+            if (entry.key == context) {
+                LocalBroadcastManager.getInstance(context).unregisterReceiver(entry.value)
+                iterator.remove()
+            }
+        }
+    }
+
+    open fun registerReceiver(context: Context, action: String, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
         registerReceiver(context, listOf(action), receiver)
     }
 
-    fun registerReceiver(context: Context, actions: List<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
+    open fun registerReceiver(context: Context, actions: List<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
         val realReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 receiver.invoke(context, intent)
@@ -50,26 +65,37 @@ private fun buildAction(context: Context, action: String): String {
     return "${context.packageName}_$action"
 }
 
-private var receivers = ArrayMap<Context, BroadcastRegistry>()
+private object GlobalBroadcastRegistry : BroadcastRegistry() {
+
+    private val registries = ArrayMap<Context, BroadcastRegistry>()
+
+    override fun clear(context: Context) {
+        registries[context]?.clear()
+    }
+
+    override fun registerReceiver(context: Context, action: String, receiver: (context: Context?, intent: Intent?) -> Unit) {
+        val registry = registries[context] ?: BroadcastRegistry().also { registries[context] = it }
+        if (context is LifecycleOwner) {
+            context.lifecycle.addObserver(registry)
+        }
+        registry.registerReceiver(context, action, receiver)
+    }
+
+    override fun registerReceiver(context: Context, actions: List<String>, receiver: (context: Context?, intent: Intent?) -> Unit) {
+        val registry = registries[context] ?: BroadcastRegistry().also { registries[context] = it }
+        if (context is LifecycleOwner) {
+            context.lifecycle.addObserver(registry)
+        }
+        registry.registerReceiver(context, actions, receiver)
+    }
+}
 
 fun Context.registerReceiver(receiver: ((context: Context?, intent: Intent?) -> Unit), vararg action: String) {
-    val registry = receivers[this] ?: BroadcastRegistry().also { receivers[this] = it }
-    if (this is LifecycleOwner) {
-        val lifecycleObserver = object : DefaultLifecycleObserver {
-            override fun onDestroy(owner: LifecycleOwner) {
-                owner.lifecycle.removeObserver(this)
-                for (value in receivers.values) {
-                    value.clear()
-                }
-            }
-        }
-        this.lifecycle.addObserver(lifecycleObserver)
-    }
-    registry.registerReceiver(this, listOf(*action), receiver)
+    GlobalBroadcastRegistry.registerReceiver(this, listOf(*action), receiver)
 }
 
 fun Context.clearBroadcastReceiver() {
-    receivers[this]?.clear()
+    GlobalBroadcastRegistry.clear(this)
 }
 
 fun Context.registerReceiver(receiver: BroadcastReceiver, action: String) {

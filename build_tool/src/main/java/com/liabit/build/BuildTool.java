@@ -82,16 +82,17 @@ class BuildTool {
         FileUtils.cleanDirectory(destDir);
 
         File manifestFile = new File(destDir, "AndroidManifest.xml");
-        if (!manifestFile.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            manifestFile.createNewFile();
-        }
+
         Document manifestXml = DocumentHelper.createDocument();
         Element manifestRootElement = manifestXml.addElement("manifest");
         manifestRootElement.addAttribute("package", packageName.substring(0, packageName.length() - 1));
         manifestRootElement.addNamespace("android", "http://schemas.android.com/apk/res/android");
         Element manifestApplicationElement = manifestRootElement.addElement("application");
         ArrayList<String> manifestNames = new ArrayList<>();
+
+        if (!manifestFile.exists()) {
+            saveXml(manifestXml, manifestFile);
+        }
 
         for (String merge : mergeList) {
             File source = new File(rootPath, merge);

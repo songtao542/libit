@@ -2,8 +2,8 @@
 <resources>
 
     <attr name="autoTextSize" format="reference|boolean" />
-    <attr name="maxValue" format="reference|integer" />
     <attr name="minValue" format="reference|integer" />
+    <attr name="maxValue" format="reference|integer" />
 
     <declare-styleable name="CascadePickerView">
         <attr name="autoTextSize" />

@@ -22,6 +22,9 @@ class AlertDialogBuilder(private val context: Context) {
     private var mAutoDismissWhenCancel = true
     private var mAutoDismissWhenConfirm = true
 
+    private var mNegativeButtonText: CharSequence? = null
+    private var mPositiveButtonText: CharSequence? = null
+
     fun setTheme(@StyleRes themeResId: Int): AlertDialogBuilder {
         mDialogTheme = themeResId
         return this
@@ -72,22 +75,44 @@ class AlertDialogBuilder(private val context: Context) {
         return this
     }
 
+    fun setNegativeButtonText(@StringRes resId: Int): AlertDialogBuilder {
+        mNegativeButtonText = context.getString(resId)
+        return this
+    }
+
+    fun setNegativeButtonText(text: CharSequence): AlertDialogBuilder {
+        mNegativeButtonText = text
+        return this
+    }
+
+    fun setPositiveButtonText(@StringRes resId: Int): AlertDialogBuilder {
+        mPositiveButtonText = context.getString(resId)
+        return this
+    }
+
+    fun setPositiveButtonText(text: CharSequence): AlertDialogBuilder {
+        mPositiveButtonText = text
+        return this
+    }
+
     fun show(): AlertDialog {
         val context = ContextThemeWrapper(context, mDialogTheme)
         val view = LayoutInflater.from(context).inflate(R.layout.alert_dialog, null)
         val textView = view.findViewById<TextView>(R.id.dialog_message_text)
         textView.text = mDialogMessage
+        val negativeButtonText = mNegativeButtonText ?: context.getString(R.string.dialog_cancel)
+        val positiveButtonText = mPositiveButtonText ?: context.getString(R.string.dialog_confirm)
         return AlertDialog.Builder(context, mDialogTheme)
                 .setView(view)
                 .setCancelable(mCancelable)
                 .setTitle(mDialogTitle ?: context.getString(R.string.alert_dialog_title))
-                .setNegativeButton(R.string.dialog_cancel) { d, _ ->
+                .setNegativeButton(negativeButtonText) { d, _ ->
                     if (mAutoDismissWhenCancel) {
                         d.dismiss()
                     }
                     mOnCancelListener?.invoke(d)
                 }
-                .setPositiveButton(R.string.dialog_confirm) { d, _ ->
+                .setPositiveButton(positiveButtonText) { d, _ ->
                     if (mAutoDismissWhenConfirm) {
                         d.dismiss()
                     }

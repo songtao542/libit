@@ -10,7 +10,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        minSdkVersion 23
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -38,6 +38,24 @@ android {
         jvmTarget = '1.8'
     }
 
+    libraryVariants.all { variant ->
+        variant.assemble.doLast {
+            variant.outputs.all { output ->
+                if (output.outputFileName.contains("release")) {
+                    System.out.println("output.outputFile: " + output.outputFile.parentFile.parentFile)
+                    def outputPath = [output.outputFile.parentFile.parentFile.parentFile, "libs"].join(File.separator)
+                    copy {
+                        from output.outputFile
+                        into outputPath
+                        rename { String fileName ->
+                            fileName.replace("-release", "")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     sourceSets {
         main {
             java.srcDirs = [
@@ -56,7 +74,8 @@ android {
                     './src/main/numberpicker', // picker
                     './src/main/dialog', // dialog
                     './src/main/picker_integrate', // picker_integrate
-                    './src/main/screenrecord', // picker_integrate
+                    './src/main/screenrecord', // screenrecord
+                    './src/main/autoclear', // autoclear
             ]
             res.srcDirs = [
                     './src/main/res', // viewbinding
@@ -75,7 +94,7 @@ android {
                     './src/main/numberpicker_res', // picker
                     './src/main/dialog_res', // dialog
                     './src/main/picker_integrate_res', // picker_integrate
-                    './src/main/screenrecord_res', // picker_integrate
+                    './src/main/screenrecord_res', // screenrecord
             ]
             manifest.srcFile './src/main/AndroidManifest.xml'
         }
@@ -84,7 +103,6 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0-alpha04'
 
@@ -94,10 +112,9 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
 
-    def lifecycle_version = "2.2.0"
-    def arch_version = "2.1.0"
+    def lifecycle_version = "2.3.0"
 
     // Saved state module for ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
@@ -122,13 +139,13 @@ dependencies {
     // optional - ReactiveStreams support for LiveData
     implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:2.2.0"
     // Lifecycles only (without ViewModel or LiveData)
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.0"
     // ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
 
-    implementation "androidx.navigation:navigation-runtime-ktx:2.3.2"
-    implementation "androidx.navigation:navigation-fragment-ktx:2.3.2"
-    implementation "androidx.navigation:navigation-ui-ktx:2.3.2"
+    implementation "androidx.navigation:navigation-runtime-ktx:2.3.5"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.3.5"
+    implementation "androidx.navigation:navigation-ui-ktx:2.3.5"
 
     implementation "androidx.paging:paging-common-ktx:2.1.2"
     implementation "androidx.paging:paging-runtime-ktx:2.1.2"
@@ -148,7 +165,7 @@ dependencies {
     compileOnly files('../common_libs/flexbox-release.aar')
     compileOnly files('../common_libs/imagepicker-1.0.0.aar')
 
-    compileOnly 'com.github.bumptech.glide:glide:4.11.0'
+    compileOnly 'com.github.bumptech.glide:glide:4.12.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

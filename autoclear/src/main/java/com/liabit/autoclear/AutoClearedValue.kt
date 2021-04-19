@@ -1,5 +1,6 @@
 package com.liabit.autoclear
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -44,6 +45,7 @@ class AutoClearedValue<T>(private var valueProvider: () -> T) : ReadWritePropert
     private var thisRef: LifecycleOwner? = null
     private var value: T? = null
     private val lifecycleObserver = object : DefaultLifecycleObserver {
+        @SuppressLint("ObsoleteSdkInt")
         override fun onDestroy(owner: LifecycleOwner) {
             thisRef?.lifecycle?.removeObserver(this)
             value?.let {

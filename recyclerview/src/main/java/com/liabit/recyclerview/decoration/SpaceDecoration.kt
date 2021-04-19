@@ -37,8 +37,9 @@ class SpaceDecoration(
 
     constructor(space: Float, divider: Float) : this(space, ALL, divider, Color.GRAY)
 
-    constructor(space: Float, spaceDirection: Int, divider: Float)
-            : this(space, spaceDirection, divider, Color.GRAY)
+    constructor(space: Float, spaceDirection: Int, divider: Float) : this(space, spaceDirection, divider, Color.GRAY)
+
+    constructor(divider: Int, dividerColor: Int) : this(divider.toFloat(), ALL, divider.toFloat(), dividerColor)
 
     init {
         if (dividerColor != Color.TRANSPARENT) {

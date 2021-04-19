@@ -5,6 +5,7 @@
       <module name="libit.addsub" target="1.8" />
       <module name="libit.app" target="1.8" />
       <module name="libit.app_api14" target="1.8" />
+      <module name="libit.autoclear" target="1.8" />
       <module name="libit.citypicker" target="1.8" />
       <module name="libit.color_util" target="1.8" />
       <module name="libit.dialog" target="1.8" />

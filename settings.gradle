@@ -1,3 +1,4 @@
+include ':autoclear'
 include ':build_tool'
 include ':libit'
 include ':runker'

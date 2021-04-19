@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.liabit.autoclear
 
 import android.content.BroadcastReceiver
@@ -49,7 +51,6 @@ class AutoClearBroadcastRegistrar : Clearable {
     }
 }
 
-@Suppress("unused")
 class BroadcastBuilder(private val context: Context) : Intent() {
     fun send() {
         LocalBroadcastManager.getInstance(context).sendBroadcast(this)

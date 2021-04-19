@@ -1,6 +1,7 @@
 package com.liabit.numberpicker
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +46,9 @@ class PickerFragment : BottomSheetDialogFragment() {
     private var mColumns: LinkedHashMap<out CharSequence, out List<CharSequence>>? = null
     private var mColumn2SubOfColumn1Type = -1
     private var mRealtimeNotify = false
+
+    private var gravity1 = Gravity.CENTER
+    private var gravity2 = Gravity.CENTER
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.p_fragment_picker, container, false)
@@ -311,6 +315,12 @@ class PickerFragment : BottomSheetDialogFragment() {
         setColumnInternal(columns)
     }
 
+    fun setColumnTextGravity(gravity1: Int, gravity2: Int) {
+        this.gravity1 = gravity1
+        this.gravity2 = gravity2
+        //mColumn1View.setg
+    }
+
     private fun setColumnInternal(columns: LinkedHashMap<out CharSequence, out List<CharSequence>>?) {
         val column1View = mColumn1View ?: return
         if (!columns.isNullOrEmpty()) {
@@ -393,6 +403,11 @@ class PickerFragment : BottomSheetDialogFragment() {
 
         fun setColumn(columns: LinkedHashMap<out CharSequence, out List<CharSequence>>): Builder {
             mPicker.setColumn(columns)
+            return this
+        }
+
+        fun setColumnTextGravity(gravity1: Int, gravity2: Int): Builder {
+            mPicker.setColumnTextGravity(gravity1, gravity2)
             return this
         }
 

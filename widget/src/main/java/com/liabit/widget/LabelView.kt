@@ -8,6 +8,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -73,9 +74,13 @@ class LabelView : LinearLayout {
             ta.recycle()
 
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelView, defStyleAttr, defStyleRes)
-            mEditable = typedArray.getBoolean(R.styleable.LabelView_android_editable, false)
+            mEditable = typedArray.getBoolean(R.styleable.LabelView_textEditable, false)
             val textVisibility = typedArray.getInt(R.styleable.LabelView_textVisibility, View.VISIBLE)
             if (mEditable) {
+                val inputType = typedArray.getInt(R.styleable.LabelView_android_inputType, EditorInfo.TYPE_NULL)
+                if (inputType != EditorInfo.TYPE_NULL) {
+                    mEditTextView.inputType = inputType
+                }
                 mEditTextView.visibility = textVisibility
                 mTextView.visibility = View.GONE
             } else {

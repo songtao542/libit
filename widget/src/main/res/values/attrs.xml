@@ -90,7 +90,8 @@
         <attr name="rightTextSize" format="dimension" />
         <attr name="labelTextSize" format="dimension" />
         <attr name="android:textColorHint" />
-        <attr name="android:editable" />
+        <attr name="textEditable" format="reference|boolean" />
+        <attr name="android:inputType" />
         <attr name="textVisibility" format="enum">
             <!-- Visible on screen; the default value. -->
             <enum name="visible" value="0" />

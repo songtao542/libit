@@ -13,6 +13,7 @@
       <module name="libit.filterlayout" target="1.8" />
       <module name="libit.gesture" target="1.8" />
       <module name="libit.libit" target="1.8" />
+      <module name="libit.livedata-ktx" target="1.8" />
       <module name="libit.location_picker" target="1.8" />
       <module name="libit.numberpicker" target="1.8" />
       <module name="libit.photoview" target="1.8" />

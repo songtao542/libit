@@ -76,6 +76,7 @@ android {
                     './src/main/picker_integrate', // picker_integrate
                     './src/main/screenrecord', // screenrecord
                     './src/main/autoclear', // autoclear
+                    './src/main/livedata-ktx', // autoclear
             ]
             res.srcDirs = [
                     './src/main/res', // viewbinding

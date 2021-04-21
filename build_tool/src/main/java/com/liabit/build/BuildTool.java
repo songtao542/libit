@@ -56,6 +56,7 @@ class BuildTool {
             "../popup/src/main",
             "../widget/src/main",
             "../ext/src/main",
+            "../livedata-ktx/src/main",
     };
 
 

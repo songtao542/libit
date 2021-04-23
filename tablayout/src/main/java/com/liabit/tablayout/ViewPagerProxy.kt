@@ -41,6 +41,11 @@ class ViewPagerProxy {
             mViewPager2?.currentItem = value
         }
 
+    fun setCurrentItem(position: Int, smoothScroll: Boolean) {
+        mViewPager?.setCurrentItem(position, smoothScroll)
+        mViewPager2?.setCurrentItem(position, smoothScroll)
+    }
+
     val itemCount: Int
         get() {
             return mViewPager?.adapter?.count ?: mViewPager2?.adapter?.itemCount ?: 0

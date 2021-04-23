@@ -94,6 +94,7 @@ class TabLayout : FrameLayout, OnPageChangeListener, ViewPager.OnAdapterChangeLi
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+        Log.d("TTTT", "position: $position  positionOffset: $positionOffset  positionOffsetPixels: $positionOffsetPixels")
         mTabIndicator?.onPageScrolled(this, position, positionOffset)
         val tabCount = mTabContainer.childCount
         if (tabCount > 0) {
@@ -138,10 +139,13 @@ class TabLayout : FrameLayout, OnPageChangeListener, ViewPager.OnAdapterChangeLi
 
     override fun onPageScrollStateChanged(state: Int) {
         val pager = viewPager
+        pager?.let {
+            mTabIndicator?.onPageScrollStateChanged(this, it.currentItem, state)
+        }
         if (state == ViewPager.SCROLL_STATE_IDLE) {
             mClickTabToSetPosition = false
-            if (pager != null) {
-                val position = pager.currentItem
+            pager?.let {
+                val position = it.currentItem
                 notifyTabViewPositionSelected(position)
             }
         }
@@ -166,7 +170,7 @@ class TabLayout : FrameLayout, OnPageChangeListener, ViewPager.OnAdapterChangeLi
         initTabAndIndicator()
     }
 
-    fun setupWith(viewPager: ViewPager2, titles: List<out CharSequence>?) {
+    fun setupWith(viewPager: ViewPager2, titles: List<CharSequence>?) {
         setupWith(viewPager, titles?.toTypedArray())
     }
 

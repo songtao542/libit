@@ -14,7 +14,7 @@ import kotlin.math.abs
 @Suppress("unused")
 class LineTabIndicator(context: Context) : View(context), TabIndicator {
     private var mLineHeight = 0f
-    private val mRadius = 0f
+    private var mRadius = 0f
     private var mPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var mColors: IntArray? = null
     private val mArgbEvaluator = ArgbEvaluator()
@@ -81,5 +81,17 @@ class LineTabIndicator(context: Context) : View(context), TabIndicator {
     fun setColor(vararg colors: Int) {
         mColors = intArrayOf(*colors)
     }
+
+    var radius: Float
+        get() = mRadius
+        set(value) {
+            mRadius = value
+        }
+
+    var lineHeight: Float
+        get() = mLineHeight
+        set(value) {
+            mLineHeight = value
+        }
 
 }

@@ -23,6 +23,9 @@ interface TabIndicator {
 
     fun onPageSelected(tabLayout: TabLayout, position: Int)
 
+    fun onPageScrollStateChanged(tabLayout: TabLayout, position: Int, state: Int) {
+    }
+
     fun onTabCreated(tabLayout: TabLayout, position: Int) {
         // DO NOTHING
     }

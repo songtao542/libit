@@ -1,5 +1,6 @@
 package com.liabit.tablayout.indicator
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -10,6 +11,7 @@ import com.liabit.tablayout.TabIndicator
 import com.liabit.tablayout.TabLayout
 import com.liabit.tablayout.Util.dip2px
 import com.liabit.tablayout.Util.dp2px
+import com.liabit.tablayout.ViewPagerProxy
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.min
@@ -24,12 +26,17 @@ open class CircleIndicator(context: Context) : View(context), TabIndicator {
     protected var mSpacing = 0
     protected var mCurrentIndex = 0
     protected var mCount = 0
+    private var mSmoothScroll = true
     protected var mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var mCurrentX = 0f
     protected var mCircles: MutableList<Circle> = ArrayList()
     private var mDownX = 0f
     private var mDownY = 0f
     private var mTouchSlop = 0
+
+    /**
+     * 圆点是否跟随ViewPager变化
+     */
     var isFollowViewPager = true
 
     init {
@@ -52,12 +59,12 @@ open class CircleIndicator(context: Context) : View(context), TabIndicator {
         mPaint.color = mColor
         for (i in mCircles.indices) {
             val circle = mCircles[i]
-            canvas.drawCircle(circle.x, circle.y, mRadius.toFloat(), mPaint)
+            canvas.drawCircle(circle.x, circle.y, mRadius, mPaint)
         }
         mPaint.color = mSelectColor
         mPaint.style = Paint.Style.FILL
         if (mCircles.size > 0) {
-            canvas.drawCircle(mCurrentX, height / 2.toFloat(), mRadius.toFloat(), mPaint)
+            canvas.drawCircle(mCurrentX, height / 2.toFloat(), mRadius, mPaint)
         }
     }
 
@@ -75,6 +82,7 @@ open class CircleIndicator(context: Context) : View(context), TabIndicator {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
         val y = event.y
@@ -89,7 +97,9 @@ open class CircleIndicator(context: Context) : View(context), TabIndicator {
                     while (i < mCircles.size) {
                         val circle = mCircles[i]
                         if (isInCircle(circle, x, y)) {
-                            getTabLayout()?.viewPager?.currentItem = i
+                            getTabLayout()?.viewPager?.let {
+                                onCircleClick(it, i)
+                            }
                             break
                         }
                         i++
@@ -97,6 +107,10 @@ open class CircleIndicator(context: Context) : View(context), TabIndicator {
                 }
         }
         return isClickable || super.onTouchEvent(event)
+    }
+
+    protected open  fun onCircleClick(viewPager: ViewPagerProxy, position: Int) {
+        viewPager.setCurrentItem(position, mSmoothScroll)
     }
 
     private fun isInCircle(point: Circle, x: Float, y: Float): Boolean {
@@ -124,7 +138,7 @@ open class CircleIndicator(context: Context) : View(context), TabIndicator {
             val startX = (width - mRadius * 2 * mCount - mSpacing * (mCount - 1)) / 2
             val y = height / 2
             for (i in 0 until mCount) {
-                val circle = Circle((startX + (mRadius * 2 + mSpacing) * i).toFloat(), y.toFloat(), mRadius.toFloat(), mColor)
+                val circle = Circle((startX + (mRadius * 2 + mSpacing) * i), y.toFloat(), mRadius, mColor)
                 mCircles.add(circle)
             }
             mCurrentX = mCircles[mCurrentIndex].x
@@ -166,8 +180,8 @@ open class CircleIndicator(context: Context) : View(context), TabIndicator {
 
     var spacing: Int
         get() = mSpacing
-        set(circleSpacing) {
-            mSpacing = circleSpacing
+        set(value) {
+            mSpacing = value
             prepare()
             invalidate()
         }
@@ -176,6 +190,12 @@ open class CircleIndicator(context: Context) : View(context), TabIndicator {
         mCount = count
     }
 
-    protected inner class Circle(var x: Float, var y: Float, var radius: Float, var color: Int)
+    var smoothScroll: Boolean
+        get() = mSmoothScroll
+        set(value) {
+            mSmoothScroll = value
+        }
+
+    protected data class Circle(var x: Float, var y: Float, var radius: Float, var color: Int)
 
 }

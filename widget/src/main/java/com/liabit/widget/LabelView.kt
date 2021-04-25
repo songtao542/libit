@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.annotation.IntDef
 import androidx.annotation.StringRes
 
 /**
@@ -324,6 +325,11 @@ class LabelView : LinearLayout {
 
             textView.setPaddingRelative(start.toInt(), top.toInt(), end.toInt(), bottom.toInt())
 
+            mRightTextView.visibility = typedArray.getInt(R.styleable.LabelView_rightTextVisibility, View.VISIBLE)
+            mRightArrowView.visibility = typedArray.getInt(R.styleable.LabelView_rightArrowVisibility, View.VISIBLE)
+            mStartIconView.visibility = typedArray.getInt(R.styleable.LabelView_startIconVisibility, View.GONE)
+            mEndIconView.visibility = typedArray.getInt(R.styleable.LabelView_endIconVisibility, View.GONE)
+
             typedArray.recycle()
         }
     }
@@ -421,4 +427,50 @@ class LabelView : LinearLayout {
     fun getRightText(): CharSequence? {
         return mRightTextView.text
     }
+
+    @IntDef(View.VISIBLE, View.INVISIBLE, View.GONE)
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class Visibility
+
+    @Visibility
+    var rightTextVisibility: Int
+        get() = mRightTextView.visibility
+        set(value) {
+            mRightTextView.visibility = value
+        }
+
+    @Visibility
+    var rightArrowVisibility: Int
+        get() = mRightArrowView.visibility
+        set(value) {
+            mRightArrowView.visibility = value
+        }
+
+    @Visibility
+    var endIconVisibility: Int
+        get() = mEndIconView.visibility
+        set(value) {
+            mEndIconView.visibility = value
+        }
+
+    @Visibility
+    var textVisibility: Int
+        get() = if (mEditable) mEditTextView.visibility else mTextView.visibility
+        set(value) {
+            (if (mEditable) mEditTextView else mTextView).visibility = value
+        }
+
+    @Visibility
+    var labelVisibility: Int
+        get() = mLabelTextView.visibility
+        set(value) {
+            mLabelTextView.visibility = value
+        }
+
+    @Visibility
+    var startIconVisibility: Int
+        get() = mStartIconView.visibility
+        set(value) {
+            mStartIconView.visibility = value
+        }
 }

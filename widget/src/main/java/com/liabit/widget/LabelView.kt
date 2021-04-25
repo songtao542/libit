@@ -410,4 +410,15 @@ class LabelView : LinearLayout {
         mRightTextView.setTextColor(ColorStateList.valueOf(textColor))
     }
 
+    fun getText(): CharSequence? {
+        return if (mEditable) mEditTextView.text else mTextView.text
+    }
+
+    fun getLabel(): CharSequence? {
+        return mLabelTextView.text
+    }
+
+    fun getRightText(): CharSequence? {
+        return mRightTextView.text
+    }
 }

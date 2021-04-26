@@ -2,7 +2,9 @@ package com.liabit.autoclear
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle.State.DESTROYED
 import androidx.lifecycle.LifecycleOwner
 import java.io.Closeable
 import kotlin.properties.ReadWriteProperty
@@ -37,17 +39,16 @@ fun <T> autoCleared(value: T) = AutoClearedValue { value }
 fun <T> autoCleared(valueProvider: () -> T) = AutoClearedValue(valueProvider)
 
 /**
- * A lazy property that gets cleaned up when the fragment is destroyed.
+ * A lazy property that gets cleaned up when the LifecycleOwner is at state of [DESTROYED].
  *
- * Accessing this variable in a destroyed fragment will throw NPE.
+ * Accessing this variable at state of [DESTROYED] LifecycleOwner will throw NPE.
  */
 class AutoClearedValue<T>(private var valueProvider: () -> T) : ReadWriteProperty<LifecycleOwner, T> {
-    private var thisRef: LifecycleOwner? = null
     private var value: T? = null
     private val lifecycleObserver = object : DefaultLifecycleObserver {
         @SuppressLint("ObsoleteSdkInt")
         override fun onDestroy(owner: LifecycleOwner) {
-            thisRef?.lifecycle?.removeObserver(this)
+            owner.lifecycle.removeObserver(this)
             value?.let {
                 if (it is Clearable) {
                     it.clear()
@@ -76,8 +77,11 @@ class AutoClearedValue<T>(private var valueProvider: () -> T) : ReadWritePropert
 
     override fun getValue(thisRef: LifecycleOwner, property: KProperty<*>): T {
         value?.let { return it }
-        this.thisRef = thisRef
-        thisRef.lifecycle.addObserver(lifecycleObserver)
+        if (thisRef is Fragment) {
+            thisRef.viewLifecycleOwner.lifecycle.addObserver(lifecycleObserver)
+        } else {
+            thisRef.lifecycle.addObserver(lifecycleObserver)
+        }
         return valueProvider.invoke().also { value = it }
     }
 

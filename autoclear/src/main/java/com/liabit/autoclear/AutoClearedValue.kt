@@ -36,12 +36,15 @@ fun <T> autoCleared(value: T) = AutoClearedValue { value }
 /**
  * Creates an [AutoClearedValue] associated with this LifecycleOwner.
  */
+@Suppress("unused")
 fun <T> autoCleared(valueProvider: () -> T) = AutoClearedValue(valueProvider)
 
 /**
  * A lazy property that gets cleaned up when the LifecycleOwner is at state of [DESTROYED].
  *
  * Accessing this variable at state of [DESTROYED] LifecycleOwner will throw NPE.
+ *
+ * The [T] must be instance of [Clearable] or [LifecycleSensitiveClearable] or [Closeable] or [AutoCloseable]
  */
 class AutoClearedValue<T>(private var valueProvider: () -> T) : ReadWriteProperty<LifecycleOwner, T> {
     private var value: T? = null
@@ -50,8 +53,18 @@ class AutoClearedValue<T>(private var valueProvider: () -> T) : ReadWritePropert
         override fun onDestroy(owner: LifecycleOwner) {
             owner.lifecycle.removeObserver(this)
             value?.let {
-                if (it is Clearable) {
-                    it.clear()
+                if (it is LifecycleSensitiveClearable) {
+                    try {
+                        it.clear(owner)
+                    } catch (e: Throwable) {
+                        Log.d("AutoClearedValue", "clear error: ", e)
+                    }
+                } else if (it is Clearable) {
+                    try {
+                        it.clear()
+                    } catch (e: Throwable) {
+                        Log.d("AutoClearedValue", "clear error: ", e)
+                    }
                 }
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
                     if (it is AutoCloseable) {
@@ -77,19 +90,22 @@ class AutoClearedValue<T>(private var valueProvider: () -> T) : ReadWritePropert
 
     override fun getValue(thisRef: LifecycleOwner, property: KProperty<*>): T {
         value?.let { return it }
-        if (thisRef is Fragment) {
-            thisRef.viewLifecycleOwner.lifecycle.addObserver(lifecycleObserver)
-        } else {
-            thisRef.lifecycle.addObserver(lifecycleObserver)
-        }
+        val lifecycle = if (thisRef is Fragment) thisRef.viewLifecycleOwner.lifecycle else thisRef.lifecycle
+        lifecycle.addObserver(lifecycleObserver)
         return valueProvider.invoke().also { value = it }
     }
 
     override fun setValue(thisRef: LifecycleOwner, property: KProperty<*>, value: T) {
+        val lifecycle = if (thisRef is Fragment) thisRef.viewLifecycleOwner.lifecycle else thisRef.lifecycle
+        lifecycle.addObserver(lifecycleObserver)
         this.value = value
     }
 }
 
 interface Clearable {
     fun clear()
+}
+
+interface LifecycleSensitiveClearable {
+    fun clear(owner: LifecycleOwner)
 }

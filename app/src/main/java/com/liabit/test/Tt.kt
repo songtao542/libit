@@ -1,5 +1,6 @@
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
+import com.liabit.autoclear.autoClearedValue
 import com.liabit.test.TestAddSubViewActivity
 import com.liabit.recyclerview.loadmore.LoadMoreAdapter
 
@@ -14,5 +15,8 @@ internal class V {
 
         recyclerView.adapter = LoadMoreAdapter.wrap(adapterq)
         recyclerView.adapter = LoadMoreAdapter.wrap(adapter)
+
+
+
     }
 }

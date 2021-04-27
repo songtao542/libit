@@ -62,7 +62,7 @@ open class BroadcastRegistry(autoClear: Boolean) : LifecycleSensitiveClearable, 
      */
     private var mAutoClear = autoClear
 
-    private val receivers = ArrayList<Entry>()
+    private val mReceivers = ArrayList<Entry>()
 
     constructor() : this(false)
 
@@ -77,7 +77,7 @@ open class BroadcastRegistry(autoClear: Boolean) : LifecycleSensitiveClearable, 
      * 只反注册该 LifecycleOwner 对应的广播
      */
     override fun clear(owner: LifecycleOwner) {
-        val iterator = receivers.iterator()
+        val iterator = mReceivers.iterator()
         while (iterator.hasNext()) {
             val entry = iterator.next()
             // 只反注册该 LifecycleOwner 对应的广播
@@ -93,17 +93,17 @@ open class BroadcastRegistry(autoClear: Boolean) : LifecycleSensitiveClearable, 
      * 反注册所有BroadcastReceiver
      */
     override fun clear() {
-        for (entry in receivers) {
+        for (entry in mReceivers) {
             unregisterReceiver(entry)
         }
-        receivers.clear()
+        mReceivers.clear()
     }
 
     /**
      * 反注册所有与该 [key] 绑定的 BroadcastReceiver
      */
     open fun unregisterReceiver(key: Any) {
-        val iterator = receivers.iterator()
+        val iterator = mReceivers.iterator()
         while (iterator.hasNext()) {
             val entry = iterator.next()
             if (entry.key == key) {
@@ -120,10 +120,18 @@ open class BroadcastRegistry(autoClear: Boolean) : LifecycleSensitiveClearable, 
     private fun unregisterReceiver(entry: Entry) {
         val key = entry.key
         if (key is Context) {
-            LocalBroadcastManager.getInstance(key).unregisterReceiver(entry.value)
+            if (entry.local) {
+                LocalBroadcastManager.getInstance(key).unregisterReceiver(entry.value)
+            } else {
+                key.unregisterReceiver(entry.value)
+            }
         } else if (key is Fragment) {
             key.context?.let {
-                LocalBroadcastManager.getInstance(it).unregisterReceiver(entry.value)
+                if (entry.local) {
+                    LocalBroadcastManager.getInstance(it).unregisterReceiver(entry.value)
+                } else {
+                    it.unregisterReceiver(entry.value)
+                }
             }
         }
     }
@@ -212,19 +220,19 @@ open class BroadcastRegistry(autoClear: Boolean) : LifecycleSensitiveClearable, 
             }
         }
         val entry = Entry(key, realReceiver, local)
-        receivers.add(entry)
+        mReceivers.add(entry)
         val intentFilter = IntentFilter()
         for (action in actions) {
             intentFilter.addAction(buildAction(context, action))
         }
+        val lifecycleOwner = when (key) {
+            is ComponentActivity -> key
+            is Fragment -> key.viewLifecycleOwner
+            else -> null
+        }
+        entry.lifecycleOwner = lifecycleOwner
         if (mAutoClear) {
-            if (key is ComponentActivity) {
-                entry.lifecycleOwner = key
-                key.lifecycle.addObserver(this)
-            } else if (key is Fragment) {
-                entry.lifecycleOwner = key.viewLifecycleOwner
-                key.viewLifecycleOwner.lifecycle.addObserver(this)
-            }
+            lifecycleOwner?.lifecycle?.addObserver(this)
         }
         if (local) {
             LocalBroadcastManager.getInstance(context).registerReceiver(realReceiver, intentFilter)

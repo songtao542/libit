@@ -10,16 +10,16 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /**
- * Creates an [ReadWriteAutoClearValue] associated with this LifecycleOwner.
+ * Creates an [NullableAutoClearValue] associated with this LifecycleOwner.
  */
-inline fun <reified T> autoClearValue(): ReadWriteAutoClearValue<T> {
-    return ReadWriteAutoClearValue()
+inline fun <reified T> autoClearValue(): NullableAutoClearValue<T> {
+    return NullableAutoClearValue()
 }
 
 /**
  * 需要手动初始化值
  */
-class ReadWriteAutoClearValue<T> : ReadWriteProperty<LifecycleOwner, T?> {
+class NullableAutoClearValue<T> : ReadWriteProperty<LifecycleOwner, T?> {
     private var value: T? = null
     private val lifecycleObserver = object : DefaultLifecycleObserver {
         @SuppressLint("ObsoleteSdkInt")

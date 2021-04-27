@@ -14,10 +14,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 /**
- * 广播注册器，配合 autoCleared 使用, 当 Activity 或 Fragment onDestroy 时会自动反注册广播
+ * 使用示例
  * ```
  * class YourFragment : Fragment() {
- *     val broadcastRegistry by autoCleared { BroadcastRegistry() }
+ *     // 配合 autoClear 使用, 当 Activity 或 Fragment onDestroy/onDestroyView 时会自动反注册广播
+ *     val broadcastRegistry by autoClear { BroadcastRegistry() }
  *
  *     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
  *         super.onViewCreated(view, savedInstanceState)

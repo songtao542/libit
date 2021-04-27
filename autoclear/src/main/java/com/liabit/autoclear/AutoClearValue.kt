@@ -11,10 +11,10 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /**
- * Creates an [AutoClearedValue] associated with this LifecycleOwner.
+ * Creates an [AutoClearValue] associated with this LifecycleOwner.
  */
-inline fun <reified T> autoCleared(): AutoClearedValue<T> {
-    return AutoClearedValue { newInstance(T::class.java) }
+inline fun <reified T> autoClear(): AutoClearValue<T> {
+    return AutoClearValue { newInstance(T::class.java) }
 }
 
 /**
@@ -29,15 +29,15 @@ inline fun <reified T> newInstance(valueClass: Class<T>): T {
 }
 
 /**
- * Creates an [AutoClearedValue] associated with this LifecycleOwner.
+ * Creates an [AutoClearValue] associated with this LifecycleOwner.
  */
-fun <T> autoCleared(value: T) = AutoClearedValue { value }
+fun <T> autoClear(value: T) = AutoClearValue { value }
 
 /**
- * Creates an [AutoClearedValue] associated with this LifecycleOwner.
+ * Creates an [AutoClearValue] associated with this LifecycleOwner.
  */
 @Suppress("unused")
-fun <T> autoCleared(valueProvider: () -> T) = AutoClearedValue(valueProvider)
+fun <T> autoClear(valueProvider: () -> T) = AutoClearValue(valueProvider)
 
 /**
  * A lazy property that gets cleaned up when the LifecycleOwner is at state of [DESTROYED].
@@ -46,7 +46,7 @@ fun <T> autoCleared(valueProvider: () -> T) = AutoClearedValue(valueProvider)
  *
  * The [T] must be instance of [Clearable] or [LifecycleSensitiveClearable] or [Closeable] or [AutoCloseable]
  */
-class AutoClearedValue<T>(private var valueProvider: () -> T) : ReadWriteProperty<LifecycleOwner, T> {
+class AutoClearValue<T>(private var valueProvider: () -> T) : ReadWriteProperty<LifecycleOwner, T> {
     private var value: T? = null
     private val lifecycleObserver = object : DefaultLifecycleObserver {
         @SuppressLint("ObsoleteSdkInt")

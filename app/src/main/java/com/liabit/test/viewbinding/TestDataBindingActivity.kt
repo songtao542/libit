@@ -3,16 +3,15 @@ package com.liabit.test.viewbinding
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import androidx.databinding.DataBindingUtil
 import com.liabit.test.R
 import com.liabit.test.databinding.ActivityTestDataBindingBinding
-import com.liabit.autoclear.autoCleared
+import com.liabit.autoclear.autoClear
 import java.util.*
 
 class TestDataBindingActivity : BaseActivity<AnViewModel, ActivityTestDataBindingBinding>() {
 
-    private val mDate by autoCleared<Date>()
-    private val mDate1 by autoCleared(Date())
+    private val mDate by autoClear<Date>()
+    private val mDate1 by autoClear(Date())
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {

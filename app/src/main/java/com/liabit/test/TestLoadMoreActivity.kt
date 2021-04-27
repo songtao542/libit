@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.liabit.autoclear.autoClearedValue
+import com.liabit.autoclear.autoClearValue
 import com.liabit.recyclerview.loadmore.LoadMoreAdapter
 import com.liabit.test.databinding.ActivityTestLoadMoreBinding
 import com.liabit.test.mock.Mock
@@ -22,7 +22,7 @@ class TestLoadMoreActivity : AppCompatActivity() {
     private var mAdapter: Adapter = Adapter()
     private var mLoadMoreAdapter: LoadMoreAdapter<*>? = null
 
-    private var mLoadMoreAdapter1 by autoClearedValue<LoadMoreAdapter<*>>()
+    private var mLoadMoreAdapter1 by autoClearValue<LoadMoreAdapter<*>>()
 
     private var mCount = 0
 

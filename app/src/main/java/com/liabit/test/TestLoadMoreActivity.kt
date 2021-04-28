@@ -20,11 +20,13 @@ class TestLoadMoreActivity : AppCompatActivity() {
     private val binding by inflate<ActivityTestLoadMoreBinding>()
 
     private var mAdapter: Adapter = Adapter()
-    private var mLoadMoreAdapter: LoadMoreAdapter<*>? = null
+    private var mLoadMoreAdapter: LoadMoreAdapter<*, *>? = null
 
     private var mLoadMoreAdapter1 by autoClearValue<LoadMoreAdapter<*>>()
 
     private var mCount = 0
+
+    private var mDataList = ArrayList<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +38,7 @@ class TestLoadMoreActivity : AppCompatActivity() {
 
         mLoadMoreAdapter = LoadMoreAdapter.wrap(mAdapter).apply {
             setStyle(this@TestLoadMoreActivity, R.style.TestLoadMoreStyle)
-            setShowNoMoreEnabled(true)
+            showNoMoreEnabled = true
         }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
@@ -47,9 +49,11 @@ class TestLoadMoreActivity : AppCompatActivity() {
                 binding.swipeRefreshLayout.isRefreshing = false
                 mCount = 0
                 mLoadMoreAdapter?.isLoadMoreEnabled = true
-                mAdapter.setData(MutableList(Mock.nextInt(5, 10)) {
+                mDataList.clear()
+                mDataList.addAll(MutableList(Mock.nextInt(8, 15)) {
                     it
                 })
+                mAdapter.setData(mDataList)
             }, 2000)
         }
 
@@ -61,40 +65,60 @@ class TestLoadMoreActivity : AppCompatActivity() {
                         it.isLoadFailed = true
                     } else {
                         mCount++
-                        mAdapter.addData(MutableList(Mock.nextInt(5, 10)) {
+                        mDataList.addAll(MutableList(Mock.nextInt(5, 10)) {
                             it
                         })
+                        mAdapter.setData(mDataList)
                     }
                 } else {
                     it.isEnable = false
                 }
-            }, Mock.nextInt(2, 5) * 1000L)
+            }, 2 * 1000L)
         }
 
-        mAdapter.setData(MutableList(Mock.nextInt(5, 10)) {
-            it
-        })
+        mAdapter.setData(mDataList)
+
+        binding.removeLast.setOnClickListener {
+            mDataList.removeLast()
+            mAdapter.setData(mDataList)
+        }
+        binding.removeLastTwo.setOnClickListener {
+            mDataList.removeAt(mDataList.size - 1)
+            mDataList.removeAt(mDataList.size - 1)
+            mAdapter.setData(mDataList)
+        }
+        binding.removeLastThree.setOnClickListener {
+            mDataList.removeAt(mDataList.size - 1)
+            mDataList.removeAt(mDataList.size - 1)
+            mDataList.removeAt(mDataList.size - 1)
+
+            mAdapter.setData1(mDataList)
+            mAdapter.notifyItemRangeRemoved(mDataList.size, 3)
+        }
+        binding.rangeInsert0.setOnClickListener {
+            mDataList.add(0, 23)
+            mAdapter.setData1(mDataList)
+            mAdapter.notifyItemRangeInserted(0, 1)
+        }
 
     }
 
     class Adapter : RecyclerView.Adapter<Adapter.Holder>() {
 
-        private var mData = ArrayList<Int>()
+        private var mData: List<Int> = emptyList()
 
-        fun setData(data: List<Int>) {
-            mData.clear()
-            mData.addAll(data)
-            notifyDataSetChanged()
+        fun setData1(data: List<Int>) {
+            mData = data
         }
 
-        fun addData(data: List<Int>) {
-            mData.addAll(data)
+        fun setData(data: List<Int>) {
+            mData = data
             notifyDataSetChanged()
         }
 
         class Holder(view: View) : RecyclerView.ViewHolder(view) {
-            fun setData(position: Int) {
-                itemView.findViewById<TextView>(R.id.textView)?.text = "$position"
+            fun setData(position: Int, data: Int) {
+                itemView.findViewById<TextView>(R.id.textView)?.text = "$position: $data"
             }
         }
 
@@ -109,7 +133,7 @@ class TestLoadMoreActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: Holder, position: Int) {
-            holder.setData(position)
+            holder.setData(position, mData[position])
         }
 
         override fun getItemCount(): Int {

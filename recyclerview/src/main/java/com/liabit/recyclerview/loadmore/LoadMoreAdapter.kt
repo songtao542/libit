@@ -24,19 +24,19 @@ import com.liabit.recyclerview.R
  * 在不改动 RecyclerView 原有 adapter 的情况下，使其拥有加载更多功能和自定义底部视图。
  */
 @Suppress("unused")
-class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Adapter<VH>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>>(val adapter: A) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
-        private const val TYPE_FOOTER = -2
-        private const val TYPE_NO_MORE = -3
-        private const val TYPE_LOAD_FAILED = -4
+        private const val TYPE_LOADING = -234623
+        private const val TYPE_NO_MORE = -345674
+        private const val TYPE_LOAD_FAILED = -445678
 
         @JvmStatic
-        fun <VH : RecyclerView.ViewHolder> wrap(adapter: RecyclerView.Adapter<VH>): LoadMoreAdapter<VH> {
+        fun <VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>> wrap(adapter: A): LoadMoreAdapter<VH, A> {
             return LoadMoreAdapter(adapter)
         }
 
         @JvmStatic
-        fun <VH : RecyclerView.ViewHolder> attach(recyclerView: RecyclerView, adapter: RecyclerView.Adapter<VH>) {
+        fun <VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>> attach(recyclerView: RecyclerView, adapter: A) {
             recyclerView.adapter = LoadMoreAdapter(adapter)
         }
 
@@ -87,91 +87,50 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
     private var mOnLoadMoreListener: OnLoadMoreListener? = null
 
     private var mIsLoading = false
-    private var mShouldRemove = false
-    private var mShowNoMoreEnabled = false
-    private var mIsLoadFailed = false
 
-    private val mOnEnabledListener = object : OnEnabledListener {
+    /**
+     * 是否加载失败，用于显示加载失败视图
+     */
+    private var mLoadFailed = false
+
+    private val mLoadMore = LoadMoreImpl(object : LoadMoreImpl.OnEnabledListener {
         override fun notifyChanged() {
-            mShouldRemove = true
             notifyFooterHolderChanged()
         }
 
         override fun notifyLoadFailed(isLoadFailed: Boolean) {
-            mIsLoadFailed = isLoadFailed
+            mLoadFailed = isLoadFailed
             notifyFooterHolderChanged()
         }
-    }
-
-    private val loadMore = LoadMoreImpl(mOnEnabledListener)
+    })
 
     private val mObserver: AdapterDataObserver = object : AdapterDataObserver() {
         override fun onChanged() {
-            if (mShouldRemove) {
-                mShouldRemove = false
-            }
             notifyDataSetChanged()
             mIsLoading = false
         }
 
         override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
-            if (mShouldRemove && positionStart == adapter.itemCount) {
-                mShouldRemove = false
-            }
-            this@LoadMoreAdapter.notifyItemRangeChanged(positionStart, itemCount)
+            notifyItemRangeChanged(positionStart, itemCount)
             mIsLoading = false
         }
 
         override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
-            if (mShouldRemove && positionStart == adapter.itemCount) {
-                mShouldRemove = false
-            }
-            this@LoadMoreAdapter.notifyItemRangeChanged(positionStart, itemCount, payload)
+            notifyItemRangeChanged(positionStart, itemCount, payload)
             mIsLoading = false
         }
 
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-            // when no data is initialized (has loadMoreView)
-            // should remove loadMoreView before notifyItemRangeInserted
-            if ((mRecyclerView?.childCount ?: 0) == 1) {
-                notifyItemRemoved(0)
-            }
             notifyItemRangeInserted(positionStart, itemCount)
-            notifyFooterHolderChanged()
             mIsLoading = false
         }
 
         override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-            if (mShouldRemove && positionStart == adapter.itemCount) {
-                mShouldRemove = false
-            }
-            /*
-               use notifyItemRangeRemoved after clear item, can throw IndexOutOfBoundsException
-               @link RecyclerView#tryGetViewHolderForPositionByDeadline
-               fix java.lang.IndexOutOfBoundsException: Inconsistency detected. Invalid item position
-             */
-            var shouldSync = false
-            if (loadMore.isEnable && 0 == adapter.itemCount) {
-                isLoadMoreEnabled = false
-                shouldSync = true
-                // when use onItemRangeInserted(0, count) after clear item
-                // recyclerView will auto scroll to bottom, because has one item(loadMoreView)
-                // remove loadMoreView
-                if (getItemCount() == 1) {
-                    notifyItemRemoved(0)
-                }
-            }
             notifyItemRangeRemoved(positionStart, itemCount)
-            if (shouldSync) {
-                isLoadMoreEnabled = true
-            }
             mIsLoading = false
         }
 
         override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-            require(!(mShouldRemove && (fromPosition == adapter.itemCount || toPosition == adapter.itemCount))) {
-                "can not move last position after setEnable(false)"
-            }
             notifyItemMoved(fromPosition, toPosition)
             mIsLoading = false
         }
@@ -181,11 +140,11 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
         adapter.registerAdapterDataObserver(mObserver)
     }
 
-    constructor(adapter: RecyclerView.Adapter<VH>, footerView: View) : this(adapter) {
+    constructor(adapter: A, footerView: View) : this(adapter) {
         this.footerView = footerView
     }
 
-    constructor(adapter: RecyclerView.Adapter<VH>, @LayoutRes resId: Int) : this(adapter) {
+    constructor(adapter: A, @LayoutRes resId: Int) : this(adapter) {
         mFooterResId = resId
     }
 
@@ -303,7 +262,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         setStyle(parent.context, mStyleResId)
         when (viewType) {
-            TYPE_FOOTER -> {
+            TYPE_LOADING -> {
                 val view = footerView ?: mFooterResId?.let {
                     LayoutInflater.from(parent.context).inflate(it, parent, false)
                 } ?: kotlin.run {
@@ -326,7 +285,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
                     }
                 }
                 footerView = view
-                return FooterHolder(view)
+                return LoadingHolder(view)
             }
             TYPE_NO_MORE -> {
                 val view = noMoreView ?: mNoMoreResId?.let {
@@ -382,7 +341,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
                     }
                 }
                 loadFailedView = view
-                return LoadFailedHolder(view, loadMore, mOnLoadMoreListener)
+                return LoadFailedHolder(view, this, mOnLoadMoreListener)
             }
             else -> return adapter.onCreateViewHolder(parent, viewType)
         }
@@ -391,16 +350,16 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {}
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
-        if (holder is LoadMoreAdapter<*>.FooterHolder) {
+        if (holder is LoadingHolder) {
             // 当 recyclerView 不能滚动的时候(item 不能铺满屏幕的时候也是不能滚动的) call loadMore
             if (!canScroll() && mOnLoadMoreListener != null && !mIsLoading) {
                 mIsLoading = true
                 // fix Cannot call this method while RecyclerView is computing a layout or scrolling
                 mRecyclerView?.post {
-                    mOnLoadMoreListener?.onLoadMore(loadMore)
+                    mOnLoadMoreListener?.onLoadMore(mLoadMore)
                 }
             }
-        } else if (holder is LoadMoreAdapter<*>.NoMoreHolder || holder is LoadMoreAdapter<*>.LoadFailedHolder) {
+        } else if (holder is NoMoreHolder || holder is LoadFailedHolder) {
             // ignore
         } else {
             @Suppress("UNCHECKED_CAST")
@@ -410,37 +369,44 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
 
     override fun getItemCount(): Int {
         val count = adapter.itemCount
-        return when {
-            isLoadMoreEnabled -> {
-                count + 1
+        return if (count > 0) {
+            when {
+                // 如果当前状态是 isLoadMoreEnabled == true, 则说明需要显示加载更多视图
+                // 加载失败是 isLoadMoreEnabled == true 的一种情况
+                isLoadMoreEnabled -> count + 1
+                // 如果 isLoadMoreEnabled == false 且 showNoMoreWhenLoadMoreDisabled == true
+                // 则说明需要显示 加载完毕（没有更多） 视图
+                showNoMoreEnabled -> count + 1
+                else -> count
             }
-            mShowNoMoreEnabled -> {
-                count + 1
-            }
-            else -> {
-                count + if (mShouldRemove) 1 else 0
-            }
+        } else {
+            count
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (position == adapter.itemCount && mIsLoadFailed) {
-            return TYPE_LOAD_FAILED
-        }
-        if (position == adapter.itemCount && (isLoadMoreEnabled || mShouldRemove)) {
-            return TYPE_FOOTER
-        } else if (position == adapter.itemCount && mShowNoMoreEnabled && !isLoadMoreEnabled) {
-            return TYPE_NO_MORE
+        if (position == adapter.itemCount) {
+            // 优先判断是否加载失败
+            if (isLoadMoreEnabled && mLoadFailed) {
+                return TYPE_LOAD_FAILED
+            }
+            // 再判断是否启用（isLoadMoreEnabled == true）
+            if (isLoadMoreEnabled) {
+                return TYPE_LOADING
+            } else if (showNoMoreEnabled) {
+                // 在 isLoadMoreEnabled == false 的情况下再判断是否显示 加载完毕 视图
+                return TYPE_NO_MORE
+            }
         }
         return adapter.getItemViewType(position)
     }
 
     override fun getItemId(position: Int): Long {
         val itemViewType = getItemViewType(position)
-        return if (adapter.hasStableIds()
-                && itemViewType != TYPE_FOOTER
-                && itemViewType != TYPE_LOAD_FAILED
-                && itemViewType != TYPE_NO_MORE) {
+        return if (itemViewType != TYPE_LOADING
+            && itemViewType != TYPE_LOAD_FAILED
+            && itemViewType != TYPE_NO_MORE
+        ) {
             adapter.getItemId(position)
         } else {
             super.getItemId(position)
@@ -451,7 +417,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
         return mRecyclerView?.canScrollVertically(-1) ?: true
     }
 
-    fun setFooterView(@LayoutRes resId: Int) {
+    fun setLoadingView(@LayoutRes resId: Int) {
         mFooterResId = resId
     }
 
@@ -463,45 +429,13 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
         mLoadFailedResId = resId
     }
 
-    private inner class FooterHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        init {
-            //当为StaggeredGridLayoutManager的时候,设置footerView占据整整一行
-            val layoutParams = itemView.layoutParams
-            if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
-                layoutParams.isFullSpan = true
-            }
-        }
-    }
-
-    private inner class NoMoreHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        init {
-            //当为StaggeredGridLayoutManager的时候,设置footerView占据整整一行
-            val layoutParams = itemView.layoutParams
-            if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
-                layoutParams.isFullSpan = true
-            }
-        }
-    }
-
-    private inner class LoadFailedHolder(itemView: View, enabled: LoadMore, listener: OnLoadMoreListener?)
-        : RecyclerView.ViewHolder(itemView) {
-        init {
-            //当为StaggeredGridLayoutManager的时候,设置footerView占据整整一行
-            val layoutParams = itemView.layoutParams
-            if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
-                layoutParams.isFullSpan = true
-            }
-            itemView.setOnClickListener {
-                enabled.isLoadFailed = false
-                listener?.onLoadMore(enabled)
-            }
-        }
-    }
-
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         mRecyclerView = recyclerView
         recyclerView.addOnScrollListener(mOnScrollListener)
-
+        try {
+            adapter.registerAdapterDataObserver(mObserver)
+        } catch (e: Throwable) {
+        }
         // 当为 GridLayoutManager 的时候, 设置 footerView 占据整整一行.
         val layoutManager = recyclerView.layoutManager
         if (layoutManager is GridLayoutManager) {
@@ -510,7 +444,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
             layoutManager.spanSizeLookup = object : SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     val itemViewType = getItemViewType(position)
-                    if (itemViewType == TYPE_FOOTER || itemViewType == TYPE_NO_MORE || itemViewType == TYPE_LOAD_FAILED) {
+                    if (itemViewType == TYPE_LOADING || itemViewType == TYPE_NO_MORE || itemViewType == TYPE_LOAD_FAILED) {
                         return layoutManager.spanCount
                     } else if (originalSizeLookup != null) {
                         return originalSizeLookup.getSpanSize(position)
@@ -522,13 +456,11 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
     }
 
     /**
-     * Deciding whether to trigger loading
      * 判断是否触发加载更多
      */
     private val mOnScrollListener: RecyclerView.OnScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-            if (!isLoadMoreEnabled || mIsLoading) {
+            if (!isLoadMoreEnabled || mIsLoading || mLoadFailed) {
                 return
             }
             if (newState == RecyclerView.SCROLL_STATE_IDLE && mOnLoadMoreListener != null) {
@@ -552,7 +484,8 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
                 }
                 if (isBottom) {
                     mIsLoading = true
-                    mOnLoadMoreListener?.onLoadMore(loadMore)
+                    mLoadFailed = false
+                    mOnLoadMoreListener?.onLoadMore(mLoadMore)
                 }
             }
         }
@@ -587,31 +520,31 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
         fun onLoadMore(loadMore: LoadMore)
     }
 
-    var isLoadMoreEnabled: Boolean
-        get() = loadMore.isEnable && adapter.itemCount >= 0
-        set(enabled) {
-            loadMore.isEnable = enabled
-        }
-
-    interface OnEnabledListener {
-        fun notifyChanged()
-        fun notifyLoadFailed(isLoadFailed: Boolean)
-    }
-
-    fun setShouldRemove(shouldRemove: Boolean) {
-        mShouldRemove = shouldRemove
-    }
-
-    fun setShowNoMoreEnabled(showNoMoreEnabled: Boolean) {
-        mShowNoMoreEnabled = showNoMoreEnabled
-    }
-
-    fun setLoadFailed(isLoadFailed: Boolean) {
-        loadMore.isLoadFailed = isLoadFailed
-    }
+    /**
+     *  当 [isLoadMoreEnabled] 等于 false 时，是否显示已加载完毕视图
+     */
+    var showNoMoreEnabled = false
 
     /**
-     * 控制加载更多的开关, 作为 [的参数][OnLoadMoreListener.onLoadMore]
+     *  是否启用加载更多
+     */
+    var isLoadMoreEnabled: Boolean
+        get() = mLoadMore.isEnable && adapter.itemCount >= 0
+        set(enabled) {
+            mLoadMore.isEnable = enabled
+        }
+
+    /**
+     *  是否加载失败
+     */
+    var isLoadFailed: Boolean
+        get() = mLoadMore.isLoadFailed
+        set(value) {
+            mLoadMore.isLoadFailed = value
+        }
+
+    /**
+     * 控制加载更多的开关, 作为 [OnLoadMoreListener.onLoadMore] 方法的参数
      */
     private class LoadMoreImpl(private val mListener: OnEnabledListener) : LoadMore {
         private var mLoadMoreEnable = true
@@ -622,11 +555,10 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
          */
         override var isLoadFailed: Boolean
             get() = mIsLoadFailed
-            set(isLoadFailed) {
-                if (mIsLoadFailed != isLoadFailed) {
-                    mIsLoadFailed = isLoadFailed
-                    mListener.notifyLoadFailed(isLoadFailed)
-                    //isEnable = !mIsLoadFailed
+            set(value) {
+                if (mIsLoadFailed != value) {
+                    mIsLoadFailed = value
+                    mListener.notifyLoadFailed(value)
                 }
             }
 
@@ -636,12 +568,17 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
         override var isEnable: Boolean
             get() = mLoadMoreEnable
             set(enable) {
-                val canNotify = mLoadMoreEnable
+                val old = mLoadMoreEnable
                 mLoadMoreEnable = enable
-                if (canNotify && !mLoadMoreEnable) {
+                if (old && !mLoadMoreEnable) {
                     mListener.notifyChanged()
                 }
             }
+
+        interface OnEnabledListener {
+            fun notifyChanged()
+            fun notifyLoadFailed(isLoadFailed: Boolean)
+        }
     }
 
     /**
@@ -663,20 +600,42 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder>(val adapter: RecyclerView.Ad
      * update last item
      */
     private fun notifyFooterHolderChanged() {
-        if (isLoadMoreEnabled) {
-            this@LoadMoreAdapter.notifyItemChanged(adapter.itemCount)
-        } else if (mShouldRemove) {
-            mShouldRemove = false
-            /*
-              fix IndexOutOfBoundsException when setEnable(false) and then use onItemRangeInserted
-              @see androidx.recyclerview.widget.Recycler#validateViewHolderForOffsetPosition(RecyclerView.ViewHolder)
-             */
-            val position = adapter.itemCount
-            val viewHolder = mRecyclerView?.findViewHolderForAdapterPosition(position)
-            if (viewHolder is LoadMoreAdapter<*>.FooterHolder) {
-                notifyItemRemoved(position)
-            } else {
-                this@LoadMoreAdapter.notifyItemChanged(position)
+        if (isLoadMoreEnabled || showNoMoreEnabled) {
+            notifyItemChanged(adapter.itemCount)
+        }
+    }
+
+    private class LoadingHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            //当为StaggeredGridLayoutManager的时候,设置footerView占据整整一行
+            val layoutParams = itemView.layoutParams
+            if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
+                layoutParams.isFullSpan = true
+            }
+        }
+    }
+
+    private class NoMoreHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            //当为StaggeredGridLayoutManager的时候,设置footerView占据整整一行
+            val layoutParams = itemView.layoutParams
+            if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
+                layoutParams.isFullSpan = true
+            }
+        }
+    }
+
+    private class LoadFailedHolder(itemView: View, adapter: LoadMoreAdapter<*, *>, listener: OnLoadMoreListener?) : RecyclerView.ViewHolder(itemView) {
+        init {
+            //当为StaggeredGridLayoutManager的时候,设置footerView占据整整一行
+            val layoutParams = itemView.layoutParams
+            if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
+                layoutParams.isFullSpan = true
+            }
+            itemView.setOnClickListener {
+                adapter.mLoadMore.isLoadFailed = false
+                adapter.notifyFooterHolderChanged()
+                listener?.onLoadMore(adapter.mLoadMore)
             }
         }
     }

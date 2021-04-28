@@ -177,15 +177,15 @@ open class BroadcastRegistry(autoClear: Boolean) : LifecycleSensitiveClearable, 
      * 注册 BroadcastReceiver ，fragment 作为 key 绑定一个对应的 BroadcastReceiver
      * 可以通过 [unregisterReceivers] 进行反注册
      */
-    open fun registerGlobalReceiver(fragment: Fragment, action: String, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
-        registerGlobalReceiver(fragment, listOf(action), receiver)
+    open fun registerBroadcastReceiver(fragment: Fragment, action: String, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
+        registerBroadcastReceiver(fragment, listOf(action), receiver)
     }
 
     /**
      * 注册 BroadcastReceiver，[fragment] 作为 key 绑定一个对应的 BroadcastReceiver
      * 可以通过 [unregisterReceivers] 传入 [fragment] 作为参数进行反注册
      */
-    open fun registerGlobalReceiver(fragment: Fragment, actions: List<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
+    open fun registerBroadcastReceiver(fragment: Fragment, actions: List<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
         val context = fragment.context ?: return
         register(fragment, false, context, actions, receiver)
     }
@@ -194,15 +194,15 @@ open class BroadcastRegistry(autoClear: Boolean) : LifecycleSensitiveClearable, 
      * 注册 BroadcastReceiver，[context] 作为 key 绑定一个对应的 BroadcastReceiver
      * 可以通过 [unregisterReceivers] 传入 [context] 作为参数进行反注册
      */
-    open fun registerGlobalReceiver(context: Context, action: String, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
-        registerGlobalReceiver(context, listOf(action), receiver)
+    open fun registerBroadcastReceiver(context: Context, action: String, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
+        registerBroadcastReceiver(context, listOf(action), receiver)
     }
 
     /**
      * 注册 BroadcastReceiver，[context] 作为 key 绑定一个对应的 BroadcastReceiver
      * 可以通过 [unregisterReceivers] 传入 [context] 作为参数进行反注册
      */
-    open fun registerGlobalReceiver(context: Context, actions: List<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
+    open fun registerBroadcastReceiver(context: Context, actions: List<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
         register(context, false, context, actions, receiver)
     }
 
@@ -276,7 +276,7 @@ private object GlobalBroadcastRegistry {
         if (local) {
             registry.registerReceiver(context, action, receiver)
         } else {
-            registry.registerGlobalReceiver(context, action, receiver)
+            registry.registerBroadcastReceiver(context, action, receiver)
         }
     }
 
@@ -288,7 +288,7 @@ private object GlobalBroadcastRegistry {
         if (local) {
             registry.registerReceiver(context, actions, receiver)
         } else {
-            registry.registerGlobalReceiver(context, actions, receiver)
+            registry.registerBroadcastReceiver(context, actions, receiver)
         }
     }
 
@@ -298,7 +298,7 @@ private object GlobalBroadcastRegistry {
         if (local) {
             registry.registerReceiver(fragment, action, receiver)
         } else {
-            registry.registerGlobalReceiver(fragment, action, receiver)
+            registry.registerBroadcastReceiver(fragment, action, receiver)
         }
     }
 
@@ -308,7 +308,7 @@ private object GlobalBroadcastRegistry {
         if (local) {
             registry.registerReceiver(fragment, actions, receiver)
         } else {
-            registry.registerGlobalReceiver(fragment, actions, receiver)
+            registry.registerBroadcastReceiver(fragment, actions, receiver)
         }
     }
 }
@@ -337,21 +337,21 @@ fun Context.registerReceiver(actions: Array<String>, receiver: ((context: Contex
 /**
  * 注册广播接收器
  */
-fun Context.registerGlobalReceiver(action: String, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
+fun Context.registerBroadcastReceiver(action: String, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
     GlobalBroadcastRegistry.registerReceiver(this, false, action, receiver)
 }
 
 /**
  * 注册广播接收器
  */
-fun Context.registerGlobalReceiver(actions: List<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
+fun Context.registerBroadcastReceiver(actions: List<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
     GlobalBroadcastRegistry.registerReceiver(this, false, actions, receiver)
 }
 
 /**
  * 注册广播接收器
  */
-fun Context.registerGlobalReceiver(actions: Array<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
+fun Context.registerBroadcastReceiver(actions: Array<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
     GlobalBroadcastRegistry.registerReceiver(this, false, actions.toList(), receiver)
 }
 
@@ -386,21 +386,21 @@ fun Fragment.registerReceiver(actions: Array<String>, receiver: ((context: Conte
 /**
  * 注册广播接收器
  */
-fun Fragment.registerGlobalReceiver(action: String, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
+fun Fragment.registerBroadcastReceiver(action: String, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
     GlobalBroadcastRegistry.registerReceiver(this, false, action, receiver)
 }
 
 /**
  * 注册广播接收器
  */
-fun Fragment.registerGlobalReceiver(actions: List<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
+fun Fragment.registerBroadcastReceiver(actions: List<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
     GlobalBroadcastRegistry.registerReceiver(this, false, actions, receiver)
 }
 
 /**
  * 注册广播接收器
  */
-fun Fragment.registerGlobalReceiver(actions: Array<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
+fun Fragment.registerBroadcastReceiver(actions: Array<String>, receiver: ((context: Context?, intent: Intent?) -> Unit)) {
     GlobalBroadcastRegistry.registerReceiver(this, false, actions.toList(), receiver)
 }
 
@@ -425,7 +425,7 @@ fun Context.registerReceiver(receiver: BroadcastReceiver, vararg action: String)
 /**
  * 注册广播接收器，不会自动反注册
  */
-fun Context.registerGlobalReceiver(receiver: BroadcastReceiver, vararg action: String) {
+fun Context.registerBroadcastReceiver(receiver: BroadcastReceiver, vararg action: String) {
     val intentFilter = IntentFilter()
     for (act in action) {
         intentFilter.addAction(buildAction(this, act))

@@ -42,9 +42,12 @@ fun <T> autoClear(valueProvider: () -> T) = AutoClearValue(valueProvider)
 /**
  * A lazy property that gets cleaned up when the LifecycleOwner is at state of [DESTROYED].
  *
- * Accessing this variable at state of [DESTROYED] LifecycleOwner will throw NPE.
+ * Accessing this variable at state of [DESTROYED] LifecycleOwner will result in variable leak.
  *
- * The [T] must be instance of [Clearable] or [LifecycleSensitiveClearable] or [Closeable] or [AutoCloseable]
+ * If the [T] is instance of [Clearable] or [LifecycleSensitiveClearable], the [Clearable.clear] method will be invoke before clean up.
+ * If the [T] is instance of [Closeable] or [AutoCloseable], the [Closeable.close] method will be invoke before clean up.
+ *
+ * @param valueProvider The initializer of the variable, when get the variable, if the variable value is null, the initializer will be called to initialize.
  */
 class AutoClearValue<T>(private var valueProvider: () -> T) : ReadWriteProperty<LifecycleOwner, T> {
     private var value: T? = null

@@ -22,7 +22,7 @@ class TestLoadMoreActivity : AppCompatActivity() {
     private var mAdapter: Adapter = Adapter()
     private var mLoadMoreAdapter: LoadMoreAdapter<*, *>? = null
 
-    private var mLoadMoreAdapter1 by autoClearValue<LoadMoreAdapter<*>>()
+    private var mLoadMoreAdapter1 by autoClearValue<LoadMoreAdapter<*, *>>()
 
     private var mCount = 0
 

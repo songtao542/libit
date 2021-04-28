@@ -30,13 +30,13 @@ class NullableAutoClearValue<T> : ReadWriteProperty<LifecycleOwner, T?> {
                     try {
                         it.clear(owner)
                     } catch (e: Throwable) {
-                        Log.d("AutoClearedValue", "clear error: ", e)
+                        Log.d("NullableAutoClearValue", "clear error: ", e)
                     }
                 } else if (it is Clearable) {
                     try {
                         it.clear()
                     } catch (e: Throwable) {
-                        Log.d("AutoClearedValue", "clear error: ", e)
+                        Log.d("NullableAutoClearValue", "clear error: ", e)
                     }
                 }
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
@@ -44,7 +44,7 @@ class NullableAutoClearValue<T> : ReadWriteProperty<LifecycleOwner, T?> {
                         try {
                             it.close()
                         } catch (e: Throwable) {
-                            Log.d("AutoClearedValue", "close error: ", e)
+                            Log.d("NullableAutoClearValue", "close error: ", e)
                         }
                     }
                 } else {
@@ -52,7 +52,7 @@ class NullableAutoClearValue<T> : ReadWriteProperty<LifecycleOwner, T?> {
                         try {
                             it.close()
                         } catch (e: Throwable) {
-                            Log.d("AutoClearedValue", "close error: ", e)
+                            Log.d("NullableAutoClearValue", "close error: ", e)
                         }
                     }
                 }

@@ -384,15 +384,28 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
         }
     }
 
+    /**
+     *                      itemCount: count + 1     ┌┈┈ true ┈┈┈> TYPE_LOAD_FAILED
+     *                     ┌┈┈ true ┈┈> failed ┈┈┈┈┈>|
+     *                     |                         └┈┈ false ┈┈> TYPE_LOADING
+     *                     |
+     * isLoadMoreEnabled --|
+     *                     |                       itemCount: count + 1
+     *                     |                         ┌┈┈ true ┈┈┈> TYPE_NO_MORE
+     *                     └┈┈ false┈┈> no more ┈┈┈┈>|
+     *                                               └┈┈ false ┈┈>
+     *                                             itemCount: count
+     */
     override fun getItemViewType(position: Int): Int {
         if (position == adapter.itemCount) {
-            // 优先判断是否加载失败
-            if (isLoadMoreEnabled && mLoadFailed) {
-                return TYPE_LOAD_FAILED
-            }
-            // 再判断是否启用（isLoadMoreEnabled == true）
+            // 判断是否启用（isLoadMoreEnabled == true）
             if (isLoadMoreEnabled) {
-                return TYPE_LOADING
+                // 优先判断是否加载失败
+                return if (mLoadFailed) {
+                    TYPE_LOAD_FAILED
+                } else {
+                    TYPE_LOADING
+                }
             } else if (showNoMoreEnabled) {
                 // 在 isLoadMoreEnabled == false 的情况下再判断是否显示 加载完毕 视图
                 return TYPE_NO_MORE

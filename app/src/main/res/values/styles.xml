@@ -89,9 +89,9 @@
 
 
     <style name="TestLoadMoreStyle">
-        <item name="loadMoreTextColor">@color/filter_light_blue</item>
-        <item name="loadMoreText">@string/loadinging</item>
-        <item name="loadMoreProgressColor">@color/filter_light_blue</item>
+        <item name="loadingTextColor">@color/filter_light_blue</item>
+        <item name="loadingText">@string/loadinging</item>
+        <item name="loadingProgressColor">@color/filter_light_blue</item>
         <item name="loadMoreFailedTextColor">@color/filter_light_blue</item>
         <item name="loadMoreFailedText">@string/load_failed</item>
         <item name="loadMoreFailedIcon">@drawable/load_more_ic_reload</item>

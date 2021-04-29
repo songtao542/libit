@@ -9,6 +9,8 @@ import com.liabit.test.decorationtest.TestRecyclerViewDecorationActivity
 import com.liabit.test.filtertest.TestFilterActivity
 import com.liabit.test.gesturetest.TestDragActivity
 import com.liabit.test.gesturetest.TestSwipeActivity
+import com.liabit.test.loadmore.TestLoadMoreActivity
+import com.liabit.test.loadmore.TestLoadMoreMenuActivity
 import com.liabit.test.nested.TestNestedRecyclerViewActivity
 import com.liabit.test.tablayouttest.TestTabLayoutActivity
 import com.liabit.test.tagviewtest.TestTagViewActivity
@@ -108,7 +110,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.loadMoreTest -> {
-                startActivity(Intent(this, TestLoadMoreActivity::class.java))
+                startActivity(Intent(this, TestLoadMoreMenuActivity::class.java))
             }
 
             R.id.otherTest -> {

@@ -1,4 +1,4 @@
-package com.liabit.test
+package com.liabit.test.loadmore
 
 import android.os.Bundle
 import android.util.Log
@@ -9,20 +9,17 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.liabit.autoclear.autoClearValue
-import com.liabit.recyclerview.loadmore.LoadMoreAdapter
+import com.liabit.recyclerview.loadmore.AbstractLoadMoreAdapter
+import com.liabit.test.R
 import com.liabit.test.databinding.ActivityTestLoadMoreBinding
 import com.liabit.test.mock.Mock
 import com.liabit.viewbinding.inflate
 
-class TestLoadMoreActivity : AppCompatActivity() {
+class TestAbsLoadMoreActivity : AppCompatActivity() {
 
     private val binding by inflate<ActivityTestLoadMoreBinding>()
 
     private var mAdapter: Adapter = Adapter()
-    private var mLoadMoreAdapter: LoadMoreAdapter<*, *>? = null
-
-    private var mLoadMoreAdapter1 by autoClearValue<LoadMoreAdapter<*, *>>()
 
     private var mCount = 0
 
@@ -32,42 +29,44 @@ class TestLoadMoreActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        Log.d("TTTT", "mLoadMoreAdapter1==$mLoadMoreAdapter1")
-        mLoadMoreAdapter1 = LoadMoreAdapter.wrap(mAdapter)
-        Log.d("TTTT", "mLoadMoreAdapter2==$mLoadMoreAdapter1")
-
-        mLoadMoreAdapter = LoadMoreAdapter.wrap(mAdapter).apply {
-            setStyle(this@TestLoadMoreActivity, R.style.TestLoadMoreStyle)
-            showNoMoreEnabled = true
-        }
-
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = mLoadMoreAdapter
+        binding.recyclerView.adapter = mAdapter
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.root.postDelayed({
                 binding.swipeRefreshLayout.isRefreshing = false
                 mCount = 0
-                mLoadMoreAdapter?.isLoadMoreEnabled = true
                 mDataList.clear()
-                mDataList.addAll(MutableList(Mock.nextInt(8, 15)) {
+                val size = Mock.nextInt(4, 8)
+                Log.d("TTTT", "swipeRefreshLayout ok size: $size")
+                mDataList.addAll(MutableList(size) {
                     it
                 })
+                /*mDataList.addAll(MutableList(4) {
+                    it
+                })*/
                 mAdapter.setData(mDataList)
+                mAdapter.finishLoad()
             }, 2000)
         }
 
-        mLoadMoreAdapter?.setLoadMoreListener {
+        mAdapter.setLoadMoreListener {
             binding.root.postDelayed({
                 if (mCount < 10) {
                     if (mCount % 3 == 2) {
                         mCount++
-                        it.isLoadFailed = true
+                        it.failedLoad()
                     } else {
                         mCount++
-                        mDataList.addAll(MutableList(Mock.nextInt(5, 10)) {
+                        val size = Mock.nextInt(5, 10)
+                        Log.d("TTTT", "loadMore ok size: $size")
+                        mDataList.addAll(MutableList(size) {
                             it
                         })
+                        /*mDataList.addAll(MutableList(4) {
+                            it
+                        })*/
+                        it.finishLoad()
                         mAdapter.setData(mDataList)
                     }
                 } else {
@@ -108,7 +107,7 @@ class TestLoadMoreActivity : AppCompatActivity() {
 
     }
 
-    class Adapter : RecyclerView.Adapter<Adapter.Holder>() {
+    class Adapter : AbstractLoadMoreAdapter<Adapter.Holder>() {
 
         private var mData: List<Int> = emptyList()
 
@@ -127,7 +126,7 @@ class TestLoadMoreActivity : AppCompatActivity() {
             }
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+        override fun onCreateHolder(parent: ViewGroup, viewType: Int): Holder {
             return Holder(
                 LayoutInflater.from(parent.context)
                     .inflate(
@@ -137,11 +136,11 @@ class TestLoadMoreActivity : AppCompatActivity() {
             )
         }
 
-        override fun onBindViewHolder(holder: Holder, position: Int) {
+        override fun onBindHolder(holder: Holder, position: Int) {
             holder.setData(position, mData[position])
         }
 
-        override fun getItemCount(): Int {
+        override fun getCount(): Int {
             return mData.size
         }
 

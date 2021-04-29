@@ -24,7 +24,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".TestLoadMoreActivity"
+            android:name=".loadmore.TestLoadMoreMenuActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".loadmore.TestAbsLoadMoreActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".loadmore.TestLoadMoreActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".TestCityPickerActivity"
@@ -109,7 +115,7 @@
         <activity
             android:name=".nested.TestNestedRecyclerViewActivity"
             android:label="Nested"
-            android:theme="@style/NoActionBar"/>
+            android:theme="@style/NoActionBar" />
         <activity
             android:name=".TestFragmentVisibleActivity"
             android:label="Fragment可见性" />

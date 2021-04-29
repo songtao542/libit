@@ -7,20 +7,20 @@
 
 
     <declare-styleable name="LoadMoreStyle">
-        <attr name="loadMoreTextColor" format="color|reference" />
-        <attr name="loadMoreTextSize" format="dimension|reference" />
-        <attr name="loadMoreText" format="string|reference" />
-        <attr name="loadMoreProgressColor" format="color|reference" />
+        <attr name="loadingText" format="string|reference" />
+        <attr name="loadingTextColor" format="color|reference" />
+        <attr name="loadingTextSize" format="dimension|reference" />
+        <attr name="loadingProgressColor" format="color|reference" />
 
+        <attr name="loadMoreFailedText" format="string|reference" />
         <attr name="loadMoreFailedTextColor" format="color|reference" />
         <attr name="loadMoreFailedTextSize" format="dimension|reference" />
-        <attr name="loadMoreFailedText" format="string|reference" />
         <attr name="loadMoreFailedIcon" format="reference" />
         <attr name="loadMoreFailedIconColor" format="color|reference" />
 
+        <attr name="loadNoMoreText" format="string|reference" />
         <attr name="loadNoMoreTextColor" format="color|reference" />
         <attr name="loadNoMoreTextSize" format="dimension|reference" />
-        <attr name="loadNoMoreText" format="string|reference" />
         <attr name="loadNoMoreIcon" format="reference" />
         <attr name="loadNoMoreIconColor" format="color|reference" />
     </declare-styleable>

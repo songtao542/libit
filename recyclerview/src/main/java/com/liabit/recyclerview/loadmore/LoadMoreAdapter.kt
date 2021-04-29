@@ -3,6 +3,7 @@ package com.liabit.recyclerview.loadmore
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -54,7 +55,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
         }
     }
 
-    var footerView: View? = null
+    var loadingView: View? = null
     var noMoreView: View? = null
     var loadFailedView: View? = null
 
@@ -106,33 +107,51 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
 
     private val mObserver: AdapterDataObserver = object : AdapterDataObserver() {
         override fun onChanged() {
-            notifyDataSetChanged()
             mIsLoading = false
+            if (adapter.itemCount == 0) {
+                notifyItemRemoved(0)
+            }
+            notifyDataSetChanged()
         }
 
         override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
-            notifyItemRangeChanged(positionStart, itemCount)
             mIsLoading = false
+            if (adapter.itemCount == 0) {
+                notifyItemRemoved(0)
+            }
+            notifyItemRangeChanged(positionStart, itemCount)
         }
 
         override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
-            notifyItemRangeChanged(positionStart, itemCount, payload)
             mIsLoading = false
+            if (adapter.itemCount == 0) {
+                notifyItemRemoved(0)
+            }
+            notifyItemRangeChanged(positionStart, itemCount, payload)
         }
 
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-            notifyItemRangeInserted(positionStart, itemCount)
             mIsLoading = false
+            if (adapter.itemCount == 0) {
+                notifyItemRemoved(0)
+            }
+            notifyItemRangeInserted(positionStart, itemCount)
         }
 
         override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-            notifyItemRangeRemoved(positionStart, itemCount)
             mIsLoading = false
+            if (adapter.itemCount == 0) {
+                notifyItemRemoved(0)
+            }
+            notifyItemRangeRemoved(positionStart, itemCount)
         }
 
         override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-            notifyItemMoved(fromPosition, toPosition)
             mIsLoading = false
+            if (adapter.itemCount == 0) {
+                notifyItemRemoved(0)
+            }
+            notifyItemMoved(fromPosition, toPosition)
         }
     }
 
@@ -141,7 +160,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
     }
 
     constructor(adapter: A, footerView: View) : this(adapter) {
-        this.footerView = footerView
+        this.loadingView = footerView
     }
 
     constructor(adapter: A, @LayoutRes resId: Int) : this(adapter) {
@@ -187,7 +206,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
         mLoadFailedTextSize = typedArray.getDimension(R.styleable.LoadMoreStyle_loadMoreFailedTextSize, defaultTextSize)
         mLoadNoMoreTextSize = typedArray.getDimension(R.styleable.LoadMoreStyle_loadNoMoreTextSize, defaultTextSize)
 
-        footerView?.findViewById<TextView>(R.id.loadMoreTextView)?.let {
+        loadingView?.findViewById<TextView>(R.id.loadMoreTextView)?.let {
             mLoadingText?.let { text ->
                 it.text = text
             }
@@ -220,7 +239,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
                 it.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
             }
         }
-        footerView?.findViewById<ProgressBar>(R.id.loadMoreProgressBar)?.let {
+        loadingView?.findViewById<ProgressBar>(R.id.loadMoreProgressBar)?.let {
             mLoadMoreProgressColor?.let { color ->
                 it.indeterminateTintList = color
             }
@@ -246,7 +265,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
 
     fun setLoadingText(loadingText: String) {
         mLoadingText = loadingText
-        footerView?.findViewById<TextView>(R.id.loadMoreTextView)?.text = mLoadingText
+        loadingView?.findViewById<TextView>(R.id.loadMoreTextView)?.text = mLoadingText
     }
 
     fun setLoadFailedText(loadFailedText: String) {
@@ -259,14 +278,19 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
         noMoreView?.findViewById<TextView>(R.id.loadMoreNoMoreTextView)?.text = mLoadNoMoreText
     }
 
+    private fun removeFromParent(view: View) {
+        (view.parent as? ViewGroup)?.removeView(view)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         setStyle(parent.context, mStyleResId)
+        val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
             TYPE_LOADING -> {
-                val view = footerView ?: mFooterResId?.let {
-                    LayoutInflater.from(parent.context).inflate(it, parent, false)
+                val view = loadingView?.also { removeFromParent(it) } ?: mFooterResId?.let {
+                    inflater.inflate(it, parent, false)
                 } ?: kotlin.run {
-                    LayoutInflater.from(parent.context).inflate(R.layout.load_more_base_footer, parent, false)
+                    inflater.inflate(R.layout.load_more_base_footer, parent, false)
                 }
                 view?.findViewById<TextView>(R.id.loadMoreTextView)?.let {
                     mLoadingText?.let { text ->
@@ -284,14 +308,14 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
                         it.indeterminateTintList = color
                     }
                 }
-                footerView = view
+                loadingView = view
                 return LoadingHolder(view)
             }
             TYPE_NO_MORE -> {
-                val view = noMoreView ?: mNoMoreResId?.let {
-                    LayoutInflater.from(parent.context).inflate(it, parent, false)
+                val view = noMoreView?.also { removeFromParent(it) } ?: mNoMoreResId?.let {
+                    inflater.inflate(it, parent, false)
                 } ?: kotlin.run {
-                    LayoutInflater.from(parent.context).inflate(R.layout.load_more_base_no_more, parent, false)
+                    inflater.inflate(R.layout.load_more_base_no_more, parent, false)
                 }
                 view?.findViewById<TextView>(R.id.loadMoreNoMoreTextView)?.let {
                     mLoadNoMoreText?.let { text ->
@@ -316,10 +340,10 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
                 return NoMoreHolder(view)
             }
             TYPE_LOAD_FAILED -> {
-                val view = loadFailedView ?: mLoadFailedResId?.let {
-                    LayoutInflater.from(parent.context).inflate(it, parent, false)
+                val view = loadFailedView?.also { removeFromParent(it) } ?: mLoadFailedResId?.let {
+                    inflater.inflate(it, parent, false)
                 } ?: kotlin.run {
-                    LayoutInflater.from(parent.context).inflate(R.layout.load_more_base_load_failed, parent, false)
+                    inflater.inflate(R.layout.load_more_base_load_failed, parent, false)
                 }
                 view?.findViewById<TextView>(R.id.loadMoreFailedTextView)?.let {
                     mLoadFailedText?.let { text ->
@@ -374,7 +398,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
                 // 如果当前状态是 isLoadMoreEnabled == true, 则说明需要显示加载更多视图
                 // 加载失败是 isLoadMoreEnabled == true 的一种情况
                 isLoadMoreEnabled -> count + 1
-                // 如果 isLoadMoreEnabled == false 且 showNoMoreWhenLoadMoreDisabled == true
+                // 如果 isLoadMoreEnabled == false 且 showNoMoreEnabled == true
                 // 则说明需要显示 加载完毕（没有更多） 视图
                 showNoMoreEnabled -> count + 1
                 else -> count
@@ -399,7 +423,8 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
      *                                               itemCount: count
      */
     override fun getItemViewType(position: Int): Int {
-        if (position == adapter.itemCount) {
+        val count = adapter.itemCount
+        if (count > 0 && position == count) {
             // 判断是否启用（isLoadMoreEnabled == true）
             if (isLoadMoreEnabled) {
                 // 优先判断是否加载失败

@@ -79,21 +79,26 @@ class TestLoadMoreActivity : AppCompatActivity() {
         mAdapter.setData(mDataList)
 
         binding.removeLast.setOnClickListener {
-            mDataList.removeLast()
-            mAdapter.setData(mDataList)
+            if (mDataList.isNotEmpty()) {
+                mDataList.removeLast()
+                mAdapter.setData(mDataList)
+            }
         }
         binding.removeLastTwo.setOnClickListener {
-            mDataList.removeAt(mDataList.size - 1)
-            mDataList.removeAt(mDataList.size - 1)
-            mAdapter.setData(mDataList)
+            if (mDataList.size >= 2) {
+                mDataList.removeAt(mDataList.size - 1)
+                mDataList.removeAt(mDataList.size - 1)
+                mAdapter.setData(mDataList)
+            }
         }
         binding.removeLastThree.setOnClickListener {
-            mDataList.removeAt(mDataList.size - 1)
-            mDataList.removeAt(mDataList.size - 1)
-            mDataList.removeAt(mDataList.size - 1)
-
-            mAdapter.setData1(mDataList)
-            mAdapter.notifyItemRangeRemoved(mDataList.size, 3)
+            if (mDataList.size >= 3) {
+                mDataList.removeAt(mDataList.size - 1)
+                mDataList.removeAt(mDataList.size - 1)
+                mDataList.removeAt(mDataList.size - 1)
+                mAdapter.setData1(mDataList)
+                mAdapter.notifyItemRangeRemoved(mDataList.size, 3)
+            }
         }
         binding.rangeInsert0.setOnClickListener {
             mDataList.add(0, 23)

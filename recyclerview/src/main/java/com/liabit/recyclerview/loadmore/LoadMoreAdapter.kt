@@ -385,16 +385,18 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
     }
 
     /**
-     *                      itemCount: count + 1     ┌┈┈ true ┈┈┈> TYPE_LOAD_FAILED
+     * count = [adapter].itemCount
+     *
+     *                     itemCount: count + 1      ┌┈┈ true ┈┈┈> TYPE_LOAD_FAILED
      *                     ┌┈┈ true ┈┈> failed ┈┈┈┈┈>|
      *                     |                         └┈┈ false ┈┈> TYPE_LOADING
      *                     |
      * isLoadMoreEnabled --|
-     *                     |                       itemCount: count + 1
+     *                     |                         itemCount: count + 1
      *                     |                         ┌┈┈ true ┈┈┈> TYPE_NO_MORE
      *                     └┈┈ false┈┈> no more ┈┈┈┈>|
      *                                               └┈┈ false ┈┈>
-     *                                             itemCount: count
+     *                                               itemCount: count
      */
     override fun getItemViewType(position: Int): Int {
         if (position == adapter.itemCount) {

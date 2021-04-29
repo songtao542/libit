@@ -3,7 +3,6 @@ package com.liabit.recyclerview.loadmore
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -59,7 +58,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
     var noMoreView: View? = null
     var loadFailedView: View? = null
 
-    private var mFooterResId: Int? = null
+    private var mLoadingResId: Int? = null
     private var mNoMoreResId: Int? = null
     private var mLoadFailedResId: Int? = null
 
@@ -164,7 +163,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
     }
 
     constructor(adapter: A, @LayoutRes resId: Int) : this(adapter) {
-        mFooterResId = resId
+        mLoadingResId = resId
     }
 
     /**
@@ -287,7 +286,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
             TYPE_LOADING -> {
-                val view = loadingView?.also { removeFromParent(it) } ?: mFooterResId?.let {
+                val view = loadingView?.also { removeFromParent(it) } ?: mLoadingResId?.let {
                     inflater.inflate(it, parent, false)
                 } ?: kotlin.run {
                     inflater.inflate(R.layout.load_more_base_footer, parent, false)
@@ -458,7 +457,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
     }
 
     fun setLoadingView(@LayoutRes resId: Int) {
-        mFooterResId = resId
+        mLoadingResId = resId
     }
 
     fun setNoMoreView(@LayoutRes resId: Int) {
@@ -569,9 +568,9 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
      *  是否启用加载更多
      */
     var isLoadMoreEnabled: Boolean
-        get() = mLoadMore.isEnable && adapter.itemCount >= 0
+        get() = mLoadMore.isEnabled && adapter.itemCount >= 0
         set(enabled) {
-            mLoadMore.isEnable = enabled
+            mLoadMore.isEnabled = enabled
         }
 
     /**
@@ -605,7 +604,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
         /**
          * 获取是否启用了加载更多,默认是 true
          */
-        override var isEnable: Boolean
+        override var isEnabled: Boolean
             get() = mLoadMoreEnable
             set(enable) {
                 val old = mLoadMoreEnable
@@ -633,7 +632,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
         /**
          * 获取是否启用了加载更多,默认是 true
          */
-        var isEnable: Boolean
+        var isEnabled: Boolean
     }
 
     /**

@@ -71,7 +71,7 @@ class TestLoadMoreActivity : AppCompatActivity() {
                         mAdapter.setData(mDataList)
                     }
                 } else {
-                    it.isEnable = false
+                    it.isEnabled = false
                 }
             }, 2 * 1000L)
         }

@@ -234,7 +234,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
             TYPE_LOAD_FAILED -> {
                 val layoutResId = mLoadFailedResId ?: R.layout.load_more_base_load_failed
                 val view = customLoadFailedView ?: createView(inflater, parent, layoutResId)
-                LoadFailedHolder(view, this, mOnLoadMoreListener)
+                LoadFailedHolder(view, this)
             }
             TYPE_NO_MORE -> {
                 val layoutResId = mNoMoreResId ?: R.layout.load_more_base_no_more
@@ -251,7 +251,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
         when (holder) {
             is LoadingHolder -> {
                 // 当 recyclerView 不能滚动的时候(item 不能铺满屏幕的时候也是不能滚动的) call loadMore
-                if (!canScroll() && mOnLoadMoreListener != null && !mIsLoading) {
+                if (!canScroll() && !mIsLoading) {
                     invokeLoadMore()
                 }
                 holder.setup(mLoadingText, mLoadingTextColor, mLoadingTextSize, mLoadingProgressColor)
@@ -270,10 +270,12 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
     }
 
     private fun invokeLoadMore() {
-        mIsLoading = true
-        mLoadFailed = false
-        mRecyclerView?.post {
-            mOnLoadMoreListener?.onLoadMore(mLoadMore)
+        val listener = mOnLoadMoreListener ?: return
+        val recyclerView = mRecyclerView ?: return
+        recyclerView.post {
+            mIsLoading = true
+            mLoadMore.isLoadFailed = false
+            listener.onLoadMore(mLoadMore)
         }
     }
 
@@ -456,7 +458,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
      *  是否启用加载更多
      */
     var isLoadMoreEnabled: Boolean
-        get() = mLoadMore.isEnabled && adapter.itemCount >= 0
+        get() = mLoadMore.isEnabled
         set(enabled) {
             mLoadMore.isEnabled = enabled
         }
@@ -475,16 +477,16 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
      */
     private class LoadMoreImpl(private val mListener: OnEnabledListener) : LoadMore {
         private var mLoadMoreEnable = true
-        private var mIsLoadFailed = false
+        private var mLoadFailed = false
 
         /**
          * 设置是否加载失败
          */
         override var isLoadFailed: Boolean
-            get() = mIsLoadFailed
+            get() = mLoadFailed
             set(value) {
-                if (mIsLoadFailed != value) {
-                    mIsLoadFailed = value
+                if (mLoadFailed != value) {
+                    mLoadFailed = value
                     mListener.notifyLoadFailed(value)
                 }
             }
@@ -532,15 +534,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
         }
     }
 
-    private class LoadingHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        init {
-            //当为StaggeredGridLayoutManager的时候,设置footerView占据整整一行
-            val layoutParams = itemView.layoutParams
-            if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
-                layoutParams.isFullSpan = true
-            }
-        }
-
+    private class LoadingHolder(itemView: View) : BaseHolder(itemView) {
         fun setup(text: String?, textColor: ColorStateList?, textSize: Float?, progressColor: ColorStateList?) {
             itemView.findViewById<TextView>(R.id.loadMoreTextView)?.let { textView ->
                 text?.let { textView.text = it }
@@ -553,15 +547,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
         }
     }
 
-    private class NoMoreHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        init {
-            //当为StaggeredGridLayoutManager的时候,设置footerView占据整整一行
-            val layoutParams = itemView.layoutParams
-            if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
-                layoutParams.isFullSpan = true
-            }
-        }
-
+    private class NoMoreHolder(itemView: View) : BaseHolder(itemView) {
         fun setup(text: String?, textColor: ColorStateList?, textSize: Float?, icon: Drawable?, iconColor: ColorStateList?) {
             itemView.findViewById<TextView>(R.id.loadMoreNoMoreTextView)?.let { textView ->
                 text?.let { textView.text = it }
@@ -575,16 +561,9 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
         }
     }
 
-    private class LoadFailedHolder(itemView: View, adapter: LoadMoreAdapter<*, *>, listener: LoadMoreAdapter.OnLoadMoreListener?) :
-        RecyclerView.ViewHolder(itemView) {
+    private class LoadFailedHolder(itemView: View, adapter: LoadMoreAdapter<*, *>) : BaseHolder(itemView) {
         init {
-            //当为StaggeredGridLayoutManager的时候,设置footerView占据整整一行
-            val layoutParams = itemView.layoutParams
-            if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
-                layoutParams.isFullSpan = true
-            }
             itemView.setOnClickListener {
-                adapter.notifyFooterHolderChanged()
                 adapter.invokeLoadMore()
             }
         }
@@ -598,6 +577,16 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
             itemView.findViewById<ImageView>(R.id.loadMoreFailedIcon)?.let { imageView ->
                 icon?.let { imageView.setImageDrawable(it) }
                 iconColor?.let { imageView.imageTintList = it }
+            }
+        }
+    }
+
+    private open class BaseHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            //当为StaggeredGridLayoutManager的时候,设置footerView占据整整一行
+            val layoutParams = itemView.layoutParams
+            if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
+                layoutParams.isFullSpan = true
             }
         }
     }

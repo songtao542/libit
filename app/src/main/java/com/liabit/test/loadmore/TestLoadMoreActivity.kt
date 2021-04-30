@@ -1,6 +1,7 @@
 package com.liabit.test.loadmore
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,27 +44,34 @@ class TestLoadMoreActivity : AppCompatActivity() {
                 mCount = 0
                 mLoadMoreAdapter?.isLoadMoreEnabled = true
                 mDataList.clear()
-                mDataList.addAll(MutableList(Mock.nextInt(8, 15)) {
+                val size = Mock.nextInt(4, 8)
+                mDataList.addAll(MutableList(size) {
                     it
                 })
+                Log.d("TTTT", "swipeRefreshLayout ok size: $size  item count: ${mDataList.size}")
                 mAdapter.setData(mDataList)
             }, 2000)
         }
 
         mLoadMoreAdapter?.setLoadMoreListener {
+            Log.d("TTTT", "start load more -> $mCount  item count: ${mDataList.size}")
             binding.root.postDelayed({
                 if (mCount < 10) {
                     if (mCount % 3 == 2) {
                         mCount++
+                        Log.d("TTTT", "load more failed item count: ${mDataList.size}")
                         it.isLoadFailed = true
                     } else {
                         mCount++
-                        mDataList.addAll(MutableList(Mock.nextInt(5, 10)) {
+                        val size = Mock.nextInt(4, 8)
+                        mDataList.addAll(MutableList(size) {
                             it
                         })
+                        Log.d("TTTT", "load more ok size: $size  item count: ${mDataList.size}")
                         mAdapter.setData(mDataList)
                     }
                 } else {
+                    Log.d("TTTT", "no more item count: ${mDataList.size}")
                     it.isEnabled = false
                 }
             }, 2 * 1000L)

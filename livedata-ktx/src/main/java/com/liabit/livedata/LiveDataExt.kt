@@ -58,8 +58,8 @@ interface LiveDataScope<T> {
 }
 
 internal class LiveDataScopeImpl<T>(
-        private var target: CoroutineLiveData<T>,
-        context: CoroutineContext
+    private var target: CoroutineLiveData<T>,
+    context: CoroutineContext
 ) : LiveDataScope<T> {
 
     override val latestValue: T? get() = target.value
@@ -69,9 +69,9 @@ internal class LiveDataScopeImpl<T>(
     private val coroutineContext = context + Dispatchers.Main.immediate
 
     override suspend fun emitSource(source: LiveData<T>): DisposableHandle =
-            withContext(coroutineContext) {
-                return@withContext target.emitSource(source)
-            }
+        withContext(coroutineContext) {
+            return@withContext target.emitSource(source)
+        }
 
     override suspend fun emit(value: T) = withContext(coroutineContext) {
         target.clearSource()
@@ -80,14 +80,14 @@ internal class LiveDataScopeImpl<T>(
 }
 
 internal suspend fun <T> MediatorLiveData<T>.addDisposableSource(
-        source: LiveData<T>
+    source: LiveData<T>
 ): EmittedSource = withContext(Dispatchers.Main.immediate) {
     addSource(source) {
         value = it
     }
     EmittedSource(
-            source = source,
-            mediator = this@addDisposableSource
+        source = source,
+        mediator = this@addDisposableSource
     )
 }
 
@@ -97,8 +97,8 @@ internal suspend fun <T> MediatorLiveData<T>.addDisposableSource(
  * that we can use internally.
  */
 internal class EmittedSource(
-        private val source: LiveData<*>,
-        private val mediator: MediatorLiveData<*>
+    private val source: LiveData<*>,
+    private val mediator: MediatorLiveData<*>
 ) : DisposableHandle {
     // @MainThread
     private var disposed = false
@@ -132,11 +132,11 @@ internal typealias Block<T> = suspend LiveDataScope<T>.() -> Unit
  * Handles running a block at most once to completion.
  */
 internal class BlockRunner<T>(
-        private val liveData: CoroutineLiveData<T>,
-        private val block: Block<T>,
-        private val timeoutInMs: Long,
-        private val scope: CoroutineScope,
-        private val onDone: () -> Unit
+    private val liveData: CoroutineLiveData<T>,
+    private val block: Block<T>,
+    private val timeoutInMs: Long,
+    private val scope: CoroutineScope,
+    private val onDone: () -> Unit
 ) {
     // currently running block job.
     private var runningJob: Job? = null
@@ -176,9 +176,9 @@ internal class BlockRunner<T>(
 }
 
 internal class CoroutineLiveData<T>(
-        private val context: CoroutineContext = EmptyCoroutineContext,
-        private val timeoutInMs: Long = DEFAULT_TIMEOUT,
-        private val block: Block<T>
+    private val context: CoroutineContext = EmptyCoroutineContext,
+    private val timeoutInMs: Long = DEFAULT_TIMEOUT,
+    private val block: Block<T>
 ) : RefreshableLiveData<T>() {
     private var blockRunner: BlockRunner<T>? = null
     private var emittedSource: EmittedSource? = null
@@ -192,22 +192,24 @@ internal class CoroutineLiveData<T>(
     }
 
     private fun refresh(immediateRun: Boolean) {
-        // use an intermediate supervisor job so that if we cancel individual block runs due to losing
-        // observers, it won't cancel the given context as we only cancel w/ the intention of possibly
-        // relaunching using the same parent context.
-        val supervisorJob = SupervisorJob(context[Job])
+        if (blockRunner == null) {
+            // use an intermediate supervisor job so that if we cancel individual block runs due to losing
+            // observers, it won't cancel the given context as we only cancel w/ the intention of possibly
+            // relaunching using the same parent context.
+            val supervisorJob = SupervisorJob(context[Job])
 
-        // The scope for this LiveData where we launch every block Job.
-        // We default to Main dispatcher but developer can override it.
-        // The supervisor job is added last to isolate block runs.
-        val scope = CoroutineScope(Dispatchers.Main.immediate + context + supervisorJob)
-        blockRunner = BlockRunner(
+            // The scope for this LiveData where we launch every block Job.
+            // We default to Main dispatcher but developer can override it.
+            // The supervisor job is added last to isolate block runs.
+            val scope = CoroutineScope(Dispatchers.Main.immediate + context + supervisorJob)
+            blockRunner = BlockRunner(
                 liveData = this,
                 block = block,
                 timeoutInMs = timeoutInMs,
                 scope = scope
-        ) {
-            blockRunner = null
+            ) {
+                blockRunner = null
+            }
         }
         if (immediateRun) {
             blockRunner?.maybeRun()
@@ -337,9 +339,9 @@ internal class CoroutineLiveData<T>(
  */
 @OptIn(ExperimentalTypeInference::class)
 fun <T> refreshableLiveData(
-        context: CoroutineContext = EmptyCoroutineContext,
-        timeoutInMs: Long = DEFAULT_TIMEOUT,
-        @BuilderInference block: suspend LiveDataScope<T>.() -> Unit
+    context: CoroutineContext = EmptyCoroutineContext,
+    timeoutInMs: Long = DEFAULT_TIMEOUT,
+    @BuilderInference block: suspend LiveDataScope<T>.() -> Unit
 ): RefreshableLiveData<T> = CoroutineLiveData(context, timeoutInMs, block)
 
 
@@ -444,7 +446,7 @@ fun <T> refreshableLiveData(
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalTypeInference::class)
 fun <T> refreshableLiveData(
-        context: CoroutineContext = EmptyCoroutineContext,
-        timeout: Duration,
-        @BuilderInference block: suspend LiveDataScope<T>.() -> Unit
+    context: CoroutineContext = EmptyCoroutineContext,
+    timeout: Duration,
+    @BuilderInference block: suspend LiveDataScope<T>.() -> Unit
 ): RefreshableLiveData<T> = CoroutineLiveData(context, timeout.toMillis(), block)

@@ -24,4 +24,13 @@
         android:text="Abs Load More Test"
         android:textAllCaps="false" />
 
+    <Button
+        android:id="@+id/tab"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:onClick="onClick"
+        android:text="Abs Load More Tab Test"
+        android:textAllCaps="false" />
+
 </LinearLayout>

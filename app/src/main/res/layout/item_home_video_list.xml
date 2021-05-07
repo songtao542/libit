@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffe1e1e1"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
+    android:paddingBottom="4dp">
+
+    <ImageView
+        android:id="@+id/item_video_coverH"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_place_holder"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/video_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tran_video_time_tag_bg"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:textColor="@android:color/white"
+        android:textSize="10sp"
+        app:drawableStartCompat="@drawable/ic_play_rectangle"
+        app:layout_constraintBottom_toBottomOf="@+id/item_video_coverH"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="SmallSp"
+        tools:text="04:45" />
+
+    <TextView
+        android:id="@+id/item_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:singleLine="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_video_coverH"
+        tools:text="【视频】如何正确保持锻炼习惯" />
+
+    <TextView
+        android:id="@+id/item_summary"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_marginTop="8dp"
+        android:maxLines="1"
+        android:textColor="#ffe1e1e1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_title"
+        tools:text="高级 3455465人观看" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

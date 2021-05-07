@@ -28,6 +28,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
     companion object {
         private const val TYPE_LOADING = -234623
         private const val TYPE_NO_MORE = -345674
+        private const val TYPE_IDLE = -675454
         private const val TYPE_LOAD_FAILED = -445678
 
         @JvmStatic
@@ -241,6 +242,11 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
                 val view = customLoadNoMoreView ?: createView(inflater, parent, layoutResId)
                 NoMoreHolder(view)
             }
+            TYPE_IDLE -> {
+                val layoutResId = mLoadingResId ?: R.layout.load_more_base_footer
+                val view = customLoadingView ?: createView(inflater, parent, layoutResId)
+                IdleHolder(view)
+            }
             else -> adapter.onCreateViewHolder(parent, viewType)
         }
     }
@@ -262,6 +268,9 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
             is NoMoreHolder -> {
                 holder.setup(mLoadNoMoreText, mLoadNoMoreIconColor, mLoadNoMoreTextSize, mLoadNoMoreIcon, mLoadNoMoreIconColor)
             }
+            is IdleHolder -> {
+                // do nothing
+            }
             else -> {
                 @Suppress("UNCHECKED_CAST")
                 adapter.onBindViewHolder(holder as VH, position, payloads)
@@ -270,6 +279,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
     }
 
     private fun invokeLoadMore() {
+        if (!isLoadMoreEnabled) return
         val listener = mOnLoadMoreListener ?: return
         val recyclerView = mRecyclerView ?: return
         recyclerView.post {
@@ -314,16 +324,19 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
         val count = adapter.itemCount
         if (count > 0 && position == count) {
             // 判断是否启用（isLoadMoreEnabled == true）
-            if (isLoadMoreEnabled) {
+            return if (isLoadMoreEnabled) {
                 // 优先判断是否加载失败
-                return if (mLoadFailed) {
+                if (mLoadFailed) {
                     TYPE_LOAD_FAILED
                 } else {
                     TYPE_LOADING
                 }
             } else if (showNoMoreEnabled) {
                 // 在 isLoadMoreEnabled == false 的情况下再判断是否显示 加载完毕 视图
-                return TYPE_NO_MORE
+                TYPE_NO_MORE
+            } else {
+                // 正常情况是不会执行到这里的
+                TYPE_IDLE
             }
         }
         return adapter.getItemViewType(position)
@@ -334,6 +347,7 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
         return if (itemViewType != TYPE_LOADING
             && itemViewType != TYPE_LOAD_FAILED
             && itemViewType != TYPE_NO_MORE
+            && itemViewType != TYPE_IDLE
         ) {
             adapter.getItemId(position)
         } else {
@@ -577,6 +591,16 @@ class LoadMoreAdapter<VH : RecyclerView.ViewHolder, A : RecyclerView.Adapter<VH>
             itemView.findViewById<ImageView>(R.id.loadMoreFailedIcon)?.let { imageView ->
                 icon?.let { imageView.setImageDrawable(it) }
                 iconColor?.let { imageView.imageTintList = it }
+            }
+        }
+    }
+
+    private open class IdleHolder(itemView: View) : BaseHolder(itemView) {
+        init {
+            if (itemView is ViewGroup) {
+                for (i in 0 until itemView.childCount) {
+                    itemView.getChildAt(i).visibility = View.INVISIBLE
+                }
             }
         }
     }

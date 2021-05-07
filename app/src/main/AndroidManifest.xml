@@ -43,6 +43,7 @@
         <activity
             android:name=".TestTimerActivity"
             android:label="TimerView" />
+        <activity android:name=".base.StubActivity" />
         <activity android:name=".TestSettingsActivity" />
         <activity android:name=".viewbinding.TestBindingActivity" />
         <activity android:name=".viewbinding.TestDataBindingActivity" />

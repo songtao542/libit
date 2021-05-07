@@ -106,4 +106,12 @@
     <string name="loadinging">努力加载中...</string>
     <string name="load_failed">加载出错了，点击重试</string>
     <string name="no_more">已全部加载了</string>
+
+    <string name="primary">初级</string>
+    <string name="intermediate">中级</string>
+    <string name="advanced">高级</string>
+    <string name="loading">正在加载</string>
+
+    <string name="level_with_watch_num">%1$s•%2$d人观看</string>
+    <string name="some_minute">%1$d分钟</string>
 </resources>

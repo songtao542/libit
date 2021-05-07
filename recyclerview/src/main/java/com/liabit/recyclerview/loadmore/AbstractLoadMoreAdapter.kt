@@ -123,17 +123,16 @@ abstract class AbstractLoadMoreAdapter<VH : RecyclerView.ViewHolder> : RecyclerV
     }
 
     private fun invokeLoadMore() {
+        if (!isEnabled) return
+        val recyclerView = mRecyclerView ?: return
         mLoadMore.state = LoadMoreImpl.LOADING
-        val recyclerView = mRecyclerView
-        if (recyclerView != null) {
-            mOnLoadMoreListener?.also {
-                recyclerView.post {
-                    it.onLoadMore(mLoadMore)
-                }
-            } ?: kotlin.run {
-                recyclerView.post {
-                    onLoadMore(mLoadMore)
-                }
+        mOnLoadMoreListener?.also {
+            recyclerView.post {
+                it.onLoadMore(mLoadMore)
+            }
+        } ?: kotlin.run {
+            recyclerView.post {
+                onLoadMore(mLoadMore)
             }
         }
     }
@@ -159,19 +158,19 @@ abstract class AbstractLoadMoreAdapter<VH : RecyclerView.ViewHolder> : RecyclerV
      */
     final override fun getItemViewType(position: Int): Int {
         val count = getCount()
-        if (mLoadMore.isEnabled && count > 0 && position == count) {
-            when (state) {
+        if (count > 0 && position == count) {
+            return when (state) {
                 LoadMoreImpl.LOADING -> {
-                    return TYPE_LOADING
+                    TYPE_LOADING
                 }
                 LoadMoreImpl.FAILED -> {
-                    return TYPE_LOAD_FAILED
+                    TYPE_LOAD_FAILED
                 }
                 LoadMoreImpl.NO_MORE -> {
-                    return TYPE_NO_MORE
+                    TYPE_NO_MORE
                 }
-                LoadMoreImpl.IDLE -> {
-                    return TYPE_IDLE
+                else -> {
+                    TYPE_IDLE
                 }
             }
         }
@@ -192,7 +191,7 @@ abstract class AbstractLoadMoreAdapter<VH : RecyclerView.ViewHolder> : RecyclerV
      * 控制加载更多的开关, 作为 [OnLoadMoreListener.onLoadMore] 方法的参数
      */
     private class LoadMoreImpl(private val mListener: OnEnabledListener) : LoadMore {
-        private var mState = 0
+        private var mState = IDLE
         private var mEnabled = true
 
         var state: Int
@@ -261,6 +260,8 @@ abstract class AbstractLoadMoreAdapter<VH : RecyclerView.ViewHolder> : RecyclerV
         set(value) {
             mLoadMore.isEnabled = value
         }
+
+    var autoLoadWhenPageNotFull = false
 
     override fun finishLoad() {
         mLoadMore.finishLoad()

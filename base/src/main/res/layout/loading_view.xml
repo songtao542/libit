@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:background="@drawable/loading_view_background"
     android:orientation="vertical"
-    tools:context="com.gree.themestore.base.LoadingView"
+    tools:context="com.liabit.base.LoadingView"
     tools:parentTag="android.widget.LinearLayout">
 
     <Space
@@ -42,7 +42,7 @@
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
-        android:text="@string/loading"
+        android:text="@string/base_loading"
         android:textColor="@android:color/white"
         android:textSize="14sp"
         android:translationZ="0dp" />

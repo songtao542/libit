@@ -66,8 +66,12 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
         }
     }
 
-    protected open fun getLoadingDialog(): LoadingDialog {
-        return mLoadingDialog ?: LoadingDialogImpl(this).also { mLoadingDialog = it }
+    protected open fun onCreateLoadingDialog(): LoadingDialog {
+        return LoadingDialogImpl(this)
+    }
+
+    private fun getLoadingDialog(): LoadingDialog {
+        return mLoadingDialog ?: onCreateLoadingDialog().also { mLoadingDialog = it }
     }
 
     fun post(runnable: Runnable) {

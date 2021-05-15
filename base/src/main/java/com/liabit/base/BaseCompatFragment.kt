@@ -123,12 +123,13 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
         }
     }
 
-    protected open fun getLoadingDialog(): LoadingDialog? {
+    protected open fun onCreateLoadingDialog(): LoadingDialog? {
         val context = context ?: return null
-        if (mLoadingDialog == null) {
-            mLoadingDialog = LoadingDialogImpl(context)
-        }
-        return mLoadingDialog
+        return LoadingDialogImpl(context)
+    }
+
+    private fun getLoadingDialog(): LoadingDialog? {
+        return mLoadingDialog ?: onCreateLoadingDialog()?.also { mLoadingDialog = it }
     }
 
     /**

@@ -1,7 +1,8 @@
-package com.liabit.util
+package com.liabit.net
 
 import android.graphics.BitmapFactory
 import android.text.TextUtils
+import com.liabit.util.MediaFile
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody

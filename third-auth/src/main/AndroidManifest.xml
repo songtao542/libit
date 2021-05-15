@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.liabit.third">
+
+    <application>
+
+        <activity
+            android:name="com.liabit.third.wx.WxEntryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/ThirdNoDisplay" />
+
+        <activity
+            android:name="com.liabit.third.wx.WxPayEntryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/ThirdNoDisplay" />
+
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ThirdNoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="1107903594" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="behind"
+            android:theme="@style/ThirdNoDisplay" />
+        <activity
+            android:name="com.sina.weibo.sdk.web.WeiboSdkWebActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            tools:node="replace" />
+
+    </application>
+
+</manifest>

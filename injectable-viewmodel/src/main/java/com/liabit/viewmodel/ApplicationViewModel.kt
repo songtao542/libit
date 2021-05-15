@@ -137,11 +137,7 @@ open class ApplicationViewModel : ViewModel() {
      * 如果 isLoading == false , 则自动设置为 true
      */
     fun isLoading(): Boolean {
-        val state = mStateMap["__def__"]
-        if (state != true) {
-            mStateMap["__def__"] = true
-        }
-        return state ?: true
+        return isLoading("__def__")
     }
 
     fun setLoading(key: String, state: Boolean) {

@@ -59,6 +59,7 @@ class BuildTool {
             "../livedata-ktx/src/main",
             "../injectable-viewmodel/src/main",
             "../base/src/main",
+            "../third-auth/src/main",
     };
 
 
@@ -110,6 +111,7 @@ class BuildTool {
             FileUtils.copyDirectory(javaSourceDir, destJavaDir);
 
             addImportR(destJavaDir, "import com\\.liabit\\..*\\.R", "import com.liabit.R");
+            replaceBuildConfig(destJavaDir, "import com\\.liabit\\..*\\.BuildConfig", "import com.liabit.BuildConfig");
 
             if (!"com.liabit.".equals(packageName)) {
                 // 重命名
@@ -215,6 +217,43 @@ class BuildTool {
                 while ((line = br.readLine()) != null) {
                     line = line.replaceAll(replace, replacement);
                     caw.write(line);
+                    caw.append(lineSeparator);
+                }
+                br.close();
+                FileWriter fw = new FileWriter(file);
+                caw.writeTo(fw);
+                fw.close();
+            }
+
+        }
+    }
+
+
+    static void replaceBuildConfig(File file, String replace, String replacement) throws IOException {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    replaceBuildConfig(f, replace, replacement);
+                }
+            }
+        } else if (file.exists()) {
+            boolean isJava = file.getAbsolutePath().endsWith(".java");
+            boolean isKt = file.getAbsolutePath().endsWith(".kt");
+            if (isJava || isKt) {
+                System.out.println("file: " + file);
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
+                CharArrayWriter caw = new CharArrayWriter();
+                String line;
+                String importBuildConfig = replacement + (isJava ? ";" : "");
+                String lineSeparator = System.getProperty("line.separator");
+                while ((line = br.readLine()) != null) {
+                    // 如果是 BuildConfig 的行
+                    if (line.matches(replace)) {
+                        caw.write(importBuildConfig);
+                    } else {
+                        caw.write(line);
+                    }
                     caw.append(lineSeparator);
                 }
                 br.close();

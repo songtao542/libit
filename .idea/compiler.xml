@@ -31,6 +31,7 @@
       <module name="libit.swipeback" target="11" />
       <module name="libit.tablayout" target="11" />
       <module name="libit.tagview" target="11" />
+      <module name="libit.third-auth" target="11" />
       <module name="libit.timerview" target="11" />
       <module name="libit.util" target="11" />
       <module name="libit.viewbinding" target="11" />

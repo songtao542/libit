@@ -491,5 +491,10 @@
       <option name="name" value="maven" />
       <option name="url" value="file:$PROJECT_DIR$/base/repo" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="file:$PROJECT_DIR$/third-auth/repo" />
+    </remote-repository>
   </component>
 </project>

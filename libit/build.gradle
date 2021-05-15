@@ -80,6 +80,7 @@ android {
                     './src/main/livedata-ktx', // livedata-ktx
                     './src/main/injectable-viewmodel', // injectable-viewmodel
                     './src/main/base', // base
+                    './src/main/third-auth', // third-auth
             ]
             res.srcDirs = [
                     './src/main/res', // viewbinding
@@ -100,6 +101,7 @@ android {
                     './src/main/picker_integrate_res', // picker_integrate
                     './src/main/screenrecord_res', // screenrecord
                     './src/main/base_res', // base
+                    './src/main/third-auth_res', // base
             ]
             manifest.srcFile './src/main/AndroidManifest.xml'
         }
@@ -176,6 +178,34 @@ dependencies {
     //implementation 'com.google.android:flexbox:2.0.1'
     compileOnly files('../common_libs/flexbox-release.aar')
     compileOnly files('../common_libs/imagepicker-1.0.0.aar')
+
+    implementation "com.google.dagger:hilt-android:2.33-beta"
+    kapt "com.google.dagger:hilt-android-compiler:2.33-beta"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
+    kapt "androidx.hilt:hilt-compiler:1.0.0-alpha03"
+    //implementation "androidx.hilt:hilt-navigation-compose:1.0.0-alpha01"
+
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+    implementation 'androidx.annotation:annotation:1.2.0'
+
+    //Retrofit网络请求
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+    //implementation 'com.squareup.retrofit2:converter-scalars:2.0.0-beta4'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+    //implementation 'com.squareup.retrofit2:converter-scalars:2.0.0-beta4'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    compileOnly files('../common_libs/open_sdk_r6019_lite.jar')
+    //implementation 'com.sina.weibo.sdk:core:4.3.4:openDefaultRelease@aar'
+    compileOnly files("../common_libs/sina-weibo-sdk-4.3.4-release.aar")
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
 
     compileOnly 'com.github.bumptech.glide:glide:4.12.0'
 

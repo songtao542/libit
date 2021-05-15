@@ -10,7 +10,7 @@ object MimeMap {
     private val mExtToMime: MutableMap<String, String> = HashMap()
 
     init {
-        //data from libcore/luni/src/main/java/libcore/net/android.mime.types
+        //data from libcore/luni/src/main/java/libcore/net/mime.android.types
         //data from libcore/luni/src/main/java/libcore/net/mime.types
         addMimeMapping("application/epub+zip", "epub")
         addMimeMapping("application/lrc", "lrc")

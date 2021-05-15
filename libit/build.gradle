@@ -79,6 +79,7 @@ android {
                     './src/main/autoclear', // autoclear
                     './src/main/livedata-ktx', // livedata-ktx
                     './src/main/injectable-viewmodel', // injectable-viewmodel
+                    './src/main/base', // base
             ]
             res.srcDirs = [
                     './src/main/res', // viewbinding
@@ -98,6 +99,7 @@ android {
                     './src/main/dialog_res', // dialog
                     './src/main/picker_integrate_res', // picker_integrate
                     './src/main/screenrecord_res', // screenrecord
+                    './src/main/base_res', // base
             ]
             manifest.srcFile './src/main/AndroidManifest.xml'
         }

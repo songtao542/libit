@@ -60,6 +60,7 @@ class BuildTool {
             "../injectable-viewmodel/src/main",
             "../base/src/main",
             "../third-auth/src/main",
+            "../compressor/src/main",
     };
 
 

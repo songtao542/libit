@@ -81,6 +81,7 @@ android {
                     './src/main/injectable-viewmodel', // injectable-viewmodel
                     './src/main/base', // base
                     './src/main/third-auth', // third-auth
+                    './src/main/compressor', // compressor
             ]
             res.srcDirs = [
                     './src/main/res', // viewbinding

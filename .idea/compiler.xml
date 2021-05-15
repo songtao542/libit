@@ -9,6 +9,7 @@
       <module name="libit.base" target="11" />
       <module name="libit.citypicker" target="11" />
       <module name="libit.color_util" target="11" />
+      <module name="libit.compressor" target="11" />
       <module name="libit.dialog" target="11" />
       <module name="libit.ext" target="11" />
       <module name="libit.filterlayout" target="11" />

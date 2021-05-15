@@ -6,12 +6,14 @@
       <module name="libit.app" target="11" />
       <module name="libit.app_api14" target="11" />
       <module name="libit.autoclear" target="11" />
+      <module name="libit.base" target="11" />
       <module name="libit.citypicker" target="11" />
       <module name="libit.color_util" target="11" />
       <module name="libit.dialog" target="11" />
       <module name="libit.ext" target="11" />
       <module name="libit.filterlayout" target="11" />
       <module name="libit.gesture" target="11" />
+      <module name="libit.injectable-viewmodel" target="11" />
       <module name="libit.libit" target="11" />
       <module name="libit.livedata-ktx" target="11" />
       <module name="libit.location_picker" target="11" />

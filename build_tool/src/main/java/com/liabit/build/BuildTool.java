@@ -57,6 +57,7 @@ class BuildTool {
             "../widget/src/main",
             "../ext/src/main",
             "../livedata-ktx/src/main",
+            "../injectable-viewmodel/src/main",
     };
 
 

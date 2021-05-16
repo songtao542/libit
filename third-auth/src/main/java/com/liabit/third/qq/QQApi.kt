@@ -86,6 +86,9 @@ class QQApi constructor(context: Context) {
                 override fun onCancel() {
                     it.resume(ApiResult(canceled = true))
                 }
+
+                override fun onWarning(code: Int) {
+                }
             })
         } catch (e: Throwable) {
             it.resume(ApiResult.error(e))
@@ -114,7 +117,7 @@ class QQApi constructor(context: Context) {
         summary: String,
         url: String
     ): ApiResult<Any> {
-        val shareType = QQShare.SHARE_TO_QQ_TYPE_APP
+        val shareType = QQShare.SHARE_TO_QQ_TYPE_DEFAULT
         val params = Bundle()
         val flag = QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN or QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE
         params.putString(QQShare.SHARE_TO_QQ_TITLE, title)
@@ -142,6 +145,9 @@ class QQApi constructor(context: Context) {
             override fun onCancel() {
                 it.resume(ApiResult(canceled = true))
             }
+
+            override fun onWarning(code: Int) {
+            }
         })
     }
 
@@ -152,8 +158,7 @@ class QQApi constructor(context: Context) {
         urlToShare: String,
         @DrawableRes iconToShare: Int? = null
     ): ApiResult<Any> {
-        //val shareType = QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT
-        val shareType = QzoneShare.SHARE_TO_QZONE_TYPE_APP
+        val shareType = QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT
         val params = Bundle()
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, shareType)
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title)
@@ -187,6 +192,9 @@ class QQApi constructor(context: Context) {
 
             override fun onCancel() {
                 it.resume(ApiResult(canceled = true))
+            }
+
+            override fun onWarning(code: Int) {
             }
         })
     }

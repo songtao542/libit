@@ -1,7 +1,5 @@
 package com.liabit.third.model
 
-import com.sina.weibo.sdk.auth.WbConnectErrorMessage
-import com.sina.weibo.sdk.exception.WeiboException
 import com.tencent.tauth.UiError
 
 data class ApiResult<T>(
@@ -24,11 +22,7 @@ data class ApiResult<T>(
             return ApiResult(error = error?.toError() ?: Error(code = ERROR_UNKNOWN))
         }
 
-        fun <T> error(error: WbConnectErrorMessage?): ApiResult<T> {
-            return ApiResult(error = error?.toError() ?: Error(code = ERROR_UNKNOWN))
-        }
-
-        fun <T> error(error: WeiboException?): ApiResult<T> {
+        fun <T> error(error: com.sina.weibo.sdk.common.UiError?): ApiResult<T> {
             return ApiResult(error = error?.toError() ?: Error(code = ERROR_UNKNOWN))
         }
 
@@ -47,10 +41,6 @@ private fun UiError.toError(): Error {
     return Error(code = errorCode, message = errorMessage)
 }
 
-private fun WbConnectErrorMessage.toError(): Error {
-    return Error(code = errorCode?.toIntOrNull(), message = errorMessage)
-}
-
-private fun WeiboException.toError(): Error {
-    return Error(code = ApiResult.ERROR_GET_ACCESS_TOKEN, message = message)
+private fun com.sina.weibo.sdk.common.UiError.toError(): Error {
+    return Error(code = ApiResult.ERROR_GET_ACCESS_TOKEN, message = errorMessage)
 }

@@ -3,6 +3,7 @@ package com.liabit.third.model
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+
 @Parcelize
 data class WxUser(
     var accessToken: String? = null,

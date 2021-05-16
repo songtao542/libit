@@ -47,6 +47,9 @@ open class QQAuthViewModel @Inject constructor() : ApplicationViewModel() {
         override fun onError(error: UiError?) {
             liveResult.postValue(ApiResult.error(error))
         }
+
+        override fun onWarning(code: Int) {
+        }
     }
 
     /**
@@ -84,6 +87,9 @@ open class QQAuthViewModel @Inject constructor() : ApplicationViewModel() {
 
             override fun onError(e: UiError?) {
                 liveResult.postValue(ApiResult.error(e))
+            }
+
+            override fun onWarning(code: Int) {
             }
         })
     }

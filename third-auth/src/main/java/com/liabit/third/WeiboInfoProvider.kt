@@ -49,7 +49,10 @@ interface ThirdAppInfoProvider {
 
     val wechatAppId: String
     val wechatAppSecret: String
-    val wechatApiUrl: String
+
+    fun getWechatApiUrl(): String {
+        return Wechat.BASE_URL
+    }
 
     val tencentAppId: String
     val tencentAppKey: String
@@ -86,7 +89,7 @@ object ThirdAppInfo {
 
     val WX_APP_ID: String get() = mWxProvider?.appId ?: mInfoProvider?.wechatAppId ?: ""
     val WX_APP_SECRET: String get() = mWxProvider?.appSecret ?: mInfoProvider?.wechatAppSecret ?: ""
-    val WX_API_URL: String get() = mWxProvider?.getApiUrl() ?: mInfoProvider?.wechatApiUrl ?: Wechat.BASE_URL
+    val WX_API_URL: String get() = mWxProvider?.getApiUrl() ?: mInfoProvider?.getWechatApiUrl() ?: Wechat.BASE_URL
 
     val TENCENT_APP_ID: String get() = mTcProvider?.appId ?: mInfoProvider?.tencentAppId ?: ""
     val TENCENT_APP_KEY: String get() = mTcProvider?.appKey ?: mInfoProvider?.tencentAppKey ?: ""

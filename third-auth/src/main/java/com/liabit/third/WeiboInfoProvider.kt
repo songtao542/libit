@@ -59,13 +59,13 @@ object ThirdAppInfo {
 
     val WEIBO_APP_KEY: String get() = mWeiboInfoProvider?.appKey ?: mAppInfoProvider?.weiboAppKey ?: ""
     val WEIBO_APP_SECRET: String get() = mWeiboInfoProvider?.appSecret ?: mAppInfoProvider?.weiboAppSecret ?: ""
-    val WEIBO_API_URL: String get() = mWeiboInfoProvider?.apiUrl ?: mAppInfoProvider?.weiboApiUrl ?: ""
+    val WEIBO_API_URL: String get() = mWeiboInfoProvider?.apiUrl ?: mAppInfoProvider?.weiboApiUrl ?: Weibo.BASE_URL
     val WEIBO_REDIRECT_URL: String get() = mWeiboInfoProvider?.redirectUrl ?: mAppInfoProvider?.weiboRedirectUrl ?: ""
     val WEIBO_SCOPE: String get() = mWeiboInfoProvider?.scope ?: mAppInfoProvider?.weiboScope ?: ""
 
     val WECHAT_APP_ID: String get() = mWechatInfoProvider?.appId ?: mAppInfoProvider?.wechatAppId ?: ""
     val WECHAT_APP_SECRET: String get() = mWechatInfoProvider?.appSecret ?: mAppInfoProvider?.wechatAppSecret ?: ""
-    val WECHAT_API_URL: String get() = mWechatInfoProvider?.apiUrl ?: mAppInfoProvider?.wechatApiUrl ?: ""
+    val WECHAT_API_URL: String get() = mWechatInfoProvider?.apiUrl ?: mAppInfoProvider?.wechatApiUrl ?: Wechat.BASE_URL
 
     val TENCENT_APP_ID: String get() = mTencentInfoProvider?.appId ?: mAppInfoProvider?.tencentAppId ?: ""
     val TENCENT_APP_KEY: String get() = mTencentInfoProvider?.appKey ?: mAppInfoProvider?.tencentAppKey ?: ""

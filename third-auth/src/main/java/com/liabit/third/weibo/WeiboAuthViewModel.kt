@@ -3,23 +3,17 @@ package com.liabit.third.weibo
 import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.MutableLiveData
-import com.liabit.third.ThirdAppInfo
 import com.liabit.third.ThirdUserRepository
 import com.liabit.third.model.ApiResult
 import com.liabit.third.model.ApiResult.Companion.ERROR_GET_ACCESS_TOKEN
 import com.liabit.third.model.ApiResult.Companion.ERROR_GET_USER_INFO
 import com.liabit.third.model.WeiboUser
 import com.liabit.viewmodel.ApplicationViewModel
-import com.sina.weibo.sdk.auth.AccessTokenKeeper
 import com.sina.weibo.sdk.auth.Oauth2AccessToken
-import com.sina.weibo.sdk.exception.WeiboException
-import com.sina.weibo.sdk.net.RequestListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
 open class WeiboAuthViewModel @Inject constructor(
@@ -40,12 +34,6 @@ open class WeiboAuthViewModel @Inject constructor(
     suspend fun authorize(activity: Activity) {
         var accessToken = mAccessToken ?: withContext(Dispatchers.Default) {
             repository.getWeiboAccessToken()
-        }
-        if (accessToken?.isSessionValid == false) { //授权过但是过期了，刷新token
-            val refresh = refreshToken().result
-            if (refresh?.isSessionValid == true) {
-                accessToken = refresh
-            }
         }
         if (accessToken == null) { //accessToken == null 说明没有授权过
             authorizeInternal(activity)
@@ -68,24 +56,11 @@ open class WeiboAuthViewModel @Inject constructor(
         }
     }
 
-    private suspend fun refreshToken(): ApiResult<Oauth2AccessToken?> = suspendCoroutine {
-        AccessTokenKeeper.refreshToken(ThirdAppInfo.WEIBO_APP_KEY, application, object : RequestListener {
-            override fun onComplete(response: String) {
-                val accessToken = AccessTokenKeeper.readAccessToken(application)
-                it.resume(ApiResult(result = accessToken))
-            }
-
-            override fun onWeiboException(e: WeiboException?) {
-                it.resume(ApiResult.error(e))
-            }
-        })
-    }
-
     /**
      * 调用微博 rest api 获取用户信息
      */
     private suspend fun getUserInfo(accessToken: Oauth2AccessToken) {
-        val weiboUser = restApi.getUserInfo(accessToken.token, accessToken.uid)
+        val weiboUser = restApi.getUserInfo(accessToken.accessToken, accessToken.uid)
         if (weiboUser == null) {
             liveResult.postValue(ApiResult(ERROR_GET_USER_INFO))
         } else {

@@ -70,7 +70,7 @@ dependencies {
 
     //compileOnly files('../common_libs/open_sdk_r6019_lite.jar')
     compileOnly files('../common_libs/open_sdk_3.5.4.11_r3f56456_lite.jar')
-    compileOnly 'com.sina.weibo.sdk:core:9.12.0:openDefaultRelease@aar'
+    //compileOnly 'com.sina.weibo.sdk:core:9.12.0:openDefaultRelease@aar'
     compileOnly files("../common_libs/sina-weibo-sdk-10.10.0.aar")
     //implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.7.0'

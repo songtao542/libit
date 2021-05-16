@@ -2,6 +2,7 @@ package com.liabit.third.wx
 
 import android.content.Intent
 import androidx.lifecycle.MutableLiveData
+import com.liabit.third.ThirdAppInfo
 import com.liabit.third.ThirdUserRepository
 import com.liabit.third.model.ApiResult
 import com.liabit.third.model.WxAccessToken
@@ -87,7 +88,7 @@ open class WxAuthViewModel @Inject constructor(
             val grantType = "authorization_code"
             // 异步调用 rest api 获取 access token
             val accessToken = withContext(Dispatchers.Default) {
-                wxRestApi.getAccessToken(code, grantType)
+                wxRestApi.getAccessToken(ThirdAppInfo.WECHAT_APP_ID, ThirdAppInfo.WECHAT_APP_SECRET, code, grantType)
             }
             val openid = accessToken?.openid
             val token = accessToken?.accessToken

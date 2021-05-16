@@ -29,7 +29,7 @@ const val SHARE_TO_TIMELINE = SendMessageToWX.Req.WXSceneTimeline
 class WxApi(context: Context) {
 
     private val mContext = context.applicationContext
-    private var mApi: IWXAPI = WXAPIFactory.createWXAPI(mContext, ThirdAppInfo.WECHAT_APP_ID, false)
+    private var mApi: IWXAPI = WXAPIFactory.createWXAPI(mContext, ThirdAppInfo.WX_APP_ID, false)
     private var mState: Long = 0
 
     fun pay(info: WxPrePayInfo) {
@@ -46,7 +46,7 @@ class WxApi(context: Context) {
     }
 
     fun authorize() {
-        mApi.registerApp(ThirdAppInfo.WECHAT_APP_ID)
+        mApi.registerApp(ThirdAppInfo.WX_APP_ID)
         val req = SendAuth.Req()
         req.scope = "snsapi_userinfo"
         mState = System.currentTimeMillis()

@@ -14,6 +14,9 @@ object Wechat {
 }
 
 object Weibo {
+    /**
+     * doc: https://open.weibo.com/wiki/%E5%BE%AE%E5%8D%9AAPI
+     */
     const val BASE_URL = "https://api.weibo.com"
     const val REDIRECT_URL = "http://www.weibo.com"
     const val SCOPE =

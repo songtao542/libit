@@ -21,7 +21,7 @@ interface WxRestApi {
         fun create(gson: Gson?): WxRestApi {
             val g = gson ?: Gson()
             return Retrofit.Builder()
-                .baseUrl(ThirdAppInfo.WECHAT_API_URL)
+                .baseUrl(ThirdAppInfo.WX_API_URL)
                 .addConverterFactory(GsonConverterFactory.create(g))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 //.addCallAdapterFactory(new LiveDataCallAdapterFactory())
@@ -40,8 +40,8 @@ interface WxRestApi {
             okHttpBuilder.addInterceptor(Interceptor { chain: Interceptor.Chain ->
                 val request = chain.request()
                 val url = request.url.newBuilder()
-                    .addQueryParameter("appid", ThirdAppInfo.WECHAT_APP_ID)
-                    .addQueryParameter("secret", ThirdAppInfo.WECHAT_APP_SECRET)
+                    .addQueryParameter("appid", ThirdAppInfo.WX_APP_ID)
+                    .addQueryParameter("secret", ThirdAppInfo.WX_APP_SECRET)
                     .build()
                 chain.proceed(request.newBuilder().url(url).build())
             })

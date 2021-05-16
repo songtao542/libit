@@ -88,7 +88,7 @@ open class WxAuthViewModel @Inject constructor(
             val grantType = "authorization_code"
             // 异步调用 rest api 获取 access token
             val accessToken = withContext(Dispatchers.Default) {
-                wxRestApi.getAccessToken(ThirdAppInfo.WECHAT_APP_ID, ThirdAppInfo.WECHAT_APP_SECRET, code, grantType)
+                wxRestApi.getAccessToken(ThirdAppInfo.WX_APP_ID, ThirdAppInfo.WX_APP_SECRET, code, grantType)
             }
             val openid = accessToken?.openid
             val token = accessToken?.accessToken

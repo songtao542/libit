@@ -3,15 +3,27 @@ package com.liabit.third
 interface WeiboInfoProvider {
     val appKey: String
     val appSecret: String
-    val apiUrl: String
-    val redirectUrl: String
-    val scope: String
+
+    fun getApiUrl(): String {
+        return Weibo.BASE_URL
+    }
+
+    fun getRedirectUrl(): String {
+        return Weibo.REDIRECT_URL
+    }
+
+    fun getScope(): String {
+        return Weibo.SCOPE
+    }
 }
 
 interface WechatInfoProvider {
     val appId: String
     val appSecret: String
-    val apiUrl: String
+
+    fun getApiUrl(): String {
+        return Wechat.BASE_URL
+    }
 }
 
 interface TencentInfoProvider {
@@ -22,9 +34,18 @@ interface TencentInfoProvider {
 interface ThirdAppInfoProvider {
     val weiboAppKey: String
     val weiboAppSecret: String
-    val weiboApiUrl: String
-    val weiboRedirectUrl: String
-    val weiboScope: String
+
+    fun getWeiboApiUrl(): String {
+        return Weibo.BASE_URL
+    }
+
+    fun getWeiboRedirectUrl(): String {
+        return Weibo.REDIRECT_URL
+    }
+
+    fun getWeiboScope(): String {
+        return Weibo.SCOPE
+    }
 
     val wechatAppId: String
     val wechatAppSecret: String
@@ -36,39 +57,39 @@ interface ThirdAppInfoProvider {
 
 object ThirdAppInfo {
 
-    private var mTencentInfoProvider: TencentInfoProvider? = null
-    private var mWeiboInfoProvider: WeiboInfoProvider? = null
-    private var mWechatInfoProvider: WechatInfoProvider? = null
-    private var mAppInfoProvider: ThirdAppInfoProvider? = null
+    private var mTcProvider: TencentInfoProvider? = null
+    private var mWbProvider: WeiboInfoProvider? = null
+    private var mWxProvider: WechatInfoProvider? = null
+    private var mInfoProvider: ThirdAppInfoProvider? = null
 
     fun setTencentInfoProvider(provider: TencentInfoProvider) {
-        mTencentInfoProvider = provider
+        mTcProvider = provider
     }
 
     fun setWeiboInfoProvider(provider: WeiboInfoProvider) {
-        mWeiboInfoProvider = provider
+        mWbProvider = provider
     }
 
     fun setWechatInfoProvider(provider: WechatInfoProvider) {
-        mWechatInfoProvider = provider
+        mWxProvider = provider
     }
 
     fun setThirdAppInfoProvider(provider: ThirdAppInfoProvider) {
-        mAppInfoProvider = provider
+        mInfoProvider = provider
     }
 
-    val WEIBO_APP_KEY: String get() = mWeiboInfoProvider?.appKey ?: mAppInfoProvider?.weiboAppKey ?: ""
-    val WEIBO_APP_SECRET: String get() = mWeiboInfoProvider?.appSecret ?: mAppInfoProvider?.weiboAppSecret ?: ""
-    val WEIBO_API_URL: String get() = mWeiboInfoProvider?.apiUrl ?: mAppInfoProvider?.weiboApiUrl ?: Weibo.BASE_URL
-    val WEIBO_REDIRECT_URL: String get() = mWeiboInfoProvider?.redirectUrl ?: mAppInfoProvider?.weiboRedirectUrl ?: ""
-    val WEIBO_SCOPE: String get() = mWeiboInfoProvider?.scope ?: mAppInfoProvider?.weiboScope ?: ""
+    val WEIBO_APP_KEY: String get() = mWbProvider?.appKey ?: mInfoProvider?.weiboAppKey ?: ""
+    val WEIBO_APP_SECRET: String get() = mWbProvider?.appSecret ?: mInfoProvider?.weiboAppSecret ?: ""
+    val WEIBO_SCOPE: String get() = mWbProvider?.getScope() ?: mInfoProvider?.getWeiboScope() ?: Weibo.SCOPE
+    val WEIBO_API_URL: String get() = mWbProvider?.getApiUrl() ?: mInfoProvider?.getWeiboApiUrl() ?: Weibo.BASE_URL
+    val WEIBO_REDIRECT_URL: String get() = mWbProvider?.getRedirectUrl() ?: mInfoProvider?.getWeiboRedirectUrl() ?: Weibo.REDIRECT_URL
 
-    val WECHAT_APP_ID: String get() = mWechatInfoProvider?.appId ?: mAppInfoProvider?.wechatAppId ?: ""
-    val WECHAT_APP_SECRET: String get() = mWechatInfoProvider?.appSecret ?: mAppInfoProvider?.wechatAppSecret ?: ""
-    val WECHAT_API_URL: String get() = mWechatInfoProvider?.apiUrl ?: mAppInfoProvider?.wechatApiUrl ?: Wechat.BASE_URL
+    val WX_APP_ID: String get() = mWxProvider?.appId ?: mInfoProvider?.wechatAppId ?: ""
+    val WX_APP_SECRET: String get() = mWxProvider?.appSecret ?: mInfoProvider?.wechatAppSecret ?: ""
+    val WX_API_URL: String get() = mWxProvider?.getApiUrl() ?: mInfoProvider?.wechatApiUrl ?: Wechat.BASE_URL
 
-    val TENCENT_APP_ID: String get() = mTencentInfoProvider?.appId ?: mAppInfoProvider?.tencentAppId ?: ""
-    val TENCENT_APP_KEY: String get() = mTencentInfoProvider?.appKey ?: mAppInfoProvider?.tencentAppKey ?: ""
+    val TENCENT_APP_ID: String get() = mTcProvider?.appId ?: mInfoProvider?.tencentAppId ?: ""
+    val TENCENT_APP_KEY: String get() = mTcProvider?.appKey ?: mInfoProvider?.tencentAppKey ?: ""
 
 }
 

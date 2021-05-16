@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets
 class GsonConverterFactory private constructor(
     private val type: Int,
     private val gson: Gson,
-    private val errorJson: String
+    private val errorResponseBodyProvider: (exception: Throwable) -> String
 ) : Converter.Factory() {
 
     companion object {
@@ -40,16 +40,25 @@ class GsonConverterFactory private constructor(
          * Create an instance using {@code gson} for conversion. Encoding to JSON and
          * decoding from JSON (when no charset is specified by a header) will use UTF-8.
          */
-        fun create(@ContentType type: Int, gson: Gson, errorJson: String): GsonConverterFactory {
-            return GsonConverterFactory(type, gson, errorJson)
+        fun create(
+            @ContentType type: Int,
+            gson: Gson,
+            errorResponseBodyProvider: (exception: Throwable) -> String
+        ): GsonConverterFactory {
+            return GsonConverterFactory(type, gson, errorResponseBodyProvider)
         }
 
-        fun create(gson: Gson = Gson(), errorJson: String): GsonConverterFactory {
-            return create(JSON, gson, errorJson)
+        fun create(
+            gson: Gson = Gson(),
+            errorResponseBodyProvider: (exception: Throwable) -> String
+        ): GsonConverterFactory {
+            return create(JSON, gson, errorResponseBodyProvider)
         }
 
-        fun create(errorJson: String): GsonConverterFactory {
-            return create(FROM, Gson(), errorJson)
+        fun create(
+            errorResponseBodyProvider: (exception: Throwable) -> String
+        ): GsonConverterFactory {
+            return create(FROM, Gson(), errorResponseBodyProvider)
         }
     }
 
@@ -63,7 +72,7 @@ class GsonConverterFactory private constructor(
         retrofit: Retrofit
     ): Converter<ResponseBody, *> {
         val adapter = gson.getAdapter(TypeToken.get(type))
-        return GsonResponseBodyConverter(gson, adapter, errorJson)
+        return GsonResponseBodyConverter(gson, adapter, errorResponseBodyProvider)
     }
 
     override fun requestBodyConverter(
@@ -118,7 +127,7 @@ internal class GsonRequestBodyConverter<T>(
 internal class GsonResponseBodyConverter<T>(
     private val gson: Gson,
     private val adapter: TypeAdapter<T>,
-    private val errorJson: String
+    private val errorResponseBodyProvider: (exception: Throwable) -> String
 ) : Converter<ResponseBody, T> {
 
     override fun convert(value: ResponseBody): T {
@@ -127,7 +136,7 @@ internal class GsonResponseBodyConverter<T>(
             return adapter.read(jsonReader)
         } catch (e: Throwable) {
             Log.e("GsonConverter", "error: ", e)
-            adapter.fromJson(errorJson)
+            adapter.fromJson(errorResponseBodyProvider.invoke(e))
         } finally {
             try {
                 value.close()

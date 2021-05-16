@@ -1,11 +1,5 @@
-//package com.liabit.third
-//
-////https://openauth.alipaydev.com/oauth2/appToAppAuth.htm?app_id=2016092400585139&redirect_uri=https://api.chunmi69.com/auth/alipay/getUserInfo?state=用户token
-//object Tencent {
-//    const val APP_ID = "1107903594"
-//    const val APP_KEY = "Jzgzv5j0ro5RWVUP"
-//}
-//
+package com.liabit.third
+
 object Wechat {
     /**
      * doc: https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html

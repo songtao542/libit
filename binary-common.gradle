@@ -1,262 +1,262 @@
-if (file(project.projectDir.getAbsolutePath() + File.separator + 'binary-config.gradle').exists()) {
-    apply from: project.projectDir.getAbsolutePath() + File.separator + 'binary-config.gradle'
-}
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-project.ext {
-    domainName = properties.getProperty("domain.name")
-    domainContextUrl = properties.getProperty("domain.context.url")
-    domainArtifactoryRepokey = properties.getProperty("domain.artifactory.repokey")
-    domainArtifactoryUsername = properties.getProperty("domain.artifactory.username")
-    domainArtifactoryPassword = properties.getProperty("domain.artifactory.password")
-    projectGroup = "com." + domainName + "." + PROJ_ARTIFACTID
-    projectVersion = PROJ_VERSION
-
-    if (domainName == "liabit") {
-        //projectVersion = "1.0.0"
-    }
-}
-
-//System.out.println("domainName =================>" + project.ext.domainName)
-//System.out.println("domainContextUrl ===========>" + project.ext.domainContextUrl)
-//System.out.println("domainArtifactoryRepokey ===>" + project.ext.domainArtifactoryRepokey)
-//System.out.println("domainArtifactoryUsername ==>" + project.ext.domainArtifactoryUsername)
-//System.out.println("domainArtifactoryPassword ==>" + project.ext.domainArtifactoryPassword)
-//System.out.println("projectGroup ===============>" + project.ext.projectGroup)
-//System.out.println("projectVersion =============>" + project.ext.projectVersion)
-
-group = projectGroup
-version = projectVersion
-project.archivesBaseName = PROJ_ARTIFACTID
-
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'org.jetbrains.dokka'
-
-dokkaHtml.configure {
-    dokkaSourceSets {
-        named("main") {
-            noAndroidSdkLink.set(false)
-        }
-    }
-}
-
-task generateSourcesJar(type: Jar) {
-    group = 'jar'
-    from android.sourceSets.main.java.srcDirs
-    archiveClassifier.set("sources")
-}
-
-task generateJavadoc(type: Jar, dependsOn: dokkaJavadoc) {
-    group = 'jar'
-    archiveClassifier.set("javadoc")
-    from "$buildDir/dokka"
-}
-
-artifacts {
-    //archives generateJavadoc
-    archives generateSourcesJar
-}
-
-if (domainName == "liabit") {
-    bintray {
-        // Bintray的用户名
-        user = properties.getProperty("bintray.user")
-        // Bintray的ApiKey
-        key = properties.getProperty("bintray.apikey")
-        if (user == null || user.isEmpty()) {
-            user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : BINTRAY_USER
-        }
-        if (key == null || key.isEmpty()) {
-            key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : BINTRAY_KEY
-        }
-
-        def bintrayUserOrg = BINTRAY_USER_ORG
-        if (bintrayUserOrg == null || bintrayUserOrg.isEmpty()) {
-            bintrayUserOrg = properties.getProperty("bintray.user_org")
-        }
-
-        configurations = ['archives']
-
-        dryRun = false
-        publish = true
-
-        pkg {
-            repo = BINTRAY_REPO   //仓库名
-            name = PROJ_NAME
-            userOrg = bintrayUserOrg
-            licenses = ['Apache-2.0']
-            vcsUrl = PROJ_VCSURL
-            websiteUrl = PROJ_WEBSITEURL
-            issueTrackerUrl = PROJ_ISSUETRACKERURL
-            publicDownloadNumbers = true
-            override = true // 覆盖已有版本
-            publish = true // 是否是公开项目
-            version {
-                name = projectVersion
-                desc = PROJ_DESCRIPTION
-                vcsTag = projectVersion
-
-                gpg {
-                    sign = true
-                }
-            }
-        }
-    }
-} else if (domainContextUrl != null && !domainContextUrl.isEmpty()) {
-    //以下内容用于发布SNAPSHOT版本，如果不需要可以移除。
-    //参考自：https://www.jfrog.com/confluence/display/RTF/Gradle+Artifactory+Plugin
-    apply plugin: "com.jfrog.artifactory"
-    artifactory {
-        contextUrl = domainContextUrl
-        resolve {
-            repository {
-                repoKey = 'libs-release'
-            }
-        }
-        publish {
-            repository {
-                repoKey = domainArtifactoryRepokey //The Artifactory repository key to publish to
-                username = domainArtifactoryUsername
-                password = domainArtifactoryPassword
-                maven = true
-            }
-            defaults {
-                //这里的名字和前面bintray.configurations的值一致即可，会将其包含的输出上传到jfrog上去
-                publishConfigs('archives')
-            }
-        }
-    }
-}
-
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            name PROJ_NAME
-            description PROJ_DESCRIPTION
-            url PROJ_WEBSITEURL
-            inceptionYear '2016'
-
-            packaging 'aar'
-            groupId projectGroup
-            artifactId PROJ_ARTIFACTID
-            version projectVersion
-
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
-                }
-            }
-            scm {
-                connection PROJ_VCSURL
-                url PROJ_WEBSITEURL
-            }
-            developers {
-                developer {
-                    id DEVELOPER_ID
-                    name DEVELOPER_NAME
-                    email DEVELOPER_EMAIL
-                }
-            }
-        }
-    }
-}
-
-// 以下代码作用是: 发布 aar 时替换包名
-def replaceAll(File file, String replace, String replacement) {
-    if (file.isDirectory()) {
-        File[] files = file.listFiles()
-        for (File f : files) {
-            replaceAll(f, replace, replacement)
-        }
-    } else if (file.exists()) {
-        if (!file.getAbsolutePath().endsWith("ttf")) {
-            System.out.println("file: " + file)
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))
-            CharArrayWriter caw = new CharArrayWriter()
-            String line
-            while ((line = br.readLine()) != null) {
-                line = line.replaceAll(replace, replacement)
-                caw.write(line)
-                caw.append(System.getProperty("line.separator"))
-            }
-            br.close()
-            FileWriter fw = new FileWriter(file)
-            caw.writeTo(fw)
-            fw.close()
-        }
-    }
-}
-
-def repackageMethod() {
-    File sourceDir = project.projectDir
-    File liabit = new File(sourceDir, "src/main/java/com/liabit")
-    File rename_to = new File(sourceDir, "src/main/java/com/$domainName")
-    if (liabit.exists()) {
-        System.out.println("-------------liabit -> $domainName-------------")
-        System.out.println("liabit   : $liabit")
-        System.out.println("rename_to: $domainName")
-        liabit.renameTo(rename_to)
-    }
-    System.out.println("-------------com.liabit. -> com.$domainName.-------------")
-    String oldStr = "com.liabit."
-    String newStr = "com.$domainName."
-    File main = new File(sourceDir, "src/main/")
-    replaceAll(main, oldStr, newStr)
-}
-
-def repackageBackMethod() {
-    File sourceDir = project.projectDir
-    File your_rename_to = new File(sourceDir, "src/main/java/com/$domainName")
-    File liabit = new File(sourceDir, "src/main/java/com/liabit")
-    if (your_rename_to.exists()) {
-        System.out.println("-------------$domainName -> liabit-------------")
-        System.out.println("rename_to: $domainName")
-        System.out.println("liabit   : $liabit")
-        your_rename_to.renameTo(liabit)
-    }
-    System.out.println("-------------com.$domainName. -> com.liabit.-------------")
-    String newStr = "com.liabit."
-    String oldStr = "com.$domainName."
-    File main = new File(sourceDir, "src/main/")
-    replaceAll(main, oldStr, newStr)
-}
-
-//if (domainName != "liabit") {
-//    tasks.whenTaskAdded { task ->
-//        if (task.name == 'preReleaseBuild') {
-//            task.doFirst {
-//                // 编译之前先 重命名 文件
-//                repackageMethod()
+//if (file(project.projectDir.getAbsolutePath() + File.separator + 'binary-config.gradle').exists()) {
+//    apply from: project.projectDir.getAbsolutePath() + File.separator + 'binary-config.gradle'
+//}
+//
+//Properties properties = new Properties()
+//properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//
+//project.ext {
+//    domainName = properties.getProperty("domain.name")
+//    domainContextUrl = properties.getProperty("domain.context.url")
+//    domainArtifactoryRepokey = properties.getProperty("domain.artifactory.repokey")
+//    domainArtifactoryUsername = properties.getProperty("domain.artifactory.username")
+//    domainArtifactoryPassword = properties.getProperty("domain.artifactory.password")
+//    projectGroup = "com." + domainName + "." + PROJ_ARTIFACTID
+//    projectVersion = PROJ_VERSION
+//
+//    if (domainName == "liabit") {
+//        //projectVersion = "1.0.0"
+//    }
+//}
+//
+////System.out.println("domainName =================>" + project.ext.domainName)
+////System.out.println("domainContextUrl ===========>" + project.ext.domainContextUrl)
+////System.out.println("domainArtifactoryRepokey ===>" + project.ext.domainArtifactoryRepokey)
+////System.out.println("domainArtifactoryUsername ==>" + project.ext.domainArtifactoryUsername)
+////System.out.println("domainArtifactoryPassword ==>" + project.ext.domainArtifactoryPassword)
+////System.out.println("projectGroup ===============>" + project.ext.projectGroup)
+////System.out.println("projectVersion =============>" + project.ext.projectVersion)
+//
+//group = projectGroup
+//version = projectVersion
+//project.archivesBaseName = PROJ_ARTIFACTID
+//
+//apply plugin: 'com.jfrog.bintray'
+//apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'org.jetbrains.dokka'
+//
+//dokkaHtml.configure {
+//    dokkaSourceSets {
+//        named("main") {
+//            noAndroidSdkLink.set(false)
+//        }
+//    }
+//}
+//
+//task generateSourcesJar(type: Jar) {
+//    group = 'jar'
+//    from android.sourceSets.main.java.srcDirs
+//    archiveClassifier.set("sources")
+//}
+//
+//task generateJavadoc(type: Jar, dependsOn: dokkaJavadoc) {
+//    group = 'jar'
+//    archiveClassifier.set("javadoc")
+//    from "$buildDir/dokka"
+//}
+//
+//artifacts {
+//    //archives generateJavadoc
+//    archives generateSourcesJar
+//}
+//
+//if (domainName == "liabit") {
+//    bintray {
+//        // Bintray的用户名
+//        user = properties.getProperty("bintray.user")
+//        // Bintray的ApiKey
+//        key = properties.getProperty("bintray.apikey")
+//        if (user == null || user.isEmpty()) {
+//            user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : BINTRAY_USER
+//        }
+//        if (key == null || key.isEmpty()) {
+//            key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : BINTRAY_KEY
+//        }
+//
+//        def bintrayUserOrg = BINTRAY_USER_ORG
+//        if (bintrayUserOrg == null || bintrayUserOrg.isEmpty()) {
+//            bintrayUserOrg = properties.getProperty("bintray.user_org")
+//        }
+//
+//        configurations = ['archives']
+//
+//        dryRun = false
+//        publish = true
+//
+//        pkg {
+//            repo = BINTRAY_REPO   //仓库名
+//            name = PROJ_NAME
+//            userOrg = bintrayUserOrg
+//            licenses = ['Apache-2.0']
+//            vcsUrl = PROJ_VCSURL
+//            websiteUrl = PROJ_WEBSITEURL
+//            issueTrackerUrl = PROJ_ISSUETRACKERURL
+//            publicDownloadNumbers = true
+//            override = true // 覆盖已有版本
+//            publish = true // 是否是公开项目
+//            version {
+//                name = projectVersion
+//                desc = PROJ_DESCRIPTION
+//                vcsTag = projectVersion
+//
+//                gpg {
+//                    sign = true
+//                }
 //            }
 //        }
 //    }
-//
-//    task repackage(dependsOn: 'assembleRelease') {
-//        doLast {
-//            // 编译打包完成后 再将文件名改回去
-//            repackageBackMethod()
+//} else if (domainContextUrl != null && !domainContextUrl.isEmpty()) {
+//    //以下内容用于发布SNAPSHOT版本，如果不需要可以移除。
+//    //参考自：https://www.jfrog.com/confluence/display/RTF/Gradle+Artifactory+Plugin
+//    apply plugin: "com.jfrog.artifactory"
+//    artifactory {
+//        contextUrl = domainContextUrl
+//        resolve {
+//            repository {
+//                repoKey = 'libs-release'
+//            }
 //        }
-//    }
-//
-//    task repackageBack() {
-//        doLast {
-//            repackageBackMethod()
+//        publish {
+//            repository {
+//                repoKey = domainArtifactoryRepokey //The Artifactory repository key to publish to
+//                username = domainArtifactoryUsername
+//                password = domainArtifactoryPassword
+//                maven = true
+//            }
+//            defaults {
+//                //这里的名字和前面bintray.configurations的值一致即可，会将其包含的输出上传到jfrog上去
+//                publishConfigs('archives')
+//            }
 //        }
-//    }
-//
-//    /*tasks.register("repackageBack", {
-//        doLast {
-//            repackageBackMethod()
-//        }
-//    })*/
-//
-//    if (tasks.findByPath("artifactoryPublish") != null) {
-//        // 发布 artifact 之前先将文件名改回去
-//        tasks.artifactoryPublish.dependsOn(repackage)
 //    }
 //}
+//
+//install {
+//    repositories.mavenInstaller {
+//        pom.project {
+//            name PROJ_NAME
+//            description PROJ_DESCRIPTION
+//            url PROJ_WEBSITEURL
+//            inceptionYear '2016'
+//
+//            packaging 'aar'
+//            groupId projectGroup
+//            artifactId PROJ_ARTIFACTID
+//            version projectVersion
+//
+//            licenses {
+//                license {
+//                    name 'The Apache Software License, Version 2.0'
+//                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                    distribution 'repo'
+//                }
+//            }
+//            scm {
+//                connection PROJ_VCSURL
+//                url PROJ_WEBSITEURL
+//            }
+//            developers {
+//                developer {
+//                    id DEVELOPER_ID
+//                    name DEVELOPER_NAME
+//                    email DEVELOPER_EMAIL
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//// 以下代码作用是: 发布 aar 时替换包名
+//def replaceAll(File file, String replace, String replacement) {
+//    if (file.isDirectory()) {
+//        File[] files = file.listFiles()
+//        for (File f : files) {
+//            replaceAll(f, replace, replacement)
+//        }
+//    } else if (file.exists()) {
+//        if (!file.getAbsolutePath().endsWith("ttf")) {
+//            System.out.println("file: " + file)
+//            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))
+//            CharArrayWriter caw = new CharArrayWriter()
+//            String line
+//            while ((line = br.readLine()) != null) {
+//                line = line.replaceAll(replace, replacement)
+//                caw.write(line)
+//                caw.append(System.getProperty("line.separator"))
+//            }
+//            br.close()
+//            FileWriter fw = new FileWriter(file)
+//            caw.writeTo(fw)
+//            fw.close()
+//        }
+//    }
+//}
+//
+//def repackageMethod() {
+//    File sourceDir = project.projectDir
+//    File liabit = new File(sourceDir, "src/main/java/com/liabit")
+//    File rename_to = new File(sourceDir, "src/main/java/com/$domainName")
+//    if (liabit.exists()) {
+//        System.out.println("-------------liabit -> $domainName-------------")
+//        System.out.println("liabit   : $liabit")
+//        System.out.println("rename_to: $domainName")
+//        liabit.renameTo(rename_to)
+//    }
+//    System.out.println("-------------com.liabit. -> com.$domainName.-------------")
+//    String oldStr = "com.liabit."
+//    String newStr = "com.$domainName."
+//    File main = new File(sourceDir, "src/main/")
+//    replaceAll(main, oldStr, newStr)
+//}
+//
+//def repackageBackMethod() {
+//    File sourceDir = project.projectDir
+//    File your_rename_to = new File(sourceDir, "src/main/java/com/$domainName")
+//    File liabit = new File(sourceDir, "src/main/java/com/liabit")
+//    if (your_rename_to.exists()) {
+//        System.out.println("-------------$domainName -> liabit-------------")
+//        System.out.println("rename_to: $domainName")
+//        System.out.println("liabit   : $liabit")
+//        your_rename_to.renameTo(liabit)
+//    }
+//    System.out.println("-------------com.$domainName. -> com.liabit.-------------")
+//    String newStr = "com.liabit."
+//    String oldStr = "com.$domainName."
+//    File main = new File(sourceDir, "src/main/")
+//    replaceAll(main, oldStr, newStr)
+//}
+//
+////if (domainName != "liabit") {
+////    tasks.whenTaskAdded { task ->
+////        if (task.name == 'preReleaseBuild') {
+////            task.doFirst {
+////                // 编译之前先 重命名 文件
+////                repackageMethod()
+////            }
+////        }
+////    }
+////
+////    task repackage(dependsOn: 'assembleRelease') {
+////        doLast {
+////            // 编译打包完成后 再将文件名改回去
+////            repackageBackMethod()
+////        }
+////    }
+////
+////    task repackageBack() {
+////        doLast {
+////            repackageBackMethod()
+////        }
+////    }
+////
+////    /*tasks.register("repackageBack", {
+////        doLast {
+////            repackageBackMethod()
+////        }
+////    })*/
+////
+////    if (tasks.findByPath("artifactoryPublish") != null) {
+////        // 发布 artifact 之前先将文件名改回去
+////        tasks.artifactoryPublish.dependsOn(repackage)
+////    }
+////}

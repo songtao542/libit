@@ -27,7 +27,7 @@ import java.util.List;
  */
 class BuildTool {
 
-    static String[] mergeList = {
+    private static String[] sportMergeList = {
             /*"../wallpaper_cropper/src/main",
             "../wallpaper_cropper_lite/src/main",
             "../color_util/src/main",
@@ -62,7 +62,43 @@ class BuildTool {
             "../third-auth/src/main",
             "../compressor/src/main",
     };
+    private static String[] themeStoreMergeList = {
+            /*"../wallpaper_cropper/src/main",
+            "../wallpaper_cropper_lite/src/main",
+            "../color_util/src/main",
+            "../settings/src/main",
+            "../gesture/src/main",
+            "../swipeback/src/main",
+            "../screenrecord/src/main",
+            "../screencapture/src/main",
+            "../location_picker/src/main",
+            "../tablayout/src/main",
+            "../util/src/main",
+            "../addsub/src/main",
+            "../photoview/src/main",
+            "../picker_integrate/src/main",
+            "../citypicker/src/main",
+            "../picker/src/main",
+            "../numberpicker/src/main",
+            "../tagview/src/main",
+            "../filterlayout/src/main",
+            "../timerview/src/main",
+            "../compressor/src/main",
+            "../third-auth/src/main",
+            "../shimmer/src/main",*/
+            "../autoclear/src/main",
+            "../dialog/src/main",
+            "../viewbinding/src/main",
+            "../recyclerview/src/main",
+            "../popup/src/main",
+            "../widget/src/main",
+            "../ext/src/main",
+            "../livedata-ktx/src/main",
+            "../injectable-viewmodel/src/main",
+            "../base/src/main",
+    };
 
+    private static String[] mergeList = themeStoreMergeList;
 
     public static void main(String[] args) throws DocumentException, IOException {
         String path = BuildTool.class.getResource("").getFile();

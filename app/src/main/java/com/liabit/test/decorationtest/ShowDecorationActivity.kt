@@ -2,6 +2,7 @@ package com.liabit.test.decorationtest
 
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -12,9 +13,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.liabit.recyclerview.decoration.SpaceDecoration
 import com.liabit.extension.dp
 import com.liabit.test.R
-import com.liabit.test.databinding.ActivityFilterTestBinding
-import com.liabit.test.databinding.ActivityRecyclerViewDecorationBinding
-import com.liabit.viewbinding.inflate
 import kotlin.random.Random
 
 class ShowDecorationActivity : AppCompatActivity() {
@@ -39,9 +37,11 @@ class ShowDecorationActivity : AppCompatActivity() {
         when (type) {
             "horizontalLinear" -> {
                 title = "Horizontal LinearLayoutManager"
-                recyclerView.layoutManager = LinearLayoutManager(this,
-                        RecyclerView.HORIZONTAL,
-                        false)
+                recyclerView.layoutManager = LinearLayoutManager(
+                    this,
+                    RecyclerView.HORIZONTAL,
+                    false
+                )
             }
             "verticalLinear" -> {
                 title = "Vertical LinearLayoutManager"
@@ -49,9 +49,11 @@ class ShowDecorationActivity : AppCompatActivity() {
             }
             "horizontalGrid" -> {
                 title = "Horizontal GridLayoutManager"
-                recyclerView.layoutManager = GridLayoutManager(this, 3,
-                        RecyclerView.HORIZONTAL,
-                        false).apply {
+                recyclerView.layoutManager = GridLayoutManager(
+                    this, 3,
+                    RecyclerView.HORIZONTAL,
+                    false
+                ).apply {
                     spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                         override fun getSpanSize(position: Int): Int {
                             return when (position) {
@@ -69,38 +71,42 @@ class ShowDecorationActivity : AppCompatActivity() {
             "verticalGrid" -> {
                 title = "Vertical GridLayoutManager"
                 recyclerView.layoutManager = GridLayoutManager(this, 3).apply {
-                    spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                        override fun getSpanSize(position: Int): Int {
-                            return when (position) {
-                                0 -> 3
-                                1 -> 1
-                                2 -> 2
-                                3 -> 1
-                                6 -> 3
-                                else -> 1
-                            }
-                        }
-                    }
+//                    spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+//                        override fun getSpanSize(position: Int): Int {
+//                            return when (position) {
+//                                0 -> 3
+//                                1 -> 1
+//                                2 -> 2
+//                                3 -> 1
+//                                6 -> 3
+//                                else -> 1
+//                            }
+//                        }
+//                    }
                 }
             }
             "horizontalStaggered" -> {
                 title = "Horizontal StaggeredGridLayoutManager"
                 recyclerView.layoutManager = StaggeredGridLayoutManager(
-                        3,
-                        RecyclerView.HORIZONTAL)
+                    3,
+                    RecyclerView.HORIZONTAL
+                )
             }
             "verticalStaggered" -> {
                 title = "Vertical StaggeredGridLayoutManager"
                 recyclerView.layoutManager = StaggeredGridLayoutManager(
-                        3,
-                        RecyclerView.VERTICAL)
+                    3,
+                    RecyclerView.VERTICAL
+                )
             }
         }
 
         val space = 10.dp(this)
-        recyclerView.addItemDecoration(SpaceDecoration(space,
-                SpaceDecoration.ALL or SpaceDecoration.IGNORE_CROSS_AXIS_START, 3f).apply {
-            setDrawable(ColorDrawable(0xff888888.toInt()))
+        recyclerView.addItemDecoration(SpaceDecoration(
+            space,
+            SpaceDecoration.ALL or SpaceDecoration.IGNORE_CROSS_AXIS_START, 3f
+        ).apply {
+            setDividerDrawable(ColorDrawable(0xff888888.toInt()))
         })
         val isGrid = type.contains("Grid")
         val isStaggered = type.contains("Staggered")
@@ -121,9 +127,11 @@ class ShowDecorationActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    class RAdapter(private val isVertical: Boolean,
-                   private val isGrid: Boolean,
-                   private val isStaggered: Boolean) : RecyclerView.Adapter<RAdapter.Holder>() {
+    class RAdapter(
+        private val isVertical: Boolean,
+        private val isGrid: Boolean,
+        private val isStaggered: Boolean
+    ) : RecyclerView.Adapter<RAdapter.Holder>() {
         private val random = Random(System.currentTimeMillis())
 
         private var data = generateData()
@@ -184,6 +192,10 @@ class ShowDecorationActivity : AppCompatActivity() {
         class Holder(view: View) : RecyclerView.ViewHolder(view) {
             fun setData(position: Int) {
                 itemView.findViewById<TextView>(R.id.textView).text = "小猫咪咪$position"
+                itemView.viewTreeObserver.addOnPreDrawListener {
+                    Log.d("TTTT", "item width: ${itemView.width} - ${itemView.height}")
+                    true
+                }
             }
         }
 

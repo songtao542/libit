@@ -75,7 +75,6 @@ class BuildTool {
             "../tablayout/src/main",
             "../util/src/main",
             "../addsub/src/main",
-            "../photoview/src/main",
             "../picker_integrate/src/main",
             "../citypicker/src/main",
             "../picker/src/main",
@@ -86,6 +85,7 @@ class BuildTool {
             "../compressor/src/main",
             "../third-auth/src/main",
             "../shimmer/src/main",*/
+            "../photoview/src/main",
             "../autoclear/src/main",
             "../dialog/src/main",
             "../viewbinding/src/main",

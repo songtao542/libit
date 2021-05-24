@@ -1,6 +1,5 @@
 package com.liabit.recyclerview.decoration
 
-import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
@@ -23,10 +22,10 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
  */
 @Suppress("unused")
 class SpaceDecoration(
-        private val space: Float,
-        private val spaceDirection: Int,
-        private val divider: Float,
-        @ColorInt dividerColor: Int
+    private val space: Float,
+    private val spaceDirection: Int,
+    private val divider: Float,
+    @ColorInt dividerColor: Int
 ) : RecyclerView.ItemDecoration() {
 
     private var mDrawable: Drawable? = null
@@ -52,9 +51,6 @@ class SpaceDecoration(
          * 只考虑横向分割线
          */
         const val ONLY_HORIZONTAL = 0x000001
-        val i: Intent = Intent().apply {
-
-        }
 
         /**
          * 只考虑纵向分割线
@@ -86,14 +82,13 @@ class SpaceDecoration(
         mDrawable = ColorDrawable(color)
     }
 
-    fun setDrawable(drawable: Drawable) {
+    fun setDividerDrawable(drawable: Drawable) {
         mDrawable = drawable
     }
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-        val dividerSize = divider.toInt()
         // 间距大小必须大于等于 分割线宽度
-        val spaceSize = if (space < divider) dividerSize else space.toInt()
+        val spaceSize = if (space < divider) divider else space
         when (val layoutManager = parent.layoutManager) {
             is GridLayoutManager -> {
                 val position = (view.layoutParams as RecyclerView.LayoutParams).viewLayoutPosition
@@ -117,7 +112,7 @@ class SpaceDecoration(
                         } else {
                             spaceSize / 2
                         }
-                        outRect.set(left, top, right, bottom)
+                        outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                     } else {
                         val left = if (spanIndex == 0) spaceSize else spaceSize / 2
                         val right = if ((spanIndex + spanSize) == spanCount) spaceSize else spaceSize / 2
@@ -134,9 +129,9 @@ class SpaceDecoration(
                         var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
                         direction = direction and IGNORE_CROSS_AXIS_END.inv()
                         when (direction) {
-                            ONLY_VERTICAL -> outRect.set(left, 0, right, 0)
-                            ONLY_HORIZONTAL -> outRect.set(0, top, 0, bottom)
-                            else -> outRect.set(left, top, right, bottom)
+                            ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
+                            ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
+                            else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                         }
                     }
                 } else {
@@ -154,7 +149,7 @@ class SpaceDecoration(
                         }
                         val top = spanIndex % spanCount * (spaceSize - eh)
                         val bottom = if ((spanIndex + spanSize) == spanCount) 0 else eh - top
-                        outRect.set(left, top, right, bottom)
+                        outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                     } else {
                         val left = if (spanGroupIndex == 0) {
                             if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
@@ -171,9 +166,9 @@ class SpaceDecoration(
                         var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
                         direction = direction and IGNORE_CROSS_AXIS_END.inv()
                         when (direction) {
-                            ONLY_VERTICAL -> outRect.set(left, 0, right, 0)
-                            ONLY_HORIZONTAL -> outRect.set(0, top, 0, bottom)
-                            else -> outRect.set(left, top, right, bottom)
+                            ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
+                            ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
+                            else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                         }
                     }
                 }
@@ -198,7 +193,7 @@ class SpaceDecoration(
                         } else {
                             spaceSize / 2
                         }
-                        outRect.set(left, top, right, bottom)
+                        outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                     } else {
                         val left = if (spanIndex == 0) spaceSize else spaceSize / 2
                         val right = if (spanIndex == spanCount - 1) spaceSize else spaceSize / 2
@@ -215,9 +210,9 @@ class SpaceDecoration(
                         var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
                         direction = direction and IGNORE_CROSS_AXIS_END.inv()
                         when (direction) {
-                            ONLY_VERTICAL -> outRect.set(left, 0, right, 0)
-                            ONLY_HORIZONTAL -> outRect.set(0, top, 0, bottom)
-                            else -> outRect.set(left, top, right, bottom)
+                            ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
+                            ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
+                            else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                         }
                     }
                 } else {
@@ -235,7 +230,7 @@ class SpaceDecoration(
                         }
                         val top = spanIndex % spanCount * (spaceSize - eh)
                         val bottom = eh - top
-                        outRect.set(left, top, right, bottom)
+                        outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                     } else {
                         val left = if (position < spanCount) {
                             if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
@@ -252,9 +247,9 @@ class SpaceDecoration(
                         var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
                         direction = direction and IGNORE_CROSS_AXIS_END.inv()
                         when (direction) {
-                            ONLY_VERTICAL -> outRect.set(left, 0, right, 0)
-                            ONLY_HORIZONTAL -> outRect.set(0, top, 0, bottom)
-                            else -> outRect.set(left, top, right, bottom)
+                            ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
+                            ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
+                            else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                         }
                     }
                 }
@@ -275,9 +270,9 @@ class SpaceDecoration(
                     var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
                     direction = direction and IGNORE_CROSS_AXIS_END.inv()
                     when (direction) {
-                        ONLY_VERTICAL -> outRect.set(spaceSize, 0, spaceSize, 0)
-                        ONLY_HORIZONTAL, IGNORE_MAIN_AXIS_EDGE -> outRect.set(0, top, 0, bottom)
-                        else -> outRect.set(spaceSize, top, spaceSize, bottom)
+                        ONLY_VERTICAL -> outRect.set(spaceSize.toInt(), 0, spaceSize.toInt(), 0)
+                        ONLY_HORIZONTAL, IGNORE_MAIN_AXIS_EDGE -> outRect.set(0, top.toInt(), 0, bottom.toInt())
+                        else -> outRect.set(spaceSize.toInt(), top.toInt(), spaceSize.toInt(), bottom.toInt())
                     }
                 } else {
                     val left = if (position == 0) {
@@ -293,9 +288,9 @@ class SpaceDecoration(
                     var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
                     direction = direction and IGNORE_CROSS_AXIS_END.inv()
                     when (direction) {
-                        ONLY_VERTICAL, IGNORE_MAIN_AXIS_EDGE -> outRect.set(left, 0, right, 0)
-                        ONLY_HORIZONTAL -> outRect.set(0, spaceSize, 0, spaceSize)
-                        else -> outRect.set(left, spaceSize, right, spaceSize)
+                        ONLY_VERTICAL, IGNORE_MAIN_AXIS_EDGE -> outRect.set(left.toInt(), 0, right.toInt(), 0)
+                        ONLY_HORIZONTAL -> outRect.set(0, spaceSize.toInt(), 0, spaceSize.toInt())
+                        else -> outRect.set(left.toInt(), spaceSize.toInt(), right.toInt(), spaceSize.toInt())
                     }
                 }
             }
@@ -311,8 +306,6 @@ class SpaceDecoration(
         if (layoutManager.childCount == 0) {
             return
         }
-        val spaceSize = space.toInt()
-        val dividerSize = divider.toInt()
         var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
         direction = direction and IGNORE_CROSS_AXIS_END.inv()
         direction = direction and IGNORE_MAIN_AXIS_EDGE.inv()
@@ -336,23 +329,23 @@ class SpaceDecoration(
                             // 绘制横向分割线
                             val left = 0
                             val right = parent.width
-                            val top = (child.top - spaceSize / 2) - dividerSize / 2
-                            val bottom = top + dividerSize
-                            drawable.setBounds(left, top, right, bottom)
+                            val top = (child.top - space / 2) - divider / 2
+                            val bottom = top + divider
+                            drawable.setBounds(left, top.toInt(), right, bottom.toInt())
                             drawable.draw(c)
                         }
                         // 不是最后一列，在 child 右边绘制一条竖线，高度为 child.height + space
                         if (direction != ONLY_HORIZONTAL && spanIndex + spanSize != spanCount) {
                             // 绘制竖向分割线
-                            val left = child.right + spaceSize / 2 - dividerSize / 2
-                            val right = left + dividerSize
-                            val top = if (!isFirstRow) child.top - spaceSize / 2 else child.top
+                            val left = child.right + space / 2 - divider / 2
+                            val right = left + divider
+                            val top = if (!isFirstRow) child.top - space / 2 else child.top
                             val bottom = if (spanGroupIndex == lastGroupIndex) {
-                                child.bottom + spaceSize
+                                child.bottom + space
                             } else {
-                                child.bottom + spaceSize / 2
+                                child.bottom + space / 2
                             }
-                            drawable.setBounds(left, top, right, bottom)
+                            drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                             drawable.draw(c)
                         }
                     }
@@ -369,25 +362,25 @@ class SpaceDecoration(
                         // 不是第一列且是第一行, 直接一条竖线从RecyclerView的上边到下边
                         if (direction != ONLY_HORIZONTAL && !isFirstColumn && spanIndex == 0) {
                             // 绘制竖向分割线
-                            val left = child.left - spaceSize / 2 - dividerSize / 2
-                            val right = left + dividerSize
+                            val left = child.left - space / 2 - divider / 2
+                            val right = left + divider
                             val top = 0
                             val bottom = parent.height
-                            drawable.setBounds(left, top, right, bottom)
+                            drawable.setBounds(left.toInt(), top, right.toInt(), bottom)
                             drawable.draw(c)
                         }
                         // 不是最后一行，在 child 顶部绘制一条横线，宽度为 child.width + space
                         if (direction != ONLY_VERTICAL && spanIndex + spanSize != spanCount) {
                             // 绘制横向分割线
-                            val left = if (!isFirstColumn) child.left - spaceSize / 2 else child.left
+                            val left = if (!isFirstColumn) child.left - space / 2 else child.left
                             val right = if (spanGroupIndex == lastGroupIndex) {
-                                child.right + spaceSize
+                                child.right + space
                             } else {
-                                child.right + spaceSize / 2
+                                child.right + space / 2
                             }
-                            val top = child.bottom + spaceSize / 2 - dividerSize / 2
-                            val bottom = top + dividerSize
-                            drawable.setBounds(left, top, right, bottom)
+                            val top = child.bottom + space / 2 - divider / 2
+                            val bottom = top + divider
+                            drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                             drawable.draw(c)
                         }
                     }
@@ -406,52 +399,53 @@ class SpaceDecoration(
                         if (direction != ONLY_VERTICAL && position != layoutManager.itemCount - 1) {
                             // 绘制横向分割线
                             val left = if (child.left < half) {
-                                child.left - params.marginStart - spaceSize
+                                child.left - params.marginStart - space
                             } else {
-                                child.left - params.marginStart - spaceSize / 2 - dividerSize / 2
+                                child.left - params.marginStart - space / 2 - divider / 2
                             }
                             val right = if (child.right > half * (spanCount * 2 - 1)) {
-                                child.right + params.marginEnd + spaceSize
+                                child.right + params.marginEnd + space
                             } else {
-                                child.right + params.marginEnd + spaceSize / 2 + dividerSize / 2
+                                child.right + params.marginEnd + space / 2 + divider / 2
                             }
-                            val top = child.bottom + params.bottomMargin + spaceSize / 2 - dividerSize / 2
-                            val bottom = top + dividerSize
-                            drawable.setBounds(left, top, right, bottom)
+                            val top = child.bottom + params.bottomMargin + space / 2 - divider / 2
+                            val bottom = top + divider
+                            drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                             drawable.draw(c)
                         }
                         // 不是第一列
                         if (direction != ONLY_HORIZONTAL && child.left > parent.width / spanCount / 2) {
                             // 绘制竖向分割线
-                            val left = child.left - params.marginStart - spaceSize / 2 - dividerSize / 2
-                            val right = left + dividerSize
+                            val left = child.left - params.marginStart - space / 2 - divider / 2
+                            val right = left + divider
                             val top = if (position < spanCount) {
-                                child.top - params.topMargin - spaceSize
+                                child.top - params.topMargin - space
                             } else {
-                                child.top - params.topMargin - spaceSize / 2
+                                child.top - params.topMargin - space / 2
                             }
                             val bottom = if (position == layoutManager.itemCount - 1) {
-                                child.bottom + params.bottomMargin + spaceSize
+                                child.bottom + params.bottomMargin + space
                             } else {
-                                child.bottom + params.bottomMargin + spaceSize / 2
+                                child.bottom + params.bottomMargin + space / 2
                             }
-                            drawable.setBounds(left, top, right, bottom)
+                            drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                             drawable.draw(c)
                         }
                         if (direction != ONLY_HORIZONTAL && (position == (layoutManager.itemCount - 1)
-                                        || position == (layoutManager.itemCount - 2)
-                                        || position == (layoutManager.itemCount - 3))
-                                && child.right < (parent.width - parent.width / spanCount / 2)) {
+                                    || position == (layoutManager.itemCount - 2)
+                                    || position == (layoutManager.itemCount - 3))
+                            && child.right < (parent.width - parent.width / spanCount / 2)
+                        ) {
                             // 绘制竖向分割线
-                            val left = child.right + params.marginEnd + spaceSize / 2 - dividerSize / 2
-                            val right = left + dividerSize
-                            val top = child.top - params.topMargin - spaceSize / 2
+                            val left = child.right + params.marginEnd + space / 2 - divider / 2
+                            val right = left + divider
+                            val top = child.top - params.topMargin - space / 2
                             val bottom = if (position == layoutManager.itemCount - 1) {
-                                child.bottom + params.bottomMargin + spaceSize
+                                child.bottom + params.bottomMargin + space
                             } else {
-                                child.bottom + params.bottomMargin + spaceSize / 2
+                                child.bottom + params.bottomMargin + space / 2
                             }
-                            drawable.setBounds(left, top, right, bottom)
+                            drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                             drawable.draw(c)
                         }
                     }
@@ -463,53 +457,54 @@ class SpaceDecoration(
                         // 如果不是最后一个，则在右边绘制分割线
                         if (direction != ONLY_HORIZONTAL && position != layoutManager.itemCount - 1) {
                             // 绘制纵向分割线
-                            val left = child.right + params.marginEnd + spaceSize / 2 - dividerSize / 2
-                            val right = left + dividerSize
+                            val left = child.right + params.marginEnd + space / 2 - divider / 2
+                            val right = left + divider
                             val top = if (child.top < half) {
-                                child.top - params.topMargin - spaceSize
+                                child.top - params.topMargin - space
                             } else {
-                                child.top - params.topMargin - spaceSize / 2 - dividerSize / 2
+                                child.top - params.topMargin - space / 2 - divider / 2
                             }
                             val bottom = if (child.bottom > half * (spanCount * 2 - 1)) {
-                                child.bottom + params.bottomMargin + spaceSize
+                                child.bottom + params.bottomMargin + space
                             } else {
-                                child.bottom + params.bottomMargin + spaceSize / 2 + dividerSize / 2
+                                child.bottom + params.bottomMargin + space / 2 + divider / 2
                             }
-                            drawable.setBounds(left, top, right, bottom)
+                            drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                             drawable.draw(c)
                         }
                         // 不是最后一行
                         if (direction != ONLY_VERTICAL && child.bottom < parent.height - parent.height / spanCount / 2) {
                             // 绘制横向分割线
                             val left = if (position < spanCount) {
-                                child.left - params.marginStart - spaceSize
+                                child.left - params.marginStart - space
                             } else {
-                                child.left - params.marginStart - spaceSize / 2 - dividerSize / 2
+                                child.left - params.marginStart - space / 2 - divider / 2
                             }
                             val right = if (position == layoutManager.itemCount - 1) {
-                                child.right + params.marginEnd + spaceSize
+                                child.right + params.marginEnd + space
                             } else {
-                                child.right + params.marginEnd + spaceSize / 2 + dividerSize / 2
+                                child.right + params.marginEnd + space / 2 + divider / 2
                             }
-                            val top = child.bottom + params.bottomMargin + spaceSize / 2 - dividerSize / 2
-                            val bottom = top + dividerSize
-                            drawable.setBounds(left, top, right, bottom)
+                            val top = child.bottom + params.bottomMargin + space / 2 - divider / 2
+                            val bottom = top + divider
+                            drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                             drawable.draw(c)
                         }
                         if (direction != ONLY_VERTICAL && (position == (layoutManager.itemCount - 1)
-                                        || position == (layoutManager.itemCount - 2)
-                                        || position == (layoutManager.itemCount - 3))
-                                && child.top > parent.height / spanCount / 2) {
+                                    || position == (layoutManager.itemCount - 2)
+                                    || position == (layoutManager.itemCount - 3))
+                            && child.top > parent.height / spanCount / 2
+                        ) {
                             // 绘制横向分割线
-                            val left = child.left - params.marginStart - spaceSize / 2 - dividerSize / 2
+                            val left = child.left - params.marginStart - space / 2 - divider / 2
                             val right = if (position == layoutManager.itemCount - 1) {
-                                child.right + params.marginEnd + spaceSize
+                                child.right + params.marginEnd + space
                             } else {
-                                child.right + params.marginEnd + spaceSize / 2 + dividerSize / 2
+                                child.right + params.marginEnd + space / 2 + divider / 2
                             }
-                            val top = child.top - params.topMargin - spaceSize / 2 - dividerSize / 2
-                            val bottom = top + dividerSize
-                            drawable.setBounds(left, top, right, bottom)
+                            val top = child.top - params.topMargin - space / 2 - divider / 2
+                            val bottom = top + divider
+                            drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                             drawable.draw(c)
                         }
                     }
@@ -524,9 +519,9 @@ class SpaceDecoration(
                             val params = child.layoutParams as RecyclerView.LayoutParams
                             val left = 0
                             val right = parent.width
-                            val top = child.bottom + params.bottomMargin + spaceSize / 2 - dividerSize / 2
-                            val bottom = top + dividerSize
-                            drawable.setBounds(left, top, right, bottom)
+                            val top = child.bottom + params.bottomMargin + space / 2 - divider / 2
+                            val bottom = top + divider
+                            drawable.setBounds(left, top.toInt(), right, bottom.toInt())
                             drawable.draw(c)
                         }
                     }
@@ -535,11 +530,11 @@ class SpaceDecoration(
                         for (i in 0 until childCount - 1) {
                             val child = parent.getChildAt(i)
                             val params = child.layoutParams as RecyclerView.LayoutParams
-                            val left = child.right + params.rightMargin + spaceSize / 2 - dividerSize / 2
-                            val right = left + dividerSize
+                            val left = child.right + params.rightMargin + space / 2 - divider / 2
+                            val right = left + divider
                             val top = 0
                             val bottom = parent.height
-                            drawable.setBounds(left, top, right, bottom)
+                            drawable.setBounds(left.toInt(), top, right.toInt(), bottom)
                             drawable.draw(c)
                         }
                     }

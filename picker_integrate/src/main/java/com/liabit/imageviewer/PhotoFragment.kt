@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.PathInterpolator
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -66,6 +67,8 @@ open class PhotoFragment : Fragment() {
 
     private val mCrossFadeFactory by lazy { DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build() }
 
+    private val mBackInterpolator = PathInterpolator(0f, 0.5f, 0.5f, 1f)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mRootView = inflater.inflate(R.layout.p_fragment_photo_view, container, false)
         mPhotoView = mRootView.findViewById(R.id.photoView)
@@ -94,7 +97,8 @@ open class PhotoFragment : Fragment() {
         mPhotoView.setAlphaChangeListener(object : DraggablePhotoView.OnAlphaChangeListener {
             override fun onAlphaChange(status: DraggablePhotoView.Status?, alpha: Int) {
                 //mRootView.alpha = alpha / 255f
-                (parentFragment as? PhotoViewerFragment)?.view?.setBackgroundColor(Color.argb(alpha, 0, 0, 0))
+                val fAlpha = (mBackInterpolator.getInterpolation(alpha / 255f) * 255f).toInt()
+                (parentFragment as? PhotoViewerFragment)?.view?.setBackgroundColor(Color.argb(fAlpha, 0, 0, 0))
             }
         })
         mPhotoView.setOnTransformListener(object : DraggablePhotoView.OnTransformListener {
@@ -133,10 +137,10 @@ open class PhotoFragment : Fragment() {
                 @Suppress("BlockingMethodInNonBlockingContext")
                 return@withContext try {
                     Glide.with(this@PhotoFragment)
-                            .downloadOnly()
-                            .load(uri)
-                            .submit()
-                            .get()
+                        .downloadOnly()
+                        .load(uri)
+                        .submit()
+                        .get()
                 } catch (e: Exception) {
                     Log.e("PhotoFragment", "load photo error!", e)
                     null
@@ -145,10 +149,10 @@ open class PhotoFragment : Fragment() {
             if (isActive && file != null && file.exists()) {
                 mPhotoView.isZoomable = "image/gif" != getFileMime(file)
                 Glide.with(this@PhotoFragment)
-                        .load(file)
-                        .apply(RequestOptions().priority(Priority.HIGH).fitCenter())
-                        .transition(withCrossFade(mCrossFadeFactory))
-                        .into(mPhotoView)
+                    .load(file)
+                    .apply(RequestOptions().priority(Priority.HIGH).fitCenter())
+                    .transition(withCrossFade(mCrossFadeFactory))
+                    .into(mPhotoView)
             }
         }
     }

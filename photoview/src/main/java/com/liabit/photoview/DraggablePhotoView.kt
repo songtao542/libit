@@ -116,7 +116,7 @@ class DraggablePhotoView : PhotoView {
             if (animTransform == null) {
                 super.onDraw(canvas)
             } else {
-                mPaint.alpha = animTransform.alpha
+                mPaint.alpha = 0 //animTransform.alpha
                 canvas.drawPaint(mPaint)
                 val saveCount = canvas.saveCount
                 mMatrix.setScale(animTransform.scale, animTransform.scale)
@@ -150,9 +150,9 @@ class DraggablePhotoView : PhotoView {
             initTransformIfNeeded()
         }
         mDownPhoto = false
-        if (mMarkTransform != null) {
-            val startY = mMarkTransform!!.top.toInt()
-            val endY = (mMarkTransform!!.height + mMarkTransform!!.top).toInt()
+        mMarkTransform?.let {
+            val startY = it.top.toInt()
+            val endY = (it.height + it.top).toInt()
             if (mDownY in startY..endY) {
                 mDownPhoto = true
             }
@@ -183,11 +183,11 @@ class DraggablePhotoView : PhotoView {
                 offsetLeftAndRight(offsetX)
                 offsetTopAndBottom(offsetY)
                 val scale = moveScale()
-                val scaleXY = 1 - scale * 0.1f
+                val scaleXY = 1f - scale * 0.1f
                 scaleY = scaleXY
                 scaleX = scaleXY
                 mMoved = true
-                mAlpha = (255 * (1 - scale * 0.5f)).toInt()
+                mAlpha = (255 * (1f - scale * 0.5f)).toInt()
                 invalidate()
                 if (mAlpha < 0) {
                     mAlpha = 0
@@ -495,12 +495,12 @@ class DraggablePhotoView : PhotoView {
     }
 
     private data class Transform(
-            var left: Float = 0f,
-            var top: Float = 0f,
-            var width: Float = 0f,
-            var height: Float = 0f,
-            var alpha: Int = 0,
-            var scale: Float = 0f,
+        var left: Float = 0f,
+        var top: Float = 0f,
+        var width: Float = 0f,
+        var height: Float = 0f,
+        var alpha: Int = 0,
+        var scale: Float = 0f,
     )
 
     /***

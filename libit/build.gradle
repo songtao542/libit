@@ -59,6 +59,7 @@ android {
 
     sourceSets {
         main {
+            jniLibs.srcDirs = ['./src/main/jniLibs']
             java.srcDirs = [
                     './src/main/addsub', // addsub
                     './src/main/tagview', // tagview
@@ -82,6 +83,9 @@ android {
                     './src/main/base', // base
                     './src/main/third-auth', // third-auth
                     './src/main/compressor', // compressor
+                    './src/main/photopicker', // photopicker
+                    './src/main/matisse', // matisse
+                    './src/main/matisse_crop', // matisse_crop
             ]
             res.srcDirs = [
                     './src/main/res', // viewbinding
@@ -102,7 +106,10 @@ android {
                     './src/main/picker_integrate_res', // picker_integrate
                     './src/main/screenrecord_res', // screenrecord
                     './src/main/base_res', // base
-                    './src/main/third-auth_res', // base
+                    './src/main/third-auth_res', // third-auth
+                    './src/main/photopicker_res', // photopicker
+                    './src/main/matisse_res', // matisse
+                    './src/main/matisse_crop_res', // matisse_crop
             ]
             manifest.srcFile './src/main/AndroidManifest.xml'
         }
@@ -110,7 +117,6 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0-alpha04'
 
@@ -202,6 +208,10 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    compileOnly 'it.sephiroth.android.library.imagezoom:library:1.0.4'
+    compileOnly 'com.github.bumptech.glide:glide:4.12.0'
+    compileOnly 'com.squareup.picasso:picasso:2.71828'
 
     //compileOnly files('../common_libs/open_sdk_r6019_lite.jar')
     compileOnly files('../common_libs/open_sdk_3.5.4.11_r3f56456_lite.jar')

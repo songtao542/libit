@@ -38,7 +38,7 @@
         <item name="android:windowExitAnimation">@anim/filter_anim_top_exit</item>
     </style>
 
-    <style name="PopupWindowAnimation" parent="android:Animation">
+    <style name="PopupWinAnimation" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/filter_popup_enter</item>
         <item name="android:windowExitAnimation">@anim/filter_popup_exit</item>
     </style>

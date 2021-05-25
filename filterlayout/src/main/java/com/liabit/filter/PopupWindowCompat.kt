@@ -117,7 +117,7 @@ internal class PopupWindowCompat(context: Context) {
             it.setBackgroundDrawable(if (mShowMask) ColorDrawable(0x88000000.toInt()) else ColorDrawable(Color.WHITE))
             it.isOutsideTouchable = true
             it.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-            it.animationStyle = R.style.PopupWindowAnimation
+            it.animationStyle = R.style.PopupWinAnimation
             it.elevation = if (mShowMask) 0f else dp2px(20).toFloat()
             it.setOnDismissListener {
                 mOnDismissListener?.onDismiss()
@@ -229,10 +229,10 @@ internal class PopupWindowCompat(context: Context) {
     private fun createContentAnimation(): Animation {
         val animation = AnimationSet(false)
         val translate = TranslateAnimation(
-                Animation.RELATIVE_TO_SELF, 0f,
-                Animation.RELATIVE_TO_SELF, 0f,
-                Animation.RELATIVE_TO_SELF, -1f,
-                Animation.RELATIVE_TO_SELF, 0f
+            Animation.RELATIVE_TO_SELF, 0f,
+            Animation.RELATIVE_TO_SELF, 0f,
+            Animation.RELATIVE_TO_SELF, -1f,
+            Animation.RELATIVE_TO_SELF, 0f
         )
         translate.interpolator = AccelerateDecelerateInterpolator()
         val alpha = AlphaAnimation(0f, 1f)
@@ -243,8 +243,9 @@ internal class PopupWindowCompat(context: Context) {
     }
 
     class PopupExitTransition(
-            private val popupWindow: PopupWindow,
-            private val view: View) : Fade(), Transition.TransitionListener {
+        private val popupWindow: PopupWindow,
+        private val view: View
+    ) : Fade(), Transition.TransitionListener {
 
         override fun onTransitionStart(transition: Transition?) {
             AnimatorSet().apply {

@@ -44,6 +44,9 @@ class BuildTool {
             "../autoclear/src/main",
             "../photoview/src/main",
             "../picker_integrate/src/main",
+            "../photopicker/src/main",
+            "../matisse/src/main",
+            "../matisse/src_crop/main",
             "../citypicker/src/main",
             "../picker/src/main",
             "../numberpicker/src/main",
@@ -98,7 +101,7 @@ class BuildTool {
             "../base/src/main",
     };
 
-    private static String[] mergeList = themeStoreMergeList;
+    private static String[] mergeList = sportMergeList; //themeStoreMergeList;//
 
     public static void main(String[] args) throws DocumentException, IOException {
         String path = BuildTool.class.getResource("").getFile();
@@ -122,6 +125,13 @@ class BuildTool {
         }
         FileUtils.cleanDirectory(destDir);
 
+        File jniLibsDir = new File(destDir, "jniLibs");
+        if (!jniLibsDir.exists()) {
+            boolean result = jniLibsDir.mkdirs();
+            System.out.println("Create jni dir " + result);
+        }
+        FileUtils.cleanDirectory(jniLibsDir);
+
         File manifestFile = new File(destDir, "AndroidManifest.xml");
 
         Document manifestXml = DocumentHelper.createDocument();
@@ -139,7 +149,9 @@ class BuildTool {
             File source = new File(rootPath, merge);
             String name = merge.replace("../", "");
             String destName = name.substring(0, name.indexOf("/"));
-
+            if (name.equals("matisse/src_crop/main")) {
+                destName = "matisse_crop";
+            }
             File javaSourceDir = new File(source.getCanonicalFile(), "java");
             File destJavaDir = new File(destDir, destName).getCanonicalFile();
             FileUtils.deleteDirectory(destJavaDir);
@@ -157,6 +169,11 @@ class BuildTool {
             if (!"liabit".equals(dirName)) {
                 // 重命名文件夹
                 renameDir(destJavaDir, "liabit", dirName);
+            }
+
+            File jniSourceDir = new File(source.getCanonicalFile(), "jniLibs");
+            if (jniSourceDir.exists()) {
+                copyJniLibs(jniSourceDir, jniLibsDir);
             }
 
             File resSourceDir = new File(source.getCanonicalFile(), "res");
@@ -187,6 +204,30 @@ class BuildTool {
         }
         saveXml(attrXml, attrFile);
         saveXml(manifestXml, manifestFile);
+    }
+
+    static void copyJniLibs(File jniLibsDir, File destJniLibsDir) {
+        File[] files = jniLibsDir.listFiles();
+        if (files == null) return;
+        for (File file : files) {
+            String fileName = file.getName();
+            File destJniDir = new File(destJniLibsDir, fileName);
+            if (!destJniDir.exists()) {
+                boolean result = destJniDir.mkdirs();
+                System.out.println("create jni dir: " + destJniDir + " : " + result);
+            }
+            File[] soFiles = file.listFiles();
+            if (soFiles != null) {
+                for (File so : soFiles) {
+                    try {
+                        System.out.println("copy " + so + " to " + destJniDir);
+                        FileUtils.copyToDirectory(so, destJniDir);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     static void renameDir(File file, String oldName, String newName) throws IOException {
@@ -286,7 +327,7 @@ class BuildTool {
                 String lineSeparator = System.getProperty("line.separator");
                 while ((line = br.readLine()) != null) {
                     // 如果是 BuildConfig 的行
-                    if (line.matches(replace)) {
+                    if (line.matches(replace) || line.matches("import com\\.zhihu\\..*\\.BuildConfig")) {
                         caw.write(importBuildConfig);
                     } else {
                         caw.write(line);
@@ -331,6 +372,16 @@ class BuildTool {
                         // 如果是 import R 的行，则直接跳过
                         if (line.matches(replace)) {
                             continue;
+                        }
+                        //"import com\\.liabit\\..*\\.R"
+                        if (line.contains("matisse")) {
+                            boolean cc = line.matches("import com\\.zhihu\\.matisse\\.R");
+                            System.out.println("line:   " + line + "  cc: " + cc);
+                        }
+                        if (line.contains("import") && line.contains("com.zhihu.matisse.R")) {
+                            continue;
+                        } else if (line.contains("com.zhihu.matisse.R")) {
+                            line = line.replace("com.zhihu.matisse.R", "com.liabit.R");
                         }
                         caw.write(line);
                     }

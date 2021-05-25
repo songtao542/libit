@@ -1,0 +1,26 @@
+project.ext {
+    PROJ_NAME = "imagepicker"
+
+    PROJ_GROUP = "com.liabit.imagepicker"
+    PROJ_ARTIFACTID = "imagepicker"
+    PROJ_VERSION = "1.0.0"
+
+    BINTRAY_USER = "songtao"
+    BINTRAY_KEY = "fa29ad597feb0fcd2d1a63ce8044b266f028183c"
+    BINTRAY_REPO = "imagepicker"
+    BINTRAY_USER_ORG = "liabit"
+
+    CONTEXT_URL = ""
+    ARTIFACTORY_REPOKEY = ""
+    ARTIFACTORY_USERNAME = ""
+    ARTIFACTORY_PASSWORD = ""
+
+    PROJ_WEBSITEURL = "https://github.com/songtao542/Matisse"
+    PROJ_ISSUETRACKERURL = ""
+    PROJ_VCSURL = "https://github.com/songtao542/Matisse.git"
+    PROJ_DESCRIPTION = "The Android ImagePicker library."
+
+    DEVELOPER_ID = "songtao"
+    DEVELOPER_NAME = "songtao"
+    DEVELOPER_EMAIL = "songtao542@gmail.com"
+}

@@ -18,7 +18,9 @@
       <module name="libit.libit" target="11" />
       <module name="libit.livedata-ktx" target="11" />
       <module name="libit.location_picker" target="11" />
+      <module name="libit.matisse" target="11" />
       <module name="libit.numberpicker" target="11" />
+      <module name="libit.photopicker" target="11" />
       <module name="libit.photoview" target="11" />
       <module name="libit.picker" target="11" />
       <module name="libit.picker_integrate" target="11" />

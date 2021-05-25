@@ -81,7 +81,7 @@
         android:text="AlertDialog"
         android:textAllCaps="false" />
 
-    <com.liabit.integratepicker.FlowLayout
+    <com.liabit.photopicker.FlowLayout
         android:id="@+id/photos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

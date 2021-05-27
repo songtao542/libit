@@ -1,5 +1,6 @@
 package com.liabit.base
 
+import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
 import com.liabit.viewmodel.ApplicationViewModel
@@ -14,6 +15,7 @@ open class BaseActivity<VM : ViewModel, VB : ViewBinding> : BaseVBActivity<VB>()
 
     protected val viewModel by genericViewModels<VM>()
 
+    @CallSuper
     override fun onViewCreated() {
         val vm = viewModel
         if (vm is ApplicationViewModel) {

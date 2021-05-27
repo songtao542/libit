@@ -1,5 +1,6 @@
 package com.liabit.base
 
+import androidx.annotation.CallSuper
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import com.liabit.viewmodel.ApplicationViewModel
@@ -12,6 +13,7 @@ import com.liabit.viewmodel.genericViewModels
 abstract class BaseVMFragment<VM : ViewModel> : BaseCompatFragment() {
     protected open val viewModel by genericViewModels<VM>()
 
+    @CallSuper
     override fun onViewCreated(activity: FragmentActivity) {
         val vm = viewModel
         if (vm is ApplicationViewModel) {

@@ -16,7 +16,7 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : BaseVBFragment<V
 
     protected open val activityViewModel by genericActivityViewModels<VM>()
 
-    override fun onBeforeBindView() {
+    override fun onViewCreated() {
         observeDialog(viewModel)
         observeDialog(activityViewModel)
     }

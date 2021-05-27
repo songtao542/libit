@@ -1,6 +1,8 @@
 package com.liabit.base
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import androidx.viewbinding.ViewBinding
 import com.liabit.viewbinding.genericBinding
 
@@ -15,20 +17,19 @@ open class BaseVBActivity<VB : ViewBinding> : BaseCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (!onSetContentView()) {
-            setContentView(binding.root)
-        }
-
-        onInitialize(savedInstanceState)
+        val view = onCreateView(LayoutInflater.from(this), savedInstanceState) ?: binding.root
+        setContentView(view)
+        onViewCreated()
+        onViewCreated(savedInstanceState)
     }
 
-    protected open fun onSetContentView(): Boolean {
-        return false
+    protected open fun onCreateView(inflater: LayoutInflater, savedInstanceState: Bundle?): View? {
+        return null
     }
 
-    protected open fun onBeforeInitialize() {
+    protected open fun onViewCreated() {
     }
 
-    protected open fun onInitialize(savedInstanceState: Bundle?) {
+    protected open fun onViewCreated(savedInstanceState: Bundle?) {
     }
 }

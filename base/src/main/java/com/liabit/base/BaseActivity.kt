@@ -14,7 +14,7 @@ open class BaseActivity<VM : ViewModel, VB : ViewBinding> : BaseVBActivity<VB>()
 
     protected val viewModel by genericViewModels<VM>()
 
-    override fun onBeforeInitialize() {
+    override fun onViewCreated() {
         val vm = viewModel
         if (vm is ApplicationViewModel) {
             vm.observeDialog(this) {

@@ -11,7 +11,7 @@ import com.liabit.viewmodel.genericViewModels
 abstract class BaseVMFragment<VM : ViewModel> : BaseCompatFragment() {
     protected open val viewModel by genericViewModels<VM>()
 
-    override fun onBeforeBindView() {
+    override fun onViewCreated() {
         val vm = viewModel
         if (vm is ApplicationViewModel) {
             vm.observeDialog(viewLifecycleOwner) {

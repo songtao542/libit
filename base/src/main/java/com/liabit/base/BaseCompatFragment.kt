@@ -41,11 +41,11 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val activity = activity ?: return
-        onBeforeBindView()
-        onBindView(activity, savedInstanceState)
+        onViewCreated()
+        onViewCreated(activity, savedInstanceState)
     }
 
-    protected open fun onBeforeBindView() {}
+    protected open fun onViewCreated() {}
 
     /**
      *  [onInitialize] 会在 [onCreate] 中回调，建议在此方法中做网络数据初始化，避免每次初始化view都去调用网络接口
@@ -54,10 +54,10 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
     }
 
     /**
-     * [onBindView] 会在 [onViewCreated] 中回调，建议在这里处理view相关的初始化，
+     * [onViewCreated] 会在 [onViewCreated] 中回调，建议在这里处理view相关的初始化，
      * 比如：设置监听器，observe livedata
      */
-    protected open fun onBindView(activity: FragmentActivity, savedInstanceState: Bundle?) {
+    protected open fun onViewCreated(activity: FragmentActivity, savedInstanceState: Bundle?) {
     }
 
     fun post(runnable: Runnable) {

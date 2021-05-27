@@ -41,11 +41,11 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val activity = activity ?: return
-        onViewCreated()
+        onViewCreated(activity)
         onViewCreated(activity, savedInstanceState)
     }
 
-    protected open fun onViewCreated() {}
+    protected open fun onViewCreated(activity: FragmentActivity) {}
 
     /**
      *  [onInitialize] 会在 [onCreate] 中回调，建议在此方法中做网络数据初始化，避免每次初始化view都去调用网络接口

@@ -1,5 +1,6 @@
 package com.liabit.base
 
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
 import com.liabit.viewmodel.ApplicationViewModel
@@ -16,7 +17,7 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : BaseVBFragment<V
 
     protected open val activityViewModel by genericActivityViewModels<VM>()
 
-    override fun onViewCreated() {
+    override fun onViewCreated(activity: FragmentActivity) {
         observeDialog(viewModel)
         observeDialog(activityViewModel)
     }

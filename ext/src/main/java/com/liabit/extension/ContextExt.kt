@@ -2,7 +2,9 @@ package com.liabit.extension
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import android.util.TypedValue
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
@@ -42,4 +44,29 @@ fun Context.color(id: Int): Int {
 
 fun Context.dip(dp: Float): Int {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics).toInt()
+}
+
+fun Context.getVersionCode(): Long {
+    var verCode = -1L
+    try {
+        verCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            packageManager.getPackageInfo(packageName, 0).longVersionCode
+        } else {
+            @Suppress("DEPRECATION")
+            packageManager.getPackageInfo(packageName, 0).versionCode.toLong()
+        }
+    } catch (e: PackageManager.NameNotFoundException) {
+        Log.w(TAG, "getVersionCode error: ", e)
+    }
+    return verCode
+}
+
+fun Context.getVersionName(): String {
+    var verName = ""
+    try {
+        verName = packageManager.getPackageInfo(packageName, 0).versionName
+    } catch (e: PackageManager.NameNotFoundException) {
+        Log.w(TAG, "getVersionName error: ", e)
+    }
+    return verName
 }

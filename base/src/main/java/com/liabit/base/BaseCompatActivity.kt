@@ -18,7 +18,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 @Suppress("MemberVisibilityCanBePrivate")
 open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
 
-    private val mHandler by lazy { Handler(Looper.getMainLooper()) }
+    private val mHandler = Handler(Looper.getMainLooper())
 
     private var mLoadingDialog: LoadingDialog? = null
 

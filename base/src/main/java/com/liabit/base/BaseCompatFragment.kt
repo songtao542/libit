@@ -31,7 +31,7 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
 
     private var mStartShowDialogTime = 0L
     private val mDismissDialogAction by lazy { Runnable { dismissDialog() } }
-    private val mHandler by lazy { Handler(Looper.getMainLooper()) }
+    private val mHandler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

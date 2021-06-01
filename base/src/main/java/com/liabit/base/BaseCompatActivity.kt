@@ -3,6 +3,7 @@ package com.liabit.base
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -33,6 +34,7 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
     /**
      * @param resId 提示信息
      */
+    @MainThread
     override fun showDialog(@StringRes resId: Int, cancellable: Boolean) {
         showDialog(getString(resId), cancellable)
     }
@@ -40,6 +42,7 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
     /**
      * @param msg 提示信息
      */
+    @MainThread
     override fun showDialog(msg: String?, cancellable: Boolean) {
         mStartShowDialogTime = SystemClock.elapsedRealtime()
         mHandler.removeCallbacks(mDismissDialogAction)
@@ -66,10 +69,12 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
         }
     }
 
+    @MainThread
     protected open fun onCreateLoadingDialog(): LoadingDialog {
         return LoadingDialogImpl(this)
     }
 
+    @MainThread
     private fun getLoadingDialog(): LoadingDialog {
         return mLoadingDialog ?: onCreateLoadingDialog().also { mLoadingDialog = it }
     }

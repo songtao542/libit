@@ -6,6 +6,7 @@ import android.os.Looper
 import android.os.SystemClock
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -93,10 +94,12 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
     /**
      * @param resId 提示信息
      */
+    @MainThread
     override fun showDialog(@StringRes resId: Int, cancellable: Boolean) {
         showDialog(getString(resId), cancellable)
     }
 
+    @MainThread
     override fun showDialog(msg: String?, cancellable: Boolean) {
         mStartShowDialogTime = SystemClock.elapsedRealtime()
         mHandler.removeCallbacks(mDismissDialogAction)
@@ -123,11 +126,13 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
         }
     }
 
+    @MainThread
     protected open fun onCreateLoadingDialog(): LoadingDialog? {
         val context = context ?: return null
         return LoadingDialogImpl(context)
     }
 
+    @MainThread
     private fun getLoadingDialog(): LoadingDialog? {
         return mLoadingDialog ?: onCreateLoadingDialog()?.also { mLoadingDialog = it }
     }

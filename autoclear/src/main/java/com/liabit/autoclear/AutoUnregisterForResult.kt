@@ -2,6 +2,7 @@ package com.liabit.autoclear
 
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.app.ActivityOptionsCompat
@@ -36,6 +37,9 @@ class AutoUnregisterForLifecycleOwner<I, O>(
                 this.registerForActivityResult(contract, this)
             }
             is ComponentActivity -> {
+                this.registerForActivityResult(contract, this)
+            }
+            is ActivityResultCaller -> {
                 this.registerForActivityResult(contract, this)
             }
             else -> {

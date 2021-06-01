@@ -32,18 +32,18 @@ class AutoUnregisterForLifecycleOwner<I, O>(
     private var mCallback: WeakReference<ActivityResultCallback<O>>? = null
 
     init {
-        val activityResultLauncher = when (this) {
+        val activityResultLauncher = when (lifecycleOwner) {
             is Fragment -> {
-                this.registerForActivityResult(contract, this)
+                lifecycleOwner.registerForActivityResult(contract, this)
             }
             is ComponentActivity -> {
-                this.registerForActivityResult(contract, this)
+                lifecycleOwner.registerForActivityResult(contract, this)
             }
             is ActivityResultCaller -> {
-                this.registerForActivityResult(contract, this)
+                lifecycleOwner.registerForActivityResult(contract, this)
             }
             else -> {
-                throw IllegalStateException("${this.javaClass.simpleName} not support registerForActivityResult")
+                throw IllegalStateException("${lifecycleOwner.javaClass.simpleName} not support registerForActivityResult")
             }
         }
         mValue = ActivityResultLauncherProxy(activityResultLauncher)

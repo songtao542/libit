@@ -11,7 +11,7 @@ import android.view.KeyEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.liabit.integratepicker.R
+import com.liabit.photopicker.R
 
 class PhotoViewerActivity : AppCompatActivity() {
 
@@ -19,10 +19,10 @@ class PhotoViewerActivity : AppCompatActivity() {
 
         @JvmStatic
         fun start(
-                context: Context,
-                uris: List<Uri>,
-                currentIndex: Int = 0,
-                deletable: Boolean = false,
+            context: Context,
+            uris: List<Uri>,
+            currentIndex: Int = 0,
+            deletable: Boolean = false,
         ) {
             val intent = Intent(context, PhotoViewerActivity::class.java)
             intent.putParcelableArrayListExtra(PhotoViewerFragment.PHOTO_LIST, Photo.fromUriList(uris))
@@ -33,11 +33,11 @@ class PhotoViewerActivity : AppCompatActivity() {
 
         @JvmStatic
         fun startActivityForResult(
-                fragment: Fragment,
-                requestCode: Int,
-                uris: List<Uri>,
-                currentIndex: Int = 0,
-                deletable: Boolean = false,
+            fragment: Fragment,
+            requestCode: Int,
+            uris: List<Uri>,
+            currentIndex: Int = 0,
+            deletable: Boolean = false,
         ) {
             val intent = Intent(fragment.requireContext(), PhotoViewerActivity::class.java)
             intent.putParcelableArrayListExtra(PhotoViewerFragment.PHOTO_LIST, Photo.fromUriList(uris))
@@ -48,11 +48,11 @@ class PhotoViewerActivity : AppCompatActivity() {
 
         @JvmStatic
         fun startActivityForResult(
-                activity: Activity,
-                requestCode: Int,
-                uris: List<Uri>,
-                currentIndex: Int = 0,
-                deletable: Boolean = false,
+            activity: Activity,
+            requestCode: Int,
+            uris: List<Uri>,
+            currentIndex: Int = 0,
+            deletable: Boolean = false,
         ) {
             val intent = Intent(activity, PhotoViewerActivity::class.java)
             intent.putParcelableArrayListExtra(PhotoViewerFragment.PHOTO_LIST, Photo.fromUriList(uris))
@@ -63,10 +63,10 @@ class PhotoViewerActivity : AppCompatActivity() {
 
         @JvmStatic
         fun startPhotoViewer(
-                context: Context,
-                photos: ArrayList<Photo>,
-                currentIndex: Int = 0,
-                deletable: Boolean = false,
+            context: Context,
+            photos: ArrayList<Photo>,
+            currentIndex: Int = 0,
+            deletable: Boolean = false,
         ) {
             val intent = Intent(context, PhotoViewerActivity::class.java)
             intent.putParcelableArrayListExtra(PhotoViewerFragment.PHOTO_LIST, photos)
@@ -77,11 +77,11 @@ class PhotoViewerActivity : AppCompatActivity() {
 
         @JvmStatic
         fun startPhotoViewer(
-                fragment: Fragment,
-                requestCode: Int,
-                photos: ArrayList<Photo>,
-                currentIndex: Int = 0,
-                deletable: Boolean = false,
+            fragment: Fragment,
+            requestCode: Int,
+            photos: ArrayList<Photo>,
+            currentIndex: Int = 0,
+            deletable: Boolean = false,
         ) {
             val intent = Intent(fragment.requireContext(), PhotoViewerActivity::class.java)
             intent.putParcelableArrayListExtra(PhotoViewerFragment.PHOTO_LIST, photos)
@@ -92,11 +92,11 @@ class PhotoViewerActivity : AppCompatActivity() {
 
         @JvmStatic
         fun startPhotoViewer(
-                activity: Activity,
-                requestCode: Int,
-                photos: ArrayList<Photo>,
-                currentIndex: Int = 0,
-                deletable: Boolean = false,
+            activity: Activity,
+            requestCode: Int,
+            photos: ArrayList<Photo>,
+            currentIndex: Int = 0,
+            deletable: Boolean = false,
         ) {
             val intent = Intent(activity, PhotoViewerActivity::class.java)
             intent.putParcelableArrayListExtra(PhotoViewerFragment.PHOTO_LIST, photos)
@@ -114,8 +114,8 @@ class PhotoViewerActivity : AppCompatActivity() {
             val index = intent.getIntExtra(PhotoViewerFragment.INDEX, 0)
             val deletable = intent.getBooleanExtra(PhotoViewerFragment.DELETABLE, false)
             supportFragmentManager.beginTransaction()
-                    .add(android.R.id.content, PhotoViewerFragment.fromPhotos(photos, index, deletable))
-                    .commitAllowingStateLoss()
+                .add(android.R.id.content, PhotoViewerFragment.fromPhotos(photos, index, deletable))
+                .commitAllowingStateLoss()
         }
     }
 
@@ -123,7 +123,7 @@ class PhotoViewerActivity : AppCompatActivity() {
         val flag = window.decorView.systemUiVisibility
         val lightStatus = lightStatusBar ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) != 0)
         val lightNavigation = lightNavigationBar
-                ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR) != 0)
+            ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR) != 0)
         var flags = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE

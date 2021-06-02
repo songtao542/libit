@@ -65,7 +65,7 @@ dependencies {
     //implementation 'com.squareup.retrofit2:converter-scalars:2.0.0-beta4'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.7'
 
     //compileOnly files('../common_libs/open_sdk_r6019_lite.jar')
     compileOnly files('../common_libs/open_sdk_3.5.4.11_r3f56456_lite.jar')

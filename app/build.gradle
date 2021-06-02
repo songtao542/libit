@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.liabit.test"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -68,6 +68,7 @@ dependencies {
     implementation project(':gesture')
     implementation project(':shimmer')
     implementation project(':picker')
+    implementation project(':photopicker')
     implementation project(':filterlayout')
     implementation project(':addsub')
     implementation project(':popup')
@@ -145,7 +146,7 @@ dependencies {
     implementation "androidx.room:room-ktx:2.2.5"
 
     implementation "androidx.sqlite:sqlite-ktx:2.1.0"
-    implementation "com.google.code.gson:gson:2.8.2"
+    implementation "com.google.code.gson:gson:2.8.7"
 
     implementation "com.google.dagger:hilt-android:2.33-beta"
     kapt "com.google.dagger:hilt-android-compiler:2.33-beta"

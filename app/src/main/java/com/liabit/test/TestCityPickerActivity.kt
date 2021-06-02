@@ -12,8 +12,8 @@ import com.liabit.dialog.InputDialogBuilder
 import com.liabit.extension.layoutUnderSystemUI
 import com.liabit.extension.toStringArray
 import com.liabit.imageviewer.PhotoViewer
-import com.liabit.integratepicker.PhotoFlowAdapter
-import com.liabit.integratepicker.PhotoSelector
+import com.liabit.photopicker.PhotoFlowAdapter
+import com.liabit.photopicker.PhotoSelector
 import com.liabit.integratepicker.Picker
 import com.liabit.integratepicker.R
 import com.liabit.listpicker.OnResultListener

@@ -11,7 +11,7 @@ import android.view.animation.PathInterpolator
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.liabit.integratepicker.R
+import com.liabit.photopicker.R
 
 @Suppress("unused")
 open class PhotoViewerFragment : Fragment(), PhotoFragment.OnPhotoSingleTapListener, KeyEventListener {
@@ -68,9 +68,8 @@ open class PhotoViewerFragment : Fragment(), PhotoFragment.OnPhotoSingleTapListe
         return view
     }
 
-    @Suppress("CascadeIf")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         hideSystemUI()
         if (mDeletable) {
             mDelete.setOnClickListener {

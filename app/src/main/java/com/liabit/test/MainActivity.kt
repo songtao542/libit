@@ -1,7 +1,12 @@
 package com.liabit.test
 
 import android.content.Intent
+import android.media.AudioAttributes
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.liabit.test.databinding.ActivityMainBinding
@@ -9,13 +14,15 @@ import com.liabit.test.decorationtest.TestRecyclerViewDecorationActivity
 import com.liabit.test.filtertest.TestFilterActivity
 import com.liabit.test.gesturetest.TestDragActivity
 import com.liabit.test.gesturetest.TestSwipeActivity
-import com.liabit.test.loadmore.TestLoadMoreActivity
 import com.liabit.test.loadmore.TestLoadMoreMenuActivity
 import com.liabit.test.nested.TestNestedRecyclerViewActivity
 import com.liabit.test.tablayouttest.TestTabLayoutActivity
 import com.liabit.test.tagviewtest.TestTagViewActivity
 import com.liabit.test.viewbinding.TestBindingActivity
 import com.liabit.viewbinding.inflate
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,6 +31,42 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        val uri = "content://com.gree.themestore.fileprovider/share_files/Ringtones/shanhuhai.mp3"
+
+        play(Uri.parse(uri))
+
+        try {
+            val inputStream = contentResolver.openInputStream(Uri.parse(uri)) ?: return
+            val file = File(externalCacheDir, "test.mp3")
+            val byteArrayOutputStream = ByteArrayOutputStream(1024)
+            val byteArray = ByteArray(1024)
+            while (inputStream.read(byteArray) > 0) {
+                byteArrayOutputStream.write(byteArray)
+            }
+            byteArrayOutputStream.writeTo(FileOutputStream(file))
+
+            play(Uri.fromFile(file))
+
+        } catch (e: Throwable) {
+            Log.d("TTTT", "error: ", e)
+        }
+    }
+
+    private fun play(uri: Uri) {
+        try {
+            val mediaPlayer = MediaPlayer()
+            mediaPlayer.setDataSource(this, uri)
+            val attr = AudioAttributes.Builder().setLegacyStreamType(AudioManager.STREAM_MUSIC)
+            mediaPlayer.setAudioAttributes(attr.build())
+            mediaPlayer.prepareAsync()
+            mediaPlayer.setOnPreparedListener {
+                // 装载完毕回调
+                it.start()
+            }
+        } catch (e: Throwable) {
+            Log.d("TTTT", "error: ", e)
+        }
+
     }
 
     fun onClick(view: View) {

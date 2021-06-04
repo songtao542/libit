@@ -57,6 +57,8 @@ class SpaceDecoration(
          */
         const val ONLY_VERTICAL = 0x000010
 
+        private const val DIRECTION_MASK = 0x000011
+
         /**
          * 忽略与滚动同向的边界的Space
          */
@@ -99,8 +101,11 @@ class SpaceDecoration(
                 val lastGroupIndex = layoutManager.spanSizeLookup.getSpanGroupIndex(layoutManager.itemCount - 1, spanCount)
                 if (layoutManager.orientation == RecyclerView.VERTICAL) {
                     if ((spaceDirection and IGNORE_MAIN_AXIS_EDGE) == IGNORE_MAIN_AXIS_EDGE) {
-                        val ew = (spanCount - 1) * spaceSize / spanCount
-                        val left = spanIndex % spanCount * (spaceSize - ew)
+                        val realSpanCount = spanCount / spanSize
+                        val ew = (realSpanCount - 1) * spaceSize / realSpanCount
+                        val left = (spanIndex / spanSize) % realSpanCount * (spaceSize - ew)
+                        //val ew = (spanCount - 1) * spaceSize / spanCount
+                        //val left = spanIndex % spanCount * (spaceSize - ew)
                         val right = if (spanIndex + spanSize == spanCount) 0 else ew - left
                         val top = if (spanGroupIndex == 0) {
                             if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
@@ -112,7 +117,11 @@ class SpaceDecoration(
                         } else {
                             spaceSize / 2
                         }
-                        outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
+                        when (spaceDirection and DIRECTION_MASK) {
+                            ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
+                            ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
+                            else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
+                        }
                     } else {
                         val left = if (spanIndex == 0) spaceSize else spaceSize / 2
                         val right = if ((spanIndex + spanSize) == spanCount) spaceSize else spaceSize / 2
@@ -126,9 +135,7 @@ class SpaceDecoration(
                         } else {
                             spaceSize / 2
                         }
-                        var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
-                        direction = direction and IGNORE_CROSS_AXIS_END.inv()
-                        when (direction) {
+                        when (spaceDirection and DIRECTION_MASK) {
                             ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                             ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                             else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
@@ -136,7 +143,6 @@ class SpaceDecoration(
                     }
                 } else {
                     if ((spaceDirection and IGNORE_MAIN_AXIS_EDGE) == IGNORE_MAIN_AXIS_EDGE) {
-                        val eh = (spanCount - 1) * spaceSize / spanCount
                         val left = if (spanGroupIndex == 0) {
                             if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
                         } else {
@@ -147,9 +153,17 @@ class SpaceDecoration(
                         } else {
                             spaceSize / 2
                         }
-                        val top = spanIndex % spanCount * (spaceSize - eh)
+                        val realSpanCount = spanCount / spanSize
+                        val eh = (realSpanCount - 1) * spaceSize / realSpanCount
+                        val top = (spanIndex / spanSize) % realSpanCount * (spaceSize - eh)
+                        //val eh = (spanCount - 1) * spaceSize / spanCount
+                        //val top = spanIndex % spanCount * (spaceSize - eh)
                         val bottom = if ((spanIndex + spanSize) == spanCount) 0 else eh - top
-                        outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
+                        when (spaceDirection and DIRECTION_MASK) {
+                            ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
+                            ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
+                            else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
+                        }
                     } else {
                         val left = if (spanGroupIndex == 0) {
                             if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
@@ -163,9 +177,7 @@ class SpaceDecoration(
                         }
                         val top = if (spanIndex == 0) spaceSize else spaceSize / 2
                         val bottom = if ((spanIndex + spanSize) == spanCount) spaceSize else spaceSize / 2
-                        var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
-                        direction = direction and IGNORE_CROSS_AXIS_END.inv()
-                        when (direction) {
+                        when (spaceDirection and DIRECTION_MASK) {
                             ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                             ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                             else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
@@ -193,7 +205,11 @@ class SpaceDecoration(
                         } else {
                             spaceSize / 2
                         }
-                        outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
+                        when (spaceDirection and DIRECTION_MASK) {
+                            ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
+                            ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
+                            else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
+                        }
                     } else {
                         val left = if (spanIndex == 0) spaceSize else spaceSize / 2
                         val right = if (spanIndex == spanCount - 1) spaceSize else spaceSize / 2
@@ -207,9 +223,7 @@ class SpaceDecoration(
                         } else {
                             spaceSize / 2
                         }
-                        var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
-                        direction = direction and IGNORE_CROSS_AXIS_END.inv()
-                        when (direction) {
+                        when (spaceDirection and DIRECTION_MASK) {
                             ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                             ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                             else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
@@ -230,7 +244,11 @@ class SpaceDecoration(
                         }
                         val top = spanIndex % spanCount * (spaceSize - eh)
                         val bottom = eh - top
-                        outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
+                        when (spaceDirection and DIRECTION_MASK) {
+                            ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
+                            ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
+                            else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
+                        }
                     } else {
                         val left = if (position < spanCount) {
                             if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
@@ -244,9 +262,7 @@ class SpaceDecoration(
                         }
                         val top = if (spanIndex == 0) spaceSize else spaceSize / 2
                         val bottom = if (spanIndex == spanCount - 1) spaceSize else spaceSize / 2
-                        var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
-                        direction = direction and IGNORE_CROSS_AXIS_END.inv()
-                        when (direction) {
+                        when (spaceDirection and DIRECTION_MASK) {
                             ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                             ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                             else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
@@ -267,9 +283,7 @@ class SpaceDecoration(
                     } else {
                         spaceSize / 2
                     }
-                    var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
-                    direction = direction and IGNORE_CROSS_AXIS_END.inv()
-                    when (direction) {
+                    when (spaceDirection and DIRECTION_MASK) {
                         ONLY_VERTICAL -> outRect.set(spaceSize.toInt(), 0, spaceSize.toInt(), 0)
                         ONLY_HORIZONTAL, IGNORE_MAIN_AXIS_EDGE -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                         else -> outRect.set(spaceSize.toInt(), top.toInt(), spaceSize.toInt(), bottom.toInt())
@@ -285,9 +299,7 @@ class SpaceDecoration(
                     } else {
                         spaceSize / 2
                     }
-                    var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
-                    direction = direction and IGNORE_CROSS_AXIS_END.inv()
-                    when (direction) {
+                    when (spaceDirection and DIRECTION_MASK) {
                         ONLY_VERTICAL, IGNORE_MAIN_AXIS_EDGE -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                         ONLY_HORIZONTAL -> outRect.set(0, spaceSize.toInt(), 0, spaceSize.toInt())
                         else -> outRect.set(left.toInt(), spaceSize.toInt(), right.toInt(), spaceSize.toInt())

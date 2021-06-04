@@ -84,10 +84,10 @@ class BuildTool {
             "../numberpicker/src/main",
             "../tagview/src/main",
             "../filterlayout/src/main",
-            "../timerview/src/main",
             "../compressor/src/main",
             "../third-auth/src/main",
             "../shimmer/src/main",*/
+            "../timerview/src/main",
             "../photoview/src/main",
             "../autoclear/src/main",
             "../dialog/src/main",

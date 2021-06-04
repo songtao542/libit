@@ -13,6 +13,10 @@ import java.lang.reflect.WildcardType
  */
 class DirectCallAdapter : CallAdapter.Factory() {
 
+    companion object {
+        private const val TAG = "DirectCallAdapter"
+    }
+
     override fun get(returnType: Type, annotations: Array<Annotation>, retrofit: Retrofit): CallAdapter<*, *> {
 
         val responseType: Type = if (returnType is WildcardType) returnType.upperBounds[0] else returnType
@@ -23,13 +27,13 @@ class DirectCallAdapter : CallAdapter.Factory() {
 
             override fun adapt(call: Call<Any>): Any? {
                 // 可以在这里判断接口数据格式
-                Log.d("DirectCallAdapter", "adapt responseType: $responseType  returnType: $returnType")
+                Log.d(TAG, "responseType: $responseType  returnType: $returnType")
                 try {
-                    val r = call.execute().body()
-                    Log.d("DirectCallAdapter", "result: $r")
-                    return r
+                    val result = call.execute().body()
+                    Log.d(TAG, "result: $result")
+                    return result
                 } catch (e: Throwable) {
-                    Log.e("DirectCallAdapter", "error: ", e)
+                    Log.e(TAG, "error: ", e)
                 }
                 return null
             }

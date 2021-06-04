@@ -137,7 +137,7 @@ class BuildTool {
             "../ext/src/main",
     };
 
-    private static String[] mergeList = themeStoreMergeList;// vpnMergeList; //sportMergeList; //
+    private static String[] mergeList = vpnMergeList; //  themeStoreMergeList;//  sportMergeList;  //
 
     public static void main(String[] args) throws DocumentException, IOException {
         String path = BuildTool.class.getResource("").getFile();

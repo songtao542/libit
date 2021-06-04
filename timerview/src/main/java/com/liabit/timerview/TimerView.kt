@@ -2,7 +2,9 @@ package com.liabit.timerview
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.*
+import android.graphics.Color
+import android.graphics.Outline
+import android.graphics.Typeface
 import android.os.CountDownTimer
 import android.os.SystemClock
 import android.util.AttributeSet
@@ -352,15 +354,12 @@ class TimerView : LinearLayout {
         this.timeEndListener = countdownListener
     }
 
-    fun setTimeEndListener(countdownListener: (() -> Unit)?) {
-        this.timeEndListener = if (countdownListener == null)
-            null
-        else
-            object : OnTimeEndListener {
-                override fun onTimeEnd() {
-                    countdownListener?.invoke()
-                }
+    fun setTimeEndListener(countdownListener: (() -> Unit)) {
+        this.timeEndListener = object : OnTimeEndListener {
+            override fun onTimeEnd() {
+                countdownListener?.invoke()
             }
+        }
     }
 
     interface OnTimeEndListener {

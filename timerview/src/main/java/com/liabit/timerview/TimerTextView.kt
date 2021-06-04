@@ -170,15 +170,11 @@ class TimerTextView : AppCompatTextView {
         this.timeEndListener = countdownListener
     }
 
-    fun setTimeEndListener(countdownListener: (() -> Unit)?) {
-        this.timeEndListener = if (countdownListener != null) {
-            object : OnTimeEndListener {
-                override fun onTimeEnd() {
-                    countdownListener.invoke()
-                }
+    fun setTimeEndListener(countdownListener: (() -> Unit)) {
+        this.timeEndListener = object : OnTimeEndListener {
+            override fun onTimeEnd() {
+                countdownListener.invoke()
             }
-        } else {
-            null
         }
     }
 
@@ -207,9 +203,11 @@ class TimerTextView : AppCompatTextView {
             val halfStrokeWidth = strokePaint.strokeWidth / 2
             val progress = 1f - (remainingTime.toDouble() / millisInFuture.toDouble()).toFloat()
             strokePaint.color = strokeColor
-            canvas.drawArc(0f + halfStrokeWidth, 0f + halfStrokeWidth,
-                    width.toFloat() - halfStrokeWidth, height.toFloat() - halfStrokeWidth,
-                    0f, progress * 360, false, strokePaint)
+            canvas.drawArc(
+                0f + halfStrokeWidth, 0f + halfStrokeWidth,
+                width.toFloat() - halfStrokeWidth, height.toFloat() - halfStrokeWidth,
+                0f, progress * 360, false, strokePaint
+            )
         }
     }
 }

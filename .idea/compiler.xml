@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.7">
+    <bytecodeTargetLevel target="1.8">
       <module name="libit.addsub" target="11" />
       <module name="libit.app" target="11" />
       <module name="libit.app_api14" target="11" />
@@ -26,6 +26,7 @@
       <module name="libit.picker_integrate" target="11" />
       <module name="libit.popup" target="11" />
       <module name="libit.recyclerview" target="11" />
+      <module name="libit.retrofit-ext" target="11" />
       <module name="libit.runker" target="11" />
       <module name="libit.screencapture" target="11" />
       <module name="libit.screenrecord" target="11" />

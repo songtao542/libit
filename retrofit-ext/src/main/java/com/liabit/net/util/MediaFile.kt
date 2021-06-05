@@ -1,4 +1,4 @@
-package com.liabit.util
+package com.liabit.net.util
 
 import android.mtp.MtpConstants
 import java.util.*

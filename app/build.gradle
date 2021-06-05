@@ -89,6 +89,7 @@ dependencies {
     implementation project(':dialog')
     implementation project(':addsub')
     implementation project(':autoclear')
+    implementation project(':retrofit-ext')
 
     implementation files('../common_libs/imagepicker-1.0.0.aar')
 

@@ -1,7 +1,7 @@
 package com.liabit.net.interceptor
 
 import android.util.Log
-import com.liabit.base.BuildConfig
+import com.liabit.net.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.util.concurrent.TimeUnit

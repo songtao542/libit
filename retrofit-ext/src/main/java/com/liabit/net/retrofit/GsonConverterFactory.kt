@@ -58,7 +58,7 @@ class GsonConverterFactory private constructor(
         fun create(
             errorResponseBodyProvider: (exception: Throwable) -> String
         ): GsonConverterFactory {
-            return create(FROM, Gson(), errorResponseBodyProvider)
+            return create(JSON, Gson(), errorResponseBodyProvider)
         }
     }
 

@@ -50,19 +50,19 @@ class ResponseCacheInterceptor constructor() : Interceptor {
     @Suppress("unused")
     constructor(maxAge: Int) : this() {
         mCacheControl = CacheControl.Builder()
-                .onlyIfCached()
-                .maxAge(maxAge, TimeUnit.SECONDS)
-                .build()
-                .toString()
+            .onlyIfCached()
+            .maxAge(maxAge, TimeUnit.SECONDS)
+            .build()
+            .toString()
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val response: Response = chain.proceed(chain.request())
         return response.newBuilder()
-                .removeHeader("Pragma") //移除影响
-                .removeHeader("Cache-Control") //移除影响
-                .addHeader("Cache-Control", mCacheControl)
-                .build()
+            .removeHeader("Pragma") //移除影响
+            .removeHeader("Cache-Control") //移除影响
+            .addHeader("Cache-Control", mCacheControl)
+            .build()
     }
 }
 
@@ -80,18 +80,18 @@ class RequestCacheInterceptor(context: Context) : Interceptor {
     @Suppress("unused")
     constructor(context: Context, maxAge: Int, maxStale: Int) : this(context) {
         mCacheControl = CacheControl.Builder()
-                .onlyIfCached()
-                .maxAge(maxAge, TimeUnit.SECONDS)
-                .maxStale(maxStale, TimeUnit.SECONDS)
-                .build()
+            .onlyIfCached()
+            .maxAge(maxAge, TimeUnit.SECONDS)
+            .maxStale(maxStale, TimeUnit.SECONDS)
+            .build()
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
         var request: Request = chain.request()
         if (!isNetAvailable()) {
             request = request.newBuilder()
-                    .cacheControl(mCacheControl)
-                    .build()
+                .cacheControl(mCacheControl)
+                .build()
         }
         return chain.proceed(request)
     }

@@ -1,7 +1,7 @@
-package com.liabit.util
+package com.liabit.net.util
 
 import android.util.Log
-import com.liabit.base.BuildConfig
+import com.liabit.net.BuildConfig
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 

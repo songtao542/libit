@@ -10,11 +10,12 @@ class ErrorHandleInterceptor(private val errorResponseBodyProvider: (exception: 
     override fun intercept(chain: Interceptor.Chain): Response {
         try {
             val request = chain.request()
-            val res = chain.proceed(request)
+            /*val res = chain.proceed(request)
             if (!res.isSuccessful) {
                 throw RuntimeException("server: ${res.message}")
             }
-            return res
+            return res*/
+            return chain.proceed(request)
         } catch (e: Exception) {
             val message = e.message ?: "none"
             val unknownError = errorResponseBodyProvider.invoke(e)

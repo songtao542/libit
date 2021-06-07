@@ -64,6 +64,7 @@ class BuildTool {
             "../base/src/main",
             "../third-auth/src/main",
             "../compressor/src/main",
+            "../retrofit-ext/src/main",
     };
     private static String[] themeStoreMergeList = {
             /*"../wallpaper_cropper/src/main",
@@ -99,6 +100,7 @@ class BuildTool {
             "../livedata-ktx/src/main",
             "../injectable-viewmodel/src/main",
             "../base/src/main",
+            "../retrofit-ext/src/main",
     };
 
     private static String[] vpnMergeList = {
@@ -135,11 +137,28 @@ class BuildTool {
             "../shimmer/src/main",*/
             "../autoclear/src/main",
             "../ext/src/main",
+            "../retrofit-ext/src/main",
     };
 
-    private static String[] mergeList = vpnMergeList; //  themeStoreMergeList;//  sportMergeList;  //
+    private static String[] mergeList = null;
 
     public static void main(String[] args) throws DocumentException, IOException {
+        System.out.println("args: " + args);
+        mergeList = null;
+        if (args != null && args.length > 0) {
+            String arg = args[0];
+            if ("vpn".equals(arg)) {
+                mergeList = vpnMergeList;
+            } else if ("theme".equals(arg)) {
+                mergeList = themeStoreMergeList;
+            } else if ("sport".equals(arg)) {
+                mergeList = sportMergeList;
+            }
+        }
+        if (mergeList == null) {
+            throw new IllegalArgumentException("请通过 --args 参数选择源码集(--args=vpn 或者 --args=theme 或者 --args=sport)");
+        }
+
         String path = BuildTool.class.getResource("").getFile();
         int index = path.indexOf("build_tool");
         String rootPath = path.substring(0, index + "build_tool".length());

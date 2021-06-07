@@ -22,7 +22,7 @@ open class WxPayViewModel @Inject constructor() : ApplicationViewModel(), IWXAPI
     val livePayResult = MutableLiveData<Boolean>()
 
     /**
-     * 预支付订单信息，需要服务器端调用微信服务端相关api生成
+     * @param prePayInfo 预支付订单信息，需要服务器端调用微信服务端相关api生成
      * App ---> 服务端 --> 微信服务端
      *  ∧         |∧         |
      *  |         ||         |
@@ -34,7 +34,7 @@ open class WxPayViewModel @Inject constructor() : ApplicationViewModel(), IWXAPI
      *
      *  #### 注意：需要在 AndroidManifest.xml 中注册 [WxPayEntryActivity], 请求的结果会通过该 Activity 返回
      */
-    private fun payByWechat(prePayInfo: WxPrePayInfo) {
+    fun pay(prePayInfo: WxPrePayInfo) {
         mWechatApi.pay(prePayInfo)
     }
 

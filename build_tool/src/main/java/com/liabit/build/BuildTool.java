@@ -21,6 +21,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 执行 main 方法将所有模块儿的源码拷贝的 libit 模块儿中，以方便编译出一个完整的 aar
@@ -142,10 +144,21 @@ class BuildTool {
 
     private static String[] mergeList = null;
 
+    private static boolean isValidPackage(String packageName) {
+        // Java/Android合法包名，可以包含大写字母、小写字母、数字和下划线，用点(英文句号)分隔称为段，且至少包含2个段，隔开的每一段都必须以字母开头
+        Pattern pattern = Pattern.compile("^([a-zA-Z_][a-zA-Z0-9_]*)+([.][a-zA-Z_][a-zA-Z0-9_]*)+$");
+        Matcher matcher = pattern.matcher(packageName);
+        return matcher.matches();
+    }
+
     public static void main(String[] args) throws DocumentException, IOException {
         System.out.println("args: " + args);
         mergeList = null;
+        String domain = "com.liabit";
         if (args != null && args.length > 0) {
+            for (String a : args) {
+                System.out.println("arg: " + a);
+            }
             String arg = args[0];
             if ("vpn".equals(arg)) {
                 mergeList = vpnMergeList;
@@ -153,6 +166,14 @@ class BuildTool {
                 mergeList = themeStoreMergeList;
             } else if ("sport".equals(arg)) {
                 mergeList = sportMergeList;
+            }
+            if (args.length > 1) {
+                String pk = args[1];
+                System.out.println("package: " + pk);
+                if (isValidPackage(pk)) {
+                    System.out.println("package valid: true");
+                    domain = args[1];
+                }
             }
         }
         if (mergeList == null) {
@@ -171,8 +192,15 @@ class BuildTool {
         attrXml.addElement("resources");
         ArrayList<String> attrNames = new ArrayList<>();
 
-        String packageName = "com.liabit.";
-        String dirName = "liabit";
+        //String packageName = "com.liabit.";
+        String packageName = domain + ".";
+        String dirName = domain.replace("com.", "");
+        if (dirName.length() == 0) {
+            throw new RuntimeException("包名少为两段, 例如：com.liabit");
+        }
+        if (dirName.split("\\.").length > 2) {
+            throw new RuntimeException("包名分段最多为三段, 例如：com.liabit.client");
+        }
 
         if (!destDir.exists()) {
             boolean result = destDir.mkdirs();
@@ -294,8 +322,21 @@ class BuildTool {
                 }
             }
             if (file.getName().equals(oldName)) {
-                //noinspection ResultOfMethodCallIgnored
-                file.renameTo(new File(file.getParentFile(), newName));
+                String[] dirs = newName.split("\\.");
+                if (dirs.length > 1) {
+                    File newDir = new File(file.getParentFile(), dirs[0]);
+                    boolean success = newDir.mkdirs();
+                    if (!success) {
+                        throw new RuntimeException("创建文件夹失败：" + newDir.getAbsolutePath());
+                    }
+                    File renameDir = new File(file.getParentFile(), dirs[1]);
+                    //noinspection ResultOfMethodCallIgnored
+                    file.renameTo(renameDir);
+                    FileUtils.moveToDirectory(renameDir, newDir, true);
+                } else {
+                    //noinspection ResultOfMethodCallIgnored
+                    file.renameTo(new File(file.getParentFile(), newName));
+                }
             }
         }
     }

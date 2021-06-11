@@ -86,6 +86,7 @@ android {
                     './src/main/matisse', // matisse
                     './src/main/matisse_crop', // matisse_crop
                     './src/main/retrofit-ext', // retrofit-ext
+                    './src/main/utils', // utils
             ]
             res.srcDirs = [
                     './src/main/res', // viewbinding
@@ -110,6 +111,7 @@ android {
                     './src/main/photopicker_res', // photopicker
                     './src/main/matisse_res', // matisse
                     './src/main/matisse_crop_res', // matisse_crop
+                    './src/main/utils_res', // utils
             ]
             manifest.srcFile './src/main/AndroidManifest.xml'
         }

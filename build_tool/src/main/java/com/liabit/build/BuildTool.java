@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -36,10 +37,20 @@ class BuildTool {
         return matcher.matches();
     }
 
+    private static HashMap<String, String> sSrcPathMap = new HashMap<>();
+
     public static void main(String[] args) throws DocumentException, IOException {
-        System.out.println("args: " + args);
+        if (args != null) {
+            int i = 0;
+            for (String a : args) {
+                System.out.println("args " + i + ": " + a);
+                i++;
+            }
+        }
         String[] mergeList = null;
         String domain = "com.liabit";
+        String manifestPackageSuffix = null;
+        sSrcPathMap.clear();
         if (args != null && args.length > 0) {
             for (String a : args) {
                 System.out.println("arg: " + a);
@@ -68,6 +79,17 @@ class BuildTool {
                     System.out.println("package valid: true");
                     domain = args[1];
                 }
+            }
+
+            if (args.length > 2) {
+                String pk = args[2];
+                System.out.println("manifest package suffix: " + pk);
+                Pattern pattern = Pattern.compile("^([a-z]+)");
+                Matcher matcher = pattern.matcher(pk);
+                if (!matcher.matches()) {
+                    throw new IllegalArgumentException("manifest package suffix 只能是小写字母组成");
+                }
+                manifestPackageSuffix = args[2];
             }
         }
         if (mergeList == null) {
@@ -110,10 +132,18 @@ class BuildTool {
         FileUtils.cleanDirectory(jniLibsDir);
 
         File manifestFile = new File(destDir, "AndroidManifest.xml");
-
+        if (!manifestFile.exists()) {
+            manifestFile.createNewFile();
+        }
+        String manifestPackage;
+        if (manifestPackageSuffix == null) {
+            manifestPackage = packageName.substring(0, packageName.length() - 1);
+        } else {
+            manifestPackage = packageName + manifestPackageSuffix;
+        }
         Document manifestXml = DocumentHelper.createDocument();
         Element manifestRootElement = manifestXml.addElement("manifest");
-        manifestRootElement.addAttribute("package", packageName.substring(0, packageName.length() - 1));
+        manifestRootElement.addAttribute("package", manifestPackage);
         manifestRootElement.addNamespace("android", "http://schemas.android.com/apk/res/android");
         Element manifestApplicationElement = manifestRootElement.addElement("application");
         ArrayList<String> manifestNames = new ArrayList<>();
@@ -136,8 +166,22 @@ class BuildTool {
             System.out.println(javaSourceDir + " -> " + destJavaDir);
             FileUtils.copyDirectory(javaSourceDir, destJavaDir);
 
-            addImportR(destJavaDir, "import com\\.liabit\\..*\\.R", "import com.liabit.R");
-            replaceBuildConfig(destJavaDir, "import com\\.liabit\\..*\\.BuildConfig", "import com.liabit.BuildConfig");
+            // 替换 import R
+            String importR;
+            if (manifestPackageSuffix == null) {
+                importR = "import " + packageName + ".R";
+            } else {
+                importR = "import " + packageName + manifestPackageSuffix + ".R";
+            }
+            addImportR(destJavaDir, "import com\\.liabit\\..*\\.R", importR);
+            // 替换 BuildConfig
+            String importBuildConfig;
+            if (manifestPackageSuffix == null) {
+                importBuildConfig = "import " + packageName + ".BuildConfig";
+            } else {
+                importBuildConfig = "import " + packageName + manifestPackageSuffix + ".BuildConfig";
+            }
+            replaceBuildConfig(destJavaDir, "import com\\.liabit\\..*\\.BuildConfig", importBuildConfig);
 
             if (!"com.liabit.".equals(packageName)) {
                 // 重命名
@@ -166,8 +210,13 @@ class BuildTool {
                     renameXmlPackage(destResDir, "com.liabit.", packageName);
                 }
             }
-            File manifestSourceFile = new File(source.getCanonicalFile(), "AndroidManifest.xml");
 
+            sSrcPathMap.clear();
+            String packagePath = packageName.replace(".", File.separator);
+            collectFilePath(packagePath, destDir);
+
+            // 源文件
+            File manifestSourceFile = new File(source.getCanonicalFile(), "AndroidManifest.xml");
             mergeManifest(saxReader, manifestRootElement, manifestApplicationElement, manifestSourceFile, manifestNames);
         }
 
@@ -227,10 +276,38 @@ class BuildTool {
                     //noinspection ResultOfMethodCallIgnored
                     file.renameTo(renameDir);
                     FileUtils.moveToDirectory(renameDir, newDir, true);
+
                 } else {
                     //noinspection ResultOfMethodCallIgnored
                     file.renameTo(new File(file.getParentFile(), newName));
                 }
+            }
+        }
+    }
+
+    static void collectFilePath(String packagePath, File file) {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    collectFilePath(packagePath, f);
+                }
+            }
+        } else {
+            boolean isJava = file.getAbsolutePath().endsWith(".java");
+            boolean isKt = file.getAbsolutePath().endsWith(".kt");
+            if (isJava || isKt) {
+                String absPath = file.getAbsolutePath();
+                int index = absPath.indexOf(packagePath);
+                String path = absPath.substring(index)
+                        .replace(File.separator, ".")
+                        .replace(".kt", "")
+                        .replace(".java", "");
+                String srcName = file.getName()
+                        .replace(".kt", "")
+                        .replace(".java", "");
+                System.out.println("file path: " + srcName + " -> " + path);
+                sSrcPathMap.put(srcName, path);
             }
         }
     }
@@ -364,14 +441,11 @@ class BuildTool {
                             continue;
                         }
                         //"import com\\.liabit\\..*\\.R"
-                        if (line.contains("matisse")) {
-                            boolean cc = line.matches("import com\\.zhihu\\.matisse\\.R");
-                            System.out.println("line:   " + line + "  cc: " + cc);
-                        }
                         if (line.contains("import") && line.contains("com.zhihu.matisse.R")) {
                             continue;
                         } else if (line.contains("com.zhihu.matisse.R")) {
-                            line = line.replace("com.zhihu.matisse.R", "com.liabit.R");
+                            String rp = replacement.replace("import ", "");
+                            line = line.replace("com.zhihu.matisse.R", rp);
                         }
                         caw.write(line);
                     }
@@ -418,13 +492,17 @@ class BuildTool {
         }
     }
 
-    static void mergeManifest(SAXReader saxReader, Element manifestRootElement, Element manifestApplicationElement, File file, ArrayList<String> names) throws DocumentException, IOException {
+    static void mergeManifest(SAXReader saxReader,
+                              Element manifestRootElement,
+                              Element manifestApplicationElement,
+                              File file,
+                              ArrayList<String> names) throws DocumentException, IOException {
         if (file.exists()) {
             boolean isXml = file.getAbsolutePath().endsWith(".xml");
             if (isXml) {
                 Document xml = saxReader.read(file);
                 List<Element> elements = xml.getDocument().getRootElement().elements();
-                System.out.println("file: " + file);
+                System.out.println("manifest file: " + file);
                 for (Element e : elements) {
                     if (e.getName().equals("uses-permission")) {
                         System.out.println("<" + e.getName() + " name=\"" + e.attributeValue("name") + "\" />");
@@ -436,7 +514,14 @@ class BuildTool {
                     } else if (e.getName().equals("application")) {
                         List<Element> components = e.elements();
                         for (Element c : components) {
-                            manifestApplicationElement.add(c.detach());
+                            String name = c.attributeValue("name");
+                            if (name != null) {
+                                int index = name.lastIndexOf(".");
+                                name = name.substring(index + 1);
+                            }
+                            Element copy = c.createCopy();
+                            copy.addAttribute("name", sSrcPathMap.get(name));
+                            manifestApplicationElement.add(copy.detach());
                         }
                     }
                 }

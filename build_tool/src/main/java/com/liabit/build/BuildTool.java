@@ -29,121 +29,6 @@ import java.util.regex.Pattern;
  */
 class BuildTool {
 
-    private static String[] sportMergeList = {
-            /*"../wallpaper_cropper/src/main",
-            "../wallpaper_cropper_lite/src/main",
-            "../color_util/src/main",
-            "../settings/src/main",
-            "../gesture/src/main",
-            "../swipeback/src/main",
-            "../screenrecord/src/main",
-            "../screencapture/src/main",
-            "../location_picker/src/main",
-            "../tablayout/src/main",
-            "../util/src/main",
-            "../shimmer/src/main",*/
-            "../addsub/src/main",
-            "../autoclear/src/main",
-            "../photoview/src/main",
-            "../picker_integrate/src/main",
-            "../photopicker/src/main",
-            "../matisse/src/main",
-            "../matisse/src_crop/main",
-            "../citypicker/src/main",
-            "../picker/src/main",
-            "../numberpicker/src/main",
-            "../tagview/src/main",
-            "../filterlayout/src/main",
-            "../dialog/src/main",
-            "../timerview/src/main",
-            "../viewbinding/src/main",
-            "../recyclerview/src/main",
-            "../popup/src/main",
-            "../widget/src/main",
-            "../ext/src/main",
-            "../livedata-ktx/src/main",
-            "../injectable-viewmodel/src/main",
-            "../base/src/main",
-            "../third-auth/src/main",
-            "../compressor/src/main",
-            "../retrofit-ext/src/main",
-    };
-    private static String[] themeStoreMergeList = {
-            /*"../wallpaper_cropper/src/main",
-            "../wallpaper_cropper_lite/src/main",
-            "../color_util/src/main",
-            "../settings/src/main",
-            "../gesture/src/main",
-            "../swipeback/src/main",
-            "../screenrecord/src/main",
-            "../screencapture/src/main",
-            "../location_picker/src/main",
-            "../tablayout/src/main",
-            "../util/src/main",
-            "../addsub/src/main",
-            "../picker_integrate/src/main",
-            "../citypicker/src/main",
-            "../picker/src/main",
-            "../numberpicker/src/main",
-            "../tagview/src/main",
-            "../filterlayout/src/main",
-            "../compressor/src/main",
-            "../third-auth/src/main",
-            "../shimmer/src/main",*/
-            "../timerview/src/main",
-            "../photoview/src/main",
-            "../autoclear/src/main",
-            "../dialog/src/main",
-            "../viewbinding/src/main",
-            "../recyclerview/src/main",
-            "../popup/src/main",
-            "../widget/src/main",
-            "../ext/src/main",
-            "../livedata-ktx/src/main",
-            "../injectable-viewmodel/src/main",
-            "../base/src/main",
-            "../retrofit-ext/src/main",
-    };
-
-    private static String[] vpnMergeList = {
-            /*"../wallpaper_cropper/src/main",
-            "../wallpaper_cropper_lite/src/main",
-            "../color_util/src/main",
-            "../settings/src/main",
-            "../gesture/src/main",
-            "../swipeback/src/main",
-            "../screenrecord/src/main",
-            "../screencapture/src/main",
-            "../location_picker/src/main",
-            "../tablayout/src/main",
-            "../util/src/main",
-            "../addsub/src/main",
-            "../picker_integrate/src/main",
-            "../citypicker/src/main",
-            "../picker/src/main",
-            "../numberpicker/src/main",
-            "../tagview/src/main",
-            "../filterlayout/src/main",
-            "../timerview/src/main",
-            "../compressor/src/main",
-            "../third-auth/src/main",
-            "../photoview/src/main",
-            "../dialog/src/main",
-            "../viewbinding/src/main",
-            "../recyclerview/src/main",
-            "../popup/src/main",
-            "../widget/src/main",
-            "../livedata-ktx/src/main",
-            "../injectable-viewmodel/src/main",
-            "../base/src/main",
-            "../shimmer/src/main",*/
-            "../autoclear/src/main",
-            "../ext/src/main",
-            "../retrofit-ext/src/main",
-    };
-
-    private static String[] mergeList = null;
-
     private static boolean isValidPackage(String packageName) {
         // Java/Android合法包名，可以包含大写字母、小写字母、数字和下划线，用点(英文句号)分隔称为段，且至少包含2个段，隔开的每一段都必须以字母开头
         Pattern pattern = Pattern.compile("^([a-zA-Z_][a-zA-Z0-9_]*)+([.][a-zA-Z_][a-zA-Z0-9_]*)+$");
@@ -153,7 +38,7 @@ class BuildTool {
 
     public static void main(String[] args) throws DocumentException, IOException {
         System.out.println("args: " + args);
-        mergeList = null;
+        String[] mergeList = null;
         String domain = "com.liabit";
         if (args != null && args.length > 0) {
             for (String a : args) {
@@ -161,11 +46,20 @@ class BuildTool {
             }
             String arg = args[0];
             if ("vpn".equals(arg)) {
-                mergeList = vpnMergeList;
+                mergeList = ModuleManifest.vpnMergeList;
             } else if ("theme".equals(arg)) {
-                mergeList = themeStoreMergeList;
+                mergeList = ModuleManifest.themeStoreMergeList;
             } else if ("sport".equals(arg)) {
-                mergeList = sportMergeList;
+                mergeList = ModuleManifest.sportMergeList;
+            } else {
+                if ("matisse".equals(arg)) {
+                    mergeList = new String[]{ModuleManifest.moduleMap.get("matisse"), ModuleManifest.moduleMap.get("matisse_crop")};
+                } else {
+                    String module = ModuleManifest.moduleMap.get(arg);
+                    if (module != null) {
+                        mergeList = new String[]{module};
+                    }
+                }
             }
             if (args.length > 1) {
                 String pk = args[1];

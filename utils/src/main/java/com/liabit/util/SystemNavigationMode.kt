@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.PatternMatcher
 import android.util.Log
-import com.liabit.extension.TAG
+
 import com.liabit.util.MainThreadInitializedObject.ObjectProvider
 import java.util.*
 
@@ -70,6 +70,8 @@ class SystemNavigationMode(private val mContext: Context) {
     }
 
     companion object {
+        private const val TAG = "SystemNavigationMode"
+
         fun getMode(context: Context): Mode? {
             return INSTANCE[context]?.mode
         }
@@ -101,6 +103,4 @@ class SystemNavigationMode(private val mContext: Context) {
             return packageFilter
         }
     }
-
-
 }

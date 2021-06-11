@@ -38,6 +38,7 @@
       <module name="libit.third-auth" target="11" />
       <module name="libit.timerview" target="11" />
       <module name="libit.util" target="11" />
+      <module name="libit.utils" target="11" />
       <module name="libit.viewbinding" target="11" />
       <module name="libit.wallpaper_cropper" target="11" />
       <module name="libit.wallpaper_cropper_lite" target="11" />

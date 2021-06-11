@@ -13,3 +13,4 @@
 /captures
 .externalNativeBuild
 /build_for_theme.sh
+/build_utils.sh

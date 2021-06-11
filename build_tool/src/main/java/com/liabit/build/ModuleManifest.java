@@ -108,8 +108,8 @@ public class ModuleManifest {
             moduleMap.get("filterlayout"),
             moduleMap.get("compressor"),
             moduleMap.get("third-auth"),
-            moduleMap.get("utils"),
             moduleMap.get("shimmer"),*/
+            moduleMap.get("utils"),
             moduleMap.get("timerview"),
             moduleMap.get("photoview"),
             moduleMap.get("autoclear"),

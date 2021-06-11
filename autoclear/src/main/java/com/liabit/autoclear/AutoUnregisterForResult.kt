@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import java.lang.ref.WeakReference
 import kotlin.properties.ReadOnlyProperty
@@ -194,3 +195,40 @@ class ActivityResultLauncherProxy<I, O>(private val proxy: ActivityResultLaunche
         return proxy.contract
     }
 }
+
+internal class CallbackProxy<I, O> : ActivityResultCallback<O> {
+
+    private var mActivityResultLauncherProxy: ActivityResultLauncherProxy<I, O>? = null
+
+    fun setActivityResultLauncherProxy(launcher: ActivityResultLauncherProxy<I, O>) {
+        mActivityResultLauncherProxy = launcher
+    }
+
+    override fun onActivityResult(result: O) {
+        mActivityResultLauncherProxy?.callback?.onActivityResult(result)
+    }
+}
+
+/**
+ * 必须在 [Lifecycle.State.STARTED] 之前调用, 所以最好在 [ComponentActivity.onCreate] 中调用
+ */
+fun <I, O> ComponentActivity.registerForActivityResult(contract: ActivityResultContract<I, O>): ActivityResultLauncherProxy<I, O> {
+    val callback = CallbackProxy<I, O>()
+    val launcher = registerForActivityResult(contract, callback)
+    val launcherProxy = ActivityResultLauncherProxy<I, O>(launcher)
+    callback.setActivityResultLauncherProxy(launcherProxy)
+    return launcherProxy
+}
+
+/**
+ * 必须在 [Lifecycle.State.STARTED] 之前调用, 所以最好在 [Fragment.onCreate] 中调用
+ */
+fun <I, O> Fragment.registerForActivityResult(contract: ActivityResultContract<I, O>): ActivityResultLauncherProxy<I, O> {
+    val callback = CallbackProxy<I, O>()
+    val launcher = registerForActivityResult(contract, callback)
+    val launcherProxy = ActivityResultLauncherProxy<I, O>(launcher)
+    callback.setActivityResultLauncherProxy(launcherProxy)
+    return launcherProxy
+}
+
+

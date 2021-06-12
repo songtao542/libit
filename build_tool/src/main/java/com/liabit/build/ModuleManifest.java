@@ -134,7 +134,6 @@ public class ModuleManifest {
             moduleMap.get("swipeback"),
             moduleMap.get("screenrecord"),
             moduleMap.get("screencapture"),
-            moduleMap.get("location_picker"),
             moduleMap.get("tablayout"),
             moduleMap.get("util"),
             moduleMap.get("addsub"),
@@ -157,6 +156,7 @@ public class ModuleManifest {
             moduleMap.get("injectable-viewmodel"),
             moduleMap.get("base"),
             moduleMap.get("shimmer"),*/
+            moduleMap.get("location_picker"),
             moduleMap.get("autoclear"),
             moduleMap.get("ext"),
             moduleMap.get("utils"),

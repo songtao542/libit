@@ -5,22 +5,12 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
 
-import java.io.BufferedReader;
-import java.io.CharArrayWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,8 +27,6 @@ class BuildTool {
         return matcher.matches();
     }
 
-    private static HashMap<String, String> sSrcPathMap = new HashMap<>();
-
     public static void main(String[] args) throws DocumentException, IOException {
         if (args != null) {
             int i = 0;
@@ -50,7 +38,6 @@ class BuildTool {
         String[] mergeList = null;
         String domain = "com.liabit";
         String manifestPackageSuffix = null;
-        sSrcPathMap.clear();
         if (args != null && args.length > 0) {
             for (String a : args) {
                 System.out.println("arg: " + a);
@@ -99,17 +86,21 @@ class BuildTool {
         String path = BuildTool.class.getResource("").getFile();
         int index = path.indexOf("build_tool");
         String rootPath = path.substring(0, index + "build_tool".length());
-        File destDir = new File(rootPath, "../libit/src/main/");
-        File resDir = new File(destDir, "res/values/");
+        File destMainDir = new File(rootPath, "../libit/src/main/");
+        File destMainResDir = new File(destMainDir, "res/values/");
 
+        // 创建 attrs.xml 用于记录所有 module 共享的 <attr/>
         SAXReader saxReader = new SAXReader();
-        File attrFile = new File(resDir, "attrs.xml");
+        File attrFile = new File(destMainResDir, "attrs.xml");
         Document attrXml = DocumentHelper.createDocument();
         attrXml.addElement("resources");
-        ArrayList<String> attrNames = new ArrayList<>();
+        ArrayList<String> attrNameList = new ArrayList<>();
 
-        //String packageName = "com.liabit.";
+        // 包名，默认为 com.liabit.
+        String defaultPackageName = "com.liabit.";
         String packageName = domain + ".";
+        // 代码目录名，默认为 liabit
+        String defaultDirName = "liabit";
         String dirName = domain.replace("com.", "");
         if (dirName.length() == 0) {
             throw new RuntimeException("包名少为两段, 例如：com.liabit");
@@ -118,23 +109,29 @@ class BuildTool {
             throw new RuntimeException("包名分段最多为三段, 例如：com.liabit.client");
         }
 
-        if (!destDir.exists()) {
-            boolean result = destDir.mkdirs();
-            System.out.println("Create dest dir " + result);
+        if (!destMainDir.exists()) {
+            boolean result = destMainDir.mkdirs();
+            System.out.println("create dest main dir " + result);
         }
-        FileUtils.cleanDirectory(destDir);
+        // 清空 main dir
+        FileUtils.cleanDirectory(destMainDir);
 
-        File jniLibsDir = new File(destDir, "jniLibs");
+        // 创建 jniLibs 目录
+        File jniLibsDir = new File(destMainDir, "jniLibs");
         if (!jniLibsDir.exists()) {
             boolean result = jniLibsDir.mkdirs();
-            System.out.println("Create jni dir " + result);
+            System.out.println("create jniLibs dir " + result);
         }
+        // 清空 jniLibs 目录
         FileUtils.cleanDirectory(jniLibsDir);
 
-        File manifestFile = new File(destDir, "AndroidManifest.xml");
+        // 创建 AndroidManifest.xml
+        File manifestFile = new File(destMainDir, "AndroidManifest.xml");
         if (!manifestFile.exists()) {
+            //noinspection ResultOfMethodCallIgnored
             manifestFile.createNewFile();
         }
+        // AndroidManifest.xml 中 package 的值
         String manifestPackage;
         if (manifestPackageSuffix == null) {
             manifestPackage = packageName.substring(0, packageName.length() - 1);
@@ -147,12 +144,10 @@ class BuildTool {
         manifestRootElement.addNamespace("android", "http://schemas.android.com/apk/res/android");
         Element manifestApplicationElement = manifestRootElement.addElement("application");
         ArrayList<String> manifestNames = new ArrayList<>();
-
-        if (!manifestFile.exists()) {
-            saveXml(manifestXml, manifestFile);
-        }
+        Xml.saveXml(manifestXml, manifestFile);
 
         for (String merge : mergeList) {
+            // module 源代码路径，例如 /path/to/project/libit/viewbinding/src/main
             File source = new File(rootPath, merge);
             String name = merge.replace("../", "");
             String destName = name.substring(0, name.indexOf("/"));
@@ -160,101 +155,96 @@ class BuildTool {
                 destName = "matisse_crop";
             }
             File javaSourceDir = new File(source.getCanonicalFile(), "java");
-            File destJavaDir = new File(destDir, destName).getCanonicalFile();
+            File destJavaDir = new File(destMainDir, destName).getCanonicalFile();
             FileUtils.deleteDirectory(destJavaDir);
 
             System.out.println(javaSourceDir + " -> " + destJavaDir);
+            // 拷贝 module 中的Java源代码到目标目录
             FileUtils.copyDirectory(javaSourceDir, destJavaDir);
 
-            // 替换 import R
+            // 修改源代码中的 import R
             String importR;
             if (manifestPackageSuffix == null) {
                 importR = "import " + packageName + ".R";
             } else {
                 importR = "import " + packageName + manifestPackageSuffix + ".R";
             }
-            addImportR(destJavaDir, "import com\\.liabit\\..*\\.R", importR);
-            // 替换 BuildConfig
+            ReplaceImportR.replace(destJavaDir, "import com\\.liabit\\..*\\.R", importR);
+
+            // 修改源代码中的 import BuildConfig
             String importBuildConfig;
             if (manifestPackageSuffix == null) {
                 importBuildConfig = "import " + packageName + ".BuildConfig";
             } else {
                 importBuildConfig = "import " + packageName + manifestPackageSuffix + ".BuildConfig";
             }
-            replaceBuildConfig(destJavaDir, "import com\\.liabit\\..*\\.BuildConfig", importBuildConfig);
+            ReplaceImportBuildConfig.replace(destJavaDir, "import com\\.liabit\\..*\\.BuildConfig", importBuildConfig);
 
-            if (!"com.liabit.".equals(packageName)) {
-                // 重命名
-                renamePackage(destJavaDir, "com.liabit.", packageName);
+            // 修改源代码中的 import BuildConfig
+            String importDataBinding;
+            if (manifestPackageSuffix == null) {
+                importDataBinding = "import " + packageName + ".databinding";
+            } else {
+                importDataBinding = "import " + packageName + manifestPackageSuffix + ".databinding";
             }
-            if (!"liabit".equals(dirName)) {
+            ReplaceDataBindingPackage.replace(destJavaDir, "import com\\.liabit\\..*\\.databinding", importDataBinding);
+
+            // 如果 packageName 需要更改，则替换源代码中的 packageName
+            if (!defaultPackageName.equals(packageName)) {
+                // 修改源代码中的包名
+                ReplacePackageName.replace(destJavaDir, defaultPackageName, packageName);
+            }
+            // 如果源代码目录需要更改，则重命名源代码目录名
+            if (!defaultDirName.equals(dirName)) {
                 // 重命名文件夹
-                renameDir(destJavaDir, "liabit", dirName);
+                renameDir(destJavaDir, defaultDirName, dirName);
             }
 
+            // 拷贝 module 中的 jniLibs 中的so文件
             File jniSourceDir = new File(source.getCanonicalFile(), "jniLibs");
             if (jniSourceDir.exists()) {
-                copyJniLibs(jniSourceDir, jniLibsDir);
+                CopyJniLib.copy(jniSourceDir, jniLibsDir);
             }
 
+            // module 的 res 目录
             File resSourceDir = new File(source.getCanonicalFile(), "res");
+
+            // 收集类名
+            HashMap<String, String> srcPathMap = new HashMap<>();
+            String packagePath = packageName.replace(".", File.separator);
+            collectFilePath(packagePath, destMainDir, srcPathMap);
+
             if (resSourceDir.exists()) {
-                File destResDir = new File(destDir, destName + "_res").getCanonicalFile();
+                File destResDir = new File(destMainDir, destName + "_res").getCanonicalFile();
                 FileUtils.deleteDirectory(destResDir);
                 System.out.println(resSourceDir + " -> " + destResDir);
                 FileUtils.copyDirectory(resSourceDir, destResDir);
-                mergeAttr(saxReader, attrXml, destResDir, attrNames);
-
-                if (!"com.liabit.".equals(packageName)) {
+                // 提取 module 中 公用的 <attr/> 属性
+                MergeAttr.merge(saxReader, attrXml, destResDir, attrNameList);
+                // 替换 xml 文件中（主要是 layout 文件）出现的包名
+                if (!defaultPackageName.equals(packageName)) {
                     // 重命名
-                    renameXmlPackage(destResDir, "com.liabit.", packageName);
+                    ReplacePackageNameInXml.replace(destResDir, defaultPackageName, packageName);
                 }
             }
 
-            sSrcPathMap.clear();
-            String packagePath = packageName.replace(".", File.separator);
-            collectFilePath(packagePath, destDir);
-
             // 源文件
             File manifestSourceFile = new File(source.getCanonicalFile(), "AndroidManifest.xml");
-            mergeManifest(saxReader, manifestRootElement, manifestApplicationElement, manifestSourceFile, manifestNames);
+            mergeManifest(saxReader, manifestRootElement, manifestApplicationElement, manifestSourceFile, manifestNames, srcPathMap);
         }
 
-        if (!resDir.exists()) {
+        if (!destMainResDir.exists()) {
             //noinspection ResultOfMethodCallIgnored
-            resDir.mkdirs();
+            destMainResDir.mkdirs();
         }
         if (!attrFile.exists()) {
             //noinspection ResultOfMethodCallIgnored
             attrFile.createNewFile();
         }
-        saveXml(attrXml, attrFile);
-        saveXml(manifestXml, manifestFile);
+        Xml.saveXml(attrXml, attrFile);
+        Xml.saveXml(manifestXml, manifestFile);
     }
 
-    static void copyJniLibs(File jniLibsDir, File destJniLibsDir) {
-        File[] files = jniLibsDir.listFiles();
-        if (files == null) return;
-        for (File file : files) {
-            String fileName = file.getName();
-            File destJniDir = new File(destJniLibsDir, fileName);
-            if (!destJniDir.exists()) {
-                boolean result = destJniDir.mkdirs();
-                System.out.println("create jni dir: " + destJniDir + " : " + result);
-            }
-            File[] soFiles = file.listFiles();
-            if (soFiles != null) {
-                for (File so : soFiles) {
-                    try {
-                        System.out.println("copy " + so + " to " + destJniDir);
-                        FileUtils.copyToDirectory(so, destJniDir);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
 
     static void renameDir(File file, String oldName, String newName) throws IOException {
         if (file.isDirectory()) {
@@ -276,7 +266,6 @@ class BuildTool {
                     //noinspection ResultOfMethodCallIgnored
                     file.renameTo(renameDir);
                     FileUtils.moveToDirectory(renameDir, newDir, true);
-
                 } else {
                     //noinspection ResultOfMethodCallIgnored
                     file.renameTo(new File(file.getParentFile(), newName));
@@ -285,12 +274,12 @@ class BuildTool {
         }
     }
 
-    static void collectFilePath(String packagePath, File file) {
+    static void collectFilePath(String packagePath, File file, HashMap<String, String> resultMap) {
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
                 for (File f : files) {
-                    collectFilePath(packagePath, f);
+                    collectFilePath(packagePath, f, resultMap);
                 }
             }
         } else {
@@ -307,196 +296,18 @@ class BuildTool {
                         .replace(".kt", "")
                         .replace(".java", "");
                 System.out.println("file path: " + srcName + " -> " + path);
-                sSrcPathMap.put(srcName, path);
+                resultMap.put(srcName, path);
             }
         }
     }
 
-    static void renamePackage(File file, String replace, String replacement) throws IOException {
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files != null) {
-                for (File f : files) {
-                    renamePackage(f, replace, replacement);
-                }
-            }
-        } else if (file.exists()) {
-            boolean isJava = file.getAbsolutePath().endsWith(".java");
-            boolean isKt = file.getAbsolutePath().endsWith(".kt");
-            if (isJava || isKt) {
-                System.out.println("file: " + file);
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
-                CharArrayWriter caw = new CharArrayWriter();
-                String line;
-                String lineSeparator = System.getProperty("line.separator");
-                while ((line = br.readLine()) != null) {
-                    line = line.replaceAll(replace, replacement);
-                    caw.write(line);
-                    caw.append(lineSeparator);
-                }
-                br.close();
-                FileWriter fw = new FileWriter(file);
-                caw.writeTo(fw);
-                fw.close();
-            }
-
-        }
-    }
-
-    static void renameXmlPackage(File file, String replace, String replacement) throws IOException {
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files != null) {
-                for (File f : files) {
-                    renameXmlPackage(f, replace, replacement);
-                }
-            }
-        } else if (file.exists()) {
-            boolean isRes = file.getAbsolutePath().endsWith(".xml");
-            if (isRes) {
-                System.out.println("file: " + file);
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
-                CharArrayWriter caw = new CharArrayWriter();
-                String line;
-                String lineSeparator = System.getProperty("line.separator");
-                while ((line = br.readLine()) != null) {
-                    line = line.replaceAll(replace, replacement);
-                    caw.write(line);
-                    caw.append(lineSeparator);
-                }
-                br.close();
-                FileWriter fw = new FileWriter(file);
-                caw.writeTo(fw);
-                fw.close();
-            }
-
-        }
-    }
-
-
-    static void replaceBuildConfig(File file, String replace, String replacement) throws IOException {
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files != null) {
-                for (File f : files) {
-                    replaceBuildConfig(f, replace, replacement);
-                }
-            }
-        } else if (file.exists()) {
-            boolean isJava = file.getAbsolutePath().endsWith(".java");
-            boolean isKt = file.getAbsolutePath().endsWith(".kt");
-            if (isJava || isKt) {
-                System.out.println("file: " + file);
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
-                CharArrayWriter caw = new CharArrayWriter();
-                String line;
-                String importBuildConfig = replacement + (isJava ? ";" : "");
-                String lineSeparator = System.getProperty("line.separator");
-                while ((line = br.readLine()) != null) {
-                    // 如果是 BuildConfig 的行
-                    if (line.matches(replace) || line.matches("import com\\.zhihu\\..*\\.BuildConfig")) {
-                        caw.write(importBuildConfig);
-                    } else {
-                        caw.write(line);
-                    }
-                    caw.append(lineSeparator);
-                }
-                br.close();
-                FileWriter fw = new FileWriter(file);
-                caw.writeTo(fw);
-                fw.close();
-            }
-
-        }
-    }
-
-    static void addImportR(File file, String replace, String replacement) throws IOException {
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files != null) {
-                for (File f : files) {
-                    addImportR(f, replace, replacement);
-                }
-            }
-        } else if (file.exists()) {
-            boolean isJava = file.getAbsolutePath().endsWith(".java");
-            boolean isKt = file.getAbsolutePath().endsWith(".kt");
-            if (isJava || isKt) {
-                System.out.println("file: " + file);
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
-                CharArrayWriter caw = new CharArrayWriter();
-                String line;
-                String importR = replacement + (isJava ? ";" : "");
-                String lineSeparator = System.getProperty("line.separator");
-                while ((line = br.readLine()) != null) {
-                    boolean isPackageRow = line.contains("package ");
-                    if (isPackageRow) {
-                        // 如果是 package 所在行，则在该行之后添加 import R 语句
-                        caw.write(line);
-                        caw.append(lineSeparator).append(lineSeparator);
-                        caw.write(importR);
-                    } else {
-                        // 如果是 import R 的行，则直接跳过
-                        if (line.matches(replace)) {
-                            continue;
-                        }
-                        //"import com\\.liabit\\..*\\.R"
-                        if (line.contains("import") && line.contains("com.zhihu.matisse.R")) {
-                            continue;
-                        } else if (line.contains("com.zhihu.matisse.R")) {
-                            String rp = replacement.replace("import ", "");
-                            line = line.replace("com.zhihu.matisse.R", rp);
-                        }
-                        caw.write(line);
-                    }
-                    caw.append(lineSeparator);
-                }
-                br.close();
-                FileWriter fw = new FileWriter(file);
-                caw.writeTo(fw);
-                fw.close();
-            }
-
-        }
-    }
-
-    static void mergeAttr(SAXReader saxReader, Document attrXml, File file, ArrayList<String> names) throws DocumentException, IOException {
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files != null) {
-                for (File f : files) {
-                    mergeAttr(saxReader, attrXml, f, names);
-                }
-            }
-        } else if (file.exists()) {
-            boolean isXml = file.getAbsolutePath().endsWith(".xml");
-            if (isXml) {
-                Document xml = saxReader.read(file);
-                List<Element> elements = xml.getDocument().getRootElement().elements();
-                System.out.println("file: " + file);
-                Iterator<Element> iterator = elements.iterator();
-                while (iterator.hasNext()) {
-                    Element e = iterator.next();
-                    if (e.getName().equals("attr")) {
-                        System.out.println("<" + e.getName() + " name=\"" + e.attributeValue("name") + "\" format=\"" + e.attributeValue("format") + "\" />");
-                        String name = e.attributeValue("name");
-                        if (!names.contains(name)) {
-                            names.add(name);
-                            attrXml.getRootElement().add(e.detach());
-                        }
-                        iterator.remove();
-                    }
-                }
-                saveXml(xml, file);
-            }
-        }
-    }
 
     static void mergeManifest(SAXReader saxReader,
                               Element manifestRootElement,
                               Element manifestApplicationElement,
                               File file,
-                              ArrayList<String> names) throws DocumentException, IOException {
+                              ArrayList<String> names,
+                              HashMap<String, String> srcPathMap) throws DocumentException, IOException {
         if (file.exists()) {
             boolean isXml = file.getAbsolutePath().endsWith(".xml");
             if (isXml) {
@@ -520,22 +331,15 @@ class BuildTool {
                                 name = name.substring(index + 1);
                             }
                             Element copy = c.createCopy();
-                            copy.addAttribute("name", sSrcPathMap.get(name));
+                            if (srcPathMap.get(name) != null) {
+                                copy.addAttribute("name", srcPathMap.get(name));
+                            }
                             manifestApplicationElement.add(copy.detach());
                         }
                     }
                 }
             }
         }
-    }
-
-    static void saveXml(Document doc, File file) throws IOException {
-        OutputFormat format = OutputFormat.createPrettyPrint();
-        format.setEncoding(StandardCharsets.UTF_8.name());
-        XMLWriter writer = new XMLWriter(new FileOutputStream(file), format);
-        writer.setEscapeText(false);
-        writer.write(doc);
-        writer.close();
     }
 
 }

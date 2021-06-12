@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -198,7 +197,7 @@ class BuildTool {
             // 如果源代码目录需要更改，则重命名源代码目录名
             if (!defaultDirName.equals(dirName)) {
                 // 重命名文件夹
-                renameDir(destJavaDir, defaultDirName, dirName);
+                RenamePackageDirectory.renameDir(destJavaDir, defaultDirName, dirName);
             }
 
             // 拷贝 module 中的 jniLibs 中的so文件
@@ -213,7 +212,7 @@ class BuildTool {
             // 收集类名
             HashMap<String, String> srcPathMap = new HashMap<>();
             String packagePath = packageName.replace(".", File.separator);
-            collectFilePath(packagePath, destMainDir, srcPathMap);
+            CollectSrcFilePath.collect(packagePath, destMainDir, srcPathMap);
 
             if (resSourceDir.exists()) {
                 File destResDir = new File(destMainDir, destName + "_res").getCanonicalFile();
@@ -233,7 +232,7 @@ class BuildTool {
             File manifestSourceFile = new File(source.getCanonicalFile(), "AndroidManifest.xml");
             if (!androidManifestFilePathList.contains(manifestSourceFile.getAbsolutePath())) {
                 androidManifestFilePathList.add(manifestSourceFile.getAbsolutePath());
-                mergeManifest(saxReader, manifestRootElement, manifestApplicationElement, manifestSourceFile, manifestNames, srcPathMap);
+                MergeAndroidManifest.merge(saxReader, manifestRootElement, manifestApplicationElement, manifestSourceFile, manifestNames, srcPathMap);
             }
         }
 
@@ -249,105 +248,5 @@ class BuildTool {
         Xml.saveXml(manifestXml, manifestFile);
     }
 
-
-    static void renameDir(File file, String oldName, String newName) throws IOException {
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files != null) {
-                for (File f : files) {
-                    renameDir(f, oldName, newName);
-                }
-            }
-            if (file.getName().equals(oldName)) {
-                String[] dirs = newName.split("\\.");
-                if (dirs.length > 1) {
-                    File newDir = new File(file.getParentFile(), dirs[0]);
-                    boolean success = newDir.mkdirs();
-                    if (!success) {
-                        throw new RuntimeException("创建文件夹失败：" + newDir.getAbsolutePath());
-                    }
-                    File renameDir = new File(file.getParentFile(), dirs[1]);
-                    //noinspection ResultOfMethodCallIgnored
-                    file.renameTo(renameDir);
-                    FileUtils.moveToDirectory(renameDir, newDir, true);
-                } else {
-                    //noinspection ResultOfMethodCallIgnored
-                    file.renameTo(new File(file.getParentFile(), newName));
-                }
-            }
-        }
-    }
-
-    static void collectFilePath(String packagePath, File file, HashMap<String, String> resultMap) {
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files != null) {
-                for (File f : files) {
-                    collectFilePath(packagePath, f, resultMap);
-                }
-            }
-        } else {
-            boolean isJava = file.getAbsolutePath().endsWith(".java");
-            boolean isKt = file.getAbsolutePath().endsWith(".kt");
-            if (isJava || isKt) {
-                String absPath = file.getAbsolutePath();
-                int index = absPath.indexOf(packagePath);
-                if (index >= 0) {
-                    String path = absPath.substring(index)
-                            .replace(File.separator, ".")
-                            .replace(".kt", "")
-                            .replace(".java", "");
-                    String srcName = file.getName()
-                            .replace(".kt", "")
-                            .replace(".java", "");
-                    System.out.println("file path: " + srcName + " -> " + path);
-                    resultMap.put(srcName, path);
-                }
-            }
-        }
-    }
-
-
-    static void mergeManifest(SAXReader saxReader,
-                              Element manifestRootElement,
-                              Element manifestApplicationElement,
-                              File file,
-                              ArrayList<String> names,
-                              HashMap<String, String> srcPathMap) throws DocumentException, IOException {
-        if (file.exists()) {
-            boolean isXml = file.getAbsolutePath().endsWith(".xml");
-            if (isXml) {
-                Document xml = saxReader.read(file);
-                List<Element> elements = xml.getDocument().getRootElement().elements();
-                System.out.println("manifest file: " + file);
-                for (Element e : elements) {
-                    if (e.getName().equals("uses-permission")) {
-                        System.out.println("<" + e.getName() + " name=\"" + e.attributeValue("name") + "\" />");
-                        String name = e.attributeValue("name");
-                        if (!names.contains(name)) {
-                            names.add(name);
-                            manifestRootElement.add(e.detach());
-                        }
-                    } else if (e.getName().equals("application")) {
-                        List<Element> components = e.elements();
-                        for (Element c : components) {
-                            String name = c.attributeValue("name");
-                            if (name != null) {
-                                int index = name.lastIndexOf(".");
-                                if (index >= 0) {
-                                    name = name.substring(index + 1);
-                                }
-                            }
-                            Element copy = c.createCopy();
-                            if (srcPathMap.get(name) != null) {
-                                copy.addAttribute("name", srcPathMap.get(name));
-                            }
-                            manifestApplicationElement.add(copy.detach());
-                        }
-                    }
-                }
-            }
-        }
-    }
 
 }

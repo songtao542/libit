@@ -146,6 +146,7 @@ class BuildTool {
         ArrayList<String> manifestNames = new ArrayList<>();
         Xml.saveXml(manifestXml, manifestFile);
 
+        ArrayList<String> androidManifestFilePathList = new ArrayList<>();
         for (String merge : mergeList) {
             // module 源代码路径，例如 /path/to/project/libit/viewbinding/src/main
             File source = new File(rootPath, merge);
@@ -165,7 +166,7 @@ class BuildTool {
             // 修改源代码中的 import R
             String importR;
             if (manifestPackageSuffix == null) {
-                importR = "import " + packageName + ".R";
+                importR = "import " + packageName + "R";
             } else {
                 importR = "import " + packageName + manifestPackageSuffix + ".R";
             }
@@ -174,7 +175,7 @@ class BuildTool {
             // 修改源代码中的 import BuildConfig
             String importBuildConfig;
             if (manifestPackageSuffix == null) {
-                importBuildConfig = "import " + packageName + ".BuildConfig";
+                importBuildConfig = "import " + packageName + "BuildConfig";
             } else {
                 importBuildConfig = "import " + packageName + manifestPackageSuffix + ".BuildConfig";
             }
@@ -183,7 +184,7 @@ class BuildTool {
             // 修改源代码中的 import databinding
             String importDataBinding;
             if (manifestPackageSuffix == null) {
-                importDataBinding = "import " + packageName + ".databinding";
+                importDataBinding = "import " + packageName + "databinding";
             } else {
                 importDataBinding = "import " + packageName + manifestPackageSuffix + ".databinding";
             }
@@ -230,7 +231,10 @@ class BuildTool {
 
             // 源文件
             File manifestSourceFile = new File(source.getCanonicalFile(), "AndroidManifest.xml");
-            mergeManifest(saxReader, manifestRootElement, manifestApplicationElement, manifestSourceFile, manifestNames, srcPathMap);
+            if (!androidManifestFilePathList.contains(manifestSourceFile.getAbsolutePath())) {
+                androidManifestFilePathList.add(manifestSourceFile.getAbsolutePath());
+                mergeManifest(saxReader, manifestRootElement, manifestApplicationElement, manifestSourceFile, manifestNames, srcPathMap);
+            }
         }
 
         if (!destMainResDir.exists()) {
@@ -288,15 +292,17 @@ class BuildTool {
             if (isJava || isKt) {
                 String absPath = file.getAbsolutePath();
                 int index = absPath.indexOf(packagePath);
-                String path = absPath.substring(index)
-                        .replace(File.separator, ".")
-                        .replace(".kt", "")
-                        .replace(".java", "");
-                String srcName = file.getName()
-                        .replace(".kt", "")
-                        .replace(".java", "");
-                System.out.println("file path: " + srcName + " -> " + path);
-                resultMap.put(srcName, path);
+                if (index >= 0) {
+                    String path = absPath.substring(index)
+                            .replace(File.separator, ".")
+                            .replace(".kt", "")
+                            .replace(".java", "");
+                    String srcName = file.getName()
+                            .replace(".kt", "")
+                            .replace(".java", "");
+                    System.out.println("file path: " + srcName + " -> " + path);
+                    resultMap.put(srcName, path);
+                }
             }
         }
     }
@@ -328,7 +334,9 @@ class BuildTool {
                             String name = c.attributeValue("name");
                             if (name != null) {
                                 int index = name.lastIndexOf(".");
-                                name = name.substring(index + 1);
+                                if (index >= 0) {
+                                    name = name.substring(index + 1);
+                                }
                             }
                             Element copy = c.createCopy();
                             if (srcPathMap.get(name) != null) {

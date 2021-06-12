@@ -37,14 +37,6 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="behind"
             android:theme="@style/ThirdNoDisplay" />
-        <activity
-            android:name="com.sina.weibo.sdk.web.WeiboSdkWebActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            tools:node="replace" />
-
     </application>
 
 </manifest>

@@ -28,7 +28,6 @@ class ActivityResultLauncherCompat(private var activity: Activity? = null) {
 
     private val mCallbackMap = HashMap<Int, ParserAndCallback<*>>()
 
-
     fun startActivityForResult(intent: Intent, callback: ResultCallback<Intent?>) {
         startActivityForResult(intent, mIntentParser, callback)
     }

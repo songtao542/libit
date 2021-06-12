@@ -15,7 +15,7 @@ typealias ResultCallback<O> = (requestCode: Int, resultCode: Int, O) -> Unit
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class ActivityResultLauncherCompat(private var activity: Activity? = null) {
 
-    private val mNextLocalRequestCode = AtomicInteger(abs(Random.nextInt()))
+    private val mNextLocalRequestCode = AtomicInteger(abs(Random.nextInt(100, 500)))
 
     private val mIntentParser: ResultParser<Intent?> = { _, _, intent ->
         intent

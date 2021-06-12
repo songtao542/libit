@@ -180,7 +180,7 @@ class BuildTool {
             }
             ReplaceImportBuildConfig.replace(destJavaDir, "import com\\.liabit\\..*\\.BuildConfig", importBuildConfig);
 
-            // 修改源代码中的 import BuildConfig
+            // 修改源代码中的 import databinding
             String importDataBinding;
             if (manifestPackageSuffix == null) {
                 importDataBinding = "import " + packageName + ".databinding";

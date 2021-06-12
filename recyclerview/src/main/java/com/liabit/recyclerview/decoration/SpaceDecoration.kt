@@ -16,44 +16,26 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
  * 间距装饰器，使每一个 Item 的四边保持相等的边距;
  *
  * @param space 间距宽度, 单位 px
- * @param spaceDirection 在哪个方向上添加间距
+ * @param flags 在哪个方向上添加间距
  * @param divider 分割线宽度, 单位 px
  * @param dividerColor 分割线颜色
  */
 @Suppress("unused")
 class SpaceDecoration(
     private val space: Float,
-    private val spaceDirection: Int,
+    private val flags: Int,
     private val divider: Float,
     @ColorInt dividerColor: Int
 ) : RecyclerView.ItemDecoration() {
 
-    private var mDrawable: Drawable? = null
-
-    constructor(space: Float) : this(space, ALL, 0f, Color.TRANSPARENT)
-
-    constructor(space: Float, spaceDirection: Int) : this(space, spaceDirection, 0f, Color.TRANSPARENT)
-
-    constructor(space: Float, divider: Float) : this(space, ALL, divider, Color.GRAY)
-
-    constructor(space: Float, spaceDirection: Int, divider: Float) : this(space, spaceDirection, divider, Color.GRAY)
-
-    constructor(divider: Int, dividerColor: Int) : this(divider.toFloat(), ALL, divider.toFloat(), dividerColor)
-
-    init {
-        if (dividerColor != Color.TRANSPARENT) {
-            mDrawable = ColorDrawable(dividerColor)
-        }
-    }
-
     companion object {
         /**
-         * 只考虑横向分割线
+         * 只显示横向分割线
          */
         const val ONLY_HORIZONTAL = 0x000001
 
         /**
-         * 只考虑纵向分割线
+         * 只显示纵向分割线
          */
         const val ONLY_VERTICAL = 0x000010
 
@@ -80,6 +62,31 @@ class SpaceDecoration(
         const val ALL = ONLY_HORIZONTAL or ONLY_VERTICAL
     }
 
+    private var mDrawable: Drawable? = null
+
+    private var mDividerPadding: Float = 0f
+
+    constructor(space: Float) : this(space, ALL, 0f, Color.TRANSPARENT)
+
+    constructor(space: Float, flags: Int) : this(space, flags, 0f, Color.TRANSPARENT)
+
+    constructor(space: Float, divider: Float) : this(space, ALL, divider, Color.GRAY)
+
+    constructor(space: Float, flags: Int, divider: Float) : this(space, flags, divider, Color.GRAY)
+
+    init {
+        if (dividerColor != Color.TRANSPARENT) {
+            mDrawable = ColorDrawable(dividerColor)
+        }
+    }
+
+    /**
+     * 只对 LinearLayoutManager 起作用
+     */
+    fun setDividerPadding(padding: Float) {
+        mDividerPadding = padding
+    }
+
     fun setDividerColor(@ColorInt color: Int) {
         mDrawable = ColorDrawable(color)
     }
@@ -100,7 +107,7 @@ class SpaceDecoration(
                 val spanGroupIndex = layoutManager.spanSizeLookup.getSpanGroupIndex(position, spanCount)
                 val lastGroupIndex = layoutManager.spanSizeLookup.getSpanGroupIndex(layoutManager.itemCount - 1, spanCount)
                 if (layoutManager.orientation == RecyclerView.VERTICAL) {
-                    if ((spaceDirection and IGNORE_MAIN_AXIS_EDGE) == IGNORE_MAIN_AXIS_EDGE) {
+                    if ((flags and IGNORE_MAIN_AXIS_EDGE) == IGNORE_MAIN_AXIS_EDGE) {
                         val realSpanCount = spanCount / spanSize
                         val ew = (realSpanCount - 1) * spaceSize / realSpanCount
                         val left = (spanIndex / spanSize) % realSpanCount * (spaceSize - ew)
@@ -108,16 +115,16 @@ class SpaceDecoration(
                         //val left = spanIndex % spanCount * (spaceSize - ew)
                         val right = if (spanIndex + spanSize == spanCount) 0 else ew - left
                         val top = if (spanGroupIndex == 0) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
                         val bottom = if (spanGroupIndex == lastGroupIndex) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
-                        when (spaceDirection and DIRECTION_MASK) {
+                        when (flags and DIRECTION_MASK) {
                             ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                             ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                             else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
@@ -126,30 +133,30 @@ class SpaceDecoration(
                         val left = if (spanIndex == 0) spaceSize else spaceSize / 2
                         val right = if ((spanIndex + spanSize) == spanCount) spaceSize else spaceSize / 2
                         val top = if (spanGroupIndex == 0) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
                         val bottom = if (spanGroupIndex == lastGroupIndex) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
-                        when (spaceDirection and DIRECTION_MASK) {
+                        when (flags and DIRECTION_MASK) {
                             ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                             ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                             else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                         }
                     }
                 } else {
-                    if ((spaceDirection and IGNORE_MAIN_AXIS_EDGE) == IGNORE_MAIN_AXIS_EDGE) {
+                    if ((flags and IGNORE_MAIN_AXIS_EDGE) == IGNORE_MAIN_AXIS_EDGE) {
                         val left = if (spanGroupIndex == 0) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
                         val right = if (spanGroupIndex == lastGroupIndex) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
@@ -159,25 +166,25 @@ class SpaceDecoration(
                         //val eh = (spanCount - 1) * spaceSize / spanCount
                         //val top = spanIndex % spanCount * (spaceSize - eh)
                         val bottom = if ((spanIndex + spanSize) == spanCount) 0 else eh - top
-                        when (spaceDirection and DIRECTION_MASK) {
+                        when (flags and DIRECTION_MASK) {
                             ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                             ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                             else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                         }
                     } else {
                         val left = if (spanGroupIndex == 0) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
                         val right = if (spanGroupIndex == lastGroupIndex) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
                         val top = if (spanIndex == 0) spaceSize else spaceSize / 2
                         val bottom = if ((spanIndex + spanSize) == spanCount) spaceSize else spaceSize / 2
-                        when (spaceDirection and DIRECTION_MASK) {
+                        when (flags and DIRECTION_MASK) {
                             ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                             ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                             else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
@@ -191,21 +198,21 @@ class SpaceDecoration(
                 val spanCount = layoutManager.spanCount
                 val spanIndex = layoutParams.spanIndex
                 if (layoutManager.orientation == RecyclerView.VERTICAL) {
-                    if ((spaceDirection and IGNORE_MAIN_AXIS_EDGE) == IGNORE_MAIN_AXIS_EDGE) {
+                    if ((flags and IGNORE_MAIN_AXIS_EDGE) == IGNORE_MAIN_AXIS_EDGE) {
                         val ew = (spanCount - 1) * spaceSize / spanCount
                         val left = spanIndex % spanCount * (spaceSize - ew)
                         val right = ew - left
                         val top = if (position < spanCount) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
                         val bottom = if (position == layoutManager.itemCount - 1) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
-                        when (spaceDirection and DIRECTION_MASK) {
+                        when (flags and DIRECTION_MASK) {
                             ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                             ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                             else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
@@ -214,55 +221,55 @@ class SpaceDecoration(
                         val left = if (spanIndex == 0) spaceSize else spaceSize / 2
                         val right = if (spanIndex == spanCount - 1) spaceSize else spaceSize / 2
                         val top = if (position < spanCount) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
                         val bottom = if (position == layoutManager.itemCount - 1) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
-                        when (spaceDirection and DIRECTION_MASK) {
+                        when (flags and DIRECTION_MASK) {
                             ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                             ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                             else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                         }
                     }
                 } else {
-                    if ((spaceDirection and IGNORE_MAIN_AXIS_EDGE) == IGNORE_MAIN_AXIS_EDGE) {
+                    if ((flags and IGNORE_MAIN_AXIS_EDGE) == IGNORE_MAIN_AXIS_EDGE) {
                         val eh = (spanCount - 1) * spaceSize / spanCount
                         val left = if (position < spanCount) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
                         val right = if (position == layoutManager.itemCount - 1) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
                         val top = spanIndex % spanCount * (spaceSize - eh)
                         val bottom = eh - top
-                        when (spaceDirection and DIRECTION_MASK) {
+                        when (flags and DIRECTION_MASK) {
                             ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                             ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                             else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                         }
                     } else {
                         val left = if (position < spanCount) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
                         val right = if (position == layoutManager.itemCount - 1) {
-                            if ((spaceDirection and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
+                            if ((flags and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
                         } else {
                             spaceSize / 2
                         }
                         val top = if (spanIndex == 0) spaceSize else spaceSize / 2
                         val bottom = if (spanIndex == spanCount - 1) spaceSize else spaceSize / 2
-                        when (spaceDirection and DIRECTION_MASK) {
+                        when (flags and DIRECTION_MASK) {
                             ONLY_VERTICAL -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                             ONLY_HORIZONTAL -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                             else -> outRect.set(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
@@ -274,32 +281,32 @@ class SpaceDecoration(
                 val position = (view.layoutParams as RecyclerView.LayoutParams).viewLayoutPosition
                 if (layoutManager.orientation == LinearLayoutManager.VERTICAL) {
                     val top = if (position == 0) {
-                        if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
+                        if ((flags and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
                     } else {
                         spaceSize / 2
                     }
                     val bottom = if (position == layoutManager.itemCount - 1) {
-                        if ((spaceDirection and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
+                        if ((flags and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
                     } else {
                         spaceSize / 2
                     }
-                    when (spaceDirection and DIRECTION_MASK) {
+                    when (flags and DIRECTION_MASK) {
                         ONLY_VERTICAL -> outRect.set(spaceSize.toInt(), 0, spaceSize.toInt(), 0)
                         ONLY_HORIZONTAL, IGNORE_MAIN_AXIS_EDGE -> outRect.set(0, top.toInt(), 0, bottom.toInt())
                         else -> outRect.set(spaceSize.toInt(), top.toInt(), spaceSize.toInt(), bottom.toInt())
                     }
                 } else {
                     val left = if (position == 0) {
-                        if ((spaceDirection and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
+                        if ((flags and IGNORE_CROSS_AXIS_START) == IGNORE_CROSS_AXIS_START) 0 else spaceSize
                     } else {
                         spaceSize / 2
                     }
                     val right = if (position == layoutManager.itemCount - 1) {
-                        if ((spaceDirection and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
+                        if ((flags and IGNORE_CROSS_AXIS_END) == IGNORE_CROSS_AXIS_END) 0 else spaceSize
                     } else {
                         spaceSize / 2
                     }
-                    when (spaceDirection and DIRECTION_MASK) {
+                    when (flags and DIRECTION_MASK) {
                         ONLY_VERTICAL, IGNORE_MAIN_AXIS_EDGE -> outRect.set(left.toInt(), 0, right.toInt(), 0)
                         ONLY_HORIZONTAL -> outRect.set(0, spaceSize.toInt(), 0, spaceSize.toInt())
                         else -> outRect.set(left.toInt(), spaceSize.toInt(), right.toInt(), spaceSize.toInt())
@@ -318,7 +325,7 @@ class SpaceDecoration(
         if (layoutManager.childCount == 0) {
             return
         }
-        var direction = spaceDirection and IGNORE_CROSS_AXIS_START.inv()
+        var direction = flags and IGNORE_CROSS_AXIS_START.inv()
         direction = direction and IGNORE_CROSS_AXIS_END.inv()
         direction = direction and IGNORE_MAIN_AXIS_EDGE.inv()
         when (layoutManager) {
@@ -529,11 +536,11 @@ class SpaceDecoration(
                         for (i in 0 until childCount - 1) {
                             val child = parent.getChildAt(i)
                             val params = child.layoutParams as RecyclerView.LayoutParams
-                            val left = 0
-                            val right = parent.width
+                            val left = 0 + mDividerPadding
+                            val right = parent.width - mDividerPadding
                             val top = child.bottom + params.bottomMargin + space / 2 - divider / 2
                             val bottom = top + divider
-                            drawable.setBounds(left, top.toInt(), right, bottom.toInt())
+                            drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                             drawable.draw(c)
                         }
                     }
@@ -544,9 +551,9 @@ class SpaceDecoration(
                             val params = child.layoutParams as RecyclerView.LayoutParams
                             val left = child.right + params.rightMargin + space / 2 - divider / 2
                             val right = left + divider
-                            val top = 0
-                            val bottom = parent.height
-                            drawable.setBounds(left.toInt(), top, right.toInt(), bottom)
+                            val top = 0 + mDividerPadding
+                            val bottom = parent.height - mDividerPadding
+                            drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
                             drawable.draw(c)
                         }
                     }

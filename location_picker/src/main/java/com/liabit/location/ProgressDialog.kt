@@ -37,8 +37,8 @@ class ProgressDialog : DialogFragment() {
         return inflater.inflate(R.layout.map_location_progress_dialog, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         title?.let {
             binding.titleView.visibility = View.VISIBLE
             binding.titleView.text = title

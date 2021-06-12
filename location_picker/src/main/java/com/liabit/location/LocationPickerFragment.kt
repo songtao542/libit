@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.Observer
 import com.amap.api.maps2d.AMapOptions
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.LatLng
@@ -26,9 +25,9 @@ import com.liabit.viewbinding.bind
  *
  */
 class LocationPickerFragment : MapBaseFragment(),
-        LocationBottomSheetDialog.OnItemClickListener,
-        View.OnClickListener,
-        Toolbar.OnMenuItemClickListener {
+    LocationBottomSheetDialog.OnItemClickListener,
+    View.OnClickListener,
+    Toolbar.OnMenuItemClickListener {
 
     companion object {
         @JvmStatic
@@ -64,14 +63,14 @@ class LocationPickerFragment : MapBaseFragment(),
         return inflater.inflate(R.layout.map_location_picker_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (activity == null) return
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val activity = activity ?: return
         enableOptionsMenu(binding.appbar.toolbar, false, R.menu.map_location_picker_fragment_menu)
-        binding.appbar.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
+        binding.appbar.toolbar.setNavigationOnClickListener { activity.onBackPressed() }
         binding.appbar.toolbar.setOnMenuItemClickListener(this)
 
-        activity?.let { poiSearcher = PoiSearcher(it) }
+        poiSearcher = PoiSearcher(activity)
 
         binding.mapView.onCreate(savedInstanceState)
         if (!checkPermission()) {
@@ -110,10 +109,10 @@ class LocationPickerFragment : MapBaseFragment(),
             }
         }
 
-        viewModel?.location?.observe(viewLifecycleOwner, Observer {
+        viewModel?.liveLocation?.observe(viewLifecycleOwner) {
             myLocation = it
             setMyLocation(it, 18f)
-        })
+        }
 
         binding.myLocationButton.setOnClickListener {
             getMyLocation()
@@ -135,16 +134,16 @@ class LocationPickerFragment : MapBaseFragment(),
     private fun search(keyword: String) {
         if (myLocation != null) {
             myLocation?.let {
-                poiSearcher?.search(it, keyword)?.observe(viewLifecycleOwner, Observer { result ->
+                poiSearcher?.search(it, keyword)?.observe(viewLifecycleOwner) { result ->
                     showPoiSearchResult(keyword, result)
-                })
+                }
             }
         } else {
             viewModel?.getMyLocation { location ->
                 myLocation = location
-                poiSearcher?.search(location, keyword)?.observe(viewLifecycleOwner, Observer { result ->
+                poiSearcher?.search(location, keyword)?.observe(viewLifecycleOwner) { result ->
                     showPoiSearchResult(keyword, result)
-                })
+                }
             }
         }
     }

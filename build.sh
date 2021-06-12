@@ -34,7 +34,7 @@ echo "copy to dir >>>>>>: ${copyto}"
 mv "./libit/build/libs/libit.aar" "./libit/build/libs/${build}.aar"
 mv "./libit/build/libs/libit-sources.jar" "./libit/build/libs/${build}-sources.jar"
 
-if [ ${copyto} != "" ]; then
+if [[ ${copyto} != "" ]]; then
   cp "./libit/build/libs/${build}.aar" "${copyto}"
   cp "./libit/build/libs/${build}-sources.jar" "${copyto}"
 fi

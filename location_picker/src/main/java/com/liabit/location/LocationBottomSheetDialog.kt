@@ -59,8 +59,8 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
         return inflater.inflate(R.layout.map_location_sheet_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         isCancelable = false
         binding.list.layoutManager = LinearLayoutManager(requireContext())
         poiResult?.let {
@@ -80,9 +80,10 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
         }
     }
 
-    class SheetAdapter(private val poiResult: List<PoiAddress>,
-                       private var onItemClickListener: OnItemClickListener? = null)
-        : RecyclerView.Adapter<SheetAdapter.ViewHolder>() {
+    class SheetAdapter(
+        private val poiResult: List<PoiAddress>,
+        private var onItemClickListener: OnItemClickListener? = null
+    ) : RecyclerView.Adapter<SheetAdapter.ViewHolder>() {
 
         private var lastSelected: PoiAddress? = null
 
@@ -104,7 +105,7 @@ class LocationBottomSheetDialog : BottomSheetDialogFragment() {
         }
 
         inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view),
-                View.OnClickListener {
+            View.OnClickListener {
 
             private val binding = MapLocationSheetItemBinding.bind(view)
 

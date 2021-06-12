@@ -93,8 +93,8 @@ class LocationViewer : MapBaseFragment(), Toolbar.OnMenuItemClickListener {
         return height
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             activity?.let {
                 val layFull = it.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -128,9 +128,9 @@ class LocationViewer : MapBaseFragment(), Toolbar.OnMenuItemClickListener {
             mapProxy.setCenter(it.location, 20f)
         }
 
-        viewModel?.location?.observe(viewLifecycleOwner, {
+        viewModel?.liveLocation?.observe(viewLifecycleOwner) {
             setMyLocation(Position(it), 16f)
-        })
+        }
 
         binding.myLocationButton.setOnClickListener {
             getMyLocation()
@@ -203,8 +203,8 @@ class LocationViewer : MapBaseFragment(), Toolbar.OnMenuItemClickListener {
         aMap.setOnClickListener { openNavigation(A_MAP) }
 
         val builder = AlertDialog.Builder(context, R.style.MapPickerStyle)
-                .setView(view)
-                .setOnDismissListener { mapPickerDialog = null }
+            .setView(view)
+            .setOnDismissListener { mapPickerDialog = null }
 
         mapPickerDialog = builder.create().also {
             it.window?.let { win ->
@@ -246,14 +246,15 @@ class LocationViewer : MapBaseFragment(), Toolbar.OnMenuItemClickListener {
             val appName = getAppName()
             try {
                 val bd = CoordinateConverter()
-                        .from(CoordinateConverter.CoordType.BAIDU)
-                        .coord(LatLng(targetLocationLatitude, targetLocationLongitude))
-                        .convert()
+                    .from(CoordinateConverter.CoordType.BAIDU)
+                    .coord(LatLng(targetLocationLatitude, targetLocationLongitude))
+                    .convert()
                 when (packageName) {
                     BAIDU_MAP -> {
                         toast = R.string.ml_baidu_map_not_install
                         val intent = Intent()
-                        intent.data = Uri.parse("baidumap://map/direction?destination=latlng:$targetLocationLatitude,$targetLocationLongitude|name:$targetLocationTitle&coord_type=bd09ll&mode=driving")
+                        intent.data =
+                            Uri.parse("baidumap://map/direction?destination=latlng:$targetLocationLatitude,$targetLocationLongitude|name:$targetLocationTitle&coord_type=bd09ll&mode=driving")
                         it.startActivity(intent)
                     }
                     A_MAP -> {
@@ -262,13 +263,15 @@ class LocationViewer : MapBaseFragment(), Toolbar.OnMenuItemClickListener {
                         intent.setPackage("com.autonavi.minimap")
                         intent.action = Intent.ACTION_VIEW
                         intent.addCategory(Intent.CATEGORY_DEFAULT)
-                        intent.data = Uri.parse("androidamap://route?sourceApplication=$appName&dlat=${bd.latitude}&dlon=${bd.longitude}&dname=$targetLocationTitle&dev=0&t=0")
+                        intent.data =
+                            Uri.parse("androidamap://route?sourceApplication=$appName&dlat=${bd.latitude}&dlon=${bd.longitude}&dname=$targetLocationTitle&dev=0&t=0")
                         it.startActivity(intent)
                     }
                     TENCENT_MAP -> {
                         toast = R.string.ml_tencent_map_not_install
                         val intent = Intent()
-                        intent.data = Uri.parse("qqmap://map/routeplan?type=walk&to=$targetLocationTitle&tocoord=${bd.latitude},${bd.longitude}&policy=1&referer=$appName")
+                        intent.data =
+                            Uri.parse("qqmap://map/routeplan?type=walk&to=$targetLocationTitle&tocoord=${bd.latitude},${bd.longitude}&policy=1&referer=$appName")
                         it.startActivity(intent)
                     }
                     else -> {

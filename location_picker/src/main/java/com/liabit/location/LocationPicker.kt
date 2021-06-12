@@ -65,8 +65,8 @@ class LocationPicker : MapBaseFragment(), Toolbar.OnMenuItemClickListener {
         return inflater.inflate(R.layout.map_location_nested_picker_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         enableOptionsMenu(binding.appbar.toolbar, false, R.menu.map_location_picker_menu)
         binding.appbar.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
         binding.appbar.toolbar.setOnMenuItemClickListener(this)
@@ -135,7 +135,7 @@ class LocationPicker : MapBaseFragment(), Toolbar.OnMenuItemClickListener {
             }
         }
 
-        viewModel?.location?.observe(viewLifecycleOwner, Observer {
+        viewModel?.liveLocation?.observe(viewLifecycleOwner, Observer {
             setMyLocation(Position(it), 16f)
         })
 
@@ -182,28 +182,28 @@ class LocationPicker : MapBaseFragment(), Toolbar.OnMenuItemClickListener {
         when {
             latLng != null -> {
                 val location = Position(latLng)
-                mapProxy.reverseGeocode(location).observe(viewLifecycleOwner, Observer {
+                mapProxy.reverseGeocode(location).observe(viewLifecycleOwner) {
                     it?.type = AddressType.ADDRESS.value
                     fillAdapter(address = it, pois = pois)
-                })
-                mapProxy.searchPoi(keyword, location).observe(viewLifecycleOwner, Observer { result ->
+                }
+                mapProxy.searchPoi(keyword, location).observe(viewLifecycleOwner) { result ->
                     fillAdapter(address = address, pois = result)
-                })
+                }
             }
             noBound -> {
-                mapProxy.searchPoi(keyword).observe(viewLifecycleOwner, Observer { result ->
+                mapProxy.searchPoi(keyword).observe(viewLifecycleOwner) { result ->
                     address = null
                     fillAdapter(address = address, pois = result)
-                })
+                }
             }
             else -> {
                 viewModel?.getMyLocation { location ->
                     if (location is AMapLocation) {
                         fillAdapter(address = location.toPoiAddress(), pois = pois)
                     }
-                    mapProxy.searchPoi(keyword, Position(location)).observe(viewLifecycleOwner, Observer { result ->
+                    mapProxy.searchPoi(keyword, Position(location)).observe(viewLifecycleOwner) { result ->
                         fillAdapter(address = address, pois = result)
-                    })
+                    }
                 }
             }
         }

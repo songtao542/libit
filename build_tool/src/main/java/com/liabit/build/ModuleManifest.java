@@ -148,15 +148,15 @@ public class ModuleManifest {
             moduleMap.get("third-auth"),
             moduleMap.get("photoview"),
             moduleMap.get("dialog"),
-            moduleMap.get("viewbinding"),
             moduleMap.get("recyclerview"),
             moduleMap.get("popup"),
             moduleMap.get("widget"),
             moduleMap.get("livedata-ktx"),
             moduleMap.get("injectable-viewmodel"),
             moduleMap.get("base"),
-            moduleMap.get("shimmer"),*/
             moduleMap.get("location_picker"),
+            moduleMap.get("viewbinding"),
+            moduleMap.get("shimmer"),*/
             moduleMap.get("autoclear"),
             moduleMap.get("ext"),
             moduleMap.get("utils"),

@@ -218,6 +218,8 @@ dependencies {
     implementation 'com.amap.api:location:4.9.0'
     implementation 'com.amap.api:map2d:6.0.0'
     implementation 'com.amap.api:search:7.3.0'
+    implementation "io.nlopez.smartlocation:library:3.3.3"
+    implementation "io.nlopez.smartlocation:rx:3.3.3"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

@@ -37,12 +37,32 @@ class LooperExecutor(looper: Looper) : AbstractExecutorService() {
     /**
      * Same as execute, but never runs the action inline.
      */
-    fun post(runnable: Runnable?) {
-        handler.post(runnable!!)
+    fun post(runnable: Runnable) {
+        handler.post(runnable)
     }
 
-    fun postDelayed(runnable: Runnable?, delay: Long) {
-        handler.postDelayed(runnable!!, delay)
+    fun postDelayed(runnable: Runnable, delay: Long) {
+        handler.postDelayed(runnable, delay)
+    }
+
+    fun removeCallbacks(runnable: Runnable) {
+        handler.removeCallbacks(runnable)
+    }
+
+    fun removeCallbacks(runnable: Runnable, token: Any) {
+        handler.removeCallbacks(runnable, token)
+    }
+
+    fun removeCallbacksAndMessages(token: Any) {
+        handler.removeCallbacksAndMessages(token)
+    }
+
+    fun removeMessages(what: Int) {
+        handler.removeMessages(what)
+    }
+
+    fun removeMessages(what: Int, obj: Any) {
+        handler.removeMessages(what, obj)
     }
 
     /**

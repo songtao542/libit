@@ -14,4 +14,5 @@
 .externalNativeBuild
 /build_for_theme.sh
 /build_utils.sh
-./build_utils.sh
+/build_for_vpn.sh
+/build_for_sport.sh

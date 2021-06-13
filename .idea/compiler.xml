@@ -13,6 +13,8 @@
       <module name="libit.dialog" target="11" />
       <module name="libit.ext" target="11" />
       <module name="libit.filterlayout" target="11" />
+      <module name="libit.flag" target="11" />
+      <module name="libit.flag-square" target="11" />
       <module name="libit.gesture" target="11" />
       <module name="libit.injectable-viewmodel" target="11" />
       <module name="libit.libit" target="11" />

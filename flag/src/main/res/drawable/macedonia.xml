@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+
+    <path
+        android:fillColor="#FFDA44"
+        android:pathData="M 0 85.333 H 512 V 426.67 H 0 V 85.333 Z" />
+    <path
+        android:fillColor="#D80027"
+        android:pathData="M 383.875 426.662 L 256 252.286 L 282.827 426.662 Z" />
+    <path
+        android:fillColor="#D80027"
+        android:pathData="M 133.565 85.33 L 256 252.286 L 230.314 85.33 Z" />
+    <path
+        android:fillColor="#D80027"
+        android:pathData="M 229.171 426.662 L 256 252.286 L 128.124 426.662 Z" />
+    <path
+        android:fillColor="#D80027"
+        android:pathData="M 0 85.33 L 0 212.9 L 256 252.286 L 28.333 85.33 Z" />
+    <path
+        android:fillColor="#D80027"
+        android:pathData="M 0 426.662 L 18.212 426.662 L 256 252.286 L 0 291.67 Z" />
+    <path
+        android:fillColor="#D80027"
+        android:pathData="M 256 252.286 L 512 212.9 L 512 85.33 L 483.669 85.33 Z" />
+    <path
+        android:fillColor="#D80027"
+        android:pathData="M 281.686 85.33 L 256 252.286 L 378.434 85.33 Z" />
+    <path
+        android:fillColor="#D80027"
+        android:pathData="M 512 426.662 L 512 291.671 L 256 252.286 L 493.787 426.662 Z" />
+    <path
+        android:fillColor="#D80027"
+        android:pathData="M 256 192.931 C 288.783070465 192.931 315.359 219.506929535 315.359 252.29 C 315.359 285.073070465 288.783070465 311.649 256 311.649 C 223.216929535 311.649 196.641 285.073070465 196.641 252.29 C 196.641 219.506929535 223.216929535 192.931 256 192.931 Z" />
+    <path
+        android:fillColor="#FFDA44"
+        android:pathData="M 256 207.768 C 280.588821632 207.768 300.522 227.701178368 300.522 252.29 C 300.522 276.878821632 280.588821632 296.812 256 296.812 C 231.411178368 296.812 211.478 276.878821632 211.478 252.29 C 211.478 227.701178368 231.411178368 207.768 256 207.768 Z" />
+</vector>

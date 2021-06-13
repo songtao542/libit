@@ -23,6 +23,8 @@
             <option value="$PROJECT_DIR$/dialog" />
             <option value="$PROJECT_DIR$/ext" />
             <option value="$PROJECT_DIR$/filterlayout" />
+            <option value="$PROJECT_DIR$/flag" />
+            <option value="$PROJECT_DIR$/flag-square" />
             <option value="$PROJECT_DIR$/gesture" />
             <option value="$PROJECT_DIR$/injectable-viewmodel" />
             <option value="$PROJECT_DIR$/libit" />

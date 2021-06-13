@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+
+    <path
+        android:fillColor="#0052B4"
+        android:pathData="M 0 85.337 H 512 V 426.663 H 0 V 85.337 Z" />
+    <path
+        android:fillColor="#FFDA44"
+        android:pathData="M 0 85.337 H 512 V 170.674 H 0 V 85.337 Z" />
+    <path
+        android:fillColor="#F0F0F0"
+        android:pathData="M 0 170.663 H 512 V 256 H 0 V 170.663 Z" />
+    <path
+        android:fillColor="#D80027"
+        android:pathData="M 0 256 H 512 V 341.337 H 0 V 256 Z" />
+    <path
+        android:fillColor="#6DA544"
+        android:pathData="M 256 256.006 L 0 426.668 L 0 85.331 Z" />
+    <path
+        android:fillColor="#F0F0F0"
+        android:pathData="M68.638,256c0-24.865,17.476-45.638,40.812-50.734c-3.587-0.784-7.308-1.208-11.13-1.208
+c-28.688,0-51.942,23.255-51.942,51.942s23.255,51.942,51.942,51.942c3.822,0,7.543-0.425,11.13-1.208
+C86.113,301.638,68.638,280.865,68.638,256z" />
+    <path
+        android:fillColor="#F0F0F0"
+        android:pathData="M 108.877 211.478 L 111.639 219.981 L 120.579 219.981 L 113.347 225.237 L 116.109 233.739 L 108.877 228.484 L 101.643 233.739 L 104.407 225.237 L 97.173 219.981 L 106.113 219.981 Z" />
+    <path
+        android:fillColor="#F0F0F0"
+        android:pathData="M 108.877 233.739 L 111.639 242.242 L 120.579 242.242 L 113.347 247.497 L 116.109 256 L 108.877 250.745 L 101.643 256 L 104.407 247.497 L 97.173 242.242 L 106.113 242.242 Z" />
+    <path
+        android:fillColor="#F0F0F0"
+        android:pathData="M 108.877 256 L 111.639 264.503 L 120.579 264.503 L 113.347 269.758 L 116.109 278.261 L 108.877 273.006 L 101.643 278.261 L 104.407 269.758 L 97.173 264.503 L 106.113 264.503 Z" />
+    <path
+        android:fillColor="#F0F0F0"
+        android:pathData="M 108.877 278.261 L 111.639 286.763 L 120.579 286.763 L 113.347 292.019 L 116.109 300.522 L 108.877 295.267 L 101.643 300.522 L 104.407 292.019 L 97.173 286.763 L 106.113 286.763 Z" />
+</vector>

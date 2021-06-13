@@ -88,6 +88,8 @@ android {
                     './src/main/retrofit-ext', // retrofit-ext
                     './src/main/utils', // utils
                     './src/main/location_picker', // location_picker
+                    './src/main/flag-square', // flag-square
+                    './src/main/flag', // flag
             ]
             res.srcDirs = [
                     './src/main/res', // viewbinding
@@ -114,6 +116,8 @@ android {
                     './src/main/matisse_crop_res', // matisse_crop
                     './src/main/utils_res', // utils
                     './src/main/location_picker_res', // utils
+                    './src/main/flag-square_res', // flag-square
+                    './src/main/flag_res', // flag
             ]
             manifest.srcFile './src/main/AndroidManifest.xml'
         }

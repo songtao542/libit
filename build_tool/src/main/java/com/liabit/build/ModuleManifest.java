@@ -43,6 +43,8 @@ public class ModuleManifest {
             put("third-auth", "../third-auth/src/main");
             put("compressor", "../compressor/src/main");
             put("retrofit-ext", "../retrofit-ext/src/main");
+            put("flag", "../flag/src/main");
+            put("flag-square", "../flag-square/src/main");
         }
     };
 
@@ -158,6 +160,7 @@ public class ModuleManifest {
             moduleMap.get("viewbinding"),
             moduleMap.get("shimmer"),*/
             moduleMap.get("autoclear"),
+            moduleMap.get("flag-square"),
             moduleMap.get("ext"),
             moduleMap.get("utils"),
             moduleMap.get("retrofit-ext"),

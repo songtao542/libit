@@ -38,6 +38,8 @@ object NationalFlag {
         mCountryList.add(Country("Brunei", "BRN", "bn", "673", R.drawable.brunei))
         mCountryList.add(Country("Bulgaria", "BGR", "bg", "359", R.drawable.bulgaria))
         mCountryList.add(Country("Burkina Faso", "BFA", "bf", "226", R.drawable.burkina_faso))
+        //////
+        mCountryList.add(Country("Burma", "MMR", "mm", "95", R.drawable.myanmar))
         mCountryList.add(Country("Burundi", "BDI", "bi", "257", R.drawable.burundi))
         mCountryList.add(Country("Cambodia", "KHM", "kh", "855", R.drawable.cambodia))
         mCountryList.add(Country("Cameroon", "CMR", "cm", "237", R.drawable.cameroon))
@@ -84,7 +86,8 @@ object NationalFlag {
         mCountryList.add(Country("Hong Kong", "HKG", "hk", "852", R.drawable.hong_kong))
         mCountryList.add(Country("Hungary", "HUN", "hu", "36", R.drawable.hungary))
         mCountryList.add(Country("Christmas Island", "CXR", "cx", "61", R.drawable.christmas_island))
-        mCountryList.add(Country("Marshall Islands", "MHL", "mh", "692", R.drawable.marshall_islands))
+        /////
+        mCountryList.add(Country("Marshall Islands", "MHL", "mh", "692", R.drawable.marshall_island))
         mCountryList.add(Country("Mauritius", "MUS", "mu", "230", R.drawable.mauritius))
         mCountryList.add(Country("Solomon Islands", "SLB", "sb", "677", R.drawable.solomon_islands))
         mCountryList.add(Country("Cayman Islands", "CYM", "ky", "1345", R.drawable.cayman_islands))
@@ -92,8 +95,10 @@ object NationalFlag {
         mCountryList.add(Country("Falkland Islands", "FLK", "fk", "500", R.drawable.falkland_islands))
         mCountryList.add(Country("Faroe Islands", "FRO", "fo", "298", R.drawable.faroe_islands))
         mCountryList.add(Country("Fiji", "FJI", "fj", "679", R.drawable.fiji))
-        mCountryList.add(Country("Mariana Island", "MNP", "mp", "1670", R.drawable.mariana_island))
-        mCountryList.add(Country("Turks and Caicos Islands", "TCA", "tc", "1649", R.drawable.turks_and_caicos_islands))
+        //////
+        mCountryList.add(Country("Mariana Island", "MNP", "mp", "1670", R.drawable.northern_marianas_islands))
+        //////
+        mCountryList.add(Country("Turks and Caicos Islands", "TCA", "tc", "1649", R.drawable.turks_and_caicos))
         mCountryList.add(Country("British Virgin Islands", "VGB", "vg", "1284", R.drawable.british_virgin_islands))
         mCountryList.add(Country("Virgin Islands", "VIR", "vi", "1340", R.drawable.virgin_islands))
         mCountryList.add(Country("India", "IND", "in", "91", R.drawable.india))
@@ -118,8 +123,10 @@ object NationalFlag {
         mCountryList.add(Country("Liechtenstein", "LIE", "li", "423", R.drawable.liechtenstein))
         mCountryList.add(Country("Lithuania", "LTU", "lt", "370", R.drawable.lithuania))
         mCountryList.add(Country("Luxembourg", "LUX", "lu", "352", R.drawable.luxembourg))
-        mCountryList.add(Country("Macau", "MAC", "mo", "853", R.drawable.macau))
-        mCountryList.add(Country("Macedonia", "MKD", "mk", "389", R.drawable.macedonia))
+        //////
+        mCountryList.add(Country("Macau", "MAC", "mo", "853", R.drawable.macao))
+        //////
+        mCountryList.add(Country("Macedonia", "MKD", "mk", "389", R.drawable.republic_of_macedonia))
         mCountryList.add(Country("Madagascar", "MDG", "mg", "261", R.drawable.madagascar))
         mCountryList.add(Country("Malaysia", "MYS", "my", "60", R.drawable.malaysia))
         mCountryList.add(Country("Malawi", "MWI", "mw", "265", R.drawable.malawi))
@@ -129,7 +136,8 @@ object NationalFlag {
         mCountryList.add(Country("Morocco", "MAR", "ma", "212", R.drawable.morocco))
         mCountryList.add(Country("Martinique", "MTQ", "fr", "596", R.drawable.martinique))
         mCountryList.add(Country("Mauritania", "MRT", "mr", "222", R.drawable.mauritania))
-        mCountryList.add(Country("Mayotte", "MYT", "fr", "262", R.drawable.mayotte))
+        //////
+        mCountryList.add(Country("Mayotte", "MYT", "fr", "262", R.drawable.france))
         mCountryList.add(Country("Mexico", "MEX", "mx", "52", R.drawable.mexico))
         mCountryList.add(Country("Micronesia", "FSM", "fm", "691", R.drawable.micronesia))
         mCountryList.add(Country("Monaco", "MCO", "mc", "377", R.drawable.monaco))
@@ -137,7 +145,6 @@ object NationalFlag {
         mCountryList.add(Country("Montenegro", "MNE", "me", "382", R.drawable.montenegro))
         mCountryList.add(Country("Montserrat", "MSR", "ms", "1664", R.drawable.montserrat))
         mCountryList.add(Country("Mozambique", "MOZ", "mz", "258", R.drawable.mozambique))
-        mCountryList.add(Country("Burma", "MMR", "mm", "95", R.drawable.burma))
         mCountryList.add(Country("Namibia", "NAM", "na", "264", R.drawable.namibia))
         mCountryList.add(Country("Nauru", "NRU", "nr", "674", R.drawable.nauru))
         mCountryList.add(Country("Nepal", "NPL", "np", "977", R.drawable.nepal))
@@ -146,11 +153,13 @@ object NationalFlag {
         mCountryList.add(Country("Nigeria", "NGA", "ng", "234", R.drawable.nigeria))
         mCountryList.add(Country("Niue", "NUI", "nu", "683", R.drawable.niue))
         mCountryList.add(Country("Norway", "NOR", "no", "47", R.drawable.norway))
-        mCountryList.add(Country("New Caledonia", "NCL", "nc", "687", R.drawable.new_caledonia))
+        //////
+        mCountryList.add(Country("New Caledonia", "NCL", "nc", "687", R.drawable.france))
         mCountryList.add(Country("New Zealand", "NZL", "nz", "64", R.drawable.new_zealand))
         mCountryList.add(Country("Oman", "OMN", "om", "968", R.drawable.oman))
         mCountryList.add(Country("Uganda", "UGA", "ug", "256", R.drawable.uganda))
-        mCountryList.add(Country("Uzbekistan", "UZB", "uz", "998", R.drawable.uzbekistan))
+        //////
+        mCountryList.add(Country("Uzbekistan", "UZB", "uz", "998", R.drawable.uzbekistn))
         mCountryList.add(Country("Pakistan", "PAK", "pk", "92", R.drawable.pakistan))
         mCountryList.add(Country("Palau", "PLW", "pw", "680", R.drawable.palau))
         mCountryList.add(Country("Palestine", "PSE", "ps", "970", R.drawable.palestine))
@@ -167,7 +176,8 @@ object NationalFlag {
         mCountryList.add(Country("Qatar", "QAT", "qa", "974", R.drawable.qatar))
         mCountryList.add(Country("Central African Republic", "CAF", "cf", "236", R.drawable.central_african_republic))
         mCountryList.add(Country("Moldova", "MDA", "md", "373", R.drawable.moldova))
-        mCountryList.add(Country("Democratic Republic of the Congo", "COD", "cd", "243", R.drawable.democratic_republic_of_the_congo))
+        //////
+        mCountryList.add(Country("Democratic Republic of the Congo", "COD", "cd", "243", R.drawable.democratic_republic_of_congo))
         mCountryList.add(Country("Dominican Republic", "DOM", "do", "1809", R.drawable.dominican_republic))
         mCountryList.add(Country("Iran", "IRN", "ir", "98", R.drawable.iran))
         mCountryList.add(Country("North Korea", "PRK", "kp", "850", R.drawable.north_korea))
@@ -190,19 +200,25 @@ object NationalFlag {
         mCountryList.add(Country("Somalia", "SOM", "so", "252", R.drawable.somalia))
         mCountryList.add(Country("Sudan", "SDN", "sd", "249", R.drawable.sudan))
         mCountryList.add(Country("Sri Lanka", "LKA", "lk", "94", R.drawable.sri_lanka))
+        //////
         mCountryList.add(Country("St. Kitts and Nevis", "KNA", "kn", "1869", R.drawable.saint_kitts_and_nevis))
+        //////
         mCountryList.add(Country("St. Vincent and the Grenadines", "VCT", "vc", "1784", R.drawable.st_vincent_and_the_grenadines))
         mCountryList.add(Country("Sweden", "SWE", "se", "46", R.drawable.sweden))
         mCountryList.add(Country("Switzerland", "CHE", "ch", "41", R.drawable.switzerland))
-        mCountryList.add(Country("Surinam", "SUR", "sr", "597", R.drawable.surinam))
+        //////
+        mCountryList.add(Country("Surinam", "SUR", "sr", "597", R.drawable.suriname))
         mCountryList.add(Country("Syria", "SYR", "sy", "963", R.drawable.syria))
+        //////
         mCountryList.add(Country("São Tomé and Príncipe", "STP", "st", "239", R.drawable.sao_tome_and_principe))
         mCountryList.add(Country("Tajikistan", "TJK", "tj", "992", R.drawable.tajikistan))
         mCountryList.add(Country("Taiwan", "TWN", "tw", "886", R.drawable.taiwan))
         mCountryList.add(Country("Tanzania", "TZA", "tz", "255", R.drawable.tanzania))
-        mCountryList.add(Country("Tuvalu", "TUV", "tv", "688", R.drawable.tuvalu))
+        //////
+        mCountryList.add(Country("Tuvalu", "TUV", "tv", "688", R.drawable.tubalu))
         mCountryList.add(Country("Chad", "TCD", "td", "235", R.drawable.chad))
-        mCountryList.add(Country("Diego Garcia", "IOT", "io", "246", R.drawable.diego_garcia))
+        //////
+        mCountryList.add(Country("Diego Garcia", "IOT", "io", "246", R.drawable.british_indian_ocean_territory))
         mCountryList.add(Country("Thailand", "THA", "th", "66", R.drawable.thailand))
         mCountryList.add(Country("East Timor", "TLS", "tl", "670", R.drawable.east_timor))
         mCountryList.add(Country("Togo", "TGO", "tg", "228", R.drawable.togo))

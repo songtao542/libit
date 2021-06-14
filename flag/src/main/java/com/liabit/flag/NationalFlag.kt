@@ -250,7 +250,7 @@ object NationalFlag {
 
     fun getFlagResourceIdByDialingCode(dialingCode: String): Int {
         for (country in mCountryList) {
-            if (country.dialingCode == dialingCode) {
+            if (country.dialingCode == dialingCode.replace("+", "").replace(" ", "")) {
                 return country.flag
             }
         }

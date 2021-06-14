@@ -4,15 +4,12 @@
     <!-- 占位层，代码中使用 setDrawableByLayerId 进行替换 -->
     <item
         android:id="@+id/animator_layer"
-        android:width="67dp"
-        android:height="67dp"
         android:gravity="center">
         <shape
-            android:innerRadius="33dp"
+            android:innerRadius="32dp"
             android:shape="ring"
             android:thickness="5dp"
             android:useLevel="false">
-
             <gradient
                 android:endColor="@color/progress_color"
                 android:gradientRadius="48dp"
@@ -22,8 +19,7 @@
     </item>
 
     <item
-        android:width="64dp"
-        android:height="64dp"
+        android:id="@+id/center_layer"
         android:bottom="10dp"
         android:gravity="center"
         android:left="10dp"
@@ -52,7 +48,7 @@
         <ripple android:color="?attr/colorControlHighlight">
             <item android:id="@android:id/mask">
                 <shape android:shape="oval">
-                    <solid android:color="@android:color/darker_gray"></solid>
+                    <solid android:color="@android:color/darker_gray"/>
                 </shape>
             </item>
         </ripple>

@@ -27,7 +27,7 @@ public abstract class StateButton extends FrameLayout {
 
     private ImageView mIconView;
 
-    enum State {
+    public enum State {
         OFF,
         ON,
         LOADING
@@ -106,6 +106,10 @@ public abstract class StateButton extends FrameLayout {
         State oldState = state;
         state = newState;
         handleState(oldState, state);
+    }
+
+    public State getState() {
+        return state;
     }
 
     public void cancelLoading() {

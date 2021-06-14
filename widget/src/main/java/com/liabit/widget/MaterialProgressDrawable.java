@@ -6,6 +6,7 @@ import android.graphics.*;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.view.animation.*;
@@ -101,7 +102,17 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
     private boolean mVisible = true;
 
     public MaterialProgressDrawable(Context context, View parent) {
-        this(context, parent, CIRCLE_DIAMETER, CIRCLE_DIAMETER, INNER_RADIUS, STROKE_WIDTH, Shape.CIRCLE);
+        mParent = parent;
+        mResources = context.getResources();
+        mRing = new Ring(mCallback);
+        mColors = COLORS;
+        mRing.setColors(mColors);
+        mRing.setShape(Shape.CIRCLE);
+        double width = dp2px(context, CIRCLE_DIAMETER);
+        double height = dp2px(context, CIRCLE_DIAMETER);
+        double strokeWidth = dp2px(context, STROKE_WIDTH);
+        setup(width, height, dp2px(context, INNER_RADIUS), strokeWidth);
+        setupAnimators();
     }
 
     public MaterialProgressDrawable(Context context, View parent, double width, double height, double innerRadius, double strokeWidth, Shape shape) {
@@ -111,18 +122,22 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
         mColors = COLORS;
         mRing.setColors(mColors);
         mRing.setShape(shape);
-        initialize(width, height, innerRadius, strokeWidth);
+        setup(width, height, innerRadius, strokeWidth);
         setupAnimators();
     }
 
-    private void initialize(double progressCircleWidth, double progressCircleHeight, double innerRadius, double strokeWidth) {
+    private float dp2px(Context context, int dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+    }
+
+    public void setup(double progressCircleWidth, double progressCircleHeight, double innerRadius, double strokeWidth) {
         final Ring ring = mRing;
         final DisplayMetrics metrics = mResources.getDisplayMetrics();
         final float screenDensity = metrics.density;
-        mWidth = progressCircleWidth * screenDensity;
-        mHeight = progressCircleHeight * screenDensity;
-        mInnerRadius = innerRadius * screenDensity;
-        mStrokeWidth = strokeWidth * screenDensity;
+        mWidth = progressCircleWidth;
+        mHeight = progressCircleHeight;
+        mInnerRadius = innerRadius;
+        mStrokeWidth = strokeWidth;
         ring.setStrokeWidth((float) mStrokeWidth);
         ring.setInnerRadius(mInnerRadius);
         ring.setDensity(screenDensity);
@@ -135,6 +150,8 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
             ring.setInsets(insets);
         }
     }
+
+
 
     /**
      * Set the overall size for the progress spinner. This updates the radius

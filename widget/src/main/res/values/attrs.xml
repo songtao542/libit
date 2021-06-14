@@ -15,6 +15,14 @@
         <attr name="supportLoading" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="CircleStateButton">
+        <attr name="gradientStartColor" format="reference|color" />
+        <attr name="gradientEndColor" format="reference|color" />
+        <attr name="gradientAngle" format="reference|integer" />
+        <attr name="progressStrokeSize" format="reference|dimension" />
+        <attr name="progressStrokeColor" format="reference|color" />
+    </declare-styleable>
+
     <declare-styleable name="SpringButton">
         <attr name="icon" />
         <attr name="iconWidth" />

@@ -3,10 +3,10 @@
        xmlns:tools="http://schemas.android.com/tools"
        tools:parentTag="android.widget.FrameLayout">
 
-    <FrameLayout
+   <!-- <FrameLayout
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_gravity="center">
+            android:layout_gravity="center">-->
 
         <ImageView
                 android:id="@+id/iconView"
@@ -15,6 +15,6 @@
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"/>
-    </FrameLayout>
+<!--    </FrameLayout>-->
 
 </merge>

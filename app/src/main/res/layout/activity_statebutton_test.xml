@@ -32,8 +32,8 @@
 
         <com.liabit.widget.CircleStateButton
             android:id="@+id/circleStateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_gravity="center"
             app:icon="@drawable/ic_charge" />
 

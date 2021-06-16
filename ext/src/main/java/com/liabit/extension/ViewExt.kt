@@ -10,21 +10,22 @@ import android.view.View.ALPHA
 import android.view.ViewOutlineProvider
 import androidx.annotation.DimenRes
 
-fun View.alphaOut(duration: Long = 250, update: ((alpha: Float) -> Unit)? = null, end: (() -> Unit)? = null) {
+fun View.alphaOut(duration: Long = 250, update: ((alpha: Float) -> Unit)? = null, end: ((view: View) -> Unit)? = null) {
     alpha(1f, 0f, duration, update, end)
 }
 
-fun View.alphaIn(duration: Long = 250, update: ((alpha: Float) -> Unit)? = null, end: (() -> Unit)? = null) {
+fun View.alphaIn(duration: Long = 250, update: ((alpha: Float) -> Unit)? = null, end: ((view: View) -> Unit)? = null) {
     alpha(0f, 1f, duration, update, end)
 }
 
-fun View.alpha(from: Float, to: Float, duration: Long = 250, update: ((alpha: Float) -> Unit)? = null, end: (() -> Unit)? = null) {
+fun View.alpha(from: Float, to: Float, duration: Long = 250, update: ((alpha: Float) -> Unit)? = null, end: ((view: View) -> Unit)? = null) {
     visibility = View.VISIBLE
+    val view = this
     val animator = ObjectAnimator.ofFloat(this, ALPHA, from, to)
     animator.duration = duration
     animator.addListener(object : AnimatorListenerAdapter() {
         override fun onAnimationEnd(animation: Animator?) {
-            end?.invoke()
+            end?.invoke(view)
         }
     })
     animator.addUpdateListener {

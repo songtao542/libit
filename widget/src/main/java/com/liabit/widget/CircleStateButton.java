@@ -102,11 +102,8 @@ public class CircleStateButton extends StateButton {
                 }
             }
         }
-        setClipToPadding(false);
-        setClipChildren(false);
         setBackground(backgroundDrawable);
     }
-
 
     private GradientDrawable.Orientation getOrientation(int angle) {
         angle = ((angle % 360) + 360) % 360;

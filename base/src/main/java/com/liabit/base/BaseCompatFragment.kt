@@ -6,6 +6,7 @@ import android.os.Looper
 import android.os.SystemClock
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -138,7 +139,7 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
     }
 
     /**
-     *
+     * 往 Child Fragment 中分发 BackEvent
      */
     override fun dispatchBackEvent(): Boolean {
         var primary = childFragmentManager.primaryNavigationFragment
@@ -152,6 +153,28 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
     }
 
     override fun onBackPressed(): Boolean {
+        return handleBackEvent(view)
+    }
+
+    /**
+     * 在控件树中查找需要处理 BackEvent 的控件
+     */
+    private fun handleBackEvent(view: View?): Boolean {
+        if (view is OnBackListener) {
+            val handled = view.onBackPressed()
+            if (handled) {
+                return true
+            }
+        }
+        if (view is ViewGroup) {
+            for (i in 0 until view.childCount) {
+                val child = view.getChildAt(i)
+                val handled = handleBackEvent(child)
+                if (handled) {
+                    return true
+                }
+            }
+        }
         return false
     }
 

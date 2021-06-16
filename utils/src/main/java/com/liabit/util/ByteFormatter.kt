@@ -11,8 +11,6 @@ object ByteFormatter {
     private const val FLAG_SI_UNITS = 1 shl 2
     private const val FLAG_IEC_UNITS = 1 shl 3
 
-    data class BytesResult(val value: String, val units: String, val roundedBytes: Long)
-
     fun formatFileSize(context: Context, sizeBytes: Long): String {
         return formatFileSize(context, sizeBytes, FLAG_SI_UNITS)
     }
@@ -94,8 +92,8 @@ object ByteFormatter {
         // it's okay (for now)...
         val roundedBytes = if (flags and FLAG_CALCULATE_ROUNDED == 0) 0 else (result * roundFactor).roundToInt().toLong() * mult / roundFactor
         val units = context.getString(suffix)
-        return BytesResult(roundedString, units, roundedBytes)
+        return BytesResult(roundedString, units, result, roundedBytes)
     }
-
-
 }
+
+data class BytesResult(val roundedString: String, val units: String, val value: Float, val roundedBytes: Long)

@@ -159,7 +159,7 @@ open class ApplicationViewModel : ViewModel() {
      * @Inject 注解的方法会在 @Inject注解的成员(application)完成注入完成后调用
      */
     @Inject
-    fun onFinishMemberInject() {
+    open fun onFinishMemberInject() {
         onCreate(context)
     }
 

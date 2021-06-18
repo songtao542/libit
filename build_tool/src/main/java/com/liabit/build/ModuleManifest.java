@@ -157,8 +157,8 @@ public class ModuleManifest {
             moduleMap.get("base"),
             moduleMap.get("location_picker"),
             moduleMap.get("viewbinding"),
-            moduleMap.get("shimmer"),*/
             moduleMap.get("widget"),
+            moduleMap.get("shimmer"),*/
             moduleMap.get("autoclear"),
             moduleMap.get("flag"),
             moduleMap.get("ext"),

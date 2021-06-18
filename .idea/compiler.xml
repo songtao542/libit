@@ -16,6 +16,7 @@
       <module name="libit.flag" target="11" />
       <module name="libit.flag-square" target="11" />
       <module name="libit.gesture" target="11" />
+      <module name="libit.imageloader" target="11" />
       <module name="libit.injectable-viewmodel" target="11" />
       <module name="libit.libit" target="11" />
       <module name="libit.livedata-ktx" target="11" />

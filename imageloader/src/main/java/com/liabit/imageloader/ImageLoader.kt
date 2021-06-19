@@ -34,23 +34,23 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 fun ImageView.load(url: String) {
-    ImageLoader.display(url, this)
+    ImageLoader.load(url).into(this)
 }
 
 fun ImageView.load(url: String, error: Int) {
-    ImageLoader.display(url, this, error)
+    ImageLoader.load(url).error(error).into(this)
 }
 
 object ImageLoader : CoroutineScope {
 
     private const val TAG = "ImageLoader"
 
-    var DEBUG = false
+    var DEBUG = true
 
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + Job()
 
     private val mBitmapCache = LruCache<String, Bitmap>(20)
-    private val mTempViewToSupportFragment = ArrayMap<View, Fragment>()
+    private val mTempViewToFragment = ArrayMap<View, Fragment>()
 
     private class Target(val url: String, displayTarget: Any) {
         val target = WeakReference(displayTarget)
@@ -70,65 +70,109 @@ object ImageLoader : CoroutineScope {
         fun getContext(): Context?
     }
 
-    @JvmStatic
-    fun display(url: String?, displayTarget: DisplayTarget) {
-        display(url, displayTarget, 0)
+    class RequestBuilder constructor() {
+
+        private var mFragment: Fragment? = null
+        private var mActivity: Activity? = null
+        private var mUrl: String? = null
+        private var mErrorResId: Int = 0
+
+        internal constructor(fragment: Fragment) : this() {
+            mFragment = fragment
+        }
+
+        internal constructor(activity: Activity) : this() {
+            mActivity = activity
+        }
+
+        fun load(url: String): RequestBuilder {
+            mUrl = url
+            return this
+        }
+
+        fun error(resId: Int): RequestBuilder {
+            mErrorResId = resId
+            return this
+        }
+
+        fun into(imageView: ImageView) {
+            display(mUrl, imageView, mFragment, mActivity, mErrorResId)
+        }
+
+        fun into(target: DisplayTarget) {
+            display(mUrl, target, mFragment, mActivity, mErrorResId)
+        }
     }
 
-    @JvmStatic
-    fun display(url: String?, displayTarget: DisplayTarget?, error: Int) {
+    fun with(fragment: Fragment): RequestBuilder {
+        return RequestBuilder(fragment)
+    }
+
+    fun with(activity: Activity): RequestBuilder {
+        return RequestBuilder(activity)
+    }
+
+    fun load(url: String): RequestBuilder {
+        return RequestBuilder().load(url)
+    }
+
+    private fun display(url: String?, displayTarget: DisplayTarget?, fragment: Fragment?, activity: Activity?, error: Int) {
         if (url.isNullOrEmpty() || displayTarget == null) return
         val context = displayTarget.getContext() ?: return
         displayTarget.setTag(R.id.image_loader_key_tag, url)
         displayTarget.setTag(R.id.image_loader_error_tag, error)
         val target = Target(url, displayTarget)
-        val activity = findActivity(context)
-        log("activity: $activity")
-        if (activity == null) {
-            val ctx = context.applicationContext
-            loadImageAndDisplay(ctx, target)
+        if (fragment != null) {
+            log("fragment: $fragment")
+            loadImage(context, fragment.viewLifecycleOwner, target)
         } else {
-            when (activity) {
-                is ComponentActivity -> {
-                    loadImage(activity, activity, target)
+            val targetActivity = activity ?: findActivity(context)
+            log("activity: $targetActivity")
+            if (targetActivity != null) {
+                when (targetActivity) {
+                    is ComponentActivity -> {
+                        loadImage(targetActivity, targetActivity, target)
+                    }
+                    else -> {
+                        loadImage(targetActivity, LifeCycleFragment.getLifecycleOwner(targetActivity), target)
+                    }
                 }
-                else -> {
-                    loadImage(activity, LifeCycleFragment.getLifecycleOwner(activity), target)
-                }
+            } else {
+                val ctx = context.applicationContext
+                loadImageAndDisplay(ctx, target)
             }
         }
     }
 
-    @JvmStatic
-    fun display(url: String?, imageView: ImageView?) {
-        display(url, imageView, 0)
-    }
-
-    @JvmStatic
-    fun display(url: String?, imageView: ImageView?, error: Int) {
+    private fun display(url: String?, imageView: ImageView?, fragment: Fragment?, activity: Activity?, error: Int) {
         if (url.isNullOrEmpty() || imageView == null) return
         val context = imageView.context ?: return
         imageView.setTag(R.id.image_loader_key_tag, url)
         imageView.setTag(R.id.image_loader_error_tag, error)
         val target = Target(url, imageView)
-        val activity = findActivity(context)
-        log("activity: $activity")
-        if (activity == null) {
-            val ctx = context.applicationContext
-            loadImageAndDisplay(ctx, target)
+        if (fragment != null) {
+            log("fragment: $fragment")
+            loadImage(context, fragment.viewLifecycleOwner, target)
         } else {
-            when (activity) {
-                is FragmentActivity -> {
-                    val fragment = findFragment(imageView, activity)
-                    log("fragment: $fragment")
-                    loadImage(activity, fragment?.viewLifecycleOwner ?: activity, target)
+            val targetActivity = activity ?: findActivity(context)
+            log("activity: $targetActivity")
+            if (targetActivity != null) {
+                when (targetActivity) {
+                    is FragmentActivity -> {
+                        val targetFragment = findFragment(imageView, targetActivity)
+                        log("target fragment: $targetFragment")
+                        loadImage(targetActivity, targetFragment?.viewLifecycleOwner ?: targetActivity, target)
+                    }
+                    is ComponentActivity -> {
+                        loadImage(targetActivity, targetActivity, target)
+                    }
+                    else -> {
+                        loadImage(targetActivity, LifeCycleFragment.getLifecycleOwner(targetActivity), target)
+                    }
                 }
-                is ComponentActivity -> {
-                    loadImage(activity, activity, target)
-                }
-                else -> {
-                    loadImage(activity, LifeCycleFragment.getLifecycleOwner(activity), target)
-                }
+            } else {
+                val ctx = context.applicationContext
+                loadImageAndDisplay(ctx, target)
             }
         }
     }
@@ -142,13 +186,13 @@ object ImageLoader : CoroutineScope {
     }
 
     private fun findFragment(target: View, activity: FragmentActivity): Fragment? {
-        mTempViewToSupportFragment.clear()
-        findAllFragmentsWithViews(activity.supportFragmentManager.fragments, mTempViewToSupportFragment)
+        mTempViewToFragment.clear()
+        findAllFragmentsWithViews(activity.supportFragmentManager.fragments, mTempViewToFragment)
         var result: Fragment? = null
         val activityRoot = activity.findViewById<View>(android.R.id.content)
         var current = target
         while (current != activityRoot) {
-            result = mTempViewToSupportFragment[current]
+            result = mTempViewToFragment[current]
             if (result != null) {
                 break
             }
@@ -158,7 +202,7 @@ object ImageLoader : CoroutineScope {
                 break
             }
         }
-        mTempViewToSupportFragment.clear()
+        mTempViewToFragment.clear()
         return result
     }
 

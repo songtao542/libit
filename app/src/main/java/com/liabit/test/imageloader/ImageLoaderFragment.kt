@@ -37,7 +37,7 @@ class ImageLoaderFragment : Fragment() {
         binding.recyclerView.adapter = object : RecyclerView.Adapter<ViewHolder>() {
 
             override fun getItemCount(): Int {
-                return 50
+                return 360
             }
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

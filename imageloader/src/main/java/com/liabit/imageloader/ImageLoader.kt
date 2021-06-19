@@ -341,7 +341,7 @@ object ImageLoader : CoroutineScope {
                     log("decode cached no sized file, options.inSampleSize=${options.inSampleSize}")
                     val bitmap = BitmapFactory.decodeFile(cacheFile.absolutePath, options)
                     if (bitmap != null) {
-                        saveDecodedBitmap(context, bitmap, appendSizeKey)
+                        saveDecodedBitmap(context, bitmap, appendSizeKey, options.outMimeType)
                         return bitmap
                     }
                 } catch (e: Throwable) {
@@ -383,7 +383,7 @@ object ImageLoader : CoroutineScope {
                 log("decode net source, options.inSampleSize=${options.inSampleSize}")
                 val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size, options)
                 if (key != appendSizeKey && bitmap != null) {
-                    saveDecodedBitmap(context, bitmap, appendSizeKey)
+                    saveDecodedBitmap(context, bitmap, appendSizeKey, options.outMimeType)
                 }
                 return bitmap
             }
@@ -393,13 +393,14 @@ object ImageLoader : CoroutineScope {
         return null
     }
 
-    private fun saveDecodedBitmap(context: Context, bitmap: Bitmap, appendSizeKey: String) {
+    private fun saveDecodedBitmap(context: Context, bitmap: Bitmap, appendSizeKey: String, mimeType: String?) {
         try {
             val cacheDir = context.externalCacheDir ?: return
             val cacheFile = File(cacheDir, appendSizeKey)
             val fileOutputStream = FileOutputStream(cacheFile)
             val bufferedOutputStream = BufferedOutputStream(fileOutputStream)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bufferedOutputStream)
+            val format = if ("image/png" == mimeType) Bitmap.CompressFormat.PNG else Bitmap.CompressFormat.JPEG
+            bitmap.compress(format, 100, bufferedOutputStream)
         } catch (e: Throwable) {
             log("save decoded image failed: ", e)
         }

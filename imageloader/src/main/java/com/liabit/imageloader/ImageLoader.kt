@@ -104,14 +104,17 @@ object ImageLoader : CoroutineScope {
         }
     }
 
+    @JvmStatic
     fun with(fragment: Fragment): RequestBuilder {
         return RequestBuilder(fragment)
     }
 
+    @JvmStatic
     fun with(activity: Activity): RequestBuilder {
         return RequestBuilder(activity)
     }
 
+    @JvmStatic
     fun load(url: String): RequestBuilder {
         return RequestBuilder().load(url)
     }

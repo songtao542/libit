@@ -1,6 +1,7 @@
 package com.liabit.imageloader
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Bitmap
@@ -49,7 +50,7 @@ object ImageLoader : CoroutineScope {
 
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + Job()
 
-    private val mBitmapCache = LruCache<String, Bitmap>(20)
+    private val mBitmapCache = LruCache<String, Bitmap>(Runtime.getRuntime().maxMemory() / 8)
     private val mTempViewToFragment = ArrayMap<View, Fragment>()
 
     private class Target(val url: String, displayTarget: Any) {
@@ -179,6 +180,15 @@ object ImageLoader : CoroutineScope {
             }
         }
     }
+
+    /*private fun initCacheSize(context: Context) {
+        (context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager)?.let {
+            val memoryClassBytes = it.memoryClass * 1024 * 1024
+            val cacheSize = memoryClassBytes / 8
+            val multiplier = cacheSize / 20f
+            mBitmapCache.setSizeMultiplier(multiplier)
+        }
+    }*/
 
     private fun findActivity(context: Context): Activity? {
         return when (context) {

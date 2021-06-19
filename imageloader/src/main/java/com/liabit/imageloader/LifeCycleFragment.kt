@@ -44,24 +44,20 @@ class LifeCycleFragment : Fragment(), LifecycleOwner {
 
     override fun onStart() {
         super.onStart()
-        Log.d("TTTT", "onStart====")
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
     }
 
     override fun onStop() {
-        Log.d("TTTT", "onStop====")
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
         super.onStop()
     }
 
     override fun onDestroyView() {
-        Log.d("TTTT", "onDestroyView====")
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         super.onDestroyView()
     }
 
     override fun onDestroy() {
-        Log.d("TTTT", "onDestroy====")
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         super.onDestroy()
     }

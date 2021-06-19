@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.ImageView
+import androidx.activity.ComponentActivity
 import androidx.collection.ArrayMap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -87,10 +88,13 @@ object ImageLoader : CoroutineScope {
             val ctx = context.applicationContext
             loadImageAndDisplay(ctx, target)
         } else {
-            if (activity is FragmentActivity) {
-                loadImage(context, activity, target)
-            } else {
-                loadImage(activity, LifeCycleFragment.getLifecycleOwner(activity), target)
+            when (activity) {
+                is ComponentActivity -> {
+                    loadImage(activity, activity, target)
+                }
+                else -> {
+                    loadImage(activity, LifeCycleFragment.getLifecycleOwner(activity), target)
+                }
             }
         }
     }
@@ -113,12 +117,18 @@ object ImageLoader : CoroutineScope {
             val ctx = context.applicationContext
             loadImageAndDisplay(ctx, target)
         } else {
-            if (activity is FragmentActivity) {
-                val fragment = findFragment(imageView, activity)
-                log("fragment: $fragment")
-                loadImage(activity, fragment?.viewLifecycleOwner ?: activity, target)
-            } else {
-                loadImage(activity, LifeCycleFragment.getLifecycleOwner(activity), target)
+            when (activity) {
+                is FragmentActivity -> {
+                    val fragment = findFragment(imageView, activity)
+                    log("fragment: $fragment")
+                    loadImage(activity, fragment?.viewLifecycleOwner ?: activity, target)
+                }
+                is ComponentActivity -> {
+                    loadImage(activity, activity, target)
+                }
+                else -> {
+                    loadImage(activity, LifeCycleFragment.getLifecycleOwner(activity), target)
+                }
             }
         }
     }

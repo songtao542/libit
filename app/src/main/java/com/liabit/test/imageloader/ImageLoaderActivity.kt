@@ -23,25 +23,25 @@ class ImageLoaderActivity : Activity() {
         setContentView(binding.root)
 
         binding.image1.load(MockPicture.random(), R.mipmap.wan_dan)
-        //binding.image2.load(MockPicture.random(), R.mipmap.wan_dan)
-        //binding.image3.load(MockPicture.random(), R.mipmap.wan_dan)
+        binding.image2.load(MockPicture.random(), R.mipmap.wan_dan)
+        binding.image3.load(MockPicture.random(), R.mipmap.wan_dan)
 
         binding.recyclerView.layoutManager = GridLayoutManager(this, 3)
 
-//        binding.recyclerView.adapter = object : RecyclerView.Adapter<ViewHolder>() {
-//
-//            override fun getItemCount(): Int {
-//                return 50
-//            }
-//
-//            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-//                return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.test_image_loader_item, parent, false))
-//            }
-//
-//            override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//                holder.setData(position)
-//            }
-//        }
+        binding.recyclerView.adapter = object : RecyclerView.Adapter<ViewHolder>() {
+
+            override fun getItemCount(): Int {
+                return 50
+            }
+
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+                return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.test_image_loader_item, parent, false))
+            }
+
+            override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+                holder.setData(position)
+            }
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

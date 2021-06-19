@@ -32,7 +32,7 @@ class ImageLoaderAppActivity : AppCompatActivity() {
         binding.recyclerView.adapter = object : RecyclerView.Adapter<ViewHolder>() {
 
             override fun getItemCount(): Int {
-                return 20
+                return 50
             }
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

@@ -327,12 +327,16 @@ object ImageLoader : CoroutineScope {
                 try {
                     log("decode cached no sized file")
                     val options = BitmapFactory.Options()
-                    options.inPreferredConfig = Bitmap.Config.RGB_565
+                    options.inJustDecodeBounds = true
+                    BitmapFactory.decodeFile(cacheFile.absolutePath, options)
                     if (size != null) {
-                        options.inJustDecodeBounds = true
-                        BitmapFactory.decodeFile(cacheFile.absolutePath, options)
                         options.inSampleSize = calculateInSampleSize(options, size.x, size.y)
-                        options.inJustDecodeBounds = false
+                    }
+                    options.inJustDecodeBounds = false
+                    if ("image/png" == options.outMimeType) {
+                        options.inPreferredConfig = Bitmap.Config.ARGB_8888
+                    } else {
+                        options.inPreferredConfig = Bitmap.Config.RGB_565
                     }
                     log("decode cached no sized file, options.inSampleSize=${options.inSampleSize}")
                     val bitmap = BitmapFactory.decodeFile(cacheFile.absolutePath, options)
@@ -365,12 +369,16 @@ object ImageLoader : CoroutineScope {
                 fileOutputStream.flush()
                 val byteArray = byteArrayOutputStream.toByteArray()
                 val options = BitmapFactory.Options()
-                options.inPreferredConfig = Bitmap.Config.RGB_565
+                options.inJustDecodeBounds = true
+                BitmapFactory.decodeFile(cacheFile.absolutePath, options)
                 if (size != null) {
-                    options.inJustDecodeBounds = true
-                    BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size, options)
                     options.inSampleSize = calculateInSampleSize(options, size.x, size.y)
-                    options.inJustDecodeBounds = false
+                }
+                options.inJustDecodeBounds = false
+                if ("image/png" == options.outMimeType) {
+                    options.inPreferredConfig = Bitmap.Config.ARGB_8888
+                } else {
+                    options.inPreferredConfig = Bitmap.Config.RGB_565
                 }
                 log("decode net source, options.inSampleSize=${options.inSampleSize}")
                 val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size, options)

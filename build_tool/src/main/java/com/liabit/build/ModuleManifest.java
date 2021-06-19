@@ -45,6 +45,7 @@ public class ModuleManifest {
             put("retrofit-ext", "../retrofit-ext/src/main");
             put("flag", "../flag/src/main");
             put("flag-square", "../flag-square/src/main");
+            put("imageloader", "../imageloader/src/main");
         }
     };
 
@@ -164,5 +165,6 @@ public class ModuleManifest {
             moduleMap.get("ext"),
             moduleMap.get("utils"),
             moduleMap.get("retrofit-ext"),
+            moduleMap.get("imageloader"),
     };
 }

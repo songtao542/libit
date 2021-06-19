@@ -9,11 +9,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.liabit.imageloader.ImageLoader
 import com.liabit.test.databinding.ActivityMainBinding
 import com.liabit.test.decorationtest.TestRecyclerViewDecorationActivity
 import com.liabit.test.filtertest.TestFilterActivity
 import com.liabit.test.gesturetest.TestDragActivity
 import com.liabit.test.gesturetest.TestSwipeActivity
+import com.liabit.test.imageloader.ImageLoaderActivity
 import com.liabit.test.loadmore.TestLoadMoreMenuActivity
 import com.liabit.test.nested.TestNestedRecyclerViewActivity
 import com.liabit.test.tablayouttest.TestTabLayoutActivity
@@ -48,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             play(Uri.fromFile(file))
 
         } catch (e: Throwable) {
-            Log.d("TTTT", "error: ", e)
+            //Log.d("TTTT", "error: ", e)
         }
     }
 
@@ -64,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                 it.start()
             }
         } catch (e: Throwable) {
-            Log.d("TTTT", "error: ", e)
+            //Log.d("TTTT", "error: ", e)
         }
 
     }
@@ -154,6 +156,10 @@ class MainActivity : AppCompatActivity() {
 
             R.id.loadMoreTest -> {
                 startActivity(Intent(this, TestLoadMoreMenuActivity::class.java))
+            }
+
+            R.id.imageLoader -> {
+                startActivity(Intent(this, ImageLoaderActivity::class.java))
             }
 
             R.id.otherTest -> {

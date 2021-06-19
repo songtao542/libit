@@ -90,6 +90,7 @@ dependencies {
     implementation project(':addsub')
     implementation project(':autoclear')
     implementation project(':retrofit-ext')
+    implementation project(':imageloader')
 
     implementation files('../common_libs/imagepicker-1.0.0.aar')
 

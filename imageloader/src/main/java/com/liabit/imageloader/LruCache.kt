@@ -14,7 +14,8 @@ import kotlin.math.roundToInt
  *
  * @param initialMaxSize The maximum size of the cache, the units must match the units used in [getSize].
  */
-class LruCache<T, Y>(private val initialMaxSize: Long) {
+@Suppress("MemberVisibilityCanBePrivate", "unused")
+open class LruCache<T, Y>(private val initialMaxSize: Long) {
 
     private val cache: MutableMap<T, Entry<Y>?> = LinkedHashMap(100, 0.75f, true)
 

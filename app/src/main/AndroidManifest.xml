@@ -38,6 +38,10 @@
         <activity android:name=".TestLabelViewActivity" />
         <activity android:name=".TestProgressBarActivity" />
         <activity
+            android:name=".imageloader.ImageLoaderActivity"
+            android:theme="@android:style/Theme.Holo.Light.DarkActionBar" />
+        <activity android:name=".imageloader.ImageLoaderAppActivity" />
+        <activity
             android:name=".TestGradient4Activity"
             android:label="ColorTest" />
         <activity

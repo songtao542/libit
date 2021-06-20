@@ -55,9 +55,9 @@ object ImageLoader : CoroutineScope {
     private val mBitmapCache = LruCache<String, Bitmap>(Runtime.getRuntime().maxMemory() / 8)
     private val mTempViewToFragment = ArrayMap<View, Fragment>()
 
-    private val mBytePool = Pools.SynchronizedPool<ByteArray>(6)
+    private val mBytePool = Pools.SynchronizedPool<ByteArray>(4)
 
-    private val mSemaphore = Semaphore(6)
+    private val mSemaphore = Semaphore(4)
 
     private val mUrlJobMap = HashMap<String, Job>()
 

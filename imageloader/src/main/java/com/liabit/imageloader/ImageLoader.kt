@@ -20,10 +20,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Semaphore
 import java.io.BufferedOutputStream
 import java.io.File
@@ -67,12 +64,12 @@ object ImageLoader : CoroutineScope {
         fun isRequesting(): Boolean {
             val displayTarget = target.get()
             if (displayTarget is ImageView) {
-                val oldUrl = displayTarget.getTag(R.id.image_loader_key_tag)
+                val oldUrl = displayTarget.getTag(R.id.image_loader_url_tag)
                 if (oldUrl == url) {
                     return true
                 }
             } else if (displayTarget is DisplayTarget) {
-                val oldUrl = displayTarget.getTag(R.id.image_loader_key_tag)
+                val oldUrl = displayTarget.getTag(R.id.image_loader_url_tag)
                 if (oldUrl == url) {
                     return true
                 }
@@ -148,14 +145,15 @@ object ImageLoader : CoroutineScope {
         if (url.isNullOrEmpty() || displayTarget == null) return
         val target = Target(url, displayTarget)
         if (target.isRequesting()) return
+        cancelJobForTarget(displayTarget)
         val context = when (displayTarget) {
             is ImageView -> {
-                displayTarget.setTag(R.id.image_loader_key_tag, url)
+                displayTarget.setTag(R.id.image_loader_url_tag, url)
                 displayTarget.setTag(R.id.image_loader_error_tag, error)
                 displayTarget.context
             }
             is DisplayTarget -> {
-                displayTarget.setTag(R.id.image_loader_key_tag, url)
+                displayTarget.setTag(R.id.image_loader_url_tag, url)
                 displayTarget.setTag(R.id.image_loader_error_tag, error)
                 displayTarget.getContext()
             }
@@ -268,33 +266,33 @@ object ImageLoader : CoroutineScope {
         val url = target.url
         if (bitmap != null) {
             if (displayTarget is ImageView) {
-                val tag = displayTarget.getTag(R.id.image_loader_key_tag)
+                val tag = displayTarget.getTag(R.id.image_loader_url_tag)
                 if (tag == url) {
                     displayTarget.setImageDrawable(BitmapDrawable(context.resources, bitmap))
-                    displayTarget.setTag(R.id.image_loader_key_tag, null)
+                    displayTarget.setTag(R.id.image_loader_url_tag, null)
                 }
             } else if (displayTarget is DisplayTarget) {
-                val tag = displayTarget.getTag(R.id.image_loader_key_tag)
+                val tag = displayTarget.getTag(R.id.image_loader_url_tag)
                 if (tag == url) {
                     displayTarget.display(bitmap)
-                    displayTarget.setTag(R.id.image_loader_key_tag, null)
+                    displayTarget.setTag(R.id.image_loader_url_tag, null)
                 }
             }
         } else {
             if (displayTarget is ImageView) {
-                val tag = displayTarget.getTag(R.id.image_loader_key_tag)
+                val tag = displayTarget.getTag(R.id.image_loader_url_tag)
                 val errorResourceId = displayTarget.getTag(R.id.image_loader_error_tag)
                 if (tag == url && errorResourceId != null) {
                     displayTarget.setImageResource(errorResourceId as Int)
-                    displayTarget.setTag(R.id.image_loader_key_tag, null)
+                    displayTarget.setTag(R.id.image_loader_url_tag, null)
                     displayTarget.setTag(R.id.image_loader_error_tag, null)
                 }
             } else if (displayTarget is DisplayTarget) {
-                val tag = displayTarget.getTag(R.id.image_loader_key_tag)
+                val tag = displayTarget.getTag(R.id.image_loader_url_tag)
                 val errorResourceId = displayTarget.getTag(R.id.image_loader_error_tag)
                 if (tag == url && errorResourceId != null) {
                     displayTarget.display(BitmapFactory.decodeResource(context.resources, errorResourceId as Int))
-                    displayTarget.setTag(R.id.image_loader_key_tag, null)
+                    displayTarget.setTag(R.id.image_loader_url_tag, null)
                     displayTarget.setTag(R.id.image_loader_error_tag, null)
                 }
             }
@@ -303,6 +301,23 @@ object ImageLoader : CoroutineScope {
 
     private fun generateKey(url: String): String {
         return url.hashCode().toString().replace("-", "_")
+    }
+
+    private fun cancelJobForTarget(displayTarget: Any) {
+        if (displayTarget is ImageView) {
+            (displayTarget.getTag(R.id.image_loader_job_tag) as? Job)?.cancel()
+        } else if (displayTarget is DisplayTarget) {
+            (displayTarget.getTag(R.id.image_loader_job_tag) as? Job)?.cancel()
+        }
+    }
+
+    private fun bindJobToTarget(target: Target, job: Job) {
+        val displayTarget = target.target.get() ?: return
+        if (displayTarget is ImageView) {
+            displayTarget.setTag(R.id.image_loader_job_tag, job)
+        } else if (displayTarget is DisplayTarget) {
+            displayTarget.setTag(R.id.image_loader_job_tag, job)
+        }
     }
 
     private fun loadBitmap(context: Context, target: Target, onComplete: (bitmap: Bitmap?) -> Unit) {
@@ -315,6 +330,7 @@ object ImageLoader : CoroutineScope {
             val existJob = mUrlJobMap[appendSizeKey]
             val job = coroutineContext[Job]
             if (job != null) {
+                bindJobToTarget(target, job)
                 if (existJob == null) {
                     mUrlJobMap[appendSizeKey] = job
                 }
@@ -344,6 +360,9 @@ object ImageLoader : CoroutineScope {
             log("target size: $size")
             val cacheDir = context.externalCacheDir ?: return null
             var cacheFile = File(cacheDir, appendSizeKey)
+            if (!isActive) {
+                return null
+            }
             // 先判断是否已缓存本地文件，如果已下载，则直接解码本地文件
             if (cacheFile.exists()) {
                 try {
@@ -369,6 +388,9 @@ object ImageLoader : CoroutineScope {
                         options.inPreferredConfig = Bitmap.Config.RGB_565
                     }
                     log("decode cached no sized file, options.inSampleSize=${options.inSampleSize}")
+                    if (!isActive) {
+                        return null
+                    }
                     val bitmap = BitmapFactory.decodeFile(cacheFile.absolutePath, options)
                     if (bitmap != null) {
                         saveDecodedBitmap(context, bitmap, appendSizeKey, options.outMimeType)
@@ -379,18 +401,22 @@ object ImageLoader : CoroutineScope {
                 }
             }
 
-            // 尝试网络下载图片
-            val connection = (URL(url).openConnection() as? HttpURLConnection) ?: return null
-            try {
+            if (!isActive) {
+                return null
+            }
+
+            var connectionRef: HttpURLConnection? = null
+            var bitmap: Bitmap? = null
+            kotlin.runCatching {
+                // 尝试网络下载图片
+                val connection = (URL(url).openConnection() as? HttpURLConnection) ?: return null
+                connectionRef = connection
                 connection.requestMethod = "GET"
                 connection.connect()
                 val responseCode = connection.responseCode
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     val inputStream = connection.inputStream
                     val buffer = mBytePool.acquire() ?: ByteArray(1024)
-
-                    var bitmap: Bitmap?
-
                     FileOutputStream(cacheFile).use { fileOutputStream ->
                         BufferedOutputStream(fileOutputStream).use { bufferedOutputStream ->
                             var read: Int
@@ -412,6 +438,9 @@ object ImageLoader : CoroutineScope {
                             options.inPreferredConfig = Bitmap.Config.RGB_565
                         }
                         log("decode net source, options.inSampleSize=${options.inSampleSize}")
+                        if (!isActive) {
+                            return null
+                        }
                         bitmap = BitmapFactory.decodeFile(cacheFile.absolutePath, options)?.also {
                             if (key != appendSizeKey) {
                                 saveDecodedBitmap(context, it, appendSizeKey, options.outMimeType)
@@ -420,13 +449,10 @@ object ImageLoader : CoroutineScope {
                     }
                     //回收 buffer
                     mBytePool.release(buffer)
-                    return bitmap
                 }
-            } catch (e: Throwable) {
-                log("url connection error: ", e)
-            } finally {
-                connection.disconnect()
             }
+            connectionRef?.disconnect()
+            return bitmap
         } catch (e: Throwable) {
             log("download image failed: ", e)
         } finally {

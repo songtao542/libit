@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="image_loader_key_tag" type="id" />
+    <item name="image_loader_job_tag" type="id" />
+    <item name="image_loader_url_tag" type="id" />
     <item name="image_loader_error_tag" type="id" />
 </resources>

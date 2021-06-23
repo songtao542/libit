@@ -1,7 +1,5 @@
 package com.liabit.base
 
-import androidx.annotation.CallSuper
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
 import com.liabit.viewmodel.ApplicationViewModel
@@ -14,15 +12,13 @@ import com.liabit.viewmodel.genericViewModels
  */
 abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : BaseVBFragment<VB>() {
 
-    protected open val viewModel by genericViewModels<VM>()
+    protected open val viewModel by genericViewModels<VM>(onInitialized = {
+        observeDialog(it)
+    })
 
-    protected open val activityViewModel by genericActivityViewModels<VM>()
-
-    @CallSuper
-    override fun onViewCreated(activity: FragmentActivity) {
-        observeDialog(viewModel)
-        observeDialog(activityViewModel)
-    }
+    protected open val activityViewModel by genericActivityViewModels<VM>(onInitialized = {
+        observeDialog(it)
+    })
 
     private fun observeDialog(viewModel: ViewModel) {
         if (viewModel is ApplicationViewModel) {

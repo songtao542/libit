@@ -1,10 +1,14 @@
 package com.liabit.livedata
 
 import android.os.Build
+import android.os.Looper
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.RequiresApi
+import androidx.arch.core.internal.SafeIterableMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.liveData
 import kotlinx.coroutines.*
 import java.time.Duration
@@ -450,3 +454,29 @@ fun <T> refreshableLiveData(
     timeout: Duration,
     @BuilderInference block: suspend LiveDataScope<T>.() -> Unit
 ): RefreshableLiveData<T> = CoroutineLiveData(context, timeout.toMillis(), block)
+
+/**
+ * Remove all Observer and notify change with [value]
+ */
+@MainThread
+fun <T> LiveData<T>.removeObservers(value: T? = null) {
+    if (Looper.getMainLooper().thread !== Thread.currentThread()) {
+        throw IllegalStateException("Cannot invoke removeObservers on a background thread")
+    }
+    try {
+        val field = LiveData::class.java.getDeclaredField("mObservers")
+        field.isAccessible = true
+        val mObservers = (field.get(this) as? SafeIterableMap<*, *>) ?: return
+        for ((key, _) in mObservers) {
+            @Suppress("UNCHECKED_CAST")
+            val observer = key as Observer<in T>
+            value?.let {
+                observer.onChanged(it)
+            }
+            removeObserver(observer)
+        }
+        field.isAccessible = false
+    } catch (e: Throwable) {
+        Log.d("LiveDataExt", "removeObservers error: ", e)
+    }
+}

@@ -47,9 +47,10 @@ fun <VM : ViewModel> findViewModelClassOrNull(clazz: Class<*>): Class<VM>? {
  * returned [ViewModelProvider.Factory] will be used for creation of [VM]
  */
 class ViewModelLazy<VM : ViewModel>(
-        private val viewModelClass: Class<VM>,
-        private val storeProducer: () -> ViewModelStore,
-        private val factoryProducer: () -> ViewModelProvider.Factory
+    private val viewModelClass: Class<VM>,
+    private val storeProducer: () -> ViewModelStore,
+    private val factoryProducer: () -> ViewModelProvider.Factory,
+    private val onInitialized: ((viewModel: VM) -> Unit)? = null
 ) : Lazy<VM> {
     private var cached: VM? = null
 
@@ -60,6 +61,7 @@ class ViewModelLazy<VM : ViewModel>(
                 val factory = factoryProducer()
                 val store = storeProducer()
                 ViewModelProvider(store, factory).get(viewModelClass).also {
+                    onInitialized?.invoke(it)
                     cached = it
                 }
             } else {
@@ -87,7 +89,7 @@ class ViewModelLazy<VM : ViewModel>(
  */
 @MainThread
 fun <VM : ViewModel> ComponentActivity.genericViewModels(
-        factoryProducer: (() -> ViewModelProvider.Factory)? = null
+    factoryProducer: (() -> ViewModelProvider.Factory)? = null
 ): Lazy<VM> {
     val factoryPromise = factoryProducer ?: {
         defaultViewModelProviderFactory
@@ -124,9 +126,15 @@ fun <VM : ViewModel> ComponentActivity.genericViewModels(
  */
 @MainThread
 fun <VM : ViewModel> Fragment.genericViewModels(
-        ownerProducer: () -> ViewModelStoreOwner = { this },
-        factoryProducer: (() -> ViewModelProvider.Factory)? = null
-) = createViewModelLazy(findViewModelClass<VM>(this.javaClass), { ownerProducer().viewModelStore }, factoryProducer)
+    ownerProducer: () -> ViewModelStoreOwner = { this },
+    factoryProducer: (() -> ViewModelProvider.Factory)? = null,
+    onInitialized: ((viewModel: VM) -> Unit)? = null
+) = createViewModelLazy(
+    findViewModelClass(this.javaClass),
+    { ownerProducer().viewModelStore },
+    factoryProducer,
+    onInitialized
+)
 
 /**
  * 通过查找 [Fragment] 上的泛型来生成具体的 VM 对象,
@@ -148,10 +156,14 @@ fun <VM : ViewModel> Fragment.genericViewModels(
  */
 @MainThread
 fun <VM : ViewModel> Fragment.genericActivityViewModels(
-        factoryProducer: (() -> ViewModelProvider.Factory)? = null
-) = createViewModelLazy(findViewModelClass<VM>(this.javaClass),
-        { requireActivity().viewModelStore },
-        factoryProducer ?: { requireActivity().defaultViewModelProviderFactory })
+    factoryProducer: (() -> ViewModelProvider.Factory)? = null,
+    onInitialized: ((viewModel: VM) -> Unit)? = null
+) = createViewModelLazy(
+    findViewModelClass(this.javaClass),
+    { requireActivity().viewModelStore },
+    factoryProducer ?: { requireActivity().defaultViewModelProviderFactory },
+    onInitialized
+)
 
 /**
  * Helper method for creation of [ViewModelLazy], that resolves `null` passed as [factoryProducer]
@@ -159,10 +171,11 @@ fun <VM : ViewModel> Fragment.genericActivityViewModels(
  */
 @MainThread
 fun <VM : ViewModel> Fragment.createViewModelLazy(
-        viewModelClass: Class<VM>,
-        storeProducer: () -> ViewModelStore,
-        factoryProducer: (() -> ViewModelProvider.Factory)? = null
+    viewModelClass: Class<VM>,
+    storeProducer: () -> ViewModelStore,
+    factoryProducer: (() -> ViewModelProvider.Factory)? = null,
+    onInitialized: ((viewModel: VM) -> Unit)? = null
 ): Lazy<VM> {
     val factoryPromise = factoryProducer ?: { defaultViewModelProviderFactory }
-    return ViewModelLazy(viewModelClass, storeProducer, factoryPromise)
+    return ViewModelLazy(viewModelClass, storeProducer, factoryPromise, onInitialized)
 }

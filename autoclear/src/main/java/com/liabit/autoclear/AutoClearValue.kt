@@ -17,6 +17,10 @@ inline fun <reified T> autoClear(): AutoClearValue<T> {
     return AutoClearValue { newInstance(T::class.java) }
 }
 
+inline fun <reified T> autoClear(bindToViewLifecycleIfFragment: Boolean): AutoClearValue<T> {
+    return AutoClearValue(bindToViewLifecycleIfFragment) { newInstance(T::class.java) }
+}
+
 /**
  * 反射方式创建对象
  */
@@ -33,11 +37,22 @@ inline fun <reified T> newInstance(valueClass: Class<T>): T {
  */
 fun <T> autoClear(value: T) = AutoClearValue { value }
 
+fun <T> autoClear(bindToViewLifecycleIfFragment: Boolean, value: T) = AutoClearValue(bindToViewLifecycleIfFragment) { value }
+
 /**
  * Creates an [AutoClearValue] associated with this LifecycleOwner.
  */
 @Suppress("unused")
-fun <T> autoClear(valueProvider: () -> T) = AutoClearValue(valueProvider)
+fun <T> autoClear(valueProvider: () -> T) = AutoClearValue(true, valueProvider)
+
+/**
+ * Creates an [AutoClearValue] associated with this LifecycleOwner.
+ */
+@Suppress("unused")
+fun <T> autoClear(
+    bindToViewLifecycleIfFragment: Boolean,
+    valueProvider: () -> T
+) = AutoClearValue(bindToViewLifecycleIfFragment, valueProvider)
 
 /**
  * A lazy property that gets cleaned up when the LifecycleOwner is at state of [DESTROYED].
@@ -47,9 +62,13 @@ fun <T> autoClear(valueProvider: () -> T) = AutoClearValue(valueProvider)
  * If the [T] is instance of [Clearable] or [LifecycleSensitiveClearable], the [Clearable.clear] method will be invoke before clean up.
  * If the [T] is instance of [Closeable] or [AutoCloseable], the [Closeable.close] method will be invoke before clean up.
  *
+ * @param bindToViewLifecycleIfFragment if true bind to fragment [Fragment.getViewLifecycleOwner] otherwise bind to fragment [Fragment]
  * @param valueProvider The initializer of the variable, when get the variable, if the variable value is null, the initializer will be called to initialize.
  */
-class AutoClearValue<T>(private var valueProvider: () -> T) : ReadWriteProperty<LifecycleOwner, T> {
+open class AutoClearValue<T>(
+    private val bindToViewLifecycleIfFragment: Boolean = true,
+    private var valueProvider: () -> T
+) : ReadWriteProperty<LifecycleOwner, T> {
     private var value: T? = null
     private val lifecycleObserver = object : DefaultLifecycleObserver {
         @SuppressLint("ObsoleteSdkInt")
@@ -93,13 +112,21 @@ class AutoClearValue<T>(private var valueProvider: () -> T) : ReadWriteProperty<
 
     override fun getValue(thisRef: LifecycleOwner, property: KProperty<*>): T {
         value?.let { return it }
-        val lifecycle = if (thisRef is Fragment) thisRef.viewLifecycleOwner.lifecycle else thisRef.lifecycle
+        val lifecycle = if (thisRef is Fragment && bindToViewLifecycleIfFragment) {
+            thisRef.viewLifecycleOwner.lifecycle
+        } else {
+            thisRef.lifecycle
+        }
         lifecycle.addObserver(lifecycleObserver)
         return valueProvider.invoke().also { value = it }
     }
 
     override fun setValue(thisRef: LifecycleOwner, property: KProperty<*>, value: T) {
-        val lifecycle = if (thisRef is Fragment) thisRef.viewLifecycleOwner.lifecycle else thisRef.lifecycle
+        val lifecycle = if (thisRef is Fragment && bindToViewLifecycleIfFragment) {
+            thisRef.viewLifecycleOwner.lifecycle
+        } else {
+            thisRef.lifecycle
+        }
         lifecycle.addObserver(lifecycleObserver)
         this.value = value
     }

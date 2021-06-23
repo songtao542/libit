@@ -16,10 +16,16 @@ inline fun <reified T> autoClearValue(): NullableAutoClearValue<T> {
     return NullableAutoClearValue()
 }
 
+inline fun <reified T> autoClearValue(bindToViewLifecycleIfFragment: Boolean): NullableAutoClearValue<T> {
+    return NullableAutoClearValue(bindToViewLifecycleIfFragment)
+}
+
 /**
  * 需要手动初始化值
  */
-class NullableAutoClearValue<T> : ReadWriteProperty<LifecycleOwner, T?> {
+class NullableAutoClearValue<T>(
+    private val bindToViewLifecycleIfFragment: Boolean = true
+) : ReadWriteProperty<LifecycleOwner, T?> {
     private var value: T? = null
     private val lifecycleObserver = object : DefaultLifecycleObserver {
         @SuppressLint("ObsoleteSdkInt")
@@ -66,7 +72,11 @@ class NullableAutoClearValue<T> : ReadWriteProperty<LifecycleOwner, T?> {
     }
 
     override fun setValue(thisRef: LifecycleOwner, property: KProperty<*>, value: T?) {
-        val lifecycle = if (thisRef is Fragment) thisRef.viewLifecycleOwner.lifecycle else thisRef.lifecycle
+        val lifecycle = if (thisRef is Fragment && bindToViewLifecycleIfFragment) {
+            thisRef.viewLifecycleOwner.lifecycle
+        } else {
+            thisRef.lifecycle
+        }
         if (value == null) {
             lifecycle.removeObserver(lifecycleObserver)
         } else {

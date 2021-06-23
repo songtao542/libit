@@ -62,7 +62,7 @@ fun <T> autoClear(
  * If the [T] is instance of [Clearable] or [LifecycleSensitiveClearable], the [Clearable.clear] method will be invoke before clean up.
  * If the [T] is instance of [Closeable] or [AutoCloseable], the [Closeable.close] method will be invoke before clean up.
  *
- * @param bindToViewLifecycleIfFragment if true bind to fragment [Fragment.getViewLifecycleOwner] otherwise bind to fragment [Fragment]
+ * @param bindToViewLifecycleIfFragment if true bind to fragment [Fragment.getViewLifecycleOwner] lifecycle, otherwise bind to fragment [Fragment] lifecycle.
  * @param valueProvider The initializer of the variable, when get the variable, if the variable value is null, the initializer will be called to initialize.
  */
 open class AutoClearValue<T>(

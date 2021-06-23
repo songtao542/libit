@@ -22,6 +22,7 @@ inline fun <reified T> autoClearValue(bindToViewLifecycleIfFragment: Boolean): N
 
 /**
  * 需要手动初始化值
+ * @param bindToViewLifecycleIfFragment if true bind to fragment [Fragment.getViewLifecycleOwner] lifecycle, otherwise bind to fragment [Fragment] lifecycle.
  */
 class NullableAutoClearValue<T>(
     private val bindToViewLifecycleIfFragment: Boolean = true

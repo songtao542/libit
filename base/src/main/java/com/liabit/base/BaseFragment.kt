@@ -1,6 +1,7 @@
 package com.liabit.base
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.liabit.viewmodel.ApplicationViewModel
 import com.liabit.viewmodel.genericActivityViewModels
@@ -21,12 +22,14 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : BaseVBFragment<V
     })
 
     private fun observeDialog(viewModel: ViewModel) {
-        if (viewModel is ApplicationViewModel) {
-            viewModel.observeDialog(viewLifecycleOwner) {
-                if (it.show) {
-                    showDialog(it.message)
-                } else {
-                    dismissDialog()
+        lifecycleScope.launchWhenResumed {
+            if (viewModel is ApplicationViewModel) {
+                viewModel.observeDialog(viewLifecycleOwner) {
+                    if (it.show) {
+                        showDialog(it.message)
+                    } else {
+                        dismissDialog()
+                    }
                 }
             }
         }

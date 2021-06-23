@@ -6,10 +6,7 @@ import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.RequiresApi
 import androidx.arch.core.internal.SafeIterableMap
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.liveData
+import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import java.time.Duration
 import kotlin.coroutines.CoroutineContext
@@ -479,4 +476,28 @@ fun <T> LiveData<T>.removeObservers(value: T? = null) {
     } catch (e: Throwable) {
         Log.d("LiveDataExt", "removeObservers error: ", e)
     }
+}
+
+/**
+ * Only notify change once， then remove the [observer]
+ */
+fun <T> LiveData<T>.observeOnce(observer: Observer<T>) {
+    observeForever(object : Observer<T> {
+        override fun onChanged(value: T) {
+            removeObserver(this)
+            observer.onChanged(value)
+        }
+    })
+}
+
+/**
+ * Only notify change once， then remove the [observer]
+ */
+fun <T> LiveData<T>.observeOnce(owner: LifecycleOwner, observer: Observer<T>) {
+    observe(owner, object : Observer<T> {
+        override fun onChanged(value: T) {
+            removeObserver(this)
+            observer.onChanged(value)
+        }
+    })
 }

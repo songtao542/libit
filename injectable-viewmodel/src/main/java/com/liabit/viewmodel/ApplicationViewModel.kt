@@ -32,7 +32,8 @@ open class ApplicationViewModel : ViewModel() {
     inner class DialogMessage(
         internal var mShow: Boolean = false,
         internal var mMessage: String? = null,
-        internal var mMessageResId: Int = 0
+        internal var mMessageResId: Int = 0,
+        internal var mCancellable: Boolean = true
     ) {
         val show: Boolean get() = mShow
 
@@ -40,31 +41,47 @@ open class ApplicationViewModel : ViewModel() {
             get() {
                 return mMessage ?: if (mMessageResId != 0) getString(mMessageResId) else null
             }
+
+        val cancellable: Boolean get() = mCancellable
+    }
+
+    fun removeDialogObserver(observer: Observer<DialogMessage>) {
+        mLiveDialog.removeObserver(observer)
     }
 
     fun observeDialog(lifecycleOwner: LifecycleOwner, observer: Observer<DialogMessage>) {
         mLiveDialog.observe(lifecycleOwner, observer)
     }
 
-    fun showDialog(message: String? = null) {
+    fun showDialog(cancellable: Boolean, message: String? = null) {
         mLiveDialog.postValue(mDialogMessage.apply {
             mShow = true
             mMessage = message
+            mCancellable = cancellable
             mMessageResId = 0
         })
     }
 
-    fun showDialog(@StringRes messageResId: Int) {
+    fun showDialog(message: String? = null) {
+        showDialog(true, message)
+    }
+
+    fun showDialog(cancellable: Boolean, @StringRes messageResId: Int) {
         mLiveDialog.postValue(mDialogMessage.apply {
             mShow = true
             mMessage = null
+            mCancellable = cancellable
             mMessageResId = messageResId
         })
     }
 
+    fun showDialog(@StringRes messageResId: Int) {
+        showDialog(true, messageResId)
+    }
+
     fun hideDialog() {
         mLiveDialog.postValue(mDialogMessage.apply {
-            mShow = true
+            mShow = false
             mMessage = null
             mMessageResId = 0
         })

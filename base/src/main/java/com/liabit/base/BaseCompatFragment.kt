@@ -7,6 +7,7 @@ import android.os.SystemClock
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -87,6 +88,7 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
         return false
     }
 
+    @CallSuper
     override fun onDestroyView() {
         super.onDestroyView()
         mHandler.removeCallbacksAndMessages(null)

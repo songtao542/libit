@@ -20,7 +20,7 @@ open class BaseVMActivity<VM : ViewModel> : BaseCompatActivity() {
         if (vm is ApplicationViewModel) {
             vm.observeDialog(this) {
                 if (it.show) {
-                    showDialog(it.message)
+                    showDialog(it.message, it.cancellable)
                 } else {
                     dismissDialog()
                 }

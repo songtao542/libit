@@ -1,7 +1,9 @@
 package com.liabit.base
 
+import androidx.annotation.CallSuper
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.liabit.viewmodel.ApplicationViewModel
 import com.liabit.viewmodel.genericActivityViewModels
@@ -15,23 +17,40 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : BaseVBFragment<V
 
     protected open val viewModel by genericViewModels<VM>(onInitialized = {
         observeDialog(it)
+        return@genericViewModels false
     })
 
     protected open val activityViewModel by genericActivityViewModels<VM>(onInitialized = {
         observeDialog(it)
+        return@genericActivityViewModels false
     })
 
-    private fun observeDialog(viewModel: ViewModel) {
-        lifecycleScope.launchWhenResumed {
-            if (viewModel is ApplicationViewModel) {
-                viewModel.observeDialog(viewLifecycleOwner) {
-                    if (it.show) {
-                        showDialog(it.message)
-                    } else {
-                        dismissDialog()
-                    }
-                }
+    private var mDialogObserverAdded = false
+
+    private val mDialogObserver = object : Observer<ApplicationViewModel.DialogMessage> {
+        override fun onChanged(it: ApplicationViewModel.DialogMessage?) {
+            if (it == null) return
+            if (it.show) {
+                showDialog(it.message, it.cancellable)
+            } else {
+                dismissDialog()
             }
         }
+    }
+
+    private fun observeDialog(viewModel: ViewModel) {
+        if (!mDialogObserverAdded && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+            if (viewModel is ApplicationViewModel) {
+                mDialogObserverAdded = true
+                viewModel.removeDialogObserver(mDialogObserver)
+                viewModel.observeDialog(viewLifecycleOwner, mDialogObserver)
+            }
+        }
+    }
+
+    @CallSuper
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mDialogObserverAdded = false
     }
 }

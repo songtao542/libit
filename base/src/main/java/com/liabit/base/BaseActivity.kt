@@ -21,7 +21,7 @@ open class BaseActivity<VM : ViewModel, VB : ViewBinding> : BaseVBActivity<VB>()
         if (vm is ApplicationViewModel) {
             vm.observeDialog(this) {
                 if (it.show) {
-                    showDialog(it.message)
+                    showDialog(it.message, it.cancellable)
                 } else {
                     dismissDialog()
                 }

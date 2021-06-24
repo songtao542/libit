@@ -11,6 +11,7 @@ import com.liabit.viewmodel.genericViewModels
  * CreateDate:     2020/12/4 18:05
  */
 abstract class BaseVMFragment<VM : ViewModel> : BaseCompatFragment() {
+
     protected open val viewModel by genericViewModels<VM>()
 
     @CallSuper
@@ -19,7 +20,7 @@ abstract class BaseVMFragment<VM : ViewModel> : BaseCompatFragment() {
         if (vm is ApplicationViewModel) {
             vm.observeDialog(viewLifecycleOwner) {
                 if (it.show) {
-                    showDialog(it.message)
+                    showDialog(it.message, it.cancellable)
                 } else {
                     dismissDialog()
                 }

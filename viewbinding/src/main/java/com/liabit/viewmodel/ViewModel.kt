@@ -50,9 +50,11 @@ class ViewModelLazy<VM : ViewModel>(
     private val viewModelClass: Class<VM>,
     private val storeProducer: () -> ViewModelStore,
     private val factoryProducer: () -> ViewModelProvider.Factory,
-    private val onInitialized: ((viewModel: VM) -> Unit)? = null
+    private val onInitialized: ((viewModel: VM) -> Boolean)? = null
 ) : Lazy<VM> {
     private var cached: VM? = null
+
+    private var initialized = false
 
     override val value: VM
         get() {
@@ -61,10 +63,13 @@ class ViewModelLazy<VM : ViewModel>(
                 val factory = factoryProducer()
                 val store = storeProducer()
                 ViewModelProvider(store, factory).get(viewModelClass).also {
-                    onInitialized?.invoke(it)
+                    initialized = onInitialized?.invoke(it) ?: false
                     cached = it
                 }
             } else {
+                if (!initialized) {
+                    initialized = onInitialized?.invoke(viewModel) ?: false
+                }
                 viewModel
             }
         }
@@ -128,7 +133,7 @@ fun <VM : ViewModel> ComponentActivity.genericViewModels(
 fun <VM : ViewModel> Fragment.genericViewModels(
     ownerProducer: () -> ViewModelStoreOwner = { this },
     factoryProducer: (() -> ViewModelProvider.Factory)? = null,
-    onInitialized: ((viewModel: VM) -> Unit)? = null
+    onInitialized: ((viewModel: VM) -> Boolean)? = null
 ) = createViewModelLazy(
     findViewModelClass(this.javaClass),
     { ownerProducer().viewModelStore },
@@ -157,7 +162,7 @@ fun <VM : ViewModel> Fragment.genericViewModels(
 @MainThread
 fun <VM : ViewModel> Fragment.genericActivityViewModels(
     factoryProducer: (() -> ViewModelProvider.Factory)? = null,
-    onInitialized: ((viewModel: VM) -> Unit)? = null
+    onInitialized: ((viewModel: VM) -> Boolean)? = null
 ) = createViewModelLazy(
     findViewModelClass(this.javaClass),
     { requireActivity().viewModelStore },
@@ -174,7 +179,7 @@ fun <VM : ViewModel> Fragment.createViewModelLazy(
     viewModelClass: Class<VM>,
     storeProducer: () -> ViewModelStore,
     factoryProducer: (() -> ViewModelProvider.Factory)? = null,
-    onInitialized: ((viewModel: VM) -> Unit)? = null
+    onInitialized: ((viewModel: VM) -> Boolean)? = null
 ): Lazy<VM> {
     val factoryPromise = factoryProducer ?: { defaultViewModelProviderFactory }
     return ViewModelLazy(viewModelClass, storeProducer, factoryPromise, onInitialized)

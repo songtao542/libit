@@ -45,11 +45,8 @@ open class ApplicationViewModel : ViewModel() {
         val cancellable: Boolean get() = mCancellable
     }
 
-    fun removeDialogObserver(observer: Observer<DialogMessage>) {
-        mLiveDialog.removeObserver(observer)
-    }
-
     fun observeDialog(lifecycleOwner: LifecycleOwner, observer: Observer<DialogMessage>) {
+        mLiveDialog.removeObserver(observer)
         mLiveDialog.observe(lifecycleOwner, observer)
     }
 

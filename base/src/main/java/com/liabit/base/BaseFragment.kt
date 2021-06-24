@@ -42,7 +42,6 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : BaseVBFragment<V
         if (!mDialogObserverAdded && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
             if (viewModel is ApplicationViewModel) {
                 mDialogObserverAdded = true
-                viewModel.removeDialogObserver(mDialogObserver)
                 viewModel.observeDialog(viewLifecycleOwner, mDialogObserver)
             }
         }

@@ -74,7 +74,7 @@ dependencies {
     compileOnly files('../common_libs/tinypinyin-2.0.3.jar')
     compileOnly files('../common_libs/imagepicker-1.0.0.aar')
 
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }

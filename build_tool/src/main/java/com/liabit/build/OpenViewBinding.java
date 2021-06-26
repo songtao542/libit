@@ -7,21 +7,16 @@ import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class OpenViewBinding {
 
     public static void openViewBinding(File buildGradle, boolean open) {
-        byte[] backup = null;
+        File backupFile = new File(buildGradle.getParent(), "build.bak");
         try {
-            backup = FileUtils.readFileToByteArray(buildGradle);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(buildGradle), StandardCharsets.UTF_8));
+            FileUtils.copyFile(buildGradle, backupFile);
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(backupFile), StandardCharsets.UTF_8));
             CharArrayWriter caw = new CharArrayWriter();
             String line;
             String lineSeparator = System.getProperty("line.separator");
@@ -43,13 +38,18 @@ public class OpenViewBinding {
             FileWriter fw = new FileWriter(buildGradle);
             caw.writeTo(fw);
             fw.close();
+            //noinspection ResultOfMethodCallIgnored
+            backupFile.delete();
         } catch (Throwable e) {
             e.printStackTrace();
-            if (backup != null && backup.length > 0) {
+            if (backupFile.exists()) {
                 try {
-                    FileUtils.writeByteArrayToFile(buildGradle, backup);
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
+                    //noinspection ResultOfMethodCallIgnored
+                    buildGradle.delete();
+                    //noinspection ResultOfMethodCallIgnored
+                    backupFile.renameTo(buildGradle);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             }
         }

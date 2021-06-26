@@ -28,7 +28,6 @@ class BuildTool {
 
     private static boolean isNeedBinding(String[] mergeList) {
         for (String str : mergeList) {
-            System.out.println("xxxxxxxxxxxxxxxxxxxxx str: " + str);
             if (str.contains("viewbinding")
                     || str.contains("base_with_viewbinding")
                     || str.contains("location_picker")) {
@@ -49,6 +48,7 @@ class BuildTool {
         String[] mergeList = null;
         String domain = "com.liabit";
         String manifestPackageSuffix = null;
+        boolean enableHilt = true;
         if (args != null && args.length > 0) {
             for (String a : args) {
                 System.out.println("arg: " + a);
@@ -89,6 +89,17 @@ class BuildTool {
                 }
                 manifestPackageSuffix = args[2];
             }
+
+            if (args.length > 3) {
+                String hilt = args[3];
+                String[] hiltArg = hilt.split(":");
+                if (hiltArg.length > 1) {
+                    if ("disable".equals(hiltArg[1])) {
+                        enableHilt = false;
+                    }
+                }
+                System.out.println("use hilt: " + enableHilt);
+            }
         }
         if (mergeList == null) {
             throw new IllegalArgumentException("请通过 --args 参数选择源码集(--args=vpn 或者 --args=theme 或者 --args=sport)");
@@ -98,11 +109,10 @@ class BuildTool {
         int index = path.indexOf("build_tool");
         String rootPath = path.substring(0, index + "build_tool".length());
 
+        // 是否开启 viewbinding
         boolean isNeedBinding = isNeedBinding(mergeList);
         File buildGradle = new File(rootPath, "../libit/build.gradle");
         OpenViewBinding.openViewBinding(buildGradle, isNeedBinding);
-
-        System.out.println("xxxxxxxxxxxxxxxxxxxxx isNeedBinding: " + isNeedBinding);
 
         File destMainDir = new File(rootPath, "../libit/src/main/");
         File destMainResDir = new File(destMainDir, "res/values/");
@@ -189,6 +199,11 @@ class BuildTool {
                 importR = "import " + packageName + manifestPackageSuffix + ".R";
             }
             ReplaceImportR.replace(destJavaDir, "import com\\.liabit\\..*\\.R", importR);
+
+            // 是否启用 Hilt
+            if (!enableHilt) {
+                DeleteHilt.deleteHilt(destJavaDir);
+            }
 
             // 修改源代码中的 import BuildConfig
             String importBuildConfig;

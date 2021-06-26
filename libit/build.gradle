@@ -82,6 +82,7 @@ android {
                     './src/main/viewmodel_inject', // injectable-viewmodel
                     './src/main/base', // base
                     './src/main/base_with_viewbinding', // base_with_viewbinding
+                    './src/main/base_with_viewmodel', // base_with_viewbinding
                     './src/main/third-auth', // third-auth
                     './src/main/compressor', // compressor
                     './src/main/photopicker', // photopicker
@@ -115,6 +116,7 @@ android {
                     './src/main/screenrecord_res', // screenrecord
                     './src/main/base_res', // base
                     './src/main/base_with_viewbinding_res', // base_with_viewbinding
+                    './src/main/base_with_viewmodel_res', // base_with_viewmodel
                     './src/main/third-auth_res', // third-auth
                     './src/main/photopicker_res', // photopicker
                     './src/main/matisse_res', // matisse

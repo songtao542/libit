@@ -1,8 +1,11 @@
 package com.liabit.base
 
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import android.view.LayoutInflater
+import android.view.View
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +28,22 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
 
     private var mStartShowDialogTime = 0L
     private val mDismissDialogAction by lazy { Runnable { dismissDialog() } }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val view = onCreateView(LayoutInflater.from(this), savedInstanceState)
+        if (view != null) {
+            setContentView(view)
+            onViewCreated(view, savedInstanceState)
+        }
+    }
+
+    protected open fun onCreateView(inflater: LayoutInflater, savedInstanceState: Bundle?): View? {
+        return null
+    }
+
+    protected open fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    }
 
     override fun onDestroy() {
         super.onDestroy()

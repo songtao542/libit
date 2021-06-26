@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/autoclear" />
             <option value="$PROJECT_DIR$/base" />
             <option value="$PROJECT_DIR$/base_with_viewbinding" />
+            <option value="$PROJECT_DIR$/base_with_viewmodel" />
             <option value="$PROJECT_DIR$/build_tool" />
             <option value="$PROJECT_DIR$/citypicker" />
             <option value="$PROJECT_DIR$/color_util" />

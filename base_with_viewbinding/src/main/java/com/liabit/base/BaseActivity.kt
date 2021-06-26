@@ -1,5 +1,7 @@
 package com.liabit.base
 
+import android.os.Bundle
+import android.view.View
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
@@ -16,7 +18,7 @@ open class BaseActivity<VM : ViewModel, VB : ViewBinding> : BaseVBActivity<VB>()
     protected val viewModel by genericViewModels<VM>()
 
     @CallSuper
-    override fun onViewCreated() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val vm = viewModel
         if (vm is ApplicationViewModel) {
             vm.observeDialog(this) {

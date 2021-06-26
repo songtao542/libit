@@ -167,6 +167,8 @@ public class ModuleManifest {
             moduleMap.get("base_with_viewmodel"),
             moduleMap.get("location_picker"),
             moduleMap.get("viewbinding"),
+            moduleMap.get("viewmodel"),
+            moduleMap.get("viewmodel_inject"),
             moduleMap.get("widget"),
             moduleMap.get("shimmer"),*/
             moduleMap.get("autoclear"),
@@ -176,7 +178,5 @@ public class ModuleManifest {
             moduleMap.get("retrofit-ext"),
             moduleMap.get("imageloader"),
             moduleMap.get("base"),
-            moduleMap.get("viewmodel"),
-            moduleMap.get("viewmodel_inject"),
     };
 }

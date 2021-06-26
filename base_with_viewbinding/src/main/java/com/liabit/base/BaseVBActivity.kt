@@ -15,21 +15,8 @@ open class BaseVBActivity<VB : ViewBinding> : BaseCompatActivity() {
 
     protected val binding by genericBinding<VB>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val view = onCreateView(LayoutInflater.from(this), savedInstanceState) ?: binding.root
-        setContentView(view)
-        onViewCreated()
-        onViewCreated(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, savedInstanceState: Bundle?): View? {
+        return binding.root
     }
 
-    protected open fun onCreateView(inflater: LayoutInflater, savedInstanceState: Bundle?): View? {
-        return null
-    }
-
-    protected open fun onViewCreated() {
-    }
-
-    protected open fun onViewCreated(savedInstanceState: Bundle?) {
-    }
 }

@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/app_api14" />
             <option value="$PROJECT_DIR$/autoclear" />
             <option value="$PROJECT_DIR$/base" />
+            <option value="$PROJECT_DIR$/base_with_viewbinding" />
             <option value="$PROJECT_DIR$/build_tool" />
             <option value="$PROJECT_DIR$/citypicker" />
             <option value="$PROJECT_DIR$/color_util" />
@@ -27,7 +28,6 @@
             <option value="$PROJECT_DIR$/flag-square" />
             <option value="$PROJECT_DIR$/gesture" />
             <option value="$PROJECT_DIR$/imageloader" />
-            <option value="$PROJECT_DIR$/injectable-viewmodel" />
             <option value="$PROJECT_DIR$/libit" />
             <option value="$PROJECT_DIR$/livedata-ktx" />
             <option value="$PROJECT_DIR$/location_picker" />
@@ -53,6 +53,8 @@
             <option value="$PROJECT_DIR$/util" />
             <option value="$PROJECT_DIR$/utils" />
             <option value="$PROJECT_DIR$/viewbinding" />
+            <option value="$PROJECT_DIR$/viewmodel" />
+            <option value="$PROJECT_DIR$/viewmodel_inject" />
             <option value="$PROJECT_DIR$/wallpaper_cropper" />
             <option value="$PROJECT_DIR$/wallpaper_cropper_lite" />
             <option value="$PROJECT_DIR$/widget" />

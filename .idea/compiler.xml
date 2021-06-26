@@ -7,6 +7,9 @@
       <module name="libit.app_api14" target="11" />
       <module name="libit.autoclear" target="11" />
       <module name="libit.base" target="11" />
+      <module name="libit.base_binding" target="11" />
+      <module name="libit.base_no_binding" target="11" />
+      <module name="libit.base_with_viewbinding" target="11" />
       <module name="libit.citypicker" target="11" />
       <module name="libit.color_util" target="11" />
       <module name="libit.compressor" target="11" />
@@ -43,6 +46,8 @@
       <module name="libit.util" target="11" />
       <module name="libit.utils" target="11" />
       <module name="libit.viewbinding" target="11" />
+      <module name="libit.viewmodel" target="11" />
+      <module name="libit.viewmodel_inject" target="11" />
       <module name="libit.wallpaper_cropper" target="11" />
       <module name="libit.wallpaper_cropper_lite" target="11" />
       <module name="libit.widget" target="11" />

@@ -33,13 +33,15 @@ public class ModuleManifest {
             put("dialog", "../dialog/src/main");
             put("timerview", "../timerview/src/main");
             put("viewbinding", "../viewbinding/src/main");
+            put("viewmodel", "../viewmodel/src/main");
+            put("viewmodel_inject", "../viewmodel_inject/src/main");
             put("recyclerview", "../recyclerview/src/main");
             put("popup", "../popup/src/main");
             put("widget", "../widget/src/main");
             put("ext", "../ext/src/main");
             put("livedata-ktx", "../livedata-ktx/src/main");
-            put("injectable-viewmodel", "../injectable-viewmodel/src/main");
             put("base", "../base/src/main");
+            put("base_with_viewbinding", "../base_with_viewbinding/src/main");
             put("third-auth", "../third-auth/src/main");
             put("compressor", "../compressor/src/main");
             put("retrofit-ext", "../retrofit-ext/src/main");
@@ -78,13 +80,15 @@ public class ModuleManifest {
             moduleMap.get("dialog"),
             moduleMap.get("timerview"),
             moduleMap.get("viewbinding"),
+            moduleMap.get("viewmodel"),
+            moduleMap.get("viewmodel_inject"),
             moduleMap.get("recyclerview"),
             moduleMap.get("popup"),
             moduleMap.get("widget"),
             moduleMap.get("ext"),
             moduleMap.get("livedata-ktx"),
-            moduleMap.get("injectable-viewmodel"),
             moduleMap.get("base"),
+            moduleMap.get("base_with_viewbinding"),
             moduleMap.get("third-auth"),
             moduleMap.get("compressor"),
             moduleMap.get("retrofit-ext"),
@@ -118,13 +122,15 @@ public class ModuleManifest {
             moduleMap.get("autoclear"),
             moduleMap.get("dialog"),
             moduleMap.get("viewbinding"),
+            moduleMap.get("viewmodel"),
+            moduleMap.get("viewmodel_inject"),
             moduleMap.get("recyclerview"),
             moduleMap.get("popup"),
             moduleMap.get("widget"),
             moduleMap.get("ext"),
             moduleMap.get("livedata-ktx"),
-            moduleMap.get("injectable-viewmodel"),
             moduleMap.get("base"),
+            moduleMap.get("base_with_viewbinding"),
             moduleMap.get("retrofit-ext"),
     };
 
@@ -154,8 +160,7 @@ public class ModuleManifest {
             moduleMap.get("recyclerview"),
             moduleMap.get("popup"),
             moduleMap.get("livedata-ktx"),
-            moduleMap.get("injectable-viewmodel"),
-            moduleMap.get("base"),
+            moduleMap.get("base_with_viewbinding"),
             moduleMap.get("location_picker"),
             moduleMap.get("viewbinding"),
             moduleMap.get("widget"),
@@ -166,5 +171,8 @@ public class ModuleManifest {
             moduleMap.get("utils"),
             moduleMap.get("retrofit-ext"),
             moduleMap.get("imageloader"),
+            moduleMap.get("base"),
+            moduleMap.get("viewmodel"),
+            moduleMap.get("viewmodel_inject"),
     };
 }

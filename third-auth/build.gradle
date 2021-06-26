@@ -76,7 +76,9 @@ dependencies {
     compileOnly files('../common_libs/alipaySdk-15.5.9-20181123210601.aar')
 
     implementation project(":base")
-    implementation project(":injectable-viewmodel")
+    implementation project(":base_with_viewbinding")
+    implementation project(":viewmodel")
+    implementation project(":viewmodel_inject")
     implementation project(":retrofit-ext")
 
     testImplementation 'junit:junit:4.13.2'

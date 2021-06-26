@@ -42,6 +42,7 @@ public class ModuleManifest {
             put("livedata-ktx", "../livedata-ktx/src/main");
             put("base", "../base/src/main");
             put("base_with_viewbinding", "../base_with_viewbinding/src/main");
+            put("base_with_viewmodel", "../base_with_viewmodel/src/main");
             put("third-auth", "../third-auth/src/main");
             put("compressor", "../compressor/src/main");
             put("retrofit-ext", "../retrofit-ext/src/main");
@@ -89,6 +90,7 @@ public class ModuleManifest {
             moduleMap.get("livedata-ktx"),
             moduleMap.get("base"),
             moduleMap.get("base_with_viewbinding"),
+            moduleMap.get("base_with_viewmodel"),
             moduleMap.get("third-auth"),
             moduleMap.get("compressor"),
             moduleMap.get("retrofit-ext"),
@@ -131,6 +133,7 @@ public class ModuleManifest {
             moduleMap.get("livedata-ktx"),
             moduleMap.get("base"),
             moduleMap.get("base_with_viewbinding"),
+            moduleMap.get("base_with_viewmodel"),
             moduleMap.get("retrofit-ext"),
     };
 
@@ -161,6 +164,7 @@ public class ModuleManifest {
             moduleMap.get("popup"),
             moduleMap.get("livedata-ktx"),
             moduleMap.get("base_with_viewbinding"),
+            moduleMap.get("base_with_viewmodel"),
             moduleMap.get("location_picker"),
             moduleMap.get("viewbinding"),
             moduleMap.get("widget"),

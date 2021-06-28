@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets
 class GsonConverterFactory private constructor(
     private val type: Int,
     private val gson: Gson,
-    private val errorResponseBodyProvider: (exception: Throwable) -> String
+    private val errorResponseBodyProvider: (gson: Gson, exception: Throwable) -> String
 ) : Converter.Factory() {
 
     companion object {
@@ -43,20 +43,20 @@ class GsonConverterFactory private constructor(
         fun create(
             @ContentType type: Int,
             gson: Gson,
-            errorResponseBodyProvider: (exception: Throwable) -> String
+            errorResponseBodyProvider: (gson: Gson, exception: Throwable) -> String
         ): GsonConverterFactory {
             return GsonConverterFactory(type, gson, errorResponseBodyProvider)
         }
 
         fun create(
             gson: Gson = Gson(),
-            errorResponseBodyProvider: (exception: Throwable) -> String
+            errorResponseBodyProvider: (gson: Gson, exception: Throwable) -> String
         ): GsonConverterFactory {
             return create(JSON, gson, errorResponseBodyProvider)
         }
 
         fun create(
-            errorResponseBodyProvider: (exception: Throwable) -> String
+            errorResponseBodyProvider: (gson: Gson, exception: Throwable) -> String
         ): GsonConverterFactory {
             return create(JSON, Gson(), errorResponseBodyProvider)
         }
@@ -127,7 +127,7 @@ internal class GsonRequestBodyConverter<T>(
 internal class GsonResponseBodyConverter<T>(
     private val gson: Gson,
     private val adapter: TypeAdapter<T>,
-    private val errorResponseBodyProvider: (exception: Throwable) -> String
+    private val errorResponseBodyProvider: (gson: Gson, exception: Throwable) -> String
 ) : Converter<ResponseBody, T> {
 
     override fun convert(value: ResponseBody): T {
@@ -136,7 +136,9 @@ internal class GsonResponseBodyConverter<T>(
             return adapter.read(jsonReader)
         } catch (e: Throwable) {
             Log.e("GsonConverter", "error: ", e)
-            adapter.fromJson(errorResponseBodyProvider.invoke(e))
+            val errorBody = errorResponseBodyProvider.invoke(gson, e)
+            Log.e("GsonConverter", "error body: $errorBody")
+            adapter.fromJson(errorBody)
         } finally {
             try {
                 value.close()

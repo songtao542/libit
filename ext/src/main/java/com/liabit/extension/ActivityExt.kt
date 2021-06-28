@@ -17,8 +17,8 @@ import android.view.inputmethod.InputMethodManager
  *  not hide navigation bar
  */
 fun Activity.layoutUnderStatusBar(
-        lightStatusBar: Boolean? = null,
-        lightNavigationBar: Boolean? = null
+    lightStatusBar: Boolean? = null,
+    lightNavigationBar: Boolean? = null
 ) {
     val flag = window.decorView.systemUiVisibility
     val lightStatus = lightStatusBar ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) != 0)
@@ -40,13 +40,13 @@ fun Activity.layoutUnderStatusBar(
  *  not hide navigation bar
  */
 fun Activity.layoutUnderSystemUI(
-        lightStatusBar: Boolean? = null,
-        lightNavigationBar: Boolean? = null
+    lightStatusBar: Boolean? = null,
+    lightNavigationBar: Boolean? = null
 ) {
     val flag = window.decorView.systemUiVisibility
     val lightStatus = lightStatusBar ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) != 0)
     val lightNavigation = lightNavigationBar
-            ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR) != 0)
+        ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR) != 0)
     var flags = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
             View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -66,13 +66,13 @@ fun Activity.layoutUnderSystemUI(
  *  hide navigation bar
  */
 fun Activity.layoutUnderStatusBarAndHideNavigation(
-        lightStatusBar: Boolean? = null,
-        lightNavigationBar: Boolean? = null
+    lightStatusBar: Boolean? = null,
+    lightNavigationBar: Boolean? = null
 ) {
     val flag = window.decorView.systemUiVisibility
     val lightStatus = lightStatusBar ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) != 0)
     val lightNavigation = lightNavigationBar
-            ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR) != 0)
+        ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR) != 0)
     var flags = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
             View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
@@ -94,13 +94,13 @@ fun Activity.layoutUnderStatusBarAndHideNavigation(
  * hide navigation bar
  */
 fun Activity.hideSystemUI(
-        lightStatusBar: Boolean? = null,
-        lightNavigationBar: Boolean? = null
+    lightStatusBar: Boolean? = null,
+    lightNavigationBar: Boolean? = null
 ) {
     val flag = window.decorView.systemUiVisibility
     val lightStatus = lightStatusBar ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) != 0)
     val lightNavigation = lightNavigationBar
-            ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR) != 0)
+        ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR) != 0)
     var flags = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
             View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
             View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
@@ -118,7 +118,7 @@ fun Activity.hideSystemUI(
     val lp = window.attributes
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
         lp.layoutInDisplayCutoutMode =
-                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
     }
     window.attributes = lp
 }
@@ -130,13 +130,13 @@ fun Activity.hideSystemUI(
  * not hide navigation bar
  */
 fun Activity.showSystemUI(
-        lightStatusBar: Boolean? = null,
-        lightNavigationBar: Boolean? = null
+    lightStatusBar: Boolean? = null,
+    lightNavigationBar: Boolean? = null
 ) {
     val flag = window.decorView.systemUiVisibility
     val lightStatus = lightStatusBar ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) != 0)
     val lightNavigation = lightNavigationBar
-            ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR) != 0)
+        ?: ((flag and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR) != 0)
     var flags = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
             View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -217,8 +217,8 @@ fun Activity.getNavigationBarHeight(): Int {
     try {
         if (isNavigationBarShow()) {
             val resourceId: Int = resources.getIdentifier(
-                    "navigation_bar_height",
-                    "dimen", "android"
+                "navigation_bar_height",
+                "dimen", "android"
             )
             //获取NavigationBar的高度
             height = resources.getDimensionPixelSize(resourceId)
@@ -234,18 +234,14 @@ fun Activity.getNavigationBarHeight(): Int {
  * @return screen height
  */
 fun Activity.getScreenHeight(): Int {
-    val point = Point()
-    windowManager.defaultDisplay.getRealSize(point)
-    return point.y
+    return getScreenSize().y
 }
 
 /**
  * @return screen height
  */
 fun Activity.getScreenWidth(): Int {
-    val point = Point()
-    windowManager.defaultDisplay.getRealSize(point)
-    return point.x
+    return getScreenSize().x
 }
 
 /**
@@ -253,6 +249,15 @@ fun Activity.getScreenWidth(): Int {
  */
 fun Activity.getScreenSize(): Point {
     val point = Point()
-    windowManager.defaultDisplay.getRealSize(point)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        display?.getRealSize(point)
+    }
+    if (point.x == 0 || point.y == 0) {
+        windowManager.defaultDisplay.getRealSize(point)
+    }
+    if (point.x == 0 || point.y == 0) {
+        point.x = resources.displayMetrics.widthPixels
+        point.y = resources.displayMetrics.heightPixels
+    }
     return point
 }

@@ -4,7 +4,7 @@ build=""
 domain=""
 suffix=""
 copyto=""
-hilt="hilt:enable"
+hilt=" hilt:enable"
 
 while getopts b:d:s:c:h opt; do
   case $opt in

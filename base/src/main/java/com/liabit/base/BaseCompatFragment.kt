@@ -1,6 +1,5 @@
 package com.liabit.base
 
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,8 +14,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
+import com.liabit.autoclear.autoClear
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -37,7 +39,7 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
     private val mDismissDialogAction by lazy { Runnable { dismissDialog() } }
     private val mHandler = Handler(Looper.getMainLooper())
 
-    private val mConnectivityManager by lazy { requireContext().getSystemService(ConnectivityManager::class.java) }
+    private val mNetworkStateMonitor by autoClear { NetworkStateMonitor(requireContext()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,11 +68,15 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
     protected open fun onViewCreated(activity: FragmentActivity, savedInstanceState: Bundle?) {
     }
 
+    fun observeNetwork(lifecycleOwner: LifecycleOwner, observer: Observer<Boolean>) {
+        mNetworkStateMonitor.observe(lifecycleOwner, observer)
+    }
+
     /**
      * 注意在 Context 初始化之后调用
      */
-    fun isNetAvailable(): Boolean {
-        return mConnectivityManager.activeNetwork != null
+    fun isNetworkAvailable(): Boolean {
+        return mNetworkStateMonitor.isNetworkAvailable()
     }
 
     fun post(runnable: Runnable) {

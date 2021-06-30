@@ -1,6 +1,5 @@
 package com.liabit.base
 
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,8 +9,11 @@ import android.view.View
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
+import com.liabit.autoclear.autoClear
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -30,7 +32,7 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
     private var mStartShowDialogTime = 0L
     private val mDismissDialogAction by lazy { Runnable { dismissDialog() } }
 
-    private val mConnectivityManager by lazy { getSystemService(ConnectivityManager::class.java) }
+    private val mNetworkStateMonitor by autoClear { NetworkStateMonitor(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,8 +103,12 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
         return mLoadingDialog ?: onCreateLoadingDialog().also { mLoadingDialog = it }
     }
 
-    fun isNetAvailable(): Boolean {
-        return mConnectivityManager.activeNetwork != null
+    fun observeNetwork(lifecycleOwner: LifecycleOwner, observer: Observer<Boolean>) {
+        mNetworkStateMonitor.observe(lifecycleOwner, observer)
+    }
+
+    fun isNetworkAvailable(): Boolean {
+        return mNetworkStateMonitor.isNetworkAvailable()
     }
 
     fun post(runnable: Runnable) {

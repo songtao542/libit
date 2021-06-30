@@ -1,5 +1,6 @@
 package com.liabit.base
 
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -28,6 +29,8 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
 
     private var mStartShowDialogTime = 0L
     private val mDismissDialogAction by lazy { Runnable { dismissDialog() } }
+
+    private val mConnectivityManager by lazy { getSystemService(ConnectivityManager::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +99,10 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
     @MainThread
     private fun getLoadingDialog(): LoadingDialog {
         return mLoadingDialog ?: onCreateLoadingDialog().also { mLoadingDialog = it }
+    }
+
+    fun isNetAvailable(): Boolean {
+        return mConnectivityManager.activeNetwork != null
     }
 
     fun post(runnable: Runnable) {

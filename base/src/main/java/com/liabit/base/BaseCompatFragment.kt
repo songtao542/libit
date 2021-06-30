@@ -1,5 +1,6 @@
 package com.liabit.base
 
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -36,6 +37,8 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
     private val mDismissDialogAction by lazy { Runnable { dismissDialog() } }
     private val mHandler = Handler(Looper.getMainLooper())
 
+    private val mConnectivityManager by lazy { requireContext().getSystemService(ConnectivityManager::class.java) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onInitialize(savedInstanceState)
@@ -61,6 +64,13 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
      * 比如：设置监听器，observe livedata
      */
     protected open fun onViewCreated(activity: FragmentActivity, savedInstanceState: Bundle?) {
+    }
+
+    /**
+     * 注意在 Context 初始化之后调用
+     */
+    fun isNetAvailable(): Boolean {
+        return mConnectivityManager.activeNetwork != null
     }
 
     fun post(runnable: Runnable) {

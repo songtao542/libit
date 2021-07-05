@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import androidx.annotation.IntDef
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatTextView
+import com.liabit.widget.progrssbutton.R
 
 /**
  * Author:         songtao

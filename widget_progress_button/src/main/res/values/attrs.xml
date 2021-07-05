@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <attr name="strokeColor" format="reference|color" />
+    <attr name="strokeWidth" format="reference|dimension" tools:override="true" />
+
+    <declare-styleable name="MaterialProgressView">
+        <attr name="size" format="reference|dimension" />
+        <attr name="strokeColor" />
+        <attr name="strokeColorScheme" format="reference" />
+        <attr name="strokeWidth" />
+        <attr name="strokeLineCap" format="enum">
+            <!--The stroke ends with the path, and does not project beyond it.-->
+            <enum name="butt" value="0" />
+            <!--The stroke projects out as a semicircle, with the center at the end of the path.-->
+            <enum name="round" value="1" />
+            <!--The stroke projects out as a square, with the center at the end of the path.-->
+            <enum name="square" value="2" />
+        </attr>
+        <attr name="strokeLineJoin" format="enum">
+            <!--The outer edges of a join meet at a sharp angle-->
+            <enum name="miter" value="0" />
+            <!--The outer edges of a join meet in a circular arc.-->
+            <enum name="round" value="1" />
+            <!--The outer edges of a join meet with a straight line-->
+            <enum name="bevel" value="2" />
+        </attr>
+        <attr name="trimEnd" format="reference|float" />
+        <!--<attr name="trimOffset" format="reference|float" />-->
+        <attr name="trimStart" format="reference|float" />
+        <attr name="android:duration" />
+        <attr name="showArrow" format="reference|boolean" />
+    </declare-styleable>
 
     <declare-styleable name="ProgressButton">
         <attr name="mode" format="enum">

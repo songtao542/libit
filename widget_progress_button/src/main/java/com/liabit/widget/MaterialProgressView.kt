@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.view.animation.Interpolator
 import android.view.animation.LinearInterpolator
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.liabit.widget.progrssbutton.R
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min

@@ -23,7 +23,8 @@ class TimerTextView : AppCompatTextView {
     }
 
     private var countDownTimer: CountDownTimer? = null
-    private var timeEndListener: OnTimeEndListener? = null
+    private var onTimeEndListener: OnTimeEndListener? = null
+    private var onCountDownListener: OnCountDownListener? = null
     private var tickInterval = 1000
     private var prefix = ""
     private var suffix = ""
@@ -125,6 +126,49 @@ class TimerTextView : AppCompatTextView {
         countDownTimer = null
     }
 
+    /*override fun onSaveInstanceState(): Parcelable? {
+        val parcelable = super.onSaveInstanceState()
+        val state = TimerSavedState(parcelable)
+        state.time = remainingTime
+        return state
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        if (state !is TimerSavedState) {
+            super.onRestoreInstanceState(state)
+        }
+        val ss = state as TimerSavedState
+        super.onRestoreInstanceState(ss.superState)
+    }
+
+    class TimerSavedState : BaseSavedState {
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<TimerSavedState?> = object : Parcelable.Creator<TimerSavedState?> {
+                override fun createFromParcel(source: Parcel): TimerSavedState {
+                    return TimerSavedState(source)
+                }
+
+                override fun newArray(size: Int): Array<TimerSavedState?> {
+                    return arrayOfNulls(size)
+                }
+            }
+        }
+
+        var time: Long = 0
+
+        override fun writeToParcel(out: Parcel?, flags: Int) {
+            super.writeToParcel(out, flags)
+            out?.writeLong(time)
+        }
+
+        constructor(superState: Parcelable?) : super(superState)
+
+        private constructor(parcel: Parcel?) : super(parcel) {
+            time = parcel?.readLong() ?: 0
+        }
+    }*/
+
     fun start(millisInFuture: Long) {
         if (millisInFuture <= 0) return
         this.millisInFuture = millisInFuture
@@ -134,13 +178,14 @@ class TimerTextView : AppCompatTextView {
             override fun onTick(millisUntilFinished: Long) {
                 remainingTime = millisUntilFinished
                 updateDigit(millisUntilFinished)
+                onCountDownListener?.onCountDown(millisUntilFinished)
             }
 
             override fun onFinish() {
                 remainingTime = 0
                 updateDigit(0)
                 invalidate()
-                timeEndListener?.onTimeEnd()
+                onTimeEndListener?.onTimeEnd()
             }
         }
         countDownTimer?.start()
@@ -166,20 +211,36 @@ class TimerTextView : AppCompatTextView {
         setText(text)
     }
 
-    fun setTimeEndListener(countdownListener: OnTimeEndListener?) {
-        this.timeEndListener = countdownListener
+    fun setTimeEndListener(onTimeEndListener: OnTimeEndListener?) {
+        this.onTimeEndListener = onTimeEndListener
     }
 
-    fun setTimeEndListener(countdownListener: (() -> Unit)) {
-        this.timeEndListener = object : OnTimeEndListener {
+    fun setTimeEndListener(onTimeEndListener: (() -> Unit)) {
+        this.onTimeEndListener = object : OnTimeEndListener {
             override fun onTimeEnd() {
-                countdownListener.invoke()
+                onTimeEndListener.invoke()
+            }
+        }
+    }
+
+    fun setOnCountDownListener(countdownListener: OnCountDownListener?) {
+        this.onCountDownListener = countdownListener
+    }
+
+    fun setOnCountDownListener(countdownListener: ((millisUntilFinished: Long) -> Unit)) {
+        this.onCountDownListener = object : OnCountDownListener {
+            override fun onCountDown(millisUntilFinished: Long) {
+                countdownListener.invoke(millisUntilFinished)
             }
         }
     }
 
     interface OnTimeEndListener {
         fun onTimeEnd()
+    }
+
+    interface OnCountDownListener {
+        fun onCountDown(millisUntilFinished: Long)
     }
 
     fun cancel() {

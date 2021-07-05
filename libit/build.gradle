@@ -66,6 +66,10 @@ android {
                     './src/main/viewbinding', // viewbinding
                     './src/main/viewmodel', // viewmodel
                     './src/main/widget', // widget
+                    './widget_label_view', // widget_label_view
+                    './widget_progress_button', // widget_progress_button
+                    './widget_spring_button', // widget_spring_button
+                    './widget_state_button', // widget_state_button
                     './src/main/recyclerview', // recyclerview
                     './src/main/timerview', // timerview
                     './src/main/ext', // ext
@@ -103,6 +107,10 @@ android {
                     './src/main/viewbinding_res', // viewbinding
                     './src/main/viewmodel_res', // viewmodel
                     './src/main/widget_res', // widget
+                    './src/main/widget_label_view_res', // widget_label_view
+                    './src/main/widget_progress_button_res', // widget_progress_button
+                    './src/main/widget_spring_button_res', // widget_spring_button
+                    './src/main/widget_state_button_res', // widget_state_button
                     './src/main/recyclerview_res', // recyclerview
                     './src/main/timerview_res', // timerview
                     './src/main/ext_res', // ext

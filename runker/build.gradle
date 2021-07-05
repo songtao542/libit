@@ -133,6 +133,10 @@ dependencies {
     //implementation 'com.liabit.widget:widget:1.0.0'
 
     implementation project(':widget')
+    implementation project(':widget_label_view')
+    implementation project(':widget_progress_button')
+    implementation project(':widget_state_button')
+    implementation project(':widget_spring_button')
     implementation project(':viewbinding')
     implementation project(':settings')
 

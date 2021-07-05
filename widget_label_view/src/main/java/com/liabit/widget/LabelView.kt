@@ -16,6 +16,7 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.IntDef
 import androidx.annotation.StringRes
+import com.liabit.widget.labelview.R
 
 /**
  * Author:         songtao

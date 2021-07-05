@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="icon" format="reference" />
+    <attr name="iconWidth" format="reference|dimension" />
+    <attr name="iconHeight" format="reference|dimension" />
+
+    <declare-styleable name="StateButton">
+        <attr name="icon" />
+        <attr name="iconWidth" />
+        <attr name="iconHeight" />
+        <attr name="supportLoading" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="CircleStateButton">
+        <attr name="gradientStartColor" format="reference|color" />
+        <attr name="gradientEndColor" format="reference|color" />
+        <attr name="gradientAngle" format="reference|integer" />
+        <attr name="progressStrokeSize" format="reference|dimension" />
+        <attr name="progressStrokeColor" format="reference|color" />
+    </declare-styleable>
+
+</resources>

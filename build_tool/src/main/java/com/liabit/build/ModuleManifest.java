@@ -38,6 +38,10 @@ public class ModuleManifest {
             put("recyclerview", "../recyclerview/src/main");
             put("popup", "../popup/src/main");
             put("widget", "../widget/src/main");
+            put("widget_label_view", "../widget_label_view/src/main");
+            put("widget_progress_button", "../widget_progress_button/src/main");
+            put("widget_spring_button", "../widget_spring_button/src/main");
+            put("widget_state_button", "../widget_state_button/src/main");
             put("ext", "../ext/src/main");
             put("livedata-ktx", "../livedata-ktx/src/main");
             put("base", "../base/src/main");
@@ -86,6 +90,10 @@ public class ModuleManifest {
             moduleMap.get("recyclerview"),
             moduleMap.get("popup"),
             moduleMap.get("widget"),
+            moduleMap.get("widget_label_view"),
+            moduleMap.get("widget_progress_button"),
+            moduleMap.get("widget_spring_button"),
+            moduleMap.get("widget_state_button"),
             moduleMap.get("ext"),
             moduleMap.get("livedata-ktx"),
             moduleMap.get("base"),
@@ -129,6 +137,10 @@ public class ModuleManifest {
             moduleMap.get("recyclerview"),
             moduleMap.get("popup"),
             moduleMap.get("widget"),
+            moduleMap.get("widget_label_view"),
+            moduleMap.get("widget_progress_button"),
+            moduleMap.get("widget_spring_button"),
+            moduleMap.get("widget_state_button"),
             moduleMap.get("ext"),
             moduleMap.get("livedata-ktx"),
             moduleMap.get("base"),
@@ -170,6 +182,10 @@ public class ModuleManifest {
             moduleMap.get("viewmodel"),
             moduleMap.get("viewmodel_inject"),
             moduleMap.get("widget"),
+            moduleMap.get("widget_label_view"),
+            moduleMap.get("widget_progress_button"),
+            moduleMap.get("widget_spring_button"),
+            moduleMap.get("widget_state_button"),
             moduleMap.get("shimmer"),*/
             moduleMap.get("autoclear"),
             moduleMap.get("flag"),

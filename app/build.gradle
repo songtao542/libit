@@ -65,6 +65,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(':widget')
+    implementation project(':widget_label_view')
+    implementation project(':widget_progress_button')
+    implementation project(':widget_state_button')
+    implementation project(':widget_spring_button')
     implementation project(':gesture')
     implementation project(':shimmer')
     implementation project(':picker')

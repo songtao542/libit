@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="empty_view_time_not_right">当前手机系统时间异常，请设置准确时间</string>
+    <string name="empty_view_network_not_available">网络不可用</string>
+    <string name="empty_view_no_data">暂无数据</string>
+    <string name="empty_view_loading">正在加载…</string>
+</resources>

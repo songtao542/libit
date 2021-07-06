@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="empty_view_background_color">@android:color/white</color>
+    <color name="empty_view_progress_color">#161616</color>
+    <color name="empty_view_text_color">#161616</color>
+</resources>

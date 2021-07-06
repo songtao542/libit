@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget" />
+
+    <style name="Widget.EmptyView" />
+
+    <style name="Widget.EmptyView.ProgressBar" parent="android:Widget.Material.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/empty_view_loading_progressbar</item>
+        <item name="android:minWidth">24dp</item>
+        <item name="android:minHeight">24dp</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="layout_goneMarginBottom">8dp</item>
+    </style>
+
+    <style name="Widget.EmptyView.Text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/empty_view_text_color</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+</resources>

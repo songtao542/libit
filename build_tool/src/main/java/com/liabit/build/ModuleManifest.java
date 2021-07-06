@@ -38,6 +38,7 @@ public class ModuleManifest {
             put("recyclerview", "../recyclerview/src/main");
             put("popup", "../popup/src/main");
             put("widget", "../widget/src/main");
+            put("widget_empty_view", "../widget_empty_view/src/main");
             put("widget_label_view", "../widget_label_view/src/main");
             put("widget_progress_button", "../widget_progress_button/src/main");
             put("widget_spring_button", "../widget_spring_button/src/main");
@@ -90,6 +91,7 @@ public class ModuleManifest {
             moduleMap.get("recyclerview"),
             moduleMap.get("popup"),
             moduleMap.get("widget"),
+            moduleMap.get("widget_empty_view"),
             moduleMap.get("widget_label_view"),
             moduleMap.get("widget_progress_button"),
             moduleMap.get("widget_spring_button"),
@@ -137,10 +139,11 @@ public class ModuleManifest {
             moduleMap.get("recyclerview"),
             moduleMap.get("popup"),
             moduleMap.get("widget"),
+            moduleMap.get("widget_empty_view"),
             moduleMap.get("widget_label_view"),
-            moduleMap.get("widget_progress_button"),
-            moduleMap.get("widget_spring_button"),
-            moduleMap.get("widget_state_button"),
+            //moduleMap.get("widget_progress_button"),
+            //moduleMap.get("widget_spring_button"),
+            //moduleMap.get("widget_state_button"),
             moduleMap.get("ext"),
             moduleMap.get("livedata-ktx"),
             moduleMap.get("base"),
@@ -167,7 +170,6 @@ public class ModuleManifest {
             moduleMap.get("numberpicker"),
             moduleMap.get("tagview"),
             moduleMap.get("filterlayout"),
-            moduleMap.get("timerview"),
             moduleMap.get("compressor"),
             moduleMap.get("third-auth"),
             moduleMap.get("photoview"),
@@ -181,12 +183,14 @@ public class ModuleManifest {
             moduleMap.get("viewbinding"),
             moduleMap.get("viewmodel"),
             moduleMap.get("viewmodel_inject"),
-            moduleMap.get("widget"),
             moduleMap.get("widget_label_view"),
             moduleMap.get("widget_progress_button"),
             moduleMap.get("widget_spring_button"),
             moduleMap.get("widget_state_button"),
             moduleMap.get("shimmer"),*/
+            moduleMap.get("widget"),
+            moduleMap.get("widget_empty_view"),
+            moduleMap.get("timerview"),
             moduleMap.get("autoclear"),
             moduleMap.get("flag"),
             moduleMap.get("ext"),

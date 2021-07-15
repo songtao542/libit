@@ -3,13 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/image1"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#e5e5e5"
+        android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toStartOf="@+id/image2"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,6 +23,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:background="#e5e5e5"
+        android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toStartOf="@+id/image3"
         app:layout_constraintStart_toEndOf="@+id/image1"
@@ -32,6 +35,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:background="#e5e5e5"
+        android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image2"

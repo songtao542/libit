@@ -60,6 +60,8 @@ class BuildTool {
                 mergeList = ModuleManifest.themeStoreMergeList;
             } else if ("sport".equals(arg)) {
                 mergeList = ModuleManifest.sportMergeList;
+            } else if ("refresh".equals(arg)) {
+                mergeList = ModuleManifest.refreshMergeList;
             } else {
                 if ("matisse".equals(arg)) {
                     mergeList = new String[]{ModuleManifest.moduleMap.get("matisse"), ModuleManifest.moduleMap.get("matisse_crop")};

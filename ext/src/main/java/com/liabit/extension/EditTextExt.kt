@@ -3,6 +3,14 @@ package com.liabit.extension
 import android.view.MotionEvent
 import android.widget.EditText
 
+fun EditText.showKeyboard() {
+    requestKeyboard()
+}
+
+fun EditText.showSoftInput() {
+    requestKeyboard()
+}
+
 fun EditText.requestKeyboard() {
     post {
         requestFocus()

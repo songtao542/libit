@@ -48,6 +48,57 @@ fun View.setCornerRadius(@DimenRes dimenResId: Int) {
     setCornerRadius(resources.getDimension(dimenResId))
 }
 
+/* Outline.setPath() 无法clip
+fun View.setCornerRadius(@DimenRes topDimenResId: Int, @DimenRes bottomDimenResId: Int) {
+    val t = resources.getDimension(topDimenResId)
+    val b = resources.getDimension(bottomDimenResId)
+    setCornerRadius(t, t, b, b)
+}
+
+fun View.setCornerRadius(
+    @DimenRes topLeftDimenResId: Int,
+    @DimenRes topRightDimenResId: Int,
+    @DimenRes bottomLeftDimenResId: Int,
+    @DimenRes bottomRightDimenResId: Int
+) {
+    val tl = resources.getDimension(topLeftDimenResId)
+    val tr = resources.getDimension(topRightDimenResId)
+    val bl = resources.getDimension(bottomLeftDimenResId)
+    val br = resources.getDimension(bottomRightDimenResId)
+    setCornerRadius(tl, tr, bl, br)
+}
+
+fun View.setCornerRadius(top: Float, bottom: Float) {
+    setCornerRadius(top, top, bottom, bottom)
+}
+
+fun View.setCornerRadius(topLeft: Float, topRight: Float, bottomLeft: Float, bottomRight: Float) {
+    clipToOutline = true
+    outlineProvider = object : ViewOutlineProvider() {
+
+        val mRect = RectF()
+        val mPath = Path()
+        val mRadiusArray = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
+
+        override fun getOutline(view: View?, outline: Outline?) {
+            val v = view ?: return
+            mRect.set(0f, 0f, v.width.toFloat(), v.height.toFloat())
+            mPath.reset()
+            mRadiusArray[0] = topLeft
+            mRadiusArray[1] = topLeft
+            mRadiusArray[2] = topRight
+            mRadiusArray[3] = topRight
+            mRadiusArray[4] = bottomLeft
+            mRadiusArray[5] = bottomLeft
+            mRadiusArray[6] = bottomRight
+            mRadiusArray[7] = bottomRight
+            mPath.addRoundRect(mRect, mRadiusArray, Path.Direction.CW)
+            outline?.setPath(mPath)
+
+        }
+    }
+}*/
+
 fun View.setSelectableItemBackground() {
     val typedValue = TypedValue()
     context.theme.resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true)

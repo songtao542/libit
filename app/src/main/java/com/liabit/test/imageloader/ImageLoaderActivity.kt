@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.liabit.extension.setCornerRadius
+import com.liabit.imageloader.ImageLoader
 import com.liabit.imageloader.load
 import com.liabit.test.R
 import com.liabit.test.base.startActivity
@@ -25,6 +27,8 @@ class ImageLoaderActivity : Activity() {
         binding.image1.load(MockPicture.random(), R.mipmap.wan_dan)
         binding.image2.load(MockPicture.random(), R.mipmap.wan_dan)
         binding.image3.load(MockPicture.random(), R.mipmap.wan_dan)
+
+        binding.image2.setCornerRadius(R.dimen.dp10)
 
         binding.recyclerView.layoutManager = GridLayoutManager(this, 3)
 
@@ -48,7 +52,8 @@ class ImageLoaderActivity : Activity() {
         val binding = TestImageLoaderItemBinding.bind(itemView)
 
         fun setData(position: Int) {
-            binding.image.load(MockPicture[position], R.mipmap.wan_dan)
+            //binding.image.load(MockPicture[position], R.mipmap.wan_dan)
+            ImageLoader.with(itemView.context).load(MockPicture[position]).into(binding.image)
         }
     }
 

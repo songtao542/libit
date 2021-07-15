@@ -96,6 +96,7 @@ object ImageLoader : CoroutineScope {
 
         private var mFragment: Fragment? = null
         private var mActivity: Activity? = null
+        private var mContext: Context? = null
         private var mUrl: String? = null
         private var mErrorResId: Int = 0
 
@@ -105,6 +106,10 @@ object ImageLoader : CoroutineScope {
 
         internal constructor(activity: Activity) : this() {
             mActivity = activity
+        }
+
+        internal constructor(context: Context) : this() {
+            mContext = context
         }
 
         fun load(url: String): RequestBuilder {
@@ -118,11 +123,11 @@ object ImageLoader : CoroutineScope {
         }
 
         fun into(imageView: ImageView) {
-            display(mUrl, imageView, mFragment, mActivity, mErrorResId)
+            display(mUrl, imageView, mFragment, mActivity, mContext, mErrorResId)
         }
 
         fun into(target: DisplayTarget) {
-            display(mUrl, target, mFragment, mActivity, mErrorResId)
+            display(mUrl, target, mFragment, mActivity, mContext, mErrorResId)
         }
     }
 
@@ -137,33 +142,45 @@ object ImageLoader : CoroutineScope {
     }
 
     @JvmStatic
+    fun with(context: Context): RequestBuilder {
+        return RequestBuilder(context)
+    }
+
+    @JvmStatic
     fun load(url: String): RequestBuilder {
         return RequestBuilder().load(url)
     }
 
-    private fun display(url: String?, displayTarget: Any?, fragment: Fragment?, activity: Activity?, error: Int) {
+    private fun display(
+        url: String?,
+        displayTarget: Any?,
+        fragment: Fragment?,
+        activity: Activity?,
+        context: Context?,
+        error: Int
+    ) {
         if (url.isNullOrEmpty() || displayTarget == null) return
         val target = Target(url, displayTarget)
         if (target.isRequesting()) return
         cancelJobForTarget(displayTarget)
-        val context = when (displayTarget) {
+        val ctx = when (displayTarget) {
             is ImageView -> {
                 displayTarget.setTag(R.id.image_loader_url_tag, url)
                 displayTarget.setTag(R.id.image_loader_error_tag, error)
-                displayTarget.context
+                context ?: displayTarget.context
             }
             is DisplayTarget -> {
                 displayTarget.setTag(R.id.image_loader_url_tag, url)
                 displayTarget.setTag(R.id.image_loader_error_tag, error)
-                displayTarget.getContext()
+                context ?: displayTarget.getContext()
             }
             else -> null
         } ?: return
         if (fragment != null) {
             log("fragment: $fragment")
-            loadImage(context, fragment.viewLifecycleOwner, target)
+            loadImage(ctx, fragment.viewLifecycleOwner, target)
         } else {
-            val targetActivity = activity ?: findActivity(context)
+            val targetActivity = activity ?: findActivity(ctx)
             log("activity: $targetActivity")
             if (targetActivity != null) {
                 when (targetActivity) {
@@ -180,8 +197,7 @@ object ImageLoader : CoroutineScope {
                     }
                 }
             } else {
-                val ctx = context.applicationContext
-                loadImageAndDisplay(ctx, target)
+                loadImageAndDisplay(ctx.applicationContext, target)
             }
         }
     }
@@ -344,15 +360,6 @@ object ImageLoader : CoroutineScope {
             mUrlJobMap.remove(appendSizeKey)
         }
     }
-
-    /*private suspend fun loadBitmap(context: Context, target: Target): Bitmap? = withContext(Dispatchers.IO) {
-        val ctx = context.applicationContext
-        val url = target.url
-        val size = getTargetSize(target)
-        val key = generateKey(url)
-        val appendSizeKey = if (size != null) "${key}_x_${size.x}_y_${size.y}" else key
-        return@withContext mBitmapCache[key] ?: download(ctx, url, key, appendSizeKey, size)?.also { mBitmapCache.put(key, it) }
-    }*/
 
     private suspend fun download(context: Context, url: String, key: String, appendSizeKey: String, size: Point?): Bitmap? {
         mSemaphore.acquire()
@@ -536,5 +543,5 @@ object ImageLoader : CoroutineScope {
            val multiplier = cacheSize / 20f
            mBitmapCache.setSizeMultiplier(multiplier)
        }
-   }*/
+    }*/
 }

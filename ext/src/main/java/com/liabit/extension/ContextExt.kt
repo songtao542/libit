@@ -1,10 +1,14 @@
 package com.liabit.extension
 
+import android.annotation.SuppressLint
+import android.app.ActivityManager
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Point
 import android.os.Build
+import android.os.Process
 import android.util.Log
 import android.util.TypedValue
 import android.view.WindowManager
@@ -80,6 +84,10 @@ fun Context.dip(dp: Float): Int {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics).toInt()
 }
 
+fun Context.dp(dp: Float): Float {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
+}
+
 fun Context.getVersionCode(): Long {
     var verCode = -1L
     try {
@@ -104,3 +112,40 @@ fun Context.getVersionName(): String {
     }
     return verName
 }
+
+@SuppressLint("PrivateApi", "DiscouragedPrivateApi")
+fun Context.getProcessName(): String {
+    var processName: String? = null
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        processName = Application.getProcessName()
+    } else {
+        try {
+            val currentProcessName = Class.forName(
+                "android.app.ActivityThread",
+                false,
+                Application::class.java.classLoader
+            ).getDeclaredMethod("currentProcessName", *arrayOfNulls<Class<*>?>(0))
+            currentProcessName.isAccessible = true
+            val invoke = currentProcessName.invoke(null, arrayOfNulls<Any>(0))
+            if (invoke is String) {
+                processName = invoke
+            }
+        } catch (e: Throwable) {
+            Log.w(TAG, "getProcessName by reflect error: ", e)
+        }
+        if (processName == null) {
+            val pid: Int = Process.myPid()
+            val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val runningAppList = am.runningAppProcesses
+            if (runningAppList != null) {
+                for (processInfo in runningAppList) {
+                    if (processInfo.pid == pid) {
+                        processName = processInfo.processName
+                    }
+                }
+            }
+        }
+    }
+    return processName ?: ""
+}
+

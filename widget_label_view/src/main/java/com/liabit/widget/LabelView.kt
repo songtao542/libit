@@ -133,12 +133,6 @@ class LabelView : LinearLayout {
             mRightText = typedArray.getText(R.styleable.LabelView_rightText) ?: ""
             mRightTextView.text = mRightText
 
-            if (typedArray.getBoolean(R.styleable.LabelView_showRightArrow, false)) {
-                mRightArrowView.visibility = View.VISIBLE
-            } else {
-                mRightArrowView.visibility = View.GONE
-            }
-
             val rightArrowIcon = typedArray.getDrawable(R.styleable.LabelView_rightArrow)
             if (rightArrowIcon != null) {
                 mRightArrowView.setImageDrawable(rightArrowIcon)

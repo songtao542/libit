@@ -65,7 +65,6 @@
         </attr>
         <attr name="labelClickable" format="boolean" />
         <attr name="labelWithColon" format="boolean" />
-        <attr name="showRightArrow" format="boolean" />
         <attr name="rightArrow" format="reference" />
         <attr name="rightArrowSize" format="reference|dimension" />
         <attr name="rightArrowColor" format="reference|color" />

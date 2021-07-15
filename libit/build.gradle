@@ -20,8 +20,8 @@ android {
     }
 
     buildFeatures {
-        dataBinding false
-        viewBinding false
+        dataBinding true
+        viewBinding true
     }
 
     buildTypes {
@@ -88,6 +88,7 @@ android {
                     './src/main/base', // base
                     './src/main/base_with_viewbinding', // base_with_viewbinding
                     './src/main/base_with_viewmodel', // base_with_viewbinding
+                    './src/main/base_with_vb_vm', // base_with_vb_vm
                     './src/main/third-auth', // third-auth
                     './src/main/compressor', // compressor
                     './src/main/photopicker', // photopicker
@@ -127,6 +128,7 @@ android {
                     './src/main/base_res', // base
                     './src/main/base_with_viewbinding_res', // base_with_viewbinding
                     './src/main/base_with_viewmodel_res', // base_with_viewmodel
+                    './src/main/base_with_vb_vm_res', // base_with_vb_vm
                     './src/main/third-auth_res', // third-auth
                     './src/main/photopicker_res', // photopicker
                     './src/main/matisse_res', // matisse
@@ -143,7 +145,7 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.3.0'
 
     implementation "androidx.dynamicanimation:dynamicanimation:1.0.0"
@@ -153,7 +155,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.2.1"
 
     def lifecycle_version = "2.3.1"
     // Saved state module for ViewModel
@@ -166,12 +168,12 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
 
     // ktx
-    implementation "androidx.fragment:fragment-ktx:1.3.4"
-    implementation "androidx.core:core-ktx:1.3.2"
+    implementation "androidx.fragment:fragment-ktx:1.3.5"
+    implementation "androidx.core:core-ktx:1.5.0"
     implementation "androidx.collection:collection-ktx:1.1.0"
     implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:2.3.1"
     // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
     // optional - ReactiveStreams support for LiveData
     implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:2.2.0"
     // Lifecycles only (without ViewModel or LiveData)
@@ -186,7 +188,7 @@ dependencies {
     implementation "androidx.paging:paging-rxjava2-ktx:2.1.2"
     implementation "androidx.palette:palette-ktx:1.0.0"
     implementation "androidx.preference:preference-ktx:1.1.1"
-    implementation "androidx.room:room-ktx:2.2.5"
+    implementation "androidx.room:room-ktx:2.3.0"
     implementation "androidx.sqlite:sqlite-ktx:2.1.0"
 
     implementation "com.google.dagger:hilt-android:2.33-beta"
@@ -207,7 +209,7 @@ dependencies {
     //implementation "androidx.hilt:hilt-navigation-compose:1.0.0-alpha01"
 
     // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
     implementation 'androidx.annotation:annotation:1.2.0'
 
     //Retrofit网络请求

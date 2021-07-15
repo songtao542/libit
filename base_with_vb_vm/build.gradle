@@ -86,7 +86,11 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.7'
 
     implementation project(":base")
+    implementation project(":base_with_viewmodel")
+    implementation project(":base_with_viewbinding")
     implementation project(":viewbinding")
+    implementation project(":viewmodel")
+    implementation project(":viewmodel_inject")
     implementation project(":autoclear")
 
     testImplementation 'junit:junit:4.13.2'

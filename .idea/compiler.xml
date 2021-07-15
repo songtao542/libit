@@ -9,6 +9,7 @@
       <module name="libit.base" target="11" />
       <module name="libit.base_binding" target="11" />
       <module name="libit.base_no_binding" target="11" />
+      <module name="libit.base_with_vb_vm" target="11" />
       <module name="libit.base_with_viewbinding" target="11" />
       <module name="libit.base_with_viewmodel" target="11" />
       <module name="libit.citypicker" target="11" />

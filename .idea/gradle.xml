@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/app_api14" />
             <option value="$PROJECT_DIR$/autoclear" />
             <option value="$PROJECT_DIR$/base" />
+            <option value="$PROJECT_DIR$/base_with_vb_vm" />
             <option value="$PROJECT_DIR$/base_with_viewbinding" />
             <option value="$PROJECT_DIR$/base_with_viewmodel" />
             <option value="$PROJECT_DIR$/build_tool" />

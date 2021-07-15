@@ -48,6 +48,7 @@ public class ModuleManifest {
             put("base", "../base/src/main");
             put("base_with_viewbinding", "../base_with_viewbinding/src/main");
             put("base_with_viewmodel", "../base_with_viewmodel/src/main");
+            put("base_with_vb_vm", "../base_with_vb_vm/src/main");
             put("third-auth", "../third-auth/src/main");
             put("compressor", "../compressor/src/main");
             put("retrofit-ext", "../retrofit-ext/src/main");
@@ -226,12 +227,7 @@ public class ModuleManifest {
             moduleMap.get("recyclerview"),
             moduleMap.get("popup"),
             moduleMap.get("livedata-ktx"),
-            moduleMap.get("base_with_viewbinding"),
-            moduleMap.get("base_with_viewmodel"),
             moduleMap.get("location_picker"),
-            moduleMap.get("viewbinding"),
-            moduleMap.get("viewmodel"),
-            moduleMap.get("viewmodel_inject"),
             moduleMap.get("widget_label_view"),
             moduleMap.get("widget_progress_button"),
             moduleMap.get("widget_spring_button"),
@@ -246,6 +242,11 @@ public class ModuleManifest {
             moduleMap.get("utils"),
             moduleMap.get("retrofit-ext"),
             moduleMap.get("imageloader"),
+            moduleMap.get("viewbinding"),
+            //moduleMap.get("viewmodel"),
+            //moduleMap.get("base_with_viewmodel"),
+            //moduleMap.get("viewmodel_inject"),
             moduleMap.get("base"),
+            moduleMap.get("base_with_viewbinding"),
     };
 }

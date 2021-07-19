@@ -15,16 +15,54 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
- * Creates an [AutoUnregisterForLifecycleOwner] associated with this LifecycleOwner.
+ * ```
+ * 使用示例
+ * val request by register<String, Boolean>(ActivityResultContracts.RequestPermission())
+ * ```
+ * Creates an [AutoUnregisterForActivityResult] associated with this LifecycleOwner.
  */
 inline fun <reified I, reified O> LifecycleOwner.register(
     contract: ActivityResultContract<I, O>,
     callback: ActivityResultCallback<O>? = null
-): AutoUnregisterForLifecycleOwner<I, O> {
-    return AutoUnregisterForLifecycleOwner(this, contract, callback)
+): AutoUnregisterForActivityResult<I, O> {
+    return AutoUnregisterForActivityResult(this, contract, callback)
 }
 
-class AutoUnregisterForLifecycleOwner<I, O>(
+/**
+ * ```
+ * 使用示例
+ * val request by register<String, Boolean>(ActivityResultContracts.RequestPermission())
+ * ```
+ * Creates an [AutoUnregisterForActivityResult] associated with this Fragment.
+ */
+inline fun <reified I, reified O> Fragment.register(
+    contract: ActivityResultContract<I, O>,
+    callback: ActivityResultCallback<O>? = null
+): AutoUnregisterForActivityResult<I, O> {
+    return AutoUnregisterForActivityResult(this, contract, callback)
+}
+
+/**
+ * ```
+ * 使用示例
+ * val request by register<String, Boolean>(ActivityResultContracts.RequestPermission())
+ * ```
+ * Creates an [AutoUnregisterForActivityResult] associated with this ComponentActivity.
+ */
+inline fun <reified I, reified O> ComponentActivity.register(
+    contract: ActivityResultContract<I, O>,
+    callback: ActivityResultCallback<O>? = null
+): AutoUnregisterForActivityResult<I, O> {
+    return AutoUnregisterForActivityResult(this, contract, callback)
+}
+
+/**
+ * ```
+ * 使用示例
+ * val request by register<String, Boolean>(ActivityResultContracts.RequestPermission())
+ * ```
+ */
+class AutoUnregisterForActivityResult<I, O>(
     lifecycleOwner: LifecycleOwner,
     contract: ActivityResultContract<I, O>,
     callback: ActivityResultCallback<O>? = null
@@ -52,90 +90,6 @@ class AutoUnregisterForLifecycleOwner<I, O>(
             mCallback = WeakReference(callback)
         }
         lifecycleOwner.lifecycle.addObserver(this)
-    }
-
-    override fun onActivityResult(result: O) {
-        val callback = mValue?.callback ?: mCallback?.get() ?: return
-        callback.onActivityResult(result)
-    }
-
-    override fun onDestroy(owner: LifecycleOwner) {
-        owner.lifecycle.removeObserver(this)
-        mValue?.unregister()
-        mValue = null
-    }
-
-    override fun getValue(thisRef: LifecycleOwner, property: KProperty<*>): ActivityResultLauncherProxy<I, O>? {
-        return mValue
-    }
-}
-
-/**
- * Creates an [AutoUnregisterForFragment] associated with this Fragment.
- */
-inline fun <reified I, reified O> Fragment.register(
-    contract: ActivityResultContract<I, O>,
-    callback: ActivityResultCallback<O>? = null
-): AutoUnregisterForFragment<I, O> {
-    return AutoUnregisterForFragment(this, contract, callback)
-}
-
-class AutoUnregisterForFragment<I, O>(
-    fragment: Fragment,
-    contract: ActivityResultContract<I, O>,
-    callback: ActivityResultCallback<O>? = null
-) : ReadOnlyProperty<LifecycleOwner, ActivityResultLauncherProxy<I, O>?>, DefaultLifecycleObserver, ActivityResultCallback<O> {
-    private var mValue: ActivityResultLauncherProxy<I, O>? = null
-    private var mCallback: WeakReference<ActivityResultCallback<O>>? = null
-
-    init {
-        mValue = ActivityResultLauncherProxy(fragment.registerForActivityResult(contract, this))
-        if (callback != null) {
-            mCallback = WeakReference(callback)
-        }
-        fragment.lifecycle.addObserver(this)
-    }
-
-    override fun onActivityResult(result: O) {
-        val callback = mValue?.callback ?: mCallback?.get() ?: return
-        callback.onActivityResult(result)
-    }
-
-    override fun onDestroy(owner: LifecycleOwner) {
-        owner.lifecycle.removeObserver(this)
-        mValue?.unregister()
-        mValue = null
-    }
-
-    override fun getValue(thisRef: LifecycleOwner, property: KProperty<*>): ActivityResultLauncherProxy<I, O>? {
-        return mValue
-    }
-}
-
-/**
- * Creates an [AutoUnregisterForActivity] associated with this ComponentActivity.
- */
-inline fun <reified I, reified O> ComponentActivity.register(
-    contract: ActivityResultContract<I, O>,
-    callback: ActivityResultCallback<O>? = null
-): AutoUnregisterForActivity<I, O> {
-    return AutoUnregisterForActivity(this, contract, callback)
-}
-
-class AutoUnregisterForActivity<I, O>(
-    activity: ComponentActivity,
-    contract: ActivityResultContract<I, O>,
-    callback: ActivityResultCallback<O>? = null
-) : ReadOnlyProperty<LifecycleOwner, ActivityResultLauncherProxy<I, O>?>, DefaultLifecycleObserver, ActivityResultCallback<O> {
-    private var mValue: ActivityResultLauncherProxy<I, O>? = null
-    private var mCallback: WeakReference<ActivityResultCallback<O>>? = null
-
-    init {
-        mValue = ActivityResultLauncherProxy(activity.registerForActivityResult(contract, this))
-        if (callback != null) {
-            mCallback = WeakReference(callback)
-        }
-        activity.lifecycle.addObserver(this)
     }
 
     override fun onActivityResult(result: O) {

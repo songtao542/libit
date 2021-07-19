@@ -14,8 +14,10 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import com.liabit.autoclear.register
 import com.liabit.test.databinding.ActivityMainBinding
 import com.liabit.test.decorationtest.TestRecyclerViewDecorationActivity
 import com.liabit.test.filtertest.TestFilterActivity
@@ -35,6 +37,12 @@ import java.io.FileOutputStream
 class MainActivity : AppCompatActivity() {
 
     private val binding by inflate<ActivityMainBinding>()
+
+    val request by register<String, Boolean>(ActivityResultContracts.RequestPermission())
+
+    fun requestStoragePermission(){
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

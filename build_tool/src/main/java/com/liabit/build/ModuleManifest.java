@@ -150,6 +150,7 @@ public class ModuleManifest {
             moduleMap.get("base"),
             moduleMap.get("base_with_viewbinding"),
             moduleMap.get("base_with_viewmodel"),
+            moduleMap.get("base_with_vb_vm"),
             moduleMap.get("retrofit-ext"),
     };
 
@@ -174,7 +175,6 @@ public class ModuleManifest {
             moduleMap.get("compressor"),
             moduleMap.get("third-auth"),
             moduleMap.get("photoview"),
-            moduleMap.get("dialog"),
             moduleMap.get("recyclerview"),
             moduleMap.get("popup"),
             moduleMap.get("livedata-ktx"),
@@ -195,6 +195,7 @@ public class ModuleManifest {
             moduleMap.get("autoclear"),
             moduleMap.get("flag"),
             moduleMap.get("ext"),
+            moduleMap.get("dialog"),
             moduleMap.get("utils"),
             moduleMap.get("retrofit-ext"),
             moduleMap.get("imageloader"),

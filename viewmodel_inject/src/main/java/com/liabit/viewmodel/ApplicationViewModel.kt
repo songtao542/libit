@@ -2,6 +2,7 @@ package com.liabit.viewmodel
 
 import android.app.Application
 import android.content.Context
+import android.os.Handler
 import android.util.ArrayMap
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
@@ -14,6 +15,7 @@ import kotlin.coroutines.EmptyCoroutineContext
  * 注意: Fragment和装载该Fragment的Activity 必须使用 @AndroidEntryPoint 注解标注。
  * 且继承 ApplicationViewModel 的类必须使用 @HiltViewModel 注解标注, 否则无法完成依赖注入
  */
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 open class ApplicationViewModel : ViewModel() {
 
     @Inject
@@ -27,9 +29,12 @@ open class ApplicationViewModel : ViewModel() {
 
     private val mLiveDialog by lazy { MutableLiveData<DialogMessage>() }
 
-    private val mDialogMessage by lazy { DialogMessage() }
+    private val mDialogMessage by lazy { DialogMessage(context) }
 
-    inner class DialogMessage(
+    private val mHandler by lazy { Handler(context.mainLooper) }
+
+    class DialogMessage(
+        val context: Context,
         internal var mShow: Boolean = false,
         internal var mMessage: String? = null,
         internal var mMessageResId: Int = 0,
@@ -39,7 +44,7 @@ open class ApplicationViewModel : ViewModel() {
 
         val message: String?
             get() {
-                return mMessage ?: if (mMessageResId != 0) getString(mMessageResId) else null
+                return mMessage ?: if (mMessageResId != 0) context.getString(mMessageResId) else null
             }
 
         val cancellable: Boolean get() = mCancellable
@@ -82,6 +87,10 @@ open class ApplicationViewModel : ViewModel() {
             mMessage = null
             mMessageResId = 0
         })
+    }
+
+    fun hideDialog(delay: Long) {
+        mHandler.postDelayed({ hideDialog() }, delay)
     }
 
     fun getString(@StringRes resId: Int): String {

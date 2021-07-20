@@ -41,6 +41,11 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
 
     private val mNetworkStateMonitor by autoClear { NetworkStateMonitor(requireContext()) }
 
+    /**
+     * 注意在 Context 初始化之后调用
+     */
+    val isNetworkAvailable: Boolean get() = mNetworkStateMonitor.isNetworkAvailable()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onInitialize(savedInstanceState)
@@ -70,13 +75,6 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
 
     fun observeNetwork(lifecycleOwner: LifecycleOwner, observer: Observer<Boolean>) {
         mNetworkStateMonitor.observe(lifecycleOwner, observer)
-    }
-
-    /**
-     * 注意在 Context 初始化之后调用
-     */
-    fun isNetworkAvailable(): Boolean {
-        return mNetworkStateMonitor.isNetworkAvailable()
     }
 
     fun post(runnable: Runnable) {

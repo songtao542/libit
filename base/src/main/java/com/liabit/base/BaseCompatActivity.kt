@@ -34,6 +34,8 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
 
     private val mNetworkStateMonitor by autoClear { NetworkStateMonitor(this) }
 
+    val isNetworkAvailable: Boolean get() = mNetworkStateMonitor.isNetworkAvailable()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val view = onCreateView(LayoutInflater.from(this), savedInstanceState)
@@ -105,10 +107,6 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
 
     fun observeNetwork(lifecycleOwner: LifecycleOwner, observer: Observer<Boolean>) {
         mNetworkStateMonitor.observe(lifecycleOwner, observer)
-    }
-
-    fun isNetworkAvailable(): Boolean {
-        return mNetworkStateMonitor.isNetworkAvailable()
     }
 
     fun post(runnable: Runnable) {

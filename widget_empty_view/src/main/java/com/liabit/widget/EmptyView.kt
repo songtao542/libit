@@ -108,6 +108,11 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
         return mState and EMPTY == EMPTY
     }
 
+    fun setState(state: Int) {
+        mState = state
+        updateState()
+    }
+
     fun addState(@State state: Int) {
         mState = mState or state
         updateState()
@@ -156,11 +161,6 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
         fun commit() {
             mEmptyView.setState(mState)
         }
-    }
-
-    private fun setState(state: Int) {
-        mState = state
-        updateState()
     }
 
     private fun updateState() {

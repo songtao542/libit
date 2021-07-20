@@ -28,7 +28,7 @@
             android:orientation="horizontal"
             android:paddingHorizontal="16dp"
             app:rightText="请选择年龄"
-            app:showRightArrow="true" />
+            app:rightArrowVisibility="visible" />
 
         <com.liabit.widget.LabelView
             android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             app:rightArrowColor="@android:color/darker_gray"
             app:rightText="请选择年龄"
             app:rightTextColor="@android:color/darker_gray"
-            app:showRightArrow="true" />
+            app:rightArrowVisibility="visible" />
 
         <com.liabit.widget.LabelView
             android:layout_width="match_parent"
@@ -55,7 +55,7 @@
             app:rightText="请选择年龄"
             app:rightTextColor="@android:color/darker_gray"
             app:rightTextSize="12sp"
-            app:showRightArrow="true" />
+            app:rightArrowVisibility="visible"/>
 
         <com.liabit.widget.LabelView
             android:layout_width="match_parent"
@@ -71,7 +71,7 @@
             app:rightText="修改年龄"
             app:rightTextColor="@android:color/darker_gray"
             app:rightTextSize="12sp"
-            app:showRightArrow="true"
+            app:rightArrowVisibility="visible"
             app:textPaddingHorizontal="16dp" />
 
         <com.liabit.widget.LabelView
@@ -88,7 +88,7 @@
             app:rightText="修改年龄"
             app:rightTextColor="@android:color/darker_gray"
             app:rightTextSize="12sp"
-            app:showRightArrow="true"
+            app:rightArrowVisibility="visible"
             app:startIcon="@drawable/ic_pause_blue"
             app:textPaddingHorizontal="16dp" />
 
@@ -109,7 +109,7 @@
             app:rightText="修改年龄"
             app:rightTextColor="@android:color/darker_gray"
             app:rightTextSize="12sp"
-            app:showRightArrow="true"
+            app:rightArrowVisibility="visible"
             app:startIcon="@drawable/ic_pause_blue"
             app:startIconPadding="10dp"
             app:textPaddingHorizontal="16dp" />

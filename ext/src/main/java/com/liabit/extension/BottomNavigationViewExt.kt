@@ -23,6 +23,18 @@ import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.internal.BaselineLayout
 
+/**
+ * 禁用/开启多点触摸
+ */
+var BottomNavigationView.isMultiTouchEnabled: Boolean
+    set(value) {
+        val menuContainer = getChildAt(0) as ViewGroup
+        menuContainer.isMotionEventSplittingEnabled = value
+    }
+    get() {
+        val menuContainer = getChildAt(0) as ViewGroup
+        return menuContainer.isMotionEventSplittingEnabled
+    }
 
 @SuppressLint("RestrictedApi")
 fun BottomNavigationView.hideLabel(index: Int) = try {

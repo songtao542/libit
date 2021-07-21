@@ -20,8 +20,8 @@
 
     <style name="DefaultAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@drawable/input_dialog_background</item>
-        <item name="android:windowMinWidthMajor">70%</item>
-        <item name="android:windowMinWidthMinor">70%</item>
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
         <item name="android:buttonBarNegativeButtonStyle">@style/DefaultDialogButtonStyle</item>
         <item name="android:buttonBarPositiveButtonStyle">@style/DefaultDialogButtonStyle</item>
         <item name="android:windowTitleStyle">@style/DefaultDialogTitleStyle</item>

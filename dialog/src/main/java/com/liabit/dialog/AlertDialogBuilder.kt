@@ -3,6 +3,7 @@ package com.liabit.dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.view.ContextThemeWrapper
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.annotation.StringRes
@@ -24,6 +25,9 @@ class AlertDialogBuilder(private val context: Context) {
 
     private var mNegativeButtonText: CharSequence? = null
     private var mPositiveButtonText: CharSequence? = null
+
+    private var mMessageGravity: Int = Gravity.CENTER
+    private var mGravity: Int = Gravity.CENTER
 
     fun setTheme(@StyleRes themeResId: Int): AlertDialogBuilder {
         mDialogTheme = themeResId
@@ -47,6 +51,16 @@ class AlertDialogBuilder(private val context: Context) {
 
     fun setMessage(@StringRes resId: Int): AlertDialogBuilder {
         mDialogMessage = context.getString(resId)
+        return this
+    }
+
+    fun setMessageGravity(gravity: Int): AlertDialogBuilder {
+        mMessageGravity = gravity
+        return this
+    }
+
+    fun setGravity(gravity: Int): AlertDialogBuilder {
+        mGravity = gravity
         return this
     }
 
@@ -99,25 +113,29 @@ class AlertDialogBuilder(private val context: Context) {
         val context = ContextThemeWrapper(context, mDialogTheme)
         val view = LayoutInflater.from(context).inflate(R.layout.alert_dialog, null)
         val textView = view.findViewById<TextView>(R.id.dialog_message_text)
+        textView.gravity = mMessageGravity
         textView.text = mDialogMessage
         val negativeButtonText = mNegativeButtonText ?: context.getString(R.string.dialog_cancel)
         val positiveButtonText = mPositiveButtonText ?: context.getString(R.string.dialog_confirm)
-        return AlertDialog.Builder(context, mDialogTheme)
-                .setView(view)
-                .setCancelable(mCancelable)
-                .setTitle(mDialogTitle ?: context.getString(R.string.alert_dialog_title))
-                .setNegativeButton(negativeButtonText) { d, _ ->
-                    if (mAutoDismissWhenCancel) {
-                        d.dismiss()
-                    }
-                    mOnCancelListener?.invoke(d)
+        val dialog = AlertDialog.Builder(context, mDialogTheme)
+            .setView(view)
+            .setCancelable(mCancelable)
+            .setTitle(mDialogTitle ?: context.getString(R.string.alert_dialog_title))
+            .setNegativeButton(negativeButtonText) { d, _ ->
+                if (mAutoDismissWhenCancel) {
+                    d.dismiss()
                 }
-                .setPositiveButton(positiveButtonText) { d, _ ->
-                    if (mAutoDismissWhenConfirm) {
-                        d.dismiss()
-                    }
-                    mOnConfirmListener?.invoke(d)
+                mOnCancelListener?.invoke(d)
+            }
+            .setPositiveButton(positiveButtonText) { d, _ ->
+                if (mAutoDismissWhenConfirm) {
+                    d.dismiss()
                 }
-                .show()
+                mOnConfirmListener?.invoke(d)
+            }
+            .create()
+        dialog.show()
+        dialog.window?.attributes?.gravity = mGravity
+        return dialog
     }
 }

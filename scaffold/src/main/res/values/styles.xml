@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Widget" />
+
+    <!--选中的样式-->
+    <style name="Widget.Navi" />
+
+    <style name="Widget.Navi.Button" />
+
+    <style name="Widget.Navi.Button.TextAppearance">
+        <item name="android:textColor">@color/navi_button_color</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="Widget.Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="title">@string/app_name</item>
+        <item name="titleTextColor">@color/toolbar_title_text_color</item>
+        <item name="titleTextAppearance">@style/Widget.Toolbar.TitleTextAppearance</item>
+    </style>
+
+    <style name="Widget.Toolbar.Secondary" parent="Widget.Toolbar">
+        <item name="navigationIcon">@drawable/ic_back_black</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="titleTextColor">@color/secondary_toolbar_title_text_color</item>
+    </style>
+
+    <style name="Widget.Toolbar.TitleTextAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:ellipsize">none</item>
+        <item name="titleTextColor">@color/toolbar_title_text_color</item>
+    </style>
+
+    <style name="Widget.RecyclerView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:clipChildren">false</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:paddingTop">@dimen/recycler_view_top_edge_padding</item>
+        <item name="android:paddingStart">@dimen/recycler_view_edge_padding</item>
+        <item name="android:paddingEnd">@dimen/recycler_view_edge_padding</item>
+        <item name="android:paddingBottom">@dimen/recycler_view_edge_padding</item>
+    </style>
+
+    <style name="Widget.RecyclerView.NoPadding" parent="Widget.RecyclerView">
+        <item name="android:padding">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+
+    <style name="Widget.List" />
+
+    <style name="Widget.List.Title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#191919</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Widget.List.Summary">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#8a8a8a</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">top</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <!-- 开屏页面样式 -->
+    <style name="Widget.Start" />
+
+    <style name="Widget.Start.Skip">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:layout_marginEnd">30dp</item>
+        <item name="android:background">@drawable/circle_timer_selector</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="prefix">@string/skip</item>
+        <item name="showAsCountDownButton">true</item>
+        <item name="showStrokeProgress">true</item>
+        <item name="strokeColor">#ffffff</item>
+        <item name="suffix">s</item>
+        <item name="tickInterval">1000</item>
+    </style>
+
+    <style name="Widget.Start.Title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/app_name</item>
+        <item name="android:textColor">@color/start_page_title_text_color</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="Widget.Start.SubTitle" parent="Widget.Start.Title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/start_slogan</item>
+        <item name="android:textColor">@color/start_page_subtitle_text_color</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <!-- 开屏页面样式 -->
+
+    <!-- dialog样式 -->
+    <style name="Widget.Dialog" />
+
+    <style name="Widget.Dialog.Center" />
+
+    <style name="Widget.Dialog.Center.Container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
+        <item name="android:background">@drawable/bottom_dialog_background</item>
+    </style>
+
+    <style name="Widget.Dialog.Bottom" />
+
+    <style name="Widget.Dialog.Bottom.Container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:background">@drawable/bottom_dialog_background</item>
+    </style>
+
+    <style name="Widget.Dialog.Bottom.Title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#161616</item>
+        <item name="android:fontWeight" tools:ignore="NewApi">800</item>
+    </style>
+
+    <style name="Widget.Dialog.Bottom.Message">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">24dp</item>
+        <item name="android:paddingBottom">24dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#161616</item>
+    </style>
+
+    <style name="Widget.Dialog.Bottom.Button">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/dialog_button_text_color</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="Widget.Dialog.Bottom.Style" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/BottomMenuAnimation</item>
+    </style>
+    <!-- dialog样式 -->
+
+</resources>

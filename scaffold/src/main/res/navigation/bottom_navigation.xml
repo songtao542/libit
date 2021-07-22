@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@+id/navi_home">
+
+    <tab_fragment
+        android:id="@+id/navi_home"
+        android:name="com.domain.scaffold.ui.tab.home.HomeFragment"
+        android:label="@string/navi_home"
+        tools:layout="@layout/fragment_home" />
+
+    <tab_fragment
+        android:id="@+id/navi_discover"
+        android:name="com.domain.scaffold.ui.tab.discover.DiscoverFragment"
+        android:label="@string/navi_discover"
+        tools:layout="@layout/fragment_discover" />
+
+    <tab_fragment
+        android:id="@+id/navi_store"
+        android:name="com.domain.scaffold.ui.tab.store.StoreFragment"
+        android:label="@string/navi_store"
+        tools:layout="@layout/fragment_store" />
+
+    <tab_fragment
+        android:id="@+id/navi_profile"
+        android:name="com.domain.scaffold.ui.tab.profile.ProfileFragment"
+        android:label="@string/navi_profile"
+        tools:layout="@layout/fragment_profile" />
+
+</navigation>

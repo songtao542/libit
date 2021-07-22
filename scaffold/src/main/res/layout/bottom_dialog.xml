@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
+        style="@style/Widget.Dialog.Bottom.Container">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            style="@style/Widget.Dialog.Bottom.Title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="是否下载试用?" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/message"
+            style="@style/Widget.Dialog.Bottom.Message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            tools:text="@string/dialog_message_temp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cancel"
+            style="@style/Widget.Dialog.Bottom.Button"
+            android:text="@string/cancel"
+            app:layout_constraintEnd_toStartOf="@+id/ok"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/message" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/ok"
+            style="@style/Widget.Dialog.Bottom.Button"
+            android:text="@string/confirm"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cancel"
+            app:layout_constraintTop_toBottomOf="@+id/message" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

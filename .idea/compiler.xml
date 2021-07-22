@@ -36,6 +36,8 @@
       <module name="libit.recyclerview" target="11" />
       <module name="libit.retrofit-ext" target="11" />
       <module name="libit.runker" target="11" />
+      <module name="libit.scaffold" target="11" />
+      <module name="libit.scaffold_network" target="11" />
       <module name="libit.screencapture" target="11" />
       <module name="libit.screenrecord" target="11" />
       <module name="libit.settings" target="11" />

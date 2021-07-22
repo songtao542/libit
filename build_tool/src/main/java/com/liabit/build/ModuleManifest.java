@@ -154,6 +154,8 @@ public class ModuleManifest {
             moduleMap.get("retrofit-ext"),
     };
 
+    public static final String[] scaffoldMergeList = themeStoreMergeList;
+
     public static final String[] vpnMergeList = {
             /*moduleMap.get("wallpaper_cropper"),
             moduleMap.get("wallpaper_cropper_lite"),

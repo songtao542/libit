@@ -62,6 +62,8 @@ class BuildTool {
                 mergeList = ModuleManifest.sportMergeList;
             } else if ("refresh".equals(arg)) {
                 mergeList = ModuleManifest.refreshMergeList;
+            } else if ("scaffold".equals(arg)) {
+                mergeList = ModuleManifest.scaffoldMergeList;
             } else {
                 if ("matisse".equals(arg)) {
                     mergeList = new String[]{ModuleManifest.moduleMap.get("matisse"), ModuleManifest.moduleMap.get("matisse_crop")};

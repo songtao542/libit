@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">scaffold</string>
+
+    <string name="click_again_to_exit">再按一次退出程序</string>
+    <string name="navi_home">首页</string>
+    <string name="navi_discover">发现</string>
+    <string name="navi_store">商城</string>
+    <string name="navi_profile">我的</string>
+
+    <string name="skip">跳过</string>
+    <string name="start_slogan">开启精彩生活</string>
+
+    <string name="permission_des_full">亲爱的用户：\n\n感谢您使用我们的产品，为了您可以正常使用应用服务，需要使用联网、IMEI、读写联系人、读写外部储存权限，可能会产生移动数据流量，流量费用详情，请咨询当地运营商。本软件除特殊说明的资源，其他资源由第三方提供。使用之前，需要您同意《用户协议》和《隐私政策》，点击同意，即表示您同意上述内容。</string>
+    <string name="p_agreement">《用户协议》</string>
+    <string name="p_privacy">《隐私政策》</string>
+    <string name="go_setting">去设置</string>
+    <string name="dialog_message_temp">绝大多数情况下，DNS 记录是不变的，这样的方案根本不会影响正常使用</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
+    <string name="user_agreement">用户协议</string>
+    <string name="privacy">隐私政策</string>
+    <string name="notify">提示</string>
+    <string name="welcome_to_use">欢迎使用</string>
+    <string name="allow">同意</string>
+</resources>

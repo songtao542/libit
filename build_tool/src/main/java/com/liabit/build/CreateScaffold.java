@@ -68,6 +68,13 @@ public class CreateScaffold {
                 // 拷贝 .gitignore
                 File gitignoreFile = new File(parentPath, ".gitignore");
                 FileUtils.copyToDirectory(gitignoreFile, outputDir);
+                replace(gitignoreFile, line1 -> {
+                    if (line1.contains("build_for")) {
+                        return "";
+                    } else {
+                        return line1;
+                    }
+                });
 
                 // 拷贝 scaffold 目录
                 String scaffoldPath = parentPath + "scaffold";

@@ -65,6 +65,10 @@ public class CreateScaffold {
                 File gradlePropertiesFile = new File(parentPath, "gradle.properties");
                 FileUtils.copyToDirectory(gradlePropertiesFile, outputDir);
 
+                // 拷贝 .gitignore
+                File gitignoreFile = new File(parentPath, ".gitignore");
+                FileUtils.copyToDirectory(gitignoreFile, outputDir);
+
                 // 拷贝 scaffold 目录
                 String scaffoldPath = parentPath + "scaffold";
                 System.out.println("scaffoldPath: " + scaffoldPath);
@@ -75,10 +79,21 @@ public class CreateScaffold {
                 System.out.println("rename scaffold : " + scaffoldRenameResult);
                 correctAppBuildGradle(scaffoldRenameDir, config);
                 correctPackageName(new File(scaffoldRenameDir, "src"), config);
-                // 重命名代码目录名称
+                // 重命名 main 代码目录名称
                 File destScaffoldJavaDir = new File(scaffoldRenameDir, "src" + File.separator + "main" + File.separator + "java");
                 System.out.println("scaffold java dir : " + destScaffoldJavaDir);
                 renameDir(destScaffoldJavaDir, "scaffold", config.packageName.replace("com.", ""));
+                // 重命名 test 代码目录名称
+                File destScaffoldTestJavaDir = new File(scaffoldRenameDir, "src" + File.separator + "test" + File.separator + "java");
+                correctPackageName(destScaffoldTestJavaDir, config);
+                System.out.println("scaffold test java dir : " + destScaffoldTestJavaDir);
+                renameDir(destScaffoldTestJavaDir, "scaffold", config.packageName.replace("com.", ""));
+                // 重命名 androidTest 代码目录名称
+                File destScaffoldAndroidTestJavaDir = new File(scaffoldRenameDir, "src" + File.separator + "androidTest" + File.separator + "java");
+                correctPackageName(destScaffoldAndroidTestJavaDir, config);
+                System.out.println("scaffold android test java dir : " + destScaffoldAndroidTestJavaDir);
+                renameDir(destScaffoldAndroidTestJavaDir, "scaffold", config.packageName.replace("com.", ""));
+
                 // 修改 app AndroidManifest.xml
                 File appManifestFile = new File(scaffoldRenameDir, "src" + File.separator + "main" + File.separator + "AndroidManifest.xml");
                 correctManifestFile(appManifestFile, config);
@@ -99,10 +114,21 @@ public class CreateScaffold {
                 System.out.println("rename scaffold_network : " + scaffoldNetworkRenameResult);
                 correctNetworkBuildGradle(scaffoldNetworkRenameDir, config);
                 correctPackageName(new File(scaffoldNetworkRenameDir, "src"), config);
-                // 重命名代码目录名称
+                // 重命名 main 代码目录名称
                 File destScaffoldNetworkJavaDir = new File(scaffoldNetworkRenameDir, "src" + File.separator + "main" + File.separator + "java");
                 System.out.println("scaffold network java dir : " + destScaffoldNetworkJavaDir);
                 renameDir(destScaffoldNetworkJavaDir, "scaffold", config.packageName.replace("com.", ""));
+                // 重命名 test 代码目录名称
+                File destScaffoldNetworkTestJavaDir = new File(scaffoldNetworkRenameDir, "src" + File.separator + "test" + File.separator + "java");
+                correctPackageName(destScaffoldNetworkTestJavaDir, config);
+                System.out.println("scaffold test java dir : " + destScaffoldNetworkTestJavaDir);
+                renameDir(destScaffoldNetworkTestJavaDir, "scaffold", config.packageName.replace("com.", ""));
+                // 重命名 androidTest 代码目录名称
+                File destScaffoldNetworkAndroidTestJavaDir = new File(scaffoldNetworkRenameDir, "src" + File.separator + "androidTest" + File.separator + "java");
+                correctPackageName(destScaffoldNetworkAndroidTestJavaDir, config);
+                System.out.println("scaffold android test java dir : " + destScaffoldNetworkAndroidTestJavaDir);
+                renameDir(destScaffoldNetworkAndroidTestJavaDir, "scaffold", config.packageName.replace("com.", ""));
+
                 // 修改 network AndroidManifest.xml
                 File networkManifestFile = new File(scaffoldNetworkRenameDir, "src" + File.separator + "main" + File.separator + "AndroidManifest.xml");
                 correctManifestFile(networkManifestFile, config);

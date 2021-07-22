@@ -1,4 +1,4 @@
-package com.liabit.scaffold
+package com.scaffold
 
 import org.junit.Test
 

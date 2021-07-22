@@ -1,13 +1,13 @@
 {
-  "projectName": "youpen",
+  "projectName": "android_ziqing",
   "projectOutputDirectory": "/Users/developer/temp",
-  "packageName": "com.you.pen",
-  "tab1": "first",
-  "tab2": "second",
-  "tab3": "third",
-  "tab4": "fourth",
-  "tab1Name": "主页",
-  "tab2Name": "资讯",
-  "tab3Name": "发现",
-  "tab4Name": "设置"
+  "packageName": "com.ziqing",
+  "tab1": "home",
+  "tab2": "health",
+  "tab3": "store",
+  "tab4": "profile",
+  "tab1Name": "首页",
+  "tab2Name": "健康",
+  "tab3Name": "商城",
+  "tab4Name": "我的"
 }

@@ -54,7 +54,10 @@ class BuildTool {
                 System.out.println("arg: " + a);
             }
             String arg = args[0];
-            if ("vpn".equals(arg)) {
+            if ("create_scaffold".equals(arg)) {
+                CreateScaffold.createScaffoldProject(args);
+                return;
+            } else if ("vpn".equals(arg)) {
                 mergeList = ModuleManifest.vpnMergeList;
             } else if ("theme".equals(arg)) {
                 mergeList = ModuleManifest.themeStoreMergeList;
@@ -235,6 +238,7 @@ class BuildTool {
             // 如果源代码目录需要更改，则重命名源代码目录名
             if (!defaultDirName.equals(dirName)) {
                 // 重命名文件夹
+                // liabit => wson.refresh
                 RenamePackageDirectory.renameDir(destJavaDir, defaultDirName, dirName);
             }
 

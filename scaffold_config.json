@@ -1,0 +1,13 @@
+{
+  "projectName": "youpen",
+  "projectOutputDirectory": "/Users/developer/temp",
+  "packageName": "com.you.pen",
+  "tab1": "first",
+  "tab2": "second",
+  "tab3": "third",
+  "tab4": "fourth",
+  "tab1Name": "主页",
+  "tab2Name": "资讯",
+  "tab3Name": "发现",
+  "tab4Name": "设置"
+}

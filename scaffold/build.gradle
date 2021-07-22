@@ -42,7 +42,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.domain.scaffold"
+        applicationId "com.scaffold"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1

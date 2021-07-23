@@ -44,6 +44,11 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
     private lateinit var mTextView: TextView
     private lateinit var mProgressBar: ProgressBar
 
+    private var mTimeText: CharSequence? = null
+    private var mNetworkText: CharSequence? = null
+    private var mLoadingText: CharSequence? = null
+    private var mEmptyText: CharSequence? = null
+
     private var mOnClickListener: OnClickListener? = null
 
     private var mState: Int = NONE
@@ -83,12 +88,34 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
         mOnClickListener = l
     }
 
-    fun setText(text: CharSequence) {
+    fun setText(text: CharSequence): EmptyView {
         mTextView.text = text
+        return this
     }
 
-    fun setText(textResId: Int) {
+    fun setText(textResId: Int): EmptyView {
         mTextView.setText(textResId)
+        return this
+    }
+
+    fun setTimeText(text: CharSequence): EmptyView {
+        mTimeText = text
+        return this
+    }
+
+    fun setNetworkText(text: CharSequence): EmptyView {
+        mNetworkText = text
+        return this
+    }
+
+    fun setLoadingText(text: CharSequence): EmptyView {
+        mLoadingText = text
+        return this
+    }
+
+    fun setEmptyText(text: CharSequence): EmptyView {
+        mEmptyText = text
+        return this
     }
 
     private fun onClick() {
@@ -118,8 +145,24 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
         updateState()
     }
 
+    /**
+     * @param predicate If true add [state] else clear [state]
+     */
+    fun addStateIf(predicate: Boolean, @State state: Int) {
+        mState = if (predicate) mState or state else mState and state.inv()
+        updateState()
+    }
+
     fun clearState(@State state: Int) {
         mState = mState and state.inv()
+        updateState()
+    }
+
+    /**
+     * @param predicate If true clear [state] else add [state]
+     */
+    fun clearStateIf(predicate: Boolean, @State state: Int) {
+        mState = if (predicate) mState and state.inv() else mState or state
         updateState()
     }
 
@@ -168,22 +211,22 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
             mState and TIME == TIME -> {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.INVISIBLE
-                mTextView.setText(R.string.empty_view_time_not_right)
+                mTextView.text = mTimeText ?: context.getString(R.string.empty_view_time_not_right)
             }
             mState and NETWORK == NETWORK -> {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.INVISIBLE
-                mTextView.setText(R.string.empty_view_network_not_available)
+                mTextView.text = mNetworkText ?: context.getString(R.string.empty_view_network_not_available)
             }
             mState and LOADING == LOADING -> {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.VISIBLE
-                mTextView.setText(R.string.empty_view_loading)
+                mTextView.text = mLoadingText ?: context.getString(R.string.empty_view_loading)
             }
             mState and EMPTY == EMPTY -> {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.INVISIBLE
-                mTextView.setText(R.string.empty_view_no_data)
+                mTextView.text = mEmptyText ?: context.getString(R.string.empty_view_no_data)
             }
             else -> {
                 visibility = View.GONE

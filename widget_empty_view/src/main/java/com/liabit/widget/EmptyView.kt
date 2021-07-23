@@ -88,16 +88,6 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
         mOnClickListener = l
     }
 
-    fun setText(text: CharSequence): EmptyView {
-        mTextView.text = text
-        return this
-    }
-
-    fun setText(textResId: Int): EmptyView {
-        mTextView.setText(textResId)
-        return this
-    }
-
     fun setTimeText(text: CharSequence): EmptyView {
         mTimeText = text
         return this

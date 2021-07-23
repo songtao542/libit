@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.IntDef
+import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.liabit.widget.emptyview.R
@@ -93,8 +94,18 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
         return this
     }
 
+    fun setTimeText(@StringRes textResId: Int): EmptyView {
+        mTimeText = context.getString(textResId)
+        return this
+    }
+
     fun setNetworkText(text: CharSequence): EmptyView {
         mNetworkText = text
+        return this
+    }
+
+    fun setNetworkText(@StringRes textResId: Int): EmptyView {
+        mNetworkText = context.getString(textResId)
         return this
     }
 
@@ -103,8 +114,18 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
         return this
     }
 
+    fun setLoadingText(@StringRes textResId: Int): EmptyView {
+        mLoadingText = context.getString(textResId)
+        return this
+    }
+
     fun setEmptyText(text: CharSequence): EmptyView {
         mEmptyText = text
+        return this
+    }
+
+    fun setEmptyText(@StringRes textResId: Int): EmptyView {
+        mEmptyText = context.getString(textResId)
         return this
     }
 

@@ -1,14 +1,13 @@
 package com.scaffold.network
 
 import android.content.Context
-import com.scaffold.network.BuildConfig
+import com.google.gson.Gson
 import com.scaffold.net.interceptor.*
 import com.scaffold.net.retrofit.GsonConverterFactory
 import com.scaffold.network.interceptor.BasicInfoInterceptor
 import com.scaffold.network.interceptor.BasicInfoProvider
 import com.scaffold.network.model.Response
 import com.scaffold.network.retrofit.LiveDataCallAdapterFactory
-import com.google.gson.Gson
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

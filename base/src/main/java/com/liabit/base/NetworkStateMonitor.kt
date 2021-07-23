@@ -47,7 +47,20 @@ class NetworkStateMonitor(
     }
 
     fun isNetworkAvailable(): Boolean {
-        return mConnectivityManager.activeNetwork != null
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mConnectivityManager.activeNetwork != null
+        } else {
+            var isAvailable = false
+            mConnectivityManager.allNetworkInfo.let {
+                for (net in it) {
+                    if (net.isAvailable) {
+                        isAvailable = true
+                        break
+                    }
+                }
+            }
+            isAvailable
+        }
     }
 
     override fun close() {

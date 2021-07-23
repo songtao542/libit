@@ -43,8 +43,15 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
 
     /**
      * 注意在 Context 初始化之后调用
+     * 网络是否可用
      */
     val isNetworkAvailable: Boolean get() = mNetworkStateMonitor.isNetworkAvailable()
+
+    /**
+     * 注意在 Context 初始化之后调用
+     * 网络是否不可用
+     */
+    val isNetworkUnavailable: Boolean get() = !isNetworkAvailable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

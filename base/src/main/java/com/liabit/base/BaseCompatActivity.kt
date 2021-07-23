@@ -34,7 +34,15 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
 
     private val mNetworkStateMonitor by autoClear { NetworkStateMonitor(this) }
 
+    /**
+     * 网络是否可用
+     */
     val isNetworkAvailable: Boolean get() = mNetworkStateMonitor.isNetworkAvailable()
+
+    /**
+     * 网络是否不可用
+     */
+    val isNetworkUnavailable: Boolean get() = !isNetworkAvailable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

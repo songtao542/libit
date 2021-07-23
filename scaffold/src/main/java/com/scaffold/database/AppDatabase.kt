@@ -16,6 +16,11 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun keyValueDao(): KeyValueDao
 
+
+    // adb shell setprop log.tag.SQLiteStatements VERBOSE
+    // adb shell getprop log.tag.SQLiteStatements
+    // adb shell stop
+    // adb shell start
     companion object {
 
         @Volatile

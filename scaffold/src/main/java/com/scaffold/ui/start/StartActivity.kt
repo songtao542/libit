@@ -3,9 +3,9 @@ package com.scaffold.ui.start
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.scaffold.TheApp
 import com.scaffold.base.BaseCompatActivity
 import com.scaffold.ui.MainActivity
-import com.scaffold.TheApp
 import com.scaffold.util.Preference
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,7 +15,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class StartActivity : BaseCompatActivity() {
     companion object {
-        private const val AD_DURATION = (24 * 60 * 60 * 1000).toLong() // 两次广告显示的时间间隔
+        // 两次Splash显示的时间间隔 24小时
+        private const val SPLASH_DURATION = 24 * 60 * 60 * 1000L
 
         fun start(context: Context) {
             val intent = Intent(context, StartActivity::class.java)
@@ -25,7 +26,7 @@ class StartActivity : BaseCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (shouldShowAd()) {
+        if (shouldShowSplash()) {
             if (savedInstanceState == null) {
                 supportFragmentManager
                     .beginTransaction()
@@ -42,15 +43,21 @@ class StartActivity : BaseCompatActivity() {
         finish()
     }
 
-    private fun shouldShowAd(): Boolean {
+    private fun shouldShowSplash(): Boolean {
         val curTime = System.currentTimeMillis()
-        if (curTime - com.scaffold.TheApp.APP_LAUNCH_TIME < 500) {
+        val show = if (curTime - TheApp.APP_LAUNCH_TIME < 500L) {
             // 第一次启动app
-            return true
+            true
+        } else {
+            // 两次Splash时间间隔
+            val lastDisplayTime = Preference.getLong("splash_time", 0L)
+            curTime - lastDisplayTime > SPLASH_DURATION
         }
-        // 两次广告时间间隔
-        val lastDisplayTime = Preference.getLong("ad_read_time", 0)
-        return curTime - lastDisplayTime > AD_DURATION
+        if (show) {
+            Preference.putLong("splash_time", curTime)
+        }
+        return show
     }
+
 
 }

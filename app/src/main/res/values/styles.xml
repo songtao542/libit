@@ -108,11 +108,11 @@
     </style>
 
     <style name="LoadingView.Style">
-        <item name="circularIndicatorBar">false</item>
+        <item name="circularIndicatorBar">true</item>
     </style>
 
-    <style name="LoadingView.ProgressBarStyle">
-        <item name="android:layout_width">32dp</item>
-        <item name="android:layout_height">32dp</item>
+    <style name="LoadingView.ProgressBarStyle" parent="LoadingView.BaseProgressBarStyle">
+        <item name="android:layout_width">36dp</item>
+        <item name="android:layout_height">36dp</item>
     </style>
 </resources>

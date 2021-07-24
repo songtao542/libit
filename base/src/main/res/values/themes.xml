@@ -45,6 +45,9 @@
     <style name="LoadingView.ProgressStyle" parent="LoadingView.BaseProgressStyle" />
 
     <style name="LoadingView.BaseProgressBarStyle" parent="android:Widget.Material.ProgressBar">
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:layout_gravity">center</item>
         <item name="android:indeterminateTint">@android:color/white</item>
         <item name="android:progressTint">@android:color/white</item>
         <item name="android:trackTint">@android:color/white</item>

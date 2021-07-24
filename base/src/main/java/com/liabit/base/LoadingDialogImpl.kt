@@ -24,9 +24,11 @@ class LoadingDialogImpl(context: Context) : Dialog(context, R.style.LoadingDialo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val contentView = FrameLayout(context)
-        val ta = context.obtainStyledAttributes(intArrayOf(R.attr.useCircularIndicator))
+
+        val ta = context.theme.obtainStyledAttributes(R.style.LoadingDialog, intArrayOf(R.attr.useCircularIndicator))
         val useCircularIndicator = ta.getBoolean(0, true)
         ta.recycle()
+        android.util.Log.d("TTTT", "uuuuuuuuuuuuuu: $useCircularIndicator")
         val loadingView = LoadingView(context, useCircularIndicator)
 
         val size = context.resources.getDimension(R.dimen.loading_view_size).toInt()

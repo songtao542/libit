@@ -12,4 +12,36 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowIsFloating">false</item>
     </style>
+
+    <style name="LoadingView" />
+
+    <style name="LoadingView.ProgressStyle" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateDuration">8000</item>
+        <item name="android:indeterminateTint">@android:color/white</item>
+        <item name="android:translationZ">0dp</item>
+        <item name="indicatorColor">@android:color/white</item>
+        <item name="indicatorSize">32dp</item>
+        <item name="trackColor">@android:color/transparent</item>
+        <item name="trackCornerRadius">2dp</item>
+        <item name="trackThickness">2dp</item>
+    </style>
+
+    <style name="LoadingView.TextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:text">@string/base_loading</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:translationZ">0dp</item>
+    </style>
+
 </resources>

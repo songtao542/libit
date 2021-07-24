@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/loading_view_size"
     android:layout_height="@dimen/loading_view_size"
@@ -15,37 +14,13 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!--<ProgressBar-->
-    <!--style="@android:style/Widget.Material.ProgressBar.Large"-->
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressBar"
-        style="@style/Widget.MaterialComponents.CircularProgressIndicator"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:indeterminateDuration="8000"
-        android:indeterminateTint="@android:color/white"
-        android:translationZ="0dp"
-        app:indicatorColor="@android:color/white"
-        app:indicatorSize="32dp"
-        app:trackColor="@android:color/transparent"
-        app:trackCornerRadius="2dp"
-        app:trackThickness="2dp" />
+        style="@style/LoadingView.ProgressStyle" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLines="1"
-        android:text="@string/base_loading"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:translationZ="0dp" />
+        style="@style/LoadingView.TextStyle" />
 
     <Space
         android:layout_width="match_parent"

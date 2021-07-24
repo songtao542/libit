@@ -28,11 +28,8 @@ import okhttp3.internal.toHexString
  * 第二步：修改 LoadingView.ProgressBarStyle
  * <style name="LoadingView.ProgressBarStyle">
  *     <item name="android:indeterminateDrawable">@drawable/progressbar_loading</item>
- *     <item name="android:minWidth">24dp</item>
- *     <item name="android:minHeight">24dp</item>
- *     <item name="android:layout_width">40dp</item>
- *     <item name="android:layout_height">40dp</item>
- *     <item name="layout_goneMarginBottom">8dp</item>
+ *     <item name="android:layout_width">32dp</item>
+ *     <item name="android:layout_height">32dp</item>
  * </style>
  *
  * 第三步：定义 indeterminateDrawable

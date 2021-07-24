@@ -69,8 +69,9 @@ class LoadingView : LinearLayout {
             findViewById(R.id.progressBar)
         } else {
             removeView(findViewById(R.id.progressBar))
-            val progressBar = inflater.inflate(R.layout.loading_progress_bar, null, false) as ProgressBar
+            val progressBar = inflater.inflate(R.layout.loading_progress_bar, this, false) as ProgressBar
             addView(progressBar, 1)
+
             progressBar
         }
         mTextView?.visibility = View.GONE

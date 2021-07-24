@@ -14,14 +14,15 @@
     </style>
 
     <style name="LoadingDialog" parent="BaseLoadingDialog">
-        <item name="circularIndicatorBar">false</item>
-        <item name="android:background">#ff0000</item>
+        <item name="circularIndicatorBar">true</item>
     </style>
 
-    <style name="LoadingView" />
+    <style name="LoadingView">
+        <item name="android:layout_gravity">center</item>
+    </style>
 
     <style name="LoadingView.Style">
-        <item name="circularIndicatorBar">false</item>
+        <item name="circularIndicatorBar">true</item>
     </style>
 
     <style name="LoadingView.BaseProgressStyle" parent="Widget.MaterialComponents.CircularProgressIndicator">

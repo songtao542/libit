@@ -106,4 +106,13 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowIsFloating">false</item>
     </style>
+
+    <style name="LoadingView.Style">
+        <item name="circularIndicatorBar">false</item>
+    </style>
+
+    <style name="LoadingView.ProgressBarStyle">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+    </style>
 </resources>

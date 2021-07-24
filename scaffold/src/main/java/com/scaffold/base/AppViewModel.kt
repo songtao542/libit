@@ -18,7 +18,6 @@ open class AppViewModel : ApplicationViewModel() {
     @Inject
     lateinit var api: Api
 
-    val liveTimeError = SingleLiveData<Boolean>()
     val liveEmpty by lazy { MutableLiveData<Boolean>() }
     val liveError by lazy { MutableLiveData<Boolean>() }
 

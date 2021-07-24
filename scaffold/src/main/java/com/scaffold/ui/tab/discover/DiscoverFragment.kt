@@ -34,9 +34,6 @@ class DiscoverFragment : BaseFragment<DiscoverViewModel, FragmentDiscoverBinding
 
         }
 
-        viewModel.liveTimeError.observe(viewLifecycleOwner) {
-            binding.emptyView.beginTransaction().addStateIf(it, EmptyView.TIME).commit()
-        }
         binding.emptyView.beginTransaction().addStateIf(!isNetworkAvailable, EmptyView.NETWORK).commit()
     }
 

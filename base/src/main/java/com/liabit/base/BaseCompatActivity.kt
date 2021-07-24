@@ -34,6 +34,8 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
 
     private val mNetworkStateMonitor by autoClear { NetworkStateMonitor(this) }
 
+    private var mNetworkObserver = Observer<Boolean> { t -> onNetworkStateChanged(t == true) }
+
     /**
      * 网络是否可用
      */
@@ -51,6 +53,7 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
             setContentView(view)
             onViewCreated(view, savedInstanceState)
         }
+        observeNetwork(mNetworkObserver)
     }
 
     protected open fun onCreateView(inflater: LayoutInflater, savedInstanceState: Bundle?): View? {
@@ -115,6 +118,13 @@ open class BaseCompatActivity : AppCompatActivity(), ProgressDialog {
 
     fun observeNetwork(lifecycleOwner: LifecycleOwner, observer: Observer<Boolean>) {
         mNetworkStateMonitor.observe(lifecycleOwner, observer)
+    }
+
+    fun observeNetwork(observer: Observer<Boolean>) {
+        mNetworkStateMonitor.observe(this, observer)
+    }
+
+    open fun onNetworkStateChanged(isNetworkAvailable: Boolean) {
     }
 
     fun post(runnable: Runnable) {

@@ -41,6 +41,8 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
 
     private val mNetworkStateMonitor by autoClear { NetworkStateMonitor(requireContext()) }
 
+    private var mNetworkObserver = Observer<Boolean> { t -> onNetworkStateChanged(t == true) }
+
     /**
      * 注意在 Context 初始化之后调用
      * 网络是否可用
@@ -63,15 +65,16 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
         val activity = activity ?: return
         onViewCreated(activity)
         onViewCreated(activity, savedInstanceState)
+        observeNetwork(mNetworkObserver)
     }
-
-    protected open fun onViewCreated(activity: FragmentActivity) {}
 
     /**
      *  [onInitialize] 会在 [onCreate] 中回调，建议在此方法中做网络数据初始化，避免每次初始化view都去调用网络接口
      */
     protected open fun onInitialize(savedInstanceState: Bundle?) {
     }
+
+    protected open fun onViewCreated(activity: FragmentActivity) {}
 
     /**
      * [onViewCreated] 会在 [onViewCreated] 中回调，建议在这里处理view相关的初始化，
@@ -82,6 +85,13 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
 
     fun observeNetwork(lifecycleOwner: LifecycleOwner, observer: Observer<Boolean>) {
         mNetworkStateMonitor.observe(lifecycleOwner, observer)
+    }
+
+    fun observeNetwork(observer: Observer<Boolean>) {
+        observeNetwork(viewLifecycleOwner, observer)
+    }
+
+    open fun onNetworkStateChanged(isNetworkAvailable: Boolean) {
     }
 
     fun post(runnable: Runnable) {

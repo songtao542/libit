@@ -24,8 +24,8 @@ class LoadingView : LinearLayout {
         init(context, null, 0, 0, true)
     }
 
-    constructor(context: Context, useCircularIndicator: Boolean) : super(context) {
-        init(context, null, 0, 0, useCircularIndicator)
+    constructor(context: Context, circularIndicatorBar: Boolean) : super(context) {
+        init(context, null, 0, 0, circularIndicatorBar)
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
@@ -52,25 +52,25 @@ class LoadingView : LinearLayout {
         init(context, attrs, defStyleAttr, defStyleRes, true)
     }
 
-    private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int, circularIndicator: Boolean) {
+    private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int, circularIndicatorBar: Boolean) {
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.loading_view, this, true)
         orientation = VERTICAL
-        var useCircularIndicator = circularIndicator
+        var isCircularIndicator = circularIndicatorBar
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LoadingView, defStyleAttr, defStyleRes)
-            useCircularIndicator = typedArray.getBoolean(R.styleable.LoadingView_useCircularIndicator, true)
+            isCircularIndicator = typedArray.getBoolean(R.styleable.LoadingView_circularIndicatorBar, true)
             typedArray.recycle()
         }
 
         setBackgroundResource(R.drawable.loading_view_background)
         mTextView = findViewById(R.id.textView)
-        mProgressBar = if (useCircularIndicator) {
+        mProgressBar = if (isCircularIndicator) {
             findViewById(R.id.progressBar)
         } else {
             removeView(findViewById(R.id.progressBar))
             val progressBar = inflater.inflate(R.layout.loading_progress_bar, null, false) as ProgressBar
-            addView(progressBar)
+            addView(progressBar, 1)
             progressBar
         }
         mTextView?.visibility = View.GONE

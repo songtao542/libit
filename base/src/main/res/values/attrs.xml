@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="circularIndicatorBar" format="boolean" />
     <declare-styleable name="LoadingView">
-        <attr name="useCircularIndicator" format="boolean" />
+        <attr name="circularIndicatorBar" />
     </declare-styleable>
 </resources>

@@ -1,15 +1,19 @@
 package com.liabit.base
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
+import android.util.TypedValue
+import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.annotation.StringRes
+import okhttp3.internal.toHexString
 
 /**
  * Author:         songtao
@@ -21,16 +25,14 @@ class LoadingDialogImpl(context: Context) : Dialog(context, R.style.LoadingDialo
     private var mText: CharSequence? = null
     private var mCancellable = true
 
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val contentView = FrameLayout(context)
-
-        val ta = context.theme.obtainStyledAttributes(R.style.LoadingDialog, intArrayOf(R.attr.useCircularIndicator))
-        val useCircularIndicator = ta.getBoolean(0, true)
+        val ta = context.obtainStyledAttributes(R.style.LoadingView_Style, R.styleable.LoadingView)
+        val circularIndicatorBar = ta.getBoolean(R.styleable.LoadingView_circularIndicatorBar, true)
         ta.recycle()
-        android.util.Log.d("TTTT", "uuuuuuuuuuuuuu: $useCircularIndicator")
-        val loadingView = LoadingView(context, useCircularIndicator)
-
+        val loadingView = LoadingView(context, circularIndicatorBar)
         val size = context.resources.getDimension(R.dimen.loading_view_size).toInt()
         loadingView.layoutParams = FrameLayout.LayoutParams(size, size).apply {
             gravity = Gravity.CENTER

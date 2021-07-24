@@ -11,6 +11,7 @@
         <item name="android:backgroundDimAmount">0.1</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowIsFloating">false</item>
+        <item name="useCircularIndicator">false</item>
     </style>
 
     <style name="LoadingView">

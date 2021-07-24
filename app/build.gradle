@@ -93,14 +93,16 @@ dependencies {
     implementation project(':photoview')
     implementation project(':dialog')
     implementation project(':addsub')
-    implementation project(':autoclear')
     implementation project(':retrofit-ext')
     implementation project(':imageloader')
+    implementation project(":viewbinding")
+    implementation project(":autoclear")
     implementation project(':base')
     implementation project(':base_with_viewbinding')
     implementation project(':base_with_viewmodel')
     implementation project(':viewmodel_inject')
     implementation project(':base_with_vb_vm')
+    implementation project(':viewmodel')
 
     implementation files('../common_libs/imagepicker-1.0.0.aar')
 

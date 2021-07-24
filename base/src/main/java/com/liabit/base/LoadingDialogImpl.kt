@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.annotation.StringRes
 
 /**
@@ -23,7 +24,11 @@ class LoadingDialogImpl(context: Context) : Dialog(context, R.style.LoadingDialo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val contentView = FrameLayout(context)
-        val loadingView = LoadingView(context)
+        val ta = context.obtainStyledAttributes(intArrayOf(R.attr.useCircularIndicator))
+        val useCircularIndicator = ta.getBoolean(0, true)
+        ta.recycle()
+        val loadingView = LoadingView(context, useCircularIndicator)
+
         val size = context.resources.getDimension(R.dimen.loading_view_size).toInt()
         loadingView.layoutParams = FrameLayout.LayoutParams(size, size).apply {
             gravity = Gravity.CENTER

@@ -18,6 +18,33 @@ import okhttp3.internal.toHexString
 /**
  * Author:         songtao
  * CreateDate:     2020/12/4 18:04
+ * ```
+ * 修改 progress bar 样式
+ * 第一步：设置 circularIndicatorBar 为 false
+ * <style name="LoadingView.Style">
+ *     <item name="circularIndicatorBar">false</item>
+ * </style>
+ *
+ * 第二步：修改 LoadingView.ProgressStyle
+ * <style name="LoadingView.ProgressStyle">
+ *     <item name="android:indeterminateDrawable">@drawable/progressbar_loading</item>
+ *     <item name="android:minWidth">24dp</item>
+ *     <item name="android:minHeight">24dp</item>
+ *     <item name="android:layout_width">40dp</item>
+ *     <item name="android:layout_height">40dp</item>
+ *     <item name="layout_goneMarginBottom">8dp</item>
+ * </style>
+ *
+ * 第三步：定义 indeterminateDrawable
+ * <?xml version="1.0" encoding="utf-8"?>
+ * <rotate xmlns:android="http://schemas.android.com/apk/res/android"
+ *     android:drawable="@mipmap/ic_loading"
+ *     android:fromDegrees="0"
+ *     android:pivotX="50%"
+ *     android:pivotY="50%"
+ *     android:toDegrees="720">
+ * </rotate>
+ * ```
  */
 class LoadingDialogImpl(context: Context) : Dialog(context, R.style.LoadingDialog), LoadingDialog {
 

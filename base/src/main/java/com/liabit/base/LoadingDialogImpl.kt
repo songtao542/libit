@@ -25,8 +25,8 @@ import okhttp3.internal.toHexString
  *     <item name="circularIndicatorBar">false</item>
  * </style>
  *
- * 第二步：修改 LoadingView.ProgressStyle
- * <style name="LoadingView.ProgressStyle">
+ * 第二步：修改 LoadingView.ProgressBarStyle
+ * <style name="LoadingView.ProgressBarStyle">
  *     <item name="android:indeterminateDrawable">@drawable/progressbar_loading</item>
  *     <item name="android:minWidth">24dp</item>
  *     <item name="android:minHeight">24dp</item>

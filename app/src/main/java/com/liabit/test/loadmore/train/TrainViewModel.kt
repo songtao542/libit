@@ -3,7 +3,7 @@ package com.liabit.test.loadmore.train
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import com.liabit.test.base.SavedStateViewModel
+import com.liabit.viewmodel.SavedStateViewModel
 import javax.inject.Inject
 
 class TrainViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : SavedStateViewModel(savedStateHandle) {

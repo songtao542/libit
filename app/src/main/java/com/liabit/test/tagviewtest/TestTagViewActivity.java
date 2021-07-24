@@ -4,6 +4,7 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 
 
+import com.liabit.base.BaseCompatActivity;
 import com.liabit.tagview.TagView;
 import com.liabit.test.R;
 
@@ -15,7 +16,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-public class TestTagViewActivity extends AppCompatActivity {
+public class TestTagViewActivity extends BaseCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -14,9 +14,9 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
+    <include
         android:id="@+id/progressBar"
-        style="@style/LoadingView.ProgressStyle" />
+        layout="@layout/loading_progress_indicator" />
 
     <TextView
         android:id="@+id/textView"

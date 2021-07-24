@@ -21,19 +21,23 @@ class LoadingView : LinearLayout {
     private var mProgressBar: ProgressBar? = null
 
     constructor(context: Context) : super(context) {
-        init(context)
+        init(context, null, 0, 0, true)
+    }
+
+    constructor(context: Context, useCircularIndicator: Boolean) : super(context) {
+        init(context, null, 0, 0, useCircularIndicator)
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        init(context)
+        init(context, attrs, 0, 0, true)
     }
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr
-    ) {
-        init(context)
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int
+    ) : super(context, attrs, defStyleAttr) {
+        init(context, attrs, defStyleAttr, 0, true)
     }
 
     @Suppress("unused")
@@ -45,15 +49,30 @@ class LoadingView : LinearLayout {
     ) : super(
         context, attrs, defStyleAttr, defStyleRes
     ) {
-        init(context)
+        init(context, attrs, defStyleAttr, defStyleRes, true)
     }
 
-    private fun init(context: Context) {
-        LayoutInflater.from(context).inflate(R.layout.loading_view, this, true)
+    private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int, circularIndicator: Boolean) {
+        val inflater = LayoutInflater.from(context)
+        inflater.inflate(R.layout.loading_view, this, true)
         orientation = VERTICAL
+        var useCircularIndicator = circularIndicator
+        if (attrs != null) {
+            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LoadingView, defStyleAttr, defStyleRes)
+            useCircularIndicator = typedArray.getBoolean(R.styleable.LoadingView_useCircularIndicator, true)
+            typedArray.recycle()
+        }
+
         setBackgroundResource(R.drawable.loading_view_background)
         mTextView = findViewById(R.id.textView)
-        mProgressBar = findViewById(R.id.progressBar)
+        mProgressBar = if (useCircularIndicator) {
+            findViewById(R.id.progressBar)
+        } else {
+            removeView(findViewById(R.id.progressBar))
+            val progressBar = inflater.inflate(R.layout.loading_progress_bar, null, false) as ProgressBar
+            addView(progressBar)
+            progressBar
+        }
         mTextView?.visibility = View.GONE
     }
 

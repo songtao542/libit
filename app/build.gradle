@@ -96,6 +96,11 @@ dependencies {
     implementation project(':autoclear')
     implementation project(':retrofit-ext')
     implementation project(':imageloader')
+    implementation project(':base')
+    implementation project(':base_with_viewbinding')
+    implementation project(':base_with_viewmodel')
+    implementation project(':viewmodel_inject')
+    implementation project(':base_with_vb_vm')
 
     implementation files('../common_libs/imagepicker-1.0.0.aar')
 

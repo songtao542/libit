@@ -13,7 +13,9 @@
         <item name="android:windowIsFloating">false</item>
     </style>
 
-    <style name="LoadingView" />
+    <style name="LoadingView">
+        <item name="useCircularIndicator">true</item>
+    </style>
 
     <style name="LoadingView.ProgressStyle" parent="Widget.MaterialComponents.CircularProgressIndicator">
         <item name="android:layout_width">32dp</item>
@@ -29,6 +31,8 @@
         <item name="trackCornerRadius">2dp</item>
         <item name="trackThickness">2dp</item>
     </style>
+
+    <style name="LoadingView.ProgressBarStyle" parent="android:Widget.Material.ProgressBar" />
 
     <style name="LoadingView.TextStyle">
         <item name="android:layout_width">match_parent</item>

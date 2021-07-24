@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.liabit.base.BaseCompatFragment;
 import com.liabit.tagview.TagView;
 import com.liabit.test.R;
 
@@ -15,7 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
 
-public class TagViewTestFragment extends Fragment {
+public class TagViewTestFragment extends BaseCompatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activity_tagview_test_layout, container, false);
@@ -35,6 +36,10 @@ public class TagViewTestFragment extends Fragment {
         tv.setOnTagClickListener(tag -> {
             Log.d("TTTT", "tag====" + tag);
             Toast.makeText(getContext(), tag.getTag(), Toast.LENGTH_SHORT).show();
+            showDialog(null, false);
+            postDelayed(() -> {
+                dismissDialog(0);
+            }, 5000);
         });
 
         TagView tv2 = (TagView) getView().findViewById(R.id.tagView2);

@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.liabit.test.R
-import com.liabit.test.base.startActivity
+import com.liabit.base.startActivity
 import com.liabit.test.loadmore.train.TrainTabFragment
 
 class TestLoadMoreMenuActivity : AppCompatActivity() {

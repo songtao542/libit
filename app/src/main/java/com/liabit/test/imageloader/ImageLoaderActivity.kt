@@ -10,7 +10,7 @@ import com.liabit.extension.setCornerRadius
 import com.liabit.imageloader.ImageLoader
 import com.liabit.imageloader.load
 import com.liabit.test.R
-import com.liabit.test.base.startActivity
+import com.liabit.base.startActivity
 import com.liabit.test.databinding.TestImageLoaderBinding
 import com.liabit.test.databinding.TestImageLoaderItemBinding
 import com.liabit.test.mock.MockPicture

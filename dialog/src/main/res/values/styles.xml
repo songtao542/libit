@@ -11,8 +11,8 @@
 
     <style name="DefaultInputDialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@drawable/input_dialog_background</item>
-        <item name="android:windowMinWidthMajor">80%</item>
-        <item name="android:windowMinWidthMinor">80%</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
         <item name="android:buttonBarNegativeButtonStyle">@style/DefaultDialogButtonStyle</item>
         <item name="android:buttonBarPositiveButtonStyle">@style/DefaultDialogButtonStyle</item>
         <item name="android:windowTitleStyle">@style/DefaultDialogTitleStyle</item>
@@ -20,11 +20,28 @@
 
     <style name="DefaultAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@drawable/input_dialog_background</item>
-        <item name="android:windowMinWidthMajor">100%</item>
-        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
         <item name="android:buttonBarNegativeButtonStyle">@style/DefaultDialogButtonStyle</item>
         <item name="android:buttonBarPositiveButtonStyle">@style/DefaultDialogButtonStyle</item>
         <item name="android:windowTitleStyle">@style/DefaultDialogTitleStyle</item>
+    </style>
+
+    <style name="DefaultBottomAlertDialogTheme" parent="DefaultAlertDialogTheme">
+        <item name="android:windowAnimationStyle">@style/BottomAlertDialogAnimation</item>
+        <item name="android:windowBackground">@drawable/dialog_inset_round_shape</item>
+    </style>
+
+    <style name="BottomAlertDialogAnimation" parent="@android:style/Animation">
+        <item name="android:windowExitAnimation">@anim/dialog_anim_bottom_exit</item>
+    </style>
+
+    <style name="BottomAlertDialogTheme" parent="DefaultBottomAlertDialogTheme">
+        <item name="alertDialogTheme">@style/DefaultBottomAlertDialogTheme</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="DefaultAlertDialogTheme">
+        <item name="alertDialogTheme">@style/DefaultAlertDialogTheme</item>
     </style>
 
 </resources>

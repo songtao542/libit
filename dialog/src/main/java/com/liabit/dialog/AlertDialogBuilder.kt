@@ -2,6 +2,7 @@ package com.liabit.dialog
 
 import android.content.Context
 import android.content.DialogInterface
+import android.util.TypedValue
 import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -13,7 +14,7 @@ import androidx.appcompat.app.AlertDialog
 @Suppress("unused")
 class AlertDialogBuilder(private val context: Context) {
 
-    private var mDialogTheme = R.style.DefaultAlertDialogTheme
+    private var mDialogTheme = R.style.AlertDialogTheme
     private var mDialogTitle: CharSequence? = null
     private var mDialogMessage: CharSequence? = null
     private var mCancelable: Boolean = true
@@ -109,15 +110,24 @@ class AlertDialogBuilder(private val context: Context) {
         return this
     }
 
+    private fun resolveDialogTheme(context: Context): Int {
+        val outValue = TypedValue()
+        context.theme.resolveAttribute(R.attr.alertDialogTheme, outValue, true)
+        return outValue.resourceId
+    }
+
     fun show(): AlertDialog {
         val context = ContextThemeWrapper(context, mDialogTheme)
+        if (mGravity == Gravity.BOTTOM) {
+            context.theme.applyStyle(R.style.BottomAlertDialogTheme, true)
+        }
         val view = LayoutInflater.from(context).inflate(R.layout.alert_dialog, null)
         val textView = view.findViewById<TextView>(R.id.dialog_message_text)
         textView.gravity = mMessageGravity
         textView.text = mDialogMessage
         val negativeButtonText = mNegativeButtonText ?: context.getString(R.string.dialog_cancel)
         val positiveButtonText = mPositiveButtonText ?: context.getString(R.string.dialog_confirm)
-        val dialog = AlertDialog.Builder(context, mDialogTheme)
+        val dialog = AlertDialog.Builder(context)
             .setView(view)
             .setCancelable(mCancelable)
             .setTitle(mDialogTitle ?: context.getString(R.string.alert_dialog_title))
@@ -135,7 +145,7 @@ class AlertDialogBuilder(private val context: Context) {
             }
             .create()
         dialog.show()
-        dialog.window?.attributes?.gravity = mGravity
+        dialog.window?.setGravity(mGravity)
         return dialog
     }
 }

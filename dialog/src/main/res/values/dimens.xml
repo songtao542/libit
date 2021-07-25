@@ -12,4 +12,5 @@
     <dimen name="dialog_title_padding">20dp</dimen>
     <dimen name="dialog_content_margin_top">24dp</dimen>
 
+    <dimen name="dialog_background_radius">10dp</dimen>
 </resources>

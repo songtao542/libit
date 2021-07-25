@@ -126,6 +126,7 @@ class TestCityPickerActivity : AppCompatActivity() {
         }
         binding.alertDialog.setOnClickListener {
             AlertDialogBuilder(this)
+                    .setGravity(Gravity.BOTTOM)
                     .setTitle("温馨提示")
                     .setMessage("确定要删除吗？")
                     .setOnConfirmListener {

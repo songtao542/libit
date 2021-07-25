@@ -16,6 +16,16 @@ object Preference {
     }
 
     @JvmStatic
+    fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        mPreference.registerOnSharedPreferenceChangeListener(listener)
+    }
+
+    @JvmStatic
+    fun unregisterOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        mPreference.unregisterOnSharedPreferenceChangeListener(listener)
+    }
+
+    @JvmStatic
     fun getString(key: String, defaultValue: String? = null): String {
         return mPreference.getString(key, defaultValue) ?: ""
     }

@@ -25,7 +25,6 @@
             android:gravity="center"
             android:maxWidth="220dp"
             android:minWidth="200dp"
-            android:paddingHorizontal="10dp"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black"
             android:textSize="14sp" />

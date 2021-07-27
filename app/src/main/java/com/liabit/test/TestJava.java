@@ -1,5 +1,7 @@
 package com.liabit.test;
 
+import android.content.ComponentName;
+import android.content.Intent;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -25,11 +27,10 @@ class TestJava {
 
         int[][] b = new int[4][4];
 
-
     }
 
 
-    class V <VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH>{
+    class V<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
 
         @NonNull

@@ -3,8 +3,10 @@ package com.liabit.test
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.LauncherApps
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
     val request by register<String, Boolean>(ActivityResultContracts.RequestPermission())
 
-    fun requestStoragePermission(){
+    fun requestStoragePermission() {
 
     }
 
@@ -240,4 +242,5 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
 }

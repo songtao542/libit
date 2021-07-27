@@ -249,8 +249,7 @@
             android:layout_marginTop="2dp"
             android:onClick="onClick"
             android:text="Other Test"
-            android:textAllCaps="false"
-            android:visibility="gone" />
+            android:textAllCaps="false" />
 
     </LinearLayout>
 

@@ -84,7 +84,7 @@ public class CreateScaffold {
                 File scaffoldRenameDir = new File(outputDir, "app");
                 boolean scaffoldRenameResult = scaffoldDir.renameTo(scaffoldRenameDir);
                 System.out.println("rename scaffold : " + scaffoldRenameResult);
-                correctAppBuildGradle(scaffoldRenameDir, config);
+                correctAppBuildGradle(new File(parentPath), scaffoldRenameDir, config);
                 correctPackageName(new File(scaffoldRenameDir, "src"), config);
                 // 重命名 main 代码目录名称
                 File destScaffoldJavaDir = new File(scaffoldRenameDir, "src" + File.separator + "main" + File.separator + "java");
@@ -174,7 +174,7 @@ public class CreateScaffold {
         System.out.println("rename " + sourceFile + " -> " + destFile + " : " + renameResult);
     }
 
-    private static void correctAppBuildGradle(File appDir, Config config) throws Exception {
+    private static void correctAppBuildGradle(File parentPath, File appDir, Config config) throws Exception {
         File aarFile = new File(appDir, "libs/scaffold.aar");
         File aarSourcesFile = new File(appDir, "libs/scaffold-sources.jar");
         renameFile(aarFile, config.projectName + ".aar");
@@ -186,9 +186,17 @@ public class CreateScaffold {
         String line;
         String lineSeparator = System.getProperty("line.separator");
         while ((line = br.readLine()) != null) {
-            line = line.replaceAll("com.scaffold", config.packageName);
-            line = line.replaceAll("scaffold.aar", config.projectName + ".aar");
-            line = line.replaceAll("scaffold_network", "network");
+            if (line.contains("../common_libs")) {
+                String fileName = line.replace("implementation files('../", "").replace("')", "");
+                fileName = fileName.replace("implementation files(\"../", "").replace("\")", "");
+                fileName = fileName.replace(" ", "");
+                FileUtils.copyFileToDirectory(new File(parentPath, fileName), new File(appDir, "libs"));
+                line = line.replace("../common_libs/", "./libs/");
+            } else {
+                line = line.replaceAll("com.scaffold", config.packageName);
+                line = line.replaceAll("scaffold.aar", config.projectName + ".aar");
+                line = line.replaceAll("scaffold_network", "network");
+            }
             caw.write(line);
             caw.append(lineSeparator);
         }

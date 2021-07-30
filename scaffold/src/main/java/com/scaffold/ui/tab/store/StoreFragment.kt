@@ -4,12 +4,16 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.scaffold.base.BaseFragment
 import com.scaffold.databinding.FragmentStoreBinding
+import com.scaffold.util.Log
 import com.scaffold.widget.EmptyView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class StoreFragment : BaseFragment<StoreViewModel, FragmentStoreBinding>() {
 
+    companion object {
+        private const val TAG = "StoreFragment"
+    }
 
     override fun onInitialize(savedInstanceState: Bundle?) {
 
@@ -37,5 +41,8 @@ class StoreFragment : BaseFragment<StoreViewModel, FragmentStoreBinding>() {
         binding.emptyView.beginTransaction().addStateIf(!isNetworkAvailable, EmptyView.NETWORK).commit()
     }
 
+    override fun onNetworkStateChanged(isNetworkAvailable: Boolean) {
+        Log.d(TAG, "onNetworkStateChanged, isNetworkAvailable: $isNetworkAvailable")
+    }
 
 }

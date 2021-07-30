@@ -20,8 +20,8 @@ android {
     }
 
     buildFeatures {
-        dataBinding false
-        viewBinding false
+        dataBinding true
+        viewBinding true
     }
 
     buildTypes {
@@ -59,48 +59,6 @@ android {
     sourceSets {
         main {
             jniLibs.srcDirs = ['./src/main/jniLibs']
-            java.srcDirs = [
-                    './src/main/addsub', // addsub
-                    './src/main/tagview', // tagview
-                    './src/main/filterlayout', // filterlayout
-                    './src/main/viewbinding', // viewbinding
-                    './src/main/viewmodel', // viewmodel
-                    './src/main/widget', // widget
-                    './src/main/widget_label_view', // widget_label_view
-                    './src/main/widget_empty_view', // widget_empty_view
-                    './src/main/widget_progress_button', // widget_progress_button
-                    './src/main/widget_spring_button', // widget_spring_button
-                    './src/main/widget_state_button', // widget_state_button
-                    './src/main/recyclerview', // recyclerview
-                    './src/main/timerview', // timerview
-                    './src/main/ext', // ext
-                    './src/main/popup', // popup
-                    './src/main/citypicker', // citypicker
-                    './src/main/photoview', // photoview
-                    './src/main/picker', // picker
-                    './src/main/numberpicker', // picker
-                    './src/main/dialog', // dialog
-                    './src/main/picker_integrate', // picker_integrate
-                    './src/main/screenrecord', // screenrecord
-                    './src/main/autoclear', // autoclear
-                    './src/main/livedata-ktx', // livedata-ktx
-                    './src/main/viewmodel_inject', // injectable-viewmodel
-                    './src/main/base', // base
-                    './src/main/base_with_viewbinding', // base_with_viewbinding
-                    './src/main/base_with_viewmodel', // base_with_viewbinding
-                    './src/main/base_with_vb_vm', // base_with_vb_vm
-                    './src/main/third-auth', // third-auth
-                    './src/main/compressor', // compressor
-                    './src/main/photopicker', // photopicker
-                    './src/main/matisse', // matisse
-                    './src/main/matisse_crop', // matisse_crop
-                    './src/main/retrofit-ext', // retrofit-ext
-                    './src/main/utils', // utils
-                    './src/main/location_picker', // location_picker
-                    './src/main/flag-square', // flag-square
-                    './src/main/flag', // flag
-                    './src/main/imageloader', // flag
-            ]
             res.srcDirs = [
                     './src/main/res', // viewbinding
                     './src/main/addsub_res', // addsub
@@ -119,18 +77,18 @@ android {
                     './src/main/ext_res', // ext
                     './src/main/popup_res', // popup
                     './src/main/citypicker_res', // citypicker
-                    './src/main/photoview_res', // photoview
                     './src/main/picker_res', // picker
                     './src/main/numberpicker_res', // picker
-                    './src/main/dialog_res', // dialog
                     './src/main/picker_integrate_res', // picker_integrate
+                    './src/main/photopicker_res', // photopicker
+                    './src/main/photoview_res', // photoview
+                    './src/main/dialog_res', // dialog
                     './src/main/screenrecord_res', // screenrecord
                     './src/main/base_res', // base
                     './src/main/base_with_viewbinding_res', // base_with_viewbinding
                     './src/main/base_with_viewmodel_res', // base_with_viewmodel
                     './src/main/base_with_vb_vm_res', // base_with_vb_vm
                     './src/main/third-auth_res', // third-auth
-                    './src/main/photopicker_res', // photopicker
                     './src/main/matisse_res', // matisse
                     './src/main/matisse_crop_res', // matisse_crop
                     './src/main/utils_res', // utils
@@ -138,6 +96,48 @@ android {
                     './src/main/flag-square_res', // flag-square
                     './src/main/flag_res', // flag
                     './src/main/imageloader_res', // flag
+            ]
+            java.srcDirs = [
+                    './src/main/addsub', // addsub
+                    './src/main/tagview', // tagview
+                    './src/main/filterlayout', // filterlayout
+                    './src/main/viewbinding', // viewbinding
+                    './src/main/viewmodel', // viewmodel
+                    './src/main/widget', // widget
+                    './src/main/widget_label_view', // widget_label_view
+                    './src/main/widget_empty_view', // widget_empty_view
+                    './src/main/widget_progress_button', // widget_progress_button
+                    './src/main/widget_spring_button', // widget_spring_button
+                    './src/main/widget_state_button', // widget_state_button
+                    './src/main/recyclerview', // recyclerview
+                    './src/main/timerview', // timerview
+                    './src/main/ext', // ext
+                    './src/main/popup', // popup
+                    './src/main/citypicker', // citypicker
+                    './src/main/picker', // picker
+                    './src/main/numberpicker', // picker
+                    './src/main/picker_integrate', // picker_integrate
+                    './src/main/photopicker', // photopicker
+                    './src/main/photoview', // photoview
+                    './src/main/dialog', // dialog
+                    './src/main/screenrecord', // screenrecord
+                    './src/main/autoclear', // autoclear
+                    './src/main/livedata-ktx', // livedata-ktx
+                    './src/main/viewmodel_inject', // injectable-viewmodel
+                    './src/main/base', // base
+                    './src/main/base_with_viewbinding', // base_with_viewbinding
+                    './src/main/base_with_viewmodel', // base_with_viewbinding
+                    './src/main/base_with_vb_vm', // base_with_vb_vm
+                    './src/main/third-auth', // third-auth
+                    './src/main/compressor', // compressor
+                    './src/main/matisse', // matisse
+                    './src/main/matisse_crop', // matisse_crop
+                    './src/main/retrofit-ext', // retrofit-ext
+                    './src/main/utils', // utils
+                    './src/main/location_picker', // location_picker
+                    './src/main/flag-square', // flag-square
+                    './src/main/flag', // flag
+                    './src/main/imageloader', // flag
             ]
             manifest.srcFile './src/main/AndroidManifest.xml'
         }

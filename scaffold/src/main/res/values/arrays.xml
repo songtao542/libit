@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="country_codes" translatable="false">
+        <item>"+1  "</item>
+        <item>"+7  "</item>
+        <item>"+66 "</item>
+        <item>"+81 "</item>
+        <item>"+82 "</item>
+        <item>"+84 "</item>
+        <item>"+86 "</item>
+        <item>"+91 "</item>
+        <item>"+852"</item>
+        <item>"+853"</item>
+        <item>"+886"</item>
+    </string-array>
+
+    <string-array name="country_names">
+        <item>USA</item>
+        <item>Russia</item>
+        <item>Thailand</item>
+        <item>Japan</item>
+        <item>Korea</item>
+        <item>Vietnam</item>
+        <item>China</item>
+        <item>Indea</item>
+        <item>Hong Kong</item>
+        <item>Macao</item>
+        <item>Taiwan</item>
+    </string-array>
+
+</resources>

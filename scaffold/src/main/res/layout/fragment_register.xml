@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.register.RegisterFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/white"
+        android:elevation="3dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_back_black"
+        app:title="@string/register" />
+
+    <FrameLayout
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="174dp"
+        android:paddingHorizontal="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/arrow_icon"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="30dp"
+            android:src="@drawable/ic_right_arrow"
+            android:tint="@color/login_text_color" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/phone_number"
+            style="@style/Widget.Login.EditText"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:hint="@string/pls_input_phone_number"
+            android:inputType="phone"
+            android:maxLength="20"
+            android:paddingStart="56dp"
+            android:paddingEnd="20dp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/clear_phone"
+            style="@style/Widget.Login.ImageButton"
+            android:layout_gravity="center_vertical|end"
+            android:src="@drawable/ic_clear"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/country"
+            style="@style/Widget.Login.TextView"
+            android:layout_width="46dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
+            android:elevation="10dp"
+            android:gravity="center_vertical"
+            android:text="+86"
+            android:textColor="@color/login_text_color" />
+    </FrameLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/line2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingStart="45dp"
+        android:paddingEnd="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line1">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/password"
+            style="@style/Widget.Login.EditText"
+            android:layout_width="match_parent"
+            android:hint="@string/pls_input_password"
+            android:maxLength="20"
+            android:paddingStart="0dp"
+            android:paddingEnd="80dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/clear_password"
+            style="@style/Widget.Login.ImageButton"
+            android:src="@drawable/ic_clear"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/password_eye"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/password_eye"
+            style="@style/Widget.Login.ImageButton"
+            android:src="@drawable/ic_eye_selector"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/line3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingHorizontal="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line2">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/verification_code"
+            style="@style/Widget.Login.EditText"
+            android:layout_width="fill_parent"
+            android:hint="@string/pls_verification_code"
+            android:maxLength="16"
+            android:paddingStart="0dp"
+            android:paddingEnd="160dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.scaffold.widget.ProgressButton
+            android:id="@+id/click_to_get_verification_code"
+            style="@style/Widget.GetMsgCode"
+            android:layout_height="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/clear_verification_code"
+            style="@style/Widget.Login.ImageButton"
+            android:src="@drawable/ic_clear"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/click_to_get_verification_code"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/info"
+        style="@style/Widget.InfoText"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="45dp"
+        android:text="@string/msg_code_has_been_sent"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line3" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/register"
+        style="@style/Widget.ActionButton"
+        android:layout_marginStart="45dp"
+        android:layout_marginEnd="45dp"
+        android:text="@string/register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line3" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

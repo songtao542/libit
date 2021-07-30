@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">scaffold</string>
 
     <string name="click_again_to_exit">再按一次退出程序</string>
@@ -22,4 +22,30 @@
     <string name="notify">提示</string>
     <string name="welcome_to_use">欢迎使用</string>
     <string name="allow">同意</string>
+    <string name="login">登录</string>
+    <string name="pls_input_phone_number">Please input phone number</string>
+    <string name="get_msg_code">获取验证码</string>
+    <string name="login_by_account">账号登录</string>
+    <string name="register">注册</string>
+    <string name="pls_input_password">请输入密码</string>
+    <string name="pls_verification_code">请输入验证码</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="pls_input_msg_code">请输入验证码</string>
+    <string name="resend_msg_code">重新发送</string>
+    <string name="msg_code_has_sent">验证码已发送至 %1$s</string>
+    <string name="msg_code_has_been_sent">Verification Code has been sent</string>
+    <string name="msg_code_countdown">%1$d后重新获取</string>
+    <string name="msg_code_login">验证码登录</string>
+    <string name="phone_invalid">号码不合法</string>
+    <string name="get_msg_code_failed">获取验证码失败</string>
+    <string name="account_not_exist">账号不存在</string>
+    <string name="account_not_exist_and_to_register">账号不存在，去注册？</string>
+    <string name="notice">提示</string>
+    <string name="login_failed">登录失败</string>
+    <string name="password_too_short">密码太短</string>
+    <string name="register_fail">注册失败</string>
+    <string name="register_success">注册成功</string>
+    <string name="reset_password_success">重置密码成功</string>
+    <string name="reset_password">重置密码</string>
+    <string name="reset_password_failed">重置密码失败</string>
 </resources>

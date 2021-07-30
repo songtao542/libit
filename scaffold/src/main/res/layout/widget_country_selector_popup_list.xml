@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/country_popup_window_width"
+    android:layout_height="@dimen/country_popup_window_height">
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/country_selector_divider"
+        android:dividerHeight="1px"
+        android:maxHeight="200dp"
+        android:scrollbars="none"
+        tools:listitem="@layout/widget_country_selector_popup_item" />
+
+</FrameLayout>
+
+

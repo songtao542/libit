@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="country_names">
+        <item>美国</item>
+        <item>俄国</item>
+        <item>泰国</item>
+        <item>日本</item>
+        <item>韩国</item>
+        <item>越南</item>
+        <item>中国</item>
+        <item>印度</item>
+        <item>香港</item>
+        <item>澳门</item>
+        <item>台湾</item>
+    </string-array>
+
+    <string-array name="search_tag_types">
+        <item>片名</item>
+        <item>主演</item>
+        <item>系列</item>
+        <item>标签</item>
+        <item>全部</item>
+    </string-array>
+</resources>

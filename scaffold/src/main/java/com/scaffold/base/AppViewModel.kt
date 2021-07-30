@@ -3,8 +3,10 @@ package com.scaffold.base
 import android.content.Context
 import androidx.annotation.CallSuper
 import androidx.lifecycle.MutableLiveData
-import com.scaffold.livedata.SingleLiveData
+import com.scaffold.cache.CacheRepository
+import com.scaffold.model.Error
 import com.scaffold.network.Api
+import com.scaffold.network.model.User
 import com.scaffold.viewmodel.ApplicationViewModel
 import java.io.File
 import javax.inject.Inject
@@ -18,8 +20,11 @@ open class AppViewModel : ApplicationViewModel() {
     @Inject
     lateinit var api: Api
 
+    @Inject
+    lateinit var cache: CacheRepository
+
     val liveEmpty by lazy { MutableLiveData<Boolean>() }
-    val liveError by lazy { MutableLiveData<Boolean>() }
+    val liveError by lazy { MutableLiveData<Error>() }
 
     @Inject
     override fun onFinishMemberInject() {
@@ -40,6 +45,12 @@ open class AppViewModel : ApplicationViewModel() {
         } catch (e: Throwable) {
             com.scaffold.util.Log.d("AppViewModel", "delete file failed: ", e)
         }
+    }
+
+    val user: User? get() = cache.get("USER")
+
+    fun saveUser(user: User?) {
+        cache.set("USER", user)
     }
 
     fun newParams() = newParamMap()

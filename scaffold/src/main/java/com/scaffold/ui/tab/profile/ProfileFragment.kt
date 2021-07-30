@@ -4,12 +4,16 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.scaffold.base.BaseFragment
 import com.scaffold.databinding.FragmentProfileBinding
+import com.scaffold.util.Log
 import com.scaffold.widget.EmptyView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileBinding>() {
 
+    companion object {
+        private const val TAG = "ProfileFragment"
+    }
 
     override fun onInitialize(savedInstanceState: Bundle?) {
 
@@ -35,6 +39,10 @@ class ProfileFragment : BaseFragment<ProfileViewModel, FragmentProfileBinding>()
         }
 
         binding.emptyView.beginTransaction().addStateIf(!isNetworkAvailable, EmptyView.NETWORK).commit()
+    }
+
+    override fun onNetworkStateChanged(isNetworkAvailable: Boolean) {
+        Log.d(TAG, "onNetworkStateChanged, isNetworkAvailable: $isNetworkAvailable")
     }
 
 }

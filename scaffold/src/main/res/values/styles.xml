@@ -197,4 +197,109 @@
     </style>
     <!-- dialog样式 -->
 
+    <!-- login -->
+    <style name="Widget.Login" />
+
+    <style name="Widget.Login.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">"sans-serif-medium"</item>
+    </style>
+
+    <style name="Widget.Login.EditText" parent="Widget.Login.TextView">
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:textCursorDrawable">@drawable/ic_edit_cursor</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@drawable/ic_edittext_selector</item>
+        <item name="android:hint">@string/pls_input_msg_code</item>
+        <item name="android:maxLength">20</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">80dp</item>
+        <item name="android:textColor">@color/login_text_color</item>
+    </style>
+
+    <style name="Widget.Login.Action" parent="Widget.Login.TextView">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/login_action_view_text_color</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Widget.Login.ImageButton">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:layout_gravity">end|bottom</item>
+        <item name="android:background">@drawable/ic_background_circle</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="Widget.Login.ProgressButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">39dp</item>
+        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:background">@drawable/ic_login_button_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="mode">text</item>
+        <item name="strokeColor">@android:color/white</item>
+    </style>
+
+    <style name="Widget.GetMsgCode">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">5dp</item>
+        <item name="android:paddingEnd">5dp</item>
+        <item name="android:text">@string/get_msg_code</item>
+        <item name="fixedSize">true</item>
+    </style>
+
+    <style name="Widget.ActionButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">39.33dp</item>
+        <item name="android:layout_marginTop">68dp</item>
+        <item name="android:background">@drawable/ic_login_button_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/reset_password</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Widget.InfoText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">9dp</item>
+        <item name="android:textColor">@color/info_text_color</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+
+    <!-- 国家选择 -->
+    <style name="Widget.CountrySelectorText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minWidth">72dp</item>
+    </style>
+
 </resources>

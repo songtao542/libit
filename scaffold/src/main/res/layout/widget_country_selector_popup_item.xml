@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_text"
+    style="@style/Widget.CountrySelectorText"
+    android:minWidth="120dp"
+    android:paddingVertical="10dp"
+    android:textColor="@android:color/white" />

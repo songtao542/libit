@@ -20,6 +20,7 @@ import com.scaffold.databinding.FragmentStartBinding
 import com.scaffold.extension.hideSystemUI
 import com.scaffold.extension.setCornerRadius
 import com.scaffold.ui.MainActivity
+import com.scaffold.ui.login.LoginActivity
 import com.scaffold.ui.web.WebViewActivity
 import com.scaffold.util.ClickSpan
 import com.scaffold.util.Preference
@@ -70,9 +71,16 @@ class StartFragment : BaseFragment<StartViewMode, FragmentStartBinding>() {
     }
 
     private fun gotoMainActivity(activity: Activity) {
-        binding.goToMain.setTimeEndListener(null)
-        MainActivity.start(activity)
-        activity.finish()
+        launch {
+            val user = viewModel.user
+            if (user == null) {
+                LoginActivity.start(activity)
+            } else {
+                binding.goToMain.setTimeEndListener(null)
+                MainActivity.start(activity)
+                activity.finish()
+            }
+        }
     }
 
     private fun showPermissionStatementDialog(action: () -> Unit) {

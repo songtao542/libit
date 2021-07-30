@@ -1,8 +1,8 @@
 package com.scaffold.di
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.scaffold.base.BasicInfoProviderImpl
 import com.scaffold.cache.CacheRepository
 import com.scaffold.cache.CacheRepositoryImpl
@@ -11,8 +11,10 @@ import com.scaffold.database.AppDatabase
 import com.scaffold.database.KeyValueDao
 import com.scaffold.network.Api
 import com.scaffold.network.interceptor.BasicInfoProvider
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import com.scaffold.third.ThirdUserRepository
+import com.scaffold.third.ThirdUserRepositoryImpl
+import com.scaffold.third.weibo.WeiboRestApi
+import com.scaffold.third.wx.WxRestApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -81,5 +83,25 @@ object AppModule {
     fun provideApi(@ApplicationContext context: Context, gson: Gson, basicInfoProvider: BasicInfoProvider): Api {
         return Api.create(context, basicInfoProvider, gson)
     }
+
+    /***********************第三方登录相关************************/
+    @Singleton
+    @Provides
+    fun provideThirdUserRepository(@ApplicationContext context: Context): ThirdUserRepository {
+        return ThirdUserRepositoryImpl(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideWeiboRestApi(gson: Gson): WeiboRestApi {
+        return WeiboRestApi.create(gson)
+    }
+
+    @Singleton
+    @Provides
+    fun provideWxRestApi(gson: Gson): WxRestApi {
+        return WxRestApi.create(gson)
+    }
+    /***********************第三方登录相关************************/
 
 }

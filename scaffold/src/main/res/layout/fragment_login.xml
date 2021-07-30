@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loginContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:paddingHorizontal="45dp"
+        android:paddingTop="16dp"
+        tools:context=".ui.login.LoginFragment">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/login_register_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="@string/login"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/row1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/login_register_label">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/arrow_icon"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="30dp"
+                android:src="@drawable/ic_right_arrow"
+                android:tint="@color/login_text_color" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/phone_number"
+                style="@style/Widget.Login.EditText"
+                android:layout_width="match_parent"
+                android:hint="@string/pls_input_phone_number"
+                android:inputType="phone"
+                android:maxLength="20"
+                android:paddingStart="56dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="10dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/country"
+                android:layout_width="46dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:text="+86"
+                android:textColor="@color/login_text_color" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/clear_phone"
+                style="@style/Widget.Login.ImageButton"
+                android:layout_gravity="center_vertical|end"
+                android:src="@drawable/ic_clear"
+                android:visibility="invisible" />
+
+        </FrameLayout>
+
+        <com.scaffold.widget.ProgressButton
+            android:id="@+id/get_msg_code"
+            style="@style/Widget.Login.ProgressButton"
+            android:text="@string/get_msg_code"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/row1" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/account_login"
+            style="@style/Widget.Login.Action"
+            android:layout_marginTop="80dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/login_by_account"
+            app:layout_constraintStart_toStartOf="@+id/get_msg_code"
+            app:layout_constraintTop_toBottomOf="@+id/row1" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/register"
+            style="@style/Widget.Login.Action"
+            android:layout_marginTop="80dp"
+            android:gravity="end|center_vertical"
+            android:text="@string/register"
+            app:layout_constraintEnd_toEndOf="@+id/get_msg_code"
+            app:layout_constraintTop_toBottomOf="@+id/row1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/weixin"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_wechat" />
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/weibo"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_weibo" />
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/qq"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_qq" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

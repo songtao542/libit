@@ -15,4 +15,18 @@
     <color name="start_page_subtitle_text_color">#131313</color>
 
     <color name="dialog_button_text_color">#00a9fd</color>
+
+    <color name="country_selector_item_normal">#444444</color>
+    <color name="country_selector_item_pressed">#333333</color>
+    <color name="country_selector_divider">#333333</color>
+
+    <color name="login_text_color">#191919</color>
+    <color name="edit_cursor_color">#191919</color>
+    <color name="login_action_text_color">#ff666666</color>
+    <color name="info_text_color">#ff666666</color>
+
+    <color name="form_button_normal">@color/purple_500</color>
+    <color name="form_button_highlight">@color/purple_700</color>
+
+
 </resources>

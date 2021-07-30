@@ -2,10 +2,7 @@ package com.liabit.widget
 
 import android.content.Context
 import android.graphics.Color
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -131,6 +128,21 @@ class ProgressButton : LinearLayout {
                 mTextView.visibility = View.INVISIBLE
             }
         }
+    }
+
+    fun asProgress(): ProgressButton {
+        setMode(PROGRESS)
+        return this
+    }
+
+    fun asButton(): ProgressButton {
+        setMode(TEXT)
+        return this
+    }
+
+    fun asProgressButton(): ProgressButton {
+        setMode(TEXT_PROGRESS)
+        return this
     }
 
     fun setMode(@Mode mode: Int) {

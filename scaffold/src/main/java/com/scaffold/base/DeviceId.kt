@@ -6,15 +6,22 @@ import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
 import com.scaffold.util.Preference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.io.*
 import java.net.NetworkInterface
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.coroutines.CoroutineContext
 
-object DeviceId {
+object DeviceId : CoroutineScope {
     private const val TAG = "DeviceId"
+
+    override val coroutineContext: CoroutineContext get() = Dispatchers.IO + Job()
 
     /**
      * Settings key
@@ -43,6 +50,11 @@ object DeviceId {
     fun getDeviceId(context: Context): String {
         var deviceId = mDeviceId
         if (!deviceId.isNullOrEmpty()) {
+            return deviceId
+        }
+        deviceId = Settings.System.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        if (!deviceId.isNullOrBlank()) {
+            mDeviceId = deviceId
             return deviceId
         }
         //读取保存的在sd卡中的唯一标识符
@@ -76,7 +88,9 @@ object DeviceId {
         val md5 = getMD5(s.toString(), false)
         if (s.isNotEmpty()) {
             //持久化操作, 进行保存到SD卡中
-            saveDeviceID(context, md5)
+            launch {
+                saveDeviceID(context, md5)
+            }
         }
         mDeviceId = md5
         return md5
@@ -266,4 +280,5 @@ object DeviceId {
         result.add(getSaveFile(context, Environment.DIRECTORY_MUSIC))
         return result
     }
+
 }

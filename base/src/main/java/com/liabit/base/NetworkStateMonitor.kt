@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -12,6 +13,10 @@ import androidx.lifecycle.Observer
 class NetworkStateMonitor(
     context: Context
 ) : ConnectivityManager.NetworkCallback(), AutoCloseable {
+
+    companion object {
+        private const val TAG = "NetworkStateMonitor"
+    }
 
     private val mContext: Context = context.applicationContext
     private val mConnectivityManager: ConnectivityManager = mContext.getSystemService(ConnectivityManager::class.java)
@@ -28,7 +33,11 @@ class NetworkStateMonitor(
     }
 
     fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<Boolean>) {
-        mLiveNetworkState.observe(lifecycleOwner, observer)
+        try {
+            mLiveNetworkState.observe(lifecycleOwner, observer)
+        } catch (e: Throwable) {
+            Log.d(TAG, "observe: ", e)
+        }
     }
 
     override fun onAvailable(network: Network) {

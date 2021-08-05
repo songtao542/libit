@@ -14,6 +14,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -49,6 +50,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+
+        val d1 = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        val d2 = Settings.System.getString(contentResolver, Settings.Secure.ANDROID_ID)
+
+        Log.d("TTTT", "d1==>$d1")
+        Log.d("TTTT", "d2==>$d2")
 
         Preference.init(applicationContext)
 

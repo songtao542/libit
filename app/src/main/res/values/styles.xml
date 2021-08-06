@@ -100,6 +100,7 @@
         <item name="loadNoMoreText">@string/no_more</item>
         <item name="loadNoMoreIcon">@null</item>
     </style>
+
     <style name="LoadingDialog" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:backgroundDimAmount">0.1</item>
@@ -114,5 +115,32 @@
     <style name="LoadingView.ProgressBarStyle" parent="LoadingView.BaseProgressBarStyle">
         <item name="android:layout_width">36dp</item>
         <item name="android:layout_height">36dp</item>
+    </style>
+
+
+    <style name="Widget.EmptyView.ProgressBar" parent="Widget.EmptyView.BaseProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/progressbar_loading</item>
+        <item name="android:minWidth">24dp</item>
+        <item name="android:minHeight">24dp</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="layout_goneMarginBottom">8dp</item>
+    </style>
+
+    <style name="Widget.EmptyView.Image" parent="Widget.EmptyView.BaseImage">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:visibility">invisible</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="layout_goneMarginBottom">8dp</item>
+        <item name="networkIcon">@drawable/ic_network_error</item>
+    </style>
+
+    <style name="Widget.EmptyView.Text.Guideline">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="layout_constraintGuide_percent">0.45</item>
     </style>
 </resources>

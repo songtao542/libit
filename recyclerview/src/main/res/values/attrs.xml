@@ -5,9 +5,10 @@
         <attr name="fixedHeight" format="reference|dimension" />
     </declare-styleable>
 
+    <attr name="loadingText" format="string|reference" />
 
     <declare-styleable name="LoadMoreStyle">
-        <attr name="loadingText" format="string|reference" />
+        <attr name="loadingText" />
         <attr name="loadingTextColor" format="color|reference" />
         <attr name="loadingTextSize" format="dimension|reference" />
         <attr name="loadingProgressColor" format="color|reference" />

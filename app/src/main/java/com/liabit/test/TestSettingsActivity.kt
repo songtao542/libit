@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.liabit.settings.AppSettings
 import com.liabit.test.databinding.ActivityTestSettingsBinding
 import com.liabit.viewbinding.inflate
+import com.liabit.widget.EmptyView
 
 class TestSettingsActivity : AppCompatActivity() {
     companion object {
@@ -36,6 +37,12 @@ class TestSettingsActivity : AppCompatActivity() {
         Log.d(TAG, "test-boolean: ${AppSettings.getBoolean("test-boolean", true)}")
         Log.d(TAG, "test-string: test string == ${AppSettings.getString("test-string", "99")}")
         Log.d(TAG, "test-string: test string == ${AppSettings.getString("test-string")}")
+
+        binding.emptyView.setState(EmptyView.LOADING)
+        binding.root.postDelayed({
+            binding.emptyView.setState(EmptyView.NETWORK)
+        }, 5000)
+
 
     }
 }

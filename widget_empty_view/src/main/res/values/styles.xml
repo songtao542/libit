@@ -5,23 +5,46 @@
 
     <style name="Widget.EmptyView" />
 
-    <style name="Widget.EmptyView.Image">
+    <style name="Widget.EmptyView.BaseImage">
         <item name="android:layout_width">150dp</item>
         <item name="android:layout_height">150dp</item>
+        <item name="android:scaleType">centerInside</item>
         <item name="android:visibility">invisible</item>
         <item name="layout_goneMarginBottom">8dp</item>
+        <item name="layout_constraintBottom_toTopOf">@+id/textView</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
     </style>
 
-    <style name="Widget.EmptyView.ProgressBar" parent="android:Widget.Material.ProgressBar">
+    <!-- ImageView 样式 -->
+    <style name="Widget.EmptyView.Image" parent="Widget.EmptyView.BaseImage" />
+
+    <style name="Widget.EmptyView.BaseProgressBar" parent="android:Widget.Material.ProgressBar">
         <item name="android:indeterminateDrawable">@drawable/empty_view_loading_progressbar</item>
         <item name="android:minWidth">24dp</item>
         <item name="android:minHeight">24dp</item>
         <item name="android:layout_width">40dp</item>
         <item name="android:layout_height">40dp</item>
         <item name="layout_goneMarginBottom">8dp</item>
+        <item name="layout_constraintBottom_toTopOf">@+id/textView</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
     </style>
 
-    <style name="Widget.EmptyView.Text">
+    <!-- ProgressBar 样式 -->
+    <style name="Widget.EmptyView.ProgressBar" parent="Widget.EmptyView.BaseProgressBar" />
+
+    <style name="Widget.EmptyView.Text.BaseGuideline">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="layout_constraintGuide_percent">0.5</item>
+    </style>
+
+    <!-- Guideline 样式 -->
+    <style name="Widget.EmptyView.Text.Guideline" parent="Widget.EmptyView.Text.BaseGuideline" />
+
+    <style name="Widget.EmptyView.BaseText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
@@ -29,5 +52,13 @@
         <item name="android:textColor">@color/empty_view_text_color</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
+        <item name="layout_constraintBottom_toBottomOf">@+id/guideline</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
+        <item name="layout_constraintTop_toTopOf">@+id/guideline</item>
     </style>
+
+    <!-- TextView 样式 -->
+    <style name="Widget.EmptyView.Text" parent="Widget.EmptyView.BaseText" />
+
 </resources>

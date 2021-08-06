@@ -103,6 +103,7 @@ dependencies {
     implementation project(':viewmodel_inject')
     implementation project(':base_with_vb_vm')
     implementation project(':viewmodel')
+    implementation project(':widget_empty_view')
 
     implementation files('../common_libs/imagepicker-1.0.0.aar')
 

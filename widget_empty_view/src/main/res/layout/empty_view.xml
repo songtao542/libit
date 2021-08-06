@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/errorLayout"
     android:layout_width="match_parent"
@@ -9,25 +8,19 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageView"
-        style="@style/Widget.EmptyView.Image"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        style="@style/Widget.EmptyView.Image" />
 
     <ProgressBar
         android:id="@+id/progressBar"
-        style="@style/Widget.EmptyView.ProgressBar"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        style="@style/Widget.EmptyView.ProgressBar" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        style="@style/Widget.EmptyView.Text.Guideline" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView"
         style="@style/Widget.EmptyView.Text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/empty_view_no_data" />
 
 </merge>

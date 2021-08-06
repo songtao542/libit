@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.DrawableRes
@@ -23,13 +22,19 @@ import com.liabit.widget.emptyview.R
 
 /**
  * 修改样式，请 override style
- * <style name="Widget.EmptyView.ProgressBar" parent="android:Widget.Material.ProgressBar">
- *     <!-- your progress style here -->
- * </style>
+ * <!-- ProgressBar 样式 -->
+ * <style name="Widget.EmptyView.ProgressBar" parent="Widget.EmptyView.BaseProgressBar" />
  *
- * <style name="Widget.EmptyView.Text">
+ * <!-- ImageView 样式 -->
+ * <style name="Widget.EmptyView.Image" parent="Widget.EmptyView.BaseImage" />
  *      <!-- your text style here -->
  * </style>
+ *
+ * <!-- TextView 样式 -->
+ * <style name="Widget.EmptyView.Text" parent="Widget.EmptyView.BaseText" />
+ *
+ * <!-- Guideline 样式 -->
+ * <style name="Widget.EmptyView.Text.Guideline" parent="Widget.EmptyView.Text.BaseGuideline" />
  */
 @Suppress("unused")
 class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
@@ -96,6 +101,34 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
             mEmptyText = typedArray.getString(R.styleable.EmptyView_emptyText)
             mEmptyDrawable = typedArray.getDrawable(R.styleable.EmptyView_emptyIcon)
             typedArray.recycle()
+
+            // 从主题样式中获取
+            val ti = context.obtainStyledAttributes(R.style.Widget_EmptyView_Image, R.styleable.EmptyView)
+            if (mTimeDrawable == null) {
+                mTimeDrawable = ti.getDrawable(R.styleable.EmptyView_timeIcon)
+            }
+            if (mNetworkDrawable == null) {
+                mNetworkDrawable = ti.getDrawable(R.styleable.EmptyView_networkIcon)
+            }
+            if (mEmptyDrawable == null) {
+                mEmptyDrawable = ti.getDrawable(R.styleable.EmptyView_emptyIcon)
+            }
+            ti.recycle()
+
+            val tt = context.obtainStyledAttributes(R.style.Widget_EmptyView_Text, R.styleable.EmptyView)
+            if (mTimeText == null) {
+                mTimeText = typedArray.getString(R.styleable.EmptyView_timeText)
+            }
+            if (mNetworkText == null) {
+                mNetworkText = typedArray.getString(R.styleable.EmptyView_networkText)
+            }
+            if (mLoadingText == null) {
+                mLoadingText = typedArray.getString(R.styleable.EmptyView_loadingText)
+            }
+            if (mEmptyText == null) {
+                mEmptyText = typedArray.getString(R.styleable.EmptyView_emptyText)
+            }
+            tt.recycle()
         }
         mGestureDetector = GestureDetector(context, this)
         setBackgroundColor(ContextCompat.getColor(context, R.color.empty_view_background_color))
@@ -268,7 +301,10 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.INVISIBLE
                 mTimeDrawable?.let {
+                    mImageView.visibility = View.VISIBLE
                     mImageView.setImageDrawable(it)
+                } ?: kotlin.run {
+                    mImageView.visibility = View.INVISIBLE
                 }
                 mTextView.text = mTimeText ?: context.getString(R.string.empty_view_time_not_right)
             }
@@ -276,20 +312,27 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.INVISIBLE
                 mNetworkDrawable?.let {
+                    mImageView.visibility = View.VISIBLE
                     mImageView.setImageDrawable(it)
+                } ?: kotlin.run {
+                    mImageView.visibility = View.INVISIBLE
                 }
                 mTextView.text = mNetworkText ?: context.getString(R.string.empty_view_network_not_available)
             }
             mState and LOADING == LOADING -> {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.VISIBLE
+                mImageView.visibility = View.INVISIBLE
                 mTextView.text = mLoadingText ?: context.getString(R.string.empty_view_loading)
             }
             mState and EMPTY == EMPTY -> {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.INVISIBLE
                 mEmptyDrawable?.let {
+                    mImageView.visibility = View.VISIBLE
                     mImageView.setImageDrawable(it)
+                } ?: kotlin.run {
+                    mImageView.visibility = View.INVISIBLE
                 }
                 mTextView.text = mEmptyText ?: context.getString(R.string.empty_view_no_data)
             }

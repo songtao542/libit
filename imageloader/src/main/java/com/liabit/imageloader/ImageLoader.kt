@@ -10,7 +10,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.ImageView
 import androidx.activity.ComponentActivity
 import androidx.collection.ArrayMap
@@ -28,10 +27,7 @@ import java.io.FileOutputStream
 import java.lang.ref.WeakReference
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 fun ImageView.load(url: String) {
     ImageLoader.load(url).into(this)
@@ -340,24 +336,29 @@ object ImageLoader : CoroutineScope {
         launch {
             val ctx = context.applicationContext
             val url = target.url
-            val size = getTargetSize(target)
-            val key = generateKey(url)
-            val appendSizeKey = if (size != null) "${key}_x_${size.x}_y_${size.y}" else key
-            val existJob = mUrlJobMap[appendSizeKey]
-            val job = coroutineContext[Job]
-            if (job != null) {
-                bindJobToTarget(target, job)
-                if (existJob == null) {
-                    mUrlJobMap[appendSizeKey] = job
+            val targetSize = TargetSize(target.target.get())
+            val size = targetSize.getSize()
+            if (size == null) {
+                cancel()
+            } else {
+                val key = generateKey(url)
+                val appendSizeKey = "${key}_x_${size.x}_y_${size.y}"
+                val existJob = mUrlJobMap[appendSizeKey]
+                val job = coroutineContext[Job]
+                if (job != null) {
+                    bindJobToTarget(target, job)
+                    if (existJob == null) {
+                        mUrlJobMap[appendSizeKey] = job
+                    }
+                    // 如果已经有一个任务在加载相同的URL，且显示的尺寸也完全相同，则只需等待那个任务结束
+                    if (existJob != null && existJob != job) {
+                        existJob.join()
+                    }
                 }
-                // 如果已经有一个任务在加载相同的URL，且显示的尺寸也完全相同，则只需等待那个任务结束
-                if (existJob != null && existJob != job) {
-                    existJob.join()
-                }
+                val bitmap = mBitmapCache[key] ?: download(ctx, url, key, appendSizeKey, size)?.also { mBitmapCache.put(key, it) }
+                onComplete.invoke(bitmap)
+                mUrlJobMap.remove(appendSizeKey)
             }
-            val bitmap = mBitmapCache[key] ?: download(ctx, url, key, appendSizeKey, size)?.also { mBitmapCache.put(key, it) }
-            onComplete.invoke(bitmap)
-            mUrlJobMap.remove(appendSizeKey)
         }
     }
 
@@ -482,33 +483,6 @@ object ImageLoader : CoroutineScope {
             log("save decoded image failed: ", e)
         }
     }
-
-    private suspend fun getTargetSize(target: Target?): Point? = suspendCoroutine {
-        val displayTarget = target?.target?.get()
-        if (displayTarget is ImageView) {
-            if (displayTarget.width > 0 && displayTarget.height > 0) {
-                it.resume(Point(displayTarget.width, displayTarget.height))
-            } else {
-                displayTarget.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-                    private var mInvokeCount = AtomicInteger(0)
-                    override fun onPreDraw(): Boolean {
-                        val count = mInvokeCount.getAndIncrement()
-                        log("getTargetSize invoke count: $count  width: ${displayTarget.width}  height: ${displayTarget.height}")
-                        displayTarget.viewTreeObserver.removeOnPreDrawListener(this)
-                        if (count == 0) {
-                            it.resume(Point(displayTarget.width, displayTarget.height))
-                        }
-                        return true
-                    }
-                })
-            }
-        } else if (displayTarget is DisplayTarget) {
-            it.resume(displayTarget.getSize())
-        } else {
-            it.resume(null)
-        }
-    }
-
 
     private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
         // Raw height and width of image

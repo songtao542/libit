@@ -13,16 +13,25 @@ import java.util.concurrent.atomic.AtomicBoolean
 @Suppress("unused")
 open class PendingLiveData<T> : MutableLiveData<T> {
 
+    private var mPendingWhenObserve: Boolean? = null
     private val mPendingMap = ArrayMap<ObserverWrapper<T>, AtomicBoolean>()
 
     constructor() : super()
 
+    constructor(pendingWhenObserve: Boolean) : super() {
+        mPendingWhenObserve = pendingWhenObserve
+    }
+
     constructor(value: T) : super(value)
+
+    constructor(pendingWhenObserve: Boolean, value: T) : super(value) {
+        mPendingWhenObserve = pendingWhenObserve
+    }
 
     @MainThread
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         // Observe the internal MutableLiveData
-        val pending = AtomicBoolean(value != null)
+        val pending = AtomicBoolean(mPendingWhenObserve ?: (value != null))
         val observerWrapper = ObserverWrapper(observer, pending)
         super.observe(owner, observerWrapper)
         mPendingMap[observerWrapper] = pending

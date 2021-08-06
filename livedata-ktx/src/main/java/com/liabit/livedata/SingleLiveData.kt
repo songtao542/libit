@@ -15,14 +15,19 @@ import java.util.concurrent.atomic.AtomicBoolean
  * <p>
  * Note that only one observer is going to be notified of changes.
  */
-open class SingleLiveData<T> : MutableLiveData<T>() {
+@Suppress("unused")
+open class SingleLiveData<T> : MutableLiveData<T> {
 
     private val mPending = AtomicBoolean(false)
+
+    constructor() : super()
+
+    constructor(value: T) : super(value)
 
     @MainThread
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         // Observe the internal MutableLiveData
-        super.observe(owner, Observer { t ->
+        super.observe(owner, { t ->
             if (mPending.compareAndSet(true, false)) {
                 observer.onChanged(t)
             }

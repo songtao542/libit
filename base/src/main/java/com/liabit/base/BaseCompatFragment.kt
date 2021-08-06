@@ -87,6 +87,9 @@ abstract class BaseCompatFragment : Fragment(), Toolbar.OnMenuItemClickListener,
         mNetworkStateMonitor.observe(lifecycleOwner, observer)
     }
 
+    /**
+     * The LifecycleOwner which controls the observer is [getViewLifecycleOwner]
+     */
     fun observeNetwork(observer: Observer<Boolean>) {
         observeNetwork(viewLifecycleOwner, observer)
     }

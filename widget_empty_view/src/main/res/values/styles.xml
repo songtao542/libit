@@ -5,6 +5,13 @@
 
     <style name="Widget.EmptyView" />
 
+    <style name="Widget.EmptyView.Image">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">150dp</item>
+        <item name="android:visibility">invisible</item>
+        <item name="layout_goneMarginBottom">8dp</item>
+    </style>
+
     <style name="Widget.EmptyView.ProgressBar" parent="android:Widget.Material.ProgressBar">
         <item name="android:indeterminateDrawable">@drawable/empty_view_loading_progressbar</item>
         <item name="android:minWidth">24dp</item>

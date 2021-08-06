@@ -7,6 +7,13 @@
     android:layout_height="match_parent"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageView"
+        style="@style/Widget.EmptyView.Image"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="@style/Widget.EmptyView.ProgressBar"

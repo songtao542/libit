@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="EmptyView">
+        <attr name="timeText" format="reference|string" />
+        <attr name="timeIcon" format="reference" />
+        <attr name="networkText" format="reference|string" />
+        <attr name="networkIcon" format="reference" />
+        <attr name="loadingText" format="reference|string" />
+        <attr name="emptyText" format="reference|string" />
+        <attr name="emptyIcon" format="reference" />
+    </declare-styleable>
+
+</resources>

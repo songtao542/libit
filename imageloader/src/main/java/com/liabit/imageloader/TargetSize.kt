@@ -38,7 +38,7 @@ class TargetSize(target: Any?) {
                     it.resume(Point(currentWidth, currentHeight))
                 } else {
                     val observer = displayTarget.viewTreeObserver
-                    if (observer.isAlive) {
+                    if (observer != null && observer.isAlive) {
                         observer.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
                             private var mInvokeCount = AtomicInteger(0)
                             override fun onPreDraw(): Boolean {

@@ -3,14 +3,18 @@ package com.liabit.widget
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.provider.Settings
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import androidx.annotation.IntDef
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -43,12 +47,17 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
     annotation class State
 
     private lateinit var mTextView: TextView
+    private lateinit var mImageView: ImageView
     private lateinit var mProgressBar: ProgressBar
 
     private var mTimeText: CharSequence? = null
     private var mNetworkText: CharSequence? = null
     private var mLoadingText: CharSequence? = null
     private var mEmptyText: CharSequence? = null
+
+    private var mTimeDrawable: Drawable? = null
+    private var mNetworkDrawable: Drawable? = null
+    private var mEmptyDrawable: Drawable? = null
 
     private var mOnClickListener: OnClickListener? = null
 
@@ -75,7 +84,19 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         LayoutInflater.from(context).inflate(R.layout.empty_view, this, true)
         mProgressBar = findViewById(R.id.progressBar)
+        mImageView = findViewById(R.id.imageView)
         mTextView = findViewById(R.id.textView)
+        if (attrs != null) {
+            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.EmptyView, defStyleAttr, defStyleRes)
+            mTimeText = typedArray.getString(R.styleable.EmptyView_timeText)
+            mTimeDrawable = typedArray.getDrawable(R.styleable.EmptyView_timeIcon)
+            mNetworkText = typedArray.getString(R.styleable.EmptyView_networkText)
+            mNetworkDrawable = typedArray.getDrawable(R.styleable.EmptyView_networkIcon)
+            mLoadingText = typedArray.getString(R.styleable.EmptyView_loadingText)
+            mEmptyText = typedArray.getString(R.styleable.EmptyView_emptyText)
+            mEmptyDrawable = typedArray.getDrawable(R.styleable.EmptyView_emptyIcon)
+            typedArray.recycle()
+        }
         mGestureDetector = GestureDetector(context, this)
         setBackgroundColor(ContextCompat.getColor(context, R.color.empty_view_background_color))
     }
@@ -127,6 +148,30 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
     fun setEmptyText(@StringRes textResId: Int): EmptyView {
         mEmptyText = context.getString(textResId)
         return this
+    }
+
+    fun setTimeDrawable(drawable: Drawable) {
+        mTimeDrawable = drawable
+    }
+
+    fun setTimeImageResource(@DrawableRes resId: Int) {
+        mTimeDrawable = ContextCompat.getDrawable(context, resId)
+    }
+
+    fun setNetworkDrawable(drawable: Drawable) {
+        mNetworkDrawable = drawable
+    }
+
+    fun setNetworkImageResource(@DrawableRes resId: Int) {
+        mNetworkDrawable = ContextCompat.getDrawable(context, resId)
+    }
+
+    fun setEmptyDrawable(drawable: Drawable) {
+        mEmptyDrawable = drawable
+    }
+
+    fun setEmptyImageResource(@DrawableRes resId: Int) {
+        mEmptyDrawable = ContextCompat.getDrawable(context, resId)
     }
 
     private fun onClick() {
@@ -222,11 +267,17 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
             mState and TIME == TIME -> {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.INVISIBLE
+                mTimeDrawable?.let {
+                    mImageView.setImageDrawable(it)
+                }
                 mTextView.text = mTimeText ?: context.getString(R.string.empty_view_time_not_right)
             }
             mState and NETWORK == NETWORK -> {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.INVISIBLE
+                mNetworkDrawable?.let {
+                    mImageView.setImageDrawable(it)
+                }
                 mTextView.text = mNetworkText ?: context.getString(R.string.empty_view_network_not_available)
             }
             mState and LOADING == LOADING -> {
@@ -237,6 +288,9 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
             mState and EMPTY == EMPTY -> {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.INVISIBLE
+                mEmptyDrawable?.let {
+                    mImageView.setImageDrawable(it)
+                }
                 mTextView.text = mEmptyText ?: context.getString(R.string.empty_view_no_data)
             }
             else -> {

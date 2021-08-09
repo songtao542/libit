@@ -22,9 +22,11 @@
     </style>
 
     <style name="LoadingView.Style">
+        <!-- 是否使用 CircularProgressIndicator -->
         <item name="circularIndicatorBar">true</item>
     </style>
 
+    <!-- CircularProgressIndicator 基础样式，开启 CircularProgressIndicator 请参考 LoadingView.Style 样式 -->
     <style name="LoadingView.BaseProgressStyle" parent="Widget.MaterialComponents.CircularProgressIndicator">
         <item name="android:layout_width">32dp</item>
         <item name="android:layout_height">32dp</item>
@@ -43,8 +45,10 @@
         <item name="trackThickness">2dp</item>
     </style>
 
+    <!-- CircularProgressIndicator 样式，开启 CircularProgressIndicator 请参考 LoadingView.Style 样式 -->
     <style name="LoadingView.ProgressStyle" parent="LoadingView.BaseProgressStyle" />
 
+    <!-- ProgressBar 基础样式 -->
     <style name="LoadingView.BaseProgressBarStyle" parent="android:Widget.Material.ProgressBar">
         <item name="android:layout_width">32dp</item>
         <item name="android:layout_height">32dp</item>
@@ -55,9 +59,11 @@
         <item name="android:thumbTint">@android:color/white</item>
     </style>
 
+    <!-- ProgressBar 样式 -->
     <style name="LoadingView.ProgressBarStyle" parent="LoadingView.BaseProgressBarStyle" />
 
-    <style name="LoadingView.TextStyle">
+    <!-- TextView 基础样式 -->
+    <style name="LoadingView.BaseTextStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
@@ -70,5 +76,8 @@
         <item name="android:textSize">14sp</item>
         <item name="android:translationZ">0dp</item>
     </style>
+
+    <!-- TextView 样式 -->
+    <style name="LoadingView.TextStyle" parent="LoadingView.BaseTextStyle" />
 
 </resources>

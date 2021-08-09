@@ -5,6 +5,7 @@ import com.scaffold.base.AppViewModel
 import com.scaffold.model.toError
 import com.scaffold.network.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -28,6 +29,9 @@ class LoginViewModel @Inject constructor() : AppViewModel() {
             async {
                 val params = HashMap<String, Any>()
                 val success = Random.nextBoolean()
+                // 模拟网络耗时
+                delay(3000)
+
                 if (success) {
                     liveMsgCode.postValue(phone to "128433")
                 } else {
@@ -45,6 +49,9 @@ class LoginViewModel @Inject constructor() : AppViewModel() {
             async {
                 val params = HashMap<String, Any>()
                 val success = Random.nextBoolean()
+                // 模拟网络耗时
+                delay(3000)
+
                 if (success) {
                     liveLoginResult.postValue(User())
                 } else {
@@ -63,6 +70,9 @@ class LoginViewModel @Inject constructor() : AppViewModel() {
             async {
                 val params = HashMap<String, Any>()
                 val success = Random.nextBoolean()
+                // 模拟网络耗时
+                delay(3000)
+
                 if (success) {
                     liveLoginResult.postValue(User())
                 } else {
@@ -71,7 +81,6 @@ class LoginViewModel @Inject constructor() : AppViewModel() {
             }
         }
     }
-
 
 
 }

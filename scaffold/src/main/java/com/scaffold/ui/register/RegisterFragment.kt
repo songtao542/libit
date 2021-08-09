@@ -28,8 +28,8 @@ class RegisterFragment : FormFragment<RegisterViewModel, FragmentRegisterBinding
         setupEditText(binding.phoneNumber, binding.clearPhone)
 
         binding.clickToGetVerificationCode.setOnClickListener {
-            val phone = binding.phoneNumber.text.toString().trim { it <= ' ' }
-            if (TextUtils.isEmpty(phone)) {
+            val phone = binding.phoneNumber.text?.toString()?.trim()
+            if (phone.isNullOrBlank()) {
                 binding.info.setText(R.string.pls_input_phone_number)
                 binding.info.visibility = View.VISIBLE
                 return@setOnClickListener

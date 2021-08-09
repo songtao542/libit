@@ -1,6 +1,7 @@
 package com.liabit.util
 
 import android.content.Context
+import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 @Suppress("SameParameterValue", "MemberVisibilityCanBePrivate")
@@ -11,13 +12,20 @@ object ByteFormatter {
     const val FLAG_SI_UNITS = 1 shl 2
     const val FLAG_IEC_UNITS = 1 shl 3
 
-    fun formatFileSize(sizeBytes: Long): String {
-        return formatFileSize(sizeBytes, FLAG_SI_UNITS)
+    private val NUMBER_FORMAT by lazy {
+        DecimalFormat.getInstance().also {
+            it.maximumFractionDigits = 2
+        }
     }
 
-    fun formatFileSize(sizeBytes: Long, flags: Int): String {
+    fun formatFileSize(sizeBytes: Long, maximumFractionDigits: Int = -1, flags: Int = FLAG_SI_UNITS): String {
         val res: BytesResult = formatBytes(sizeBytes, flags)
-        return "${res.value}${res.units}"
+        return if (maximumFractionDigits >= 0) {
+            NUMBER_FORMAT.maximumFractionDigits = maximumFractionDigits
+            "${NUMBER_FORMAT.format(res.value)}${res.units}"
+        } else {
+            "${res.value}${res.units}"
+        }
     }
 
     fun formatBytes(sizeBytes: Long): BytesResult {

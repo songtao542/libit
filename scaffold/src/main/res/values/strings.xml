@@ -23,7 +23,7 @@
     <string name="welcome_to_use">欢迎使用</string>
     <string name="allow">同意</string>
     <string name="login">登录</string>
-    <string name="pls_input_phone_number">Please input phone number</string>
+    <string name="pls_input_phone_number">请输入手机号</string>
     <string name="get_msg_code">获取验证码</string>
     <string name="login_by_account">账号登录</string>
     <string name="register">注册</string>
@@ -34,7 +34,7 @@
     <string name="resend_msg_code">重新发送</string>
     <string name="msg_code_has_sent">验证码已发送至 %1$s</string>
     <string name="msg_code_has_been_sent">Verification Code has been sent</string>
-    <string name="msg_code_countdown">%1$d后重新获取</string>
+    <string name="msg_code_countdown">%1$d秒后重新获取</string>
     <string name="msg_code_login">验证码登录</string>
     <string name="phone_invalid">号码不合法</string>
     <string name="get_msg_code_failed">获取验证码失败</string>

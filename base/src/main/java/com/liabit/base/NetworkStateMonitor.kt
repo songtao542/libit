@@ -34,6 +34,7 @@ class NetworkStateMonitor(
 
     fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<Boolean>) {
         try {
+            mLiveNetworkState.removeObserver(observer)
             mLiveNetworkState.observe(lifecycleOwner, observer)
         } catch (e: Throwable) {
             Log.d(TAG, "observe: ", e)

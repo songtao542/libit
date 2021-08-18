@@ -1,5 +1,6 @@
 package com.liabit.livedata
 
+import android.util.ArrayMap
 import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -20,6 +21,8 @@ open class SingleLiveData<T> : MutableLiveData<T> {
 
     private val mPending = AtomicBoolean(false)
 
+    private val mObserverMap by lazy { ArrayMap<Observer<in T>, ObserverWrapper<in T>>() }
+
     constructor() : super()
 
     constructor(value: T) : super(value)
@@ -27,19 +30,32 @@ open class SingleLiveData<T> : MutableLiveData<T> {
     @MainThread
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         // Observe the internal MutableLiveData
-        super.observe(owner, { t ->
-            if (mPending.compareAndSet(true, false)) {
-                observer.onChanged(t)
-            }
-        })
+        val wrapper = ObserverWrapper(observer)
+        mObserverMap[observer] = wrapper
+        super.observe(owner, wrapper)
+    }
+
+    override fun observeForever(observer: Observer<in T>) {
+        val wrapper = ObserverWrapper(observer)
+        mObserverMap[observer] = wrapper
+        super.observeForever(wrapper)
+    }
+
+    override fun removeObserver(observer: Observer<in T>) {
+        val wrapper = mObserverMap.remove(observer)
+        if (wrapper != null) {
+            super.removeObserver(wrapper)
+        }
     }
 
     @MainThread
     override fun setValue(t: T?) {
-        t?.let {
-            mPending.set(true)
-        }
+        mPending.set(true)
         super.setValue(t)
+    }
+
+    fun setPending(pending: Boolean) {
+        mPending.set(pending)
     }
 
     /**
@@ -47,6 +63,16 @@ open class SingleLiveData<T> : MutableLiveData<T> {
      */
     @MainThread
     fun clear() {
-        value = null
+        super.setValue(null)
+    }
+
+    private inner class ObserverWrapper<T>(val observer: Observer<in T>) : Observer<T> {
+
+        override fun onChanged(t: T) {
+            if (mPending.compareAndSet(true, false)) {
+                observer.onChanged(t)
+            }
+        }
+
     }
 }

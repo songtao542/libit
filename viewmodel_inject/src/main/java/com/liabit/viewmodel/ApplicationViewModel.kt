@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Handler
 import android.util.ArrayMap
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
@@ -148,6 +149,42 @@ open class ApplicationViewModel : ViewModel() {
      */
     suspend fun <T> async(block: suspend CoroutineScope.() -> T): T {
         return withContext(Dispatchers.Default, block)
+    }
+
+    /**
+     * 会根据 [isLoading] 判断是否执行 [block]
+     */
+    fun launch(block: suspend CoroutineScope.() -> Unit) {
+        if (isLoading()) return
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                try {
+                    block.invoke(this)
+                } catch (e: Throwable) {
+                    Log.d(TAG, "error occurred: ", e)
+                } finally {
+                    setLoading(false)
+                }
+            }
+        }
+    }
+
+    /**
+     * @param key 当前任务的唯一标识, 会根据 [isLoading] 判断是否执行 [block]
+     */
+    fun launch(key: String, block: suspend CoroutineScope.() -> Unit) {
+        if (isLoading(key)) return
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                try {
+                    block.invoke(this)
+                } catch (e: Throwable) {
+                    Log.d(TAG, "error occurred: ", e)
+                } finally {
+                    setLoading(key, false)
+                }
+            }
+        }
     }
 
     private val mStateMap by lazy { ArrayMap<String, Boolean>() }

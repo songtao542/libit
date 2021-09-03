@@ -152,14 +152,15 @@ open class ApplicationViewModel : ViewModel() {
     }
 
     /**
-     * 会根据 [isLoading] 判断是否执行 [block]
+     * 执行异步任务
+     * 会根据 [isLoading] 判断是否执行 [task]
      */
-    fun launch(block: suspend CoroutineScope.() -> Unit) {
+    fun launchTask(task: suspend CoroutineScope.() -> Unit) {
         if (isLoading()) return
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
                 try {
-                    block.invoke(this)
+                    task.invoke(this)
                 } catch (e: Throwable) {
                     Log.d(TAG, "error occurred: ", e)
                 } finally {
@@ -170,14 +171,15 @@ open class ApplicationViewModel : ViewModel() {
     }
 
     /**
-     * @param key 当前任务的唯一标识, 会根据 [isLoading] 判断是否执行 [block]
+     * 执行异步任务
+     * @param key 当前任务的唯一标识, 会根据 [isLoading] 判断是否执行 [task]
      */
-    fun launch(key: String, block: suspend CoroutineScope.() -> Unit) {
+    fun launchTask(key: String, task: suspend CoroutineScope.() -> Unit) {
         if (isLoading(key)) return
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
                 try {
-                    block.invoke(this)
+                    task.invoke(this)
                 } catch (e: Throwable) {
                     Log.d(TAG, "error occurred: ", e)
                 } finally {

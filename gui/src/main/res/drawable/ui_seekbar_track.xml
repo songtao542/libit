@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@android:id/background"
+        android:gravity="center_vertical|fill_horizontal"
+        android:left="@dimen/ui_seekbar_track_background_left_offset"
+        android:right="@dimen/ui_seekbar_track_background_right_offset">
+        <layer-list>
+            <item>
+                <shape
+                    android:shape="rectangle"
+                    android:tint="@color/ui_seekbar_track_background_color">
+                    <corners android:radius="@dimen/ui_seekbar_track_height" />
+                    <size android:height="@dimen/ui_seekbar_track_height" />
+                    <solid android:color="@android:color/white" />
+                </shape>
+            </item>
+            <item
+                android:width="@dimen/ui_seekbar_track_height"
+                android:height="@dimen/ui_seekbar_track_height"
+                android:gravity="left">
+                <selector>
+                    <item android:state_enabled="false">
+                        <shape
+                            android:shape="rectangle"
+                            android:tint="@color/ui_seekbar_track_disabled_color">
+                            <corners android:radius="@dimen/ui_seekbar_track_height" />
+                            <size android:height="@dimen/ui_seekbar_track_height" />
+                            <solid android:color="@android:color/white" />
+                        </shape>
+                    </item>
+                    <item>
+                        <shape
+                            android:shape="rectangle"
+                            android:tint="@color/ui_seekbar_track_color">
+                            <corners android:radius="@dimen/ui_seekbar_track_height" />
+                            <size android:height="@dimen/ui_seekbar_track_height" />
+                            <solid android:color="@android:color/white" />
+                        </shape>
+                    </item>
+                </selector>
+            </item>
+        </layer-list>
+    </item>
+    <item
+        android:id="@android:id/secondaryProgress"
+        android:height="@dimen/ui_seekbar_track_height"
+        android:gravity="center_vertical|fill_horizontal">
+        <scale android:scaleWidth="100%">
+            <selector>
+                <item android:state_enabled="false">
+                    <shape
+                        android:shape="rectangle"
+                        android:tint="@color/ui_seekbar_track_disabled_color">
+                        <size android:height="@dimen/ui_seekbar_track_height" />
+                        <solid android:color="@android:color/white" />
+                    </shape>
+                </item>
+                <item>
+                    <shape
+                        android:shape="rectangle"
+                        android:tint="@color/ui_seekbar_track_color">
+                        <size android:height="@dimen/ui_seekbar_track_height" />
+                        <solid android:color="@android:color/white" />
+                    </shape>
+                </item>
+            </selector>
+        </scale>
+    </item>
+    <item
+        android:id="@android:id/progress"
+        android:height="@dimen/ui_seekbar_track_height"
+        android:gravity="center_vertical|fill_horizontal">
+        <clip>
+            <selector>
+                <item android:state_enabled="false">
+                    <shape
+                        android:shape="rectangle"
+                        android:tint="@color/ui_seekbar_track_disabled_color">
+                        <size android:height="@dimen/ui_seekbar_track_height" />
+                        <solid android:color="@android:color/white" />
+                    </shape>
+                </item>
+                <item>
+                    <shape
+                        android:shape="rectangle"
+                        android:tint="@color/ui_seekbar_track_color">
+                        <size android:height="@dimen/ui_seekbar_track_height" />
+                        <solid android:color="@android:color/white" />
+                    </shape>
+                </item>
+            </selector>
+        </clip>
+    </item>
+</layer-list>

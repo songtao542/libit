@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="ui_seekbar_marker_size">16dp</dimen>
+    <dimen name="ui_seekbar_track_height">24dp</dimen>
+    <dimen name="ui_seekbar_track_half_height">12dp</dimen>
+    <dimen name="ui_seekbar_track_background_left_offset">-12dp</dimen>
+    <dimen name="ui_seekbar_track_background_right_offset">-12dp</dimen>
+
+    <dimen name="ui_wide_seekbar_track_width">46dp</dimen>
+    <dimen name="ui_wide_seekbar_track_radius">12dp</dimen>
+    <dimen name="ui_wide_track_icon_size">30dp</dimen>
+
+    <dimen name="ui_switch_height">24dp</dimen>
+
+    <dimen name="ui_wide_seekbar_width">180dp</dimen>
+    <dimen name="ui_wide_seekbar_height">46dp</dimen>
+
+</resources>

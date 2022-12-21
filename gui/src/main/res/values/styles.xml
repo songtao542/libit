@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="UI" />
+
+    <style name="UI.SeekBar" parent="android:Widget.Material.SeekBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:indeterminateDrawable">@drawable/ui_seekbar_track</item>
+        <item name="android:paddingStart">@dimen/ui_seekbar_track_half_height</item>
+        <item name="android:paddingEnd">@dimen/ui_seekbar_track_half_height</item>
+        <item name="android:progressDrawable">@drawable/ui_seekbar_track</item>
+        <item name="android:splitTrack">false</item>
+        <item name="android:thumb">@drawable/ui_seekbar_thumb</item>
+    </style>
+
+    <style name="UI.SeekBar.Mark" parent="android:Widget.Material.SeekBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:indeterminateDrawable">@drawable/ui_seekbar_labeled_track</item>
+        <item name="android:paddingStart">@dimen/ui_seekbar_track_half_height</item>
+        <item name="android:paddingEnd">@dimen/ui_seekbar_track_half_height</item>
+        <item name="android:tickMark">@drawable/ui_seekbar_labeled_marker</item>
+        <item name="android:progressDrawable">@drawable/ui_seekbar_labeled_track</item>
+        <item name="android:splitTrack">false</item>
+        <item name="android:thumb">@drawable/ui_seekbar_thumb</item>
+    </style>
+
+    <style name="UI.SeekBar.Balance" parent="android:Widget.Material.SeekBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:progressDrawable">@drawable/ui_seekbar_balance_track</item>
+        <item name="android:indeterminateDrawable">@drawable/ui_seekbar_track</item>
+        <item name="android:paddingStart">@dimen/ui_seekbar_track_half_height</item>
+        <item name="android:paddingEnd">@dimen/ui_seekbar_track_half_height</item>
+        <item name="android:splitTrack">false</item>
+        <item name="android:thumb">@drawable/ui_seekbar_thumb</item>
+    </style>
+
+    <style name="UI.SeekBar.Wide" parent="android:Widget.Material.SeekBar">
+        <item name="android:background">@null</item>
+        <item name="android:clickable">false</item>
+        <item name="android:layoutDirection">ltr</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:progressDrawable">@drawable/ui_wide_seekbar</item>
+        <item name="android:splitTrack">false</item>
+        <item name="android:thumb">@null</item>
+    </style>
+
+    <style name="UI.SeekBar.Wide.Vertical" parent="android:Widget.Material.SeekBar">
+        <item name="android:progressDrawable">@drawable/ui_wide_vertical_seekbar</item>
+        <item name="android:indeterminateDrawable">@drawable/ui_wide_vertical_seekbar</item>
+        <item name="android:thumb">@null</item>
+        <item name="android:maxHeight">1500dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+    </style>
+
+    <style name="UI.Switch" parent="android:Widget.Material.CompoundButton.Switch">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:track">@drawable/ui_switch_track</item>
+        <item name="android:thumb">@drawable/ui_switch_thumb</item>
+    </style>
+
+</resources>

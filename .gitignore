@@ -1,5 +1,8 @@
 *.iml
 .gradle
+.idea/
+.idea/gradle.xml
+.idea/runConfigurations.xml
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -18,3 +21,4 @@
 /build_for_sport.sh
 /build_for_refresh.sh
 /build_for_ziqing.sh
+

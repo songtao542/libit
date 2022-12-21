@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--源码中：switchWidth = Math.max(mSwitchMinWidth, 2 * mThumbWidth + paddingLeft + paddingRight);-->
+    <!--paddingLeft 为 mTrackDrawable 的 padding和 mThumbDrawable 的 inset 中的最大那个-->
+    <item
+        android:end="4dp"
+        android:gravity="center_vertical|fill_horizontal"
+        android:start="4dp">
+        <!--此 start,end 调节背景 track 起止位置-->
+
+        <shape
+            android:shape="rectangle"
+            android:tint="@color/ui_switch_track_color">
+            <corners android:radius="@dimen/ui_switch_height" />
+            <solid android:color="@android:color/white" />
+            <size
+                android:width="96px"
+                android:height="@dimen/ui_switch_height" />
+            <!--height 与 thumb 高度一致，width没作用的-->
+
+            <padding
+                android:left="5dp"
+                android:right="5dp" />
+            <!--此padding调节switch宽度，如thumb位于track内，需thumb的padding加上面的start,end-->
+
+        </shape>
+    </item>
+</layer-list>

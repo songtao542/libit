@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingMode="stack">
+    <item
+        android:id="@android:id/background"
+        android:gravity="center_vertical|fill_horizontal">
+        <shape
+            android:shape="rectangle"
+            android:tint="@color/ui_wide_seekbar_track_background_color">
+            <size android:height="@dimen/ui_wide_seekbar_track_width" />
+            <corners android:radius="@dimen/ui_wide_seekbar_track_radius" />
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
+    <item
+        android:id="@android:id/secondaryProgress"
+        android:gravity="center_vertical|fill_horizontal">
+        <clip>
+            <shape
+                android:shape="rectangle"
+                android:tint="?android:attr/colorActivatedHighlight">
+                <size android:height="@dimen/ui_wide_seekbar_track_width" />
+                <solid android:color="@android:color/white" />
+                <corners android:radius="@dimen/ui_wide_seekbar_track_radius" />
+            </shape>
+        </clip>
+    </item>
+    <item
+        android:id="@android:id/progress"
+        android:gravity="center_vertical|fill_horizontal">
+        <clip>
+            <shape
+                android:shape="rectangle"
+                android:tint="?android:attr/colorAccent">
+                <size android:height="@dimen/ui_wide_seekbar_track_width" />
+                <solid android:color="@android:color/white" />
+                <corners android:radius="@dimen/ui_wide_seekbar_track_radius" />
+            </shape>
+        </clip>
+    </item>
+    <item
+        android:id="@+id/ui_seekbar_progress_icon"
+        android:width="@dimen/ui_wide_track_icon_size"
+        android:height="@dimen/ui_wide_track_icon_size"
+        android:gravity="center_vertical|start"
+        android:start="10dp">
+        <rotate
+            android:fromDegrees="0"
+            android:toDegrees="0">
+            <inset
+                android:drawable="@drawable/ui_ic_volume_media"
+                android:tint="@color/ui_wide_seekbar_icon_color" />
+        </rotate>
+    </item>
+</layer-list>

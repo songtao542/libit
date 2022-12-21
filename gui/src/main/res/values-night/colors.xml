@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ui_widget_disabled_checked">#b2d7fa</color>
+    <color name="ui_widget_disabled_unchecked">#f2f2f2</color>
+    <color name="ui_widget_checked">#007cee</color>
+    <color name="ui_widget_normal">#e6e6e6</color>
+</resources>

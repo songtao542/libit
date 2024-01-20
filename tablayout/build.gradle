@@ -1,22 +1,24 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
+apply from: "../config.gradle"
+
 android {
-    compileSdkVersion 30
+    compileSdk project.ext.compile_sdk
+
+    namespace 'com.liabit.tablayout'
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        minSdk 21
+        targetSdk project.ext.target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     buildTypes {
@@ -26,7 +28,7 @@ android {
         }
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "17"
     }
 
     libraryVariants.all { variant ->
@@ -54,12 +56,12 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    //implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${project.org_jetbrains_kotlin__kotlin_stdlib_jdk7}"
+    implementation "androidx.appcompat:appcompat:${project.androidx_appcompat__appcompat}"
+    implementation "androidx.core:core-ktx:${project.androidx_core__core_ktx}"
+    implementation "androidx.viewpager2:viewpager2:${project.androidx_viewpager2__viewpager2}"
 
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    testImplementation "junit:junit:${project.junit__junit}"
+    androidTestImplementation "androidx.test.ext:junit:${project.androidx_test_ext__junit}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${project.androidx_test_espresso__espresso_core}"
 }

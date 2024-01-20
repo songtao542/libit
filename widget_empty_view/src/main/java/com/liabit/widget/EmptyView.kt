@@ -136,7 +136,7 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return mGestureDetector.onTouchEvent(event)
+        return event?.let { mGestureDetector.onTouchEvent(it) } ?: false
     }
 
     override fun setOnClickListener(l: OnClickListener?) {
@@ -214,6 +214,7 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
             }
+
             else -> {
                 mOnClickListener?.onClick(this)
             }
@@ -259,10 +260,7 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
         return StateTransaction(this, mState)
     }
 
-    class StateTransaction(
-        private val mEmptyView: EmptyView,
-        private var mState: Int
-    ) {
+    class StateTransaction(private val mEmptyView: EmptyView, private var mState: Int) {
 
         fun clearState(@State state: Int): StateTransaction {
             mState = mState and state.inv()
@@ -308,6 +306,7 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
                 }
                 mTextView.text = mTimeText ?: context.getString(R.string.empty_view_time_not_right)
             }
+
             mState and NETWORK == NETWORK -> {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.INVISIBLE
@@ -317,14 +316,17 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
                 } ?: kotlin.run {
                     mImageView.visibility = View.INVISIBLE
                 }
-                mTextView.text = mNetworkText ?: context.getString(R.string.empty_view_network_not_available)
+                mTextView.text = mNetworkText
+                        ?: context.getString(R.string.empty_view_network_not_available)
             }
+
             mState and LOADING == LOADING -> {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.VISIBLE
                 mImageView.visibility = View.INVISIBLE
                 mTextView.text = mLoadingText ?: context.getString(R.string.empty_view_loading)
             }
+
             mState and EMPTY == EMPTY -> {
                 visibility = View.VISIBLE
                 mProgressBar.visibility = View.INVISIBLE
@@ -336,32 +338,33 @@ class EmptyView : ConstraintLayout, GestureDetector.OnGestureListener {
                 }
                 mTextView.text = mEmptyText ?: context.getString(R.string.empty_view_no_data)
             }
+
             else -> {
                 visibility = View.GONE
             }
         }
     }
 
-    override fun onDown(e: MotionEvent?): Boolean {
+    override fun onDown(e: MotionEvent): Boolean {
         return true
     }
 
-    override fun onShowPress(e: MotionEvent?) {
+    override fun onShowPress(e: MotionEvent) {
     }
 
-    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+    override fun onSingleTapUp(e: MotionEvent): Boolean {
         onClick()
         return true
     }
 
-    override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+    override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
         return false
     }
 
-    override fun onLongPress(e: MotionEvent?) {
+    override fun onLongPress(e: MotionEvent) {
     }
 
-    override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+    override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
         return false
     }
 

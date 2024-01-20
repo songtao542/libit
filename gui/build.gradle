@@ -1,21 +1,17 @@
-plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
-}
+apply plugin: 'com.android.library'
 
 apply from: "../config.gradle"
 
 android {
     compileSdk project.ext.compile_sdk
 
-    namespace 'com.liabit.addsub'
+    namespace 'com.liabit.gui'
 
     defaultConfig {
         minSdk 21
         targetSdk project.ext.target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -27,9 +23,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
     }
 
     libraryVariants.all { variant ->
@@ -56,15 +49,12 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${project.org_jetbrains_kotlin__kotlin_stdlib}"
-    implementation "androidx.core:core-ktx:${project.androidx_core__core_ktx}"
-    implementation "androidx.appcompat:appcompat:${project.androidx_appcompat__appcompat}"
-    implementation "com.google.android.material:material:${project.com_google_android_material__material}"
-    testImplementation "junit:junit:${project.junit__junit}"
-    androidTestImplementation "androidx.test.ext:junit:${project.androidx_test_ext__junit}"
-    androidTestImplementation "androidx.test.espresso:espresso-core:${project.androidx_test_espresso__espresso_core}"
-}
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-if (file('binary-config.gradle').exists() && file('../binary-common.gradle').exists()) {
-    apply from: '../binary-common.gradle'
+    implementation "androidx.annotation:annotation:${project.androidx_annotation__annotation}"
+    implementation "androidx.core:core:${project.androidx_core__core}"
+
+    testImplementation "junit:junit:${project.junit__junit}"
+    androidTestImplementation "androidx.test:runner:${project.androidx_test__runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${project.androidx_test_espresso__espresso_core}"
 }

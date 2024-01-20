@@ -1,24 +1,31 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'dagger.hilt.android.plugin'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
+    id 'org.jetbrains.kotlin.android'
+}
+
+apply from: "../config.gradle"
 
 android {
-    compileSdkVersion 30
+    compileSdk project.ext.compile_sdk
+
+    namespace "com.liabit.test"
 
     defaultConfig {
         applicationId "com.liabit.test"
-        minSdkVersion 23
-        targetSdkVersion 30
+        minSdk project.ext.min_sdk
+        targetSdk project.ext.target_sdk
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -57,7 +64,7 @@ android {
         }
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "17"
     }
 }
 
@@ -104,82 +111,80 @@ dependencies {
     implementation project(':base_with_vb_vm')
     implementation project(':viewmodel')
     implementation project(':widget_empty_view')
+    implementation project(':gui')
 
     implementation files('../common_libs/imagepicker-1.0.0.aar')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.android.material:material:1.3.0-alpha04'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    //implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${project.org_jetbrains_kotlin__kotlin_stdlib_jdk7}"
+    implementation "androidx.appcompat:appcompat:${project.androidx_appcompat__appcompat}"
+    implementation "androidx.constraintlayout:constraintlayout:${project.androidx_constraintlayout__constraintlayout}"
+    implementation "com.google.android.material:material:${project.com_google_android_material__material}"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:${project.androidx_swiperefreshlayout__swiperefreshlayout}"
 
     implementation files('../common_libs/flexbox-release.aar')
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
-    def lifecycle_version = "2.2.0"
-    def arch_version = "2.1.0"
+    implementation "androidx.legacy:legacy-support-v4:${project.androidx_legacy__legacy_support_v4}"
 
     // Saved state module for ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:${project.androidx_lifecycle__lifecycle_viewmodel_savedstate}"
 
     // alternately - if using Java8, use the following instead of lifecycle-compiler
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common-java8:${project.androidx_lifecycle__lifecycle_common_java8}"
 
     // optional - helpers for implementing LifecycleOwner in a Service
-    implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-service:${project.androidx_lifecycle__lifecycle_service}"
 
     // optional - ProcessLifecycleOwner provides a lifecycle for the whole application process
-    implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-process:${project.androidx_lifecycle__lifecycle_process}"
 
     // ktx
-    implementation "androidx.fragment:fragment-ktx:1.2.5"
-    implementation "androidx.core:core-ktx:1.3.2"
-    implementation "androidx.collection:collection-ktx:1.1.0"
+    implementation "androidx.fragment:fragment-ktx:${project.androidx_fragment__fragment_ktx}"
+    implementation "androidx.core:core-ktx:${project.androidx_core__core_ktx}"
+    implementation "androidx.collection:collection-ktx:${project.androidx_collection__collection_ktx}"
 
-    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:${project.androidx_lifecycle__lifecycle_livedata_core_ktx}"
     // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${project.androidx_lifecycle__lifecycle_livedata_ktx}"
     // optional - ReactiveStreams support for LiveData
-    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:${project.androidx_lifecycle__lifecycle_reactivestreams_ktx}"
     // Lifecycles only (without ViewModel or LiveData)
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${project.androidx_lifecycle__lifecycle_runtime_ktx}"
     // ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${project.androidx_lifecycle__lifecycle_viewmodel_ktx}"
 
-    implementation "androidx.navigation:navigation-runtime-ktx:2.3.2"
-    implementation "androidx.navigation:navigation-fragment-ktx:2.3.2"
-    implementation "androidx.navigation:navigation-ui-ktx:2.3.2"
+    implementation "androidx.navigation:navigation-runtime-ktx:${project.androidx_navigation__navigation_runtime_ktx}"
+    implementation "androidx.navigation:navigation-fragment-ktx:${project.androidx_navigation__navigation_fragment_ktx}"
+    implementation "androidx.navigation:navigation-ui-ktx:${project.androidx_navigation__navigation_ui_ktx}"
 
-    implementation "androidx.paging:paging-common-ktx:2.1.2"
-    implementation "androidx.paging:paging-runtime-ktx:2.1.2"
-    implementation "androidx.paging:paging-rxjava2-ktx:2.1.2"
+    implementation "androidx.paging:paging-common-ktx:${project.androidx_paging__paging_common_ktx}"
+    implementation "androidx.paging:paging-runtime-ktx:${project.androidx_paging__paging_runtime_ktx}"
+    implementation "androidx.paging:paging-rxjava2-ktx:${project.androidx_paging__paging_rxjava2_ktx}"
 
-    implementation "androidx.palette:palette-ktx:1.0.0"
+    implementation "androidx.palette:palette-ktx:${project.androidx_palette__palette_ktx}"
 
-    implementation "androidx.preference:preference-ktx:1.1.1"
+    implementation "androidx.preference:preference-ktx:${project.androidx_preference__preference_ktx}"
 
-    implementation "androidx.room:room-ktx:2.2.5"
+    implementation "androidx.room:room-ktx:${project.androidx_room__room_ktx}"
 
-    implementation "androidx.sqlite:sqlite-ktx:2.1.0"
-    implementation "com.google.code.gson:gson:2.8.7"
+    implementation "androidx.sqlite:sqlite-ktx:${project.androidx_sqlite__sqlite_ktx}"
+    implementation "com.google.code.gson:gson:${project.com_google_code_gson__gson}"
 
-    implementation "com.google.dagger:hilt-android:2.33-beta"
-    kapt "com.google.dagger:hilt-android-compiler:2.33-beta"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
-    kapt "androidx.hilt:hilt-compiler:1.0.0-alpha03"
-    //implementation "androidx.hilt:hilt-navigation-compose:1.0.0-alpha01"
+    implementation "com.google.dagger:hilt-android:${project.com_google_dagger__hilt_android}"
+    kapt "com.google.dagger:hilt-compiler:${project.com_google_dagger__hilt_compiler}"
+    //kapt "androidx.hilt:hilt-compiler:${project.androidx_hilt__hilt_compiler}"
+    //implementation "androidx.hilt:hilt-lifecycle-viewmodel:${project.androidx_hilt__hilt_lifecycle_viewmodel}"
+    //implementation "androidx.hilt:hilt-navigation-compose:${project.androidx_hilt__hilt_navigation_compose}"
 
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation "com.github.bumptech.glide:glide:${project.com_github_bumptech_glide__glide}"
 
     // optional - Test helpers for LiveData
-    testImplementation "androidx.arch.core:core-testing:$arch_version"
+    testImplementation "androidx.arch.core:core-testing:${project.androidx_arch_core__core_testing}"
 
-    implementation 'it.sephiroth.android.library.imagezoom:library:1.0.4'
+    implementation "it.sephiroth.android.library.imagezoom:library:${project.it_sephiroth_android_library_imagezoom__library}"
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
+    //debugImplementation "com.squareup.leakcanary:leakcanary-android:${project.com_squareup_leakcanary__leakcanary_android}"
 
-    implementation 'junit:junit:4.13.1'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation "junit:junit:${project.junit__junit}"
+    testImplementation "junit:junit:${project.junit__junit}"
+    androidTestImplementation "androidx.test:runner:${project.androidx_test__runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${project.androidx_test_espresso__espresso_core}"
 }

@@ -36,7 +36,7 @@ fun getLayoutResource(context: Context, viewBindingClassName: String): Int {
     while (matcher.find()) {
         val match = matcher.group(0)
         if (match != null) {
-            matcher.appendReplacement(sb, "_" + match.toLowerCase(Locale.ROOT))
+            matcher.appendReplacement(sb, "_" + match.lowercase(Locale.ROOT))
         }
     }
     matcher.appendTail(sb)

@@ -27,14 +27,11 @@ abstract class BaseFragment<VM : ViewModel, VB : ViewBinding> : BaseVBFragment<V
 
     private var mDialogObserverAdded = false
 
-    private val mDialogObserver = object : Observer<ApplicationViewModel.DialogMessage> {
-        override fun onChanged(it: ApplicationViewModel.DialogMessage?) {
-            if (it == null) return
-            if (it.show) {
-                showDialog(it.message, it.cancellable)
-            } else {
-                dismissDialog()
-            }
+    private val mDialogObserver = Observer<ApplicationViewModel.DialogMessage> {
+        if (it.show) {
+            showDialog(it.message, it.cancellable)
+        } else {
+            dismissDialog()
         }
     }
 

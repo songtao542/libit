@@ -6,13 +6,17 @@ apply plugin: "kotlin-allopen"
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
+apply from: "../config.gradle"
+
 android {
-    compileSdkVersion 30
+    compileSdk project.ext.compile_sdk
+
+    namespace 'com.irun.runker'
 
     defaultConfig {
         applicationId "com.irun.runker"
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdk 21
+        targetSdk project.ext.target_sdk
         versionCode 1
         versionName "1.0"
 
@@ -48,85 +52,82 @@ android {
         viewBinding true
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "17"
     }
+
 }
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0"
-    //implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${project.org_jetbrains_kotlin__kotlin_stdlib}"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:${project.org_jetbrains_kotlinx__kotlinx_serialization_core}"
+    //implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:${project.org_jetbrains_kotlinx__kotlinx_serialization_runtime}"
 
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation "androidx.core:core-ktx:${project.androidx_core__core_ktx}"
+    implementation "androidx.appcompat:appcompat:${project.androidx_appcompat__appcompat}"
+    implementation "com.google.android.material:material:${project.com_google_android_material__material}"
+    implementation "androidx.constraintlayout:constraintlayout:${project.androidx_constraintlayout__constraintlayout}"
+    testImplementation "junit:junit:${project.junit__junit}"
+    androidTestImplementation "androidx.test.ext:junit:${project.androidx_test_ext__junit}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${project.androidx_test_espresso__espresso_core}"
 
-    def version_hilt = "2.31.2-alpha"
-    def version_hilt_x = '1.0.0-alpha03'
-    implementation "com.google.dagger:hilt-android:$version_hilt"
-    kapt "com.google.dagger:hilt-android-compiler:$version_hilt"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$version_hilt_x"
-    kapt "androidx.hilt:hilt-compiler:$version_hilt_x"
+    implementation "com.google.dagger:hilt-android:${project.com_google_dagger__hilt_android}"
+    kapt "com.google.dagger:hilt-compiler:${project.com_google_dagger__hilt_compiler}"
+    //kapt "androidx.hilt:hilt-compiler:${project.androidx_hilt__hilt_compiler}"
+    //implementation "androidx.hilt:hilt-lifecycle-viewmodel:${project.androidx_hilt__hilt_lifecycle_viewmodel}"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9"
-    implementation "io.reactivex.rxjava2:rxjava:2.2.0"
-    implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
-    implementation "io.reactivex.rxjava2:rxkotlin:2.2.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${project.org_jetbrains_kotlinx__kotlinx_coroutines_core}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${project.org_jetbrains_kotlinx__kotlinx_coroutines_android}"
+    implementation "io.reactivex.rxjava2:rxjava:${project.io_reactivex_rxjava2__rxjava}"
+    implementation "io.reactivex.rxjava2:rxandroid:${project.io_reactivex_rxjava2__rxandroid}"
+    implementation "io.reactivex.rxjava2:rxkotlin:${project.io_reactivex_rxjava2__rxkotlin}"
 
     //https://github.com/appmattus/layercache
-    def layer_version = "1.2.1"
-    implementation "com.appmattus:layercache:$layer_version"
+    implementation " com.appmattus.layercache:layercache:${project.com_appmattus__layercache}"
     // To use with the Kotlin serializer
-    implementation "com.appmattus:layercache-serializer:$layer_version"
+    implementation " com.appmattus.layercache:layercache-serializer:${project.com_appmattus__layercache_serializer}"
     // Provides support for ehcache
-    implementation "com.appmattus:layercache-ehcache:$layer_version"
+    implementation " com.appmattus.layercache:layercache-ehcache:${project.com_appmattus__layercache_ehcache}"
     // Provides support for cache2k
-    implementation "com.appmattus:layercache-cache2k:$layer_version"
+    implementation " com.appmattus.layercache:layercache-cache2k:${project.com_appmattus__layercache_cache2k}"
     // Provides LruCache & DiskLruCache support for Android
-    implementation "com.appmattus:layercache-android:$layer_version"
+    implementation " com.appmattus.layercache:layercache-android:${project.com_appmattus__layercache_android}"
     // Provides one-line String encryption for Android
-    implementation "com.appmattus:layercache-android-encryption:$layer_version"
+    implementation " com.appmattus.layercache:layercache-android-encryption:${project.com_appmattus__layercache_android_encryption}"
     // Provides conversion from Cache into LiveData for Android
-    implementation "com.appmattus:layercache-android-livedata:$layer_version"
+    implementation " com.appmattus.layercache:layercache-android-livedata:${project.com_appmattus__layercache_android_livedata}"
     // ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${project.androidx_lifecycle__lifecycle_viewmodel_ktx}"
+    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:${project.androidx_lifecycle__lifecycle_livedata_core_ktx}"
     // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${project.androidx_lifecycle__lifecycle_livedata_ktx}"
     // optional - ReactiveStreams support for LiveData
-    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:${project.androidx_lifecycle__lifecycle_reactivestreams_ktx}"
     // Lifecycles only (without ViewModel or LiveData)
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${project.androidx_lifecycle__lifecycle_runtime_ktx}"
 
-    def room_version = "2.2.5"
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-runtime:${project.androidx_room__room_runtime}"
+    kapt "androidx.room:room-compiler:${project.androidx_room__room_compiler}"
     // optional - Kotlin Extensions and Coroutines support for Room
-    implementation "androidx.room:room-ktx:$room_version"
+    implementation "androidx.room:room-ktx:${project.androidx_room__room_ktx}"
 
-    implementation 'com.google.android.material:material:1.3.0-alpha04'
+    implementation "com.google.android.material:material:${project.com_google_android_material__material}"
 
     //Retrofit网络请求
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-scalars:2.0.0-beta4'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
-    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
+    implementation "com.squareup.retrofit2:retrofit:${project.com_squareup_retrofit2__retrofit}"
+    implementation "com.squareup.retrofit2:converter-gson:${project.com_squareup_retrofit2__converter_gson}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${project.com_squareup_retrofit2__adapter_rxjava2}"
+    implementation "com.squareup.retrofit2:converter-scalars:${project.com_squareup_retrofit2__converter_scalars}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${project.com_squareup_okhttp3__logging_interceptor}"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${project.com_jakewharton_retrofit__retrofit2_kotlin_coroutines_adapter}"
 
-    implementation "com.amap.api:3dmap:7.7.0"
-    implementation "com.amap.api:search:7.7.0"
-    implementation "com.amap.api:location:5.2.0"
+    implementation "com.amap.api:3dmap:${project.com_amap_api__3dmap}"
+    implementation "com.amap.api:search:${project.com_amap_api__search}"
+    implementation "com.amap.api:location:${project.com_amap_api__location}"
 
     //implementation 'com.liabit.viewbinding-extension:viewbinding-extension:1.0.0'
     //implementation 'com.liabit.settings:settings:1.0.0'

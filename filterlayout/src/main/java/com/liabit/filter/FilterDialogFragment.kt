@@ -83,7 +83,7 @@ class FilterDialogFragment() : AppCompatDialogFragment(), FilterController by Fi
                             View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                 }
                 val gestureDetector = GestureDetector(it.context, object : GestureDetector.SimpleOnGestureListener() {
-                    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+                    override fun onSingleTapUp(e: MotionEvent): Boolean {
                         dismiss()
                         return true
                     }

@@ -29,6 +29,7 @@ interface Api : ApiService {
 
         private const val DEFAULT_TIMEOUT = 30000L
 
+        private const val DEBUG = false
 
         private val createErrorBodyMethod = { gson: Gson, e: Throwable ->
             gson.toJson(Response<Any>(null, 600, e.message))//  """{"status": 200,"message": "${e.message}","data": null}"""
@@ -62,7 +63,7 @@ interface Api : ApiService {
                 .addInterceptor(ErrorHandleInterceptor(gson, createErrorBodyMethod))
                 .addInterceptor(BasicInfoInterceptor(basicInfoProvider))
 
-            if (BuildConfig.DEBUG) {
+            if (DEBUG) {
                 val httpLoggingInterceptor = EnhancedHttpLoggingInterceptor()
                 httpLoggingInterceptor.level = EnhancedHttpLoggingInterceptor.Level.BODY
                 okHttpBuilder.addInterceptor(httpLoggingInterceptor)

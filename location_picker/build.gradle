@@ -5,13 +5,16 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'kotlin-parcelize'
 
+apply from: "../config.gradle"
+
 android {
-    compileSdkVersion 30
+    compileSdk project.ext.compile_sdk
+
+    namespace 'com.liabit.location'
+
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        minSdk 14
+        targetSdk project.ext.target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -27,12 +30,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     buildFeatures {
@@ -69,40 +72,40 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.core:core-ktx:1.3.2'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation "androidx.appcompat:appcompat:${project.androidx_appcompat__appcompat}"
+    implementation "androidx.core:core-ktx:${project.androidx_core__core_ktx}"
+    testImplementation "junit:junit:${project.junit__junit}"
+    androidTestImplementation "androidx.test.ext:junit:${project.androidx_test_ext__junit}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${project.androidx_test_espresso__espresso_core}"
 
     implementation "androidx.recyclerview:recyclerview:1.2.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${project.androidx_lifecycle__lifecycle_viewmodel_ktx}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${project.androidx_lifecycle__lifecycle_viewmodel_ktx}"
 
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC"
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-extensions:${project.androidx_lifecycle__lifecycle_extensions}"
 
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.fragment:fragment-ktx:1.3.4'
+    implementation "androidx.core:core-ktx:${project.androidx_core__core_ktx}"
+    implementation "androidx.fragment:fragment-ktx:${project.androidx_fragment__fragment_ktx}"
 
     //高德地图
-    implementation 'com.amap.api:location:4.9.0'
-    implementation 'com.amap.api:map2d:6.0.0'
-    implementation 'com.amap.api:search:7.3.0'
+    implementation "com.amap.api:location:${project.com_amap_api__location}"
+    implementation "com.amap.api:map2d:${project.com_amap_api__map2d}"
+    implementation "com.amap.api:search:${project.com_amap_api__search}"
 
-    implementation "io.nlopez.smartlocation:library:3.3.3"
-    //implementation "io.nlopez.smartlocation:rx:3.3.3"
-    //implementation "io.reactivex.rxjava2:rxkotlin:2.2.0"
+    implementation "io.nlopez.smartlocation:library:${project.io_nlopez_smartlocation__library}"
+    //implementation "io.nlopez.smartlocation:rx:${project.io_nlopez_smartlocation__rx}"
+    //implementation "io.reactivex.rxjava2:rxkotlin:${project.io_reactivex_rxjava2__rxkotlin}"
 
-    implementation "com.google.android.material:material:1.3.0"
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.3.1"
+    implementation "com.google.android.material:material:${project.com_google_android_material__material}"
+    implementation "androidx.lifecycle:lifecycle-common-java8:${project.androidx_lifecycle__lifecycle_common_java8}"
 
     implementation project(":viewbinding")
 
-    //implementation "com.google.dagger:dagger:2.17"
-    //implementation "com.google.dagger:dagger-android:2.17"
-    //implementation "com.google.dagger:dagger-android-support:2.17"
-    //kapt "com.google.dagger:dagger-android-processor:2.17"
-    //kapt "com.google.dagger:dagger-compiler:2.17"
+    //implementation "com.google.dagger:dagger:${project.com_google_dagger__dagger}"
+    //implementation "com.google.dagger:dagger-android:${project.com_google_dagger__dagger_android}"
+    //implementation "com.google.dagger:dagger-android-support:${project.com_google_dagger__dagger_android_support}"
+    //kapt "com.google.dagger:dagger-android-processor:${project.com_google_dagger__dagger_android_processor}"
+    //kapt "com.google.dagger:dagger-compiler:${project.com_google_dagger__dagger_compiler}"
 
 }

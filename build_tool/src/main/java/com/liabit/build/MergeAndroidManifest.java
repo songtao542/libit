@@ -40,7 +40,7 @@ public class MergeAndroidManifest {
                             if (name != null) {
                                 int index = name.lastIndexOf(".");
                                 if (index >= 0) {
-                                    name = name.substring(index + 1);
+androidTestImplementation "androidx.test.ext:junit:${project.androidx_test_ext__junit}" name = name.substring(index + 1);
                                 }
                             }
                             Element copy = c.createCopy();

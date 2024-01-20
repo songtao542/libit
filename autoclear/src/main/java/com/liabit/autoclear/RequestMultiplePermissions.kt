@@ -48,7 +48,7 @@ class RequestMultiplePermissions : ActivityResultContract<Array<String>, Boolean
         return Intent(ACTION_REQUEST_PERMISSIONS).putExtra(EXTRA_PERMISSIONS, input)
     }
 
-    override fun getSynchronousResult(context: Context, input: Array<String>?): SynchronousResult<Boolean> {
+    override fun getSynchronousResult(context: Context, input: Array<String>): SynchronousResult<Boolean> {
         if (input.isNullOrEmpty()) {
             return SynchronousResult(false)
         }

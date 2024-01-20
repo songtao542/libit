@@ -3,14 +3,16 @@ plugins {
     id 'kotlin-android'
 }
 
+apply from: "../config.gradle"
+
 android {
-    compileSdkVersion 30
+    compileSdk project.ext.compile_sdk
+
+    namespace 'com.liabit.widget.paddingstatusbar'
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        minSdk 21
+        targetSdk project.ext.target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -22,12 +24,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "17"
     }
 
     libraryVariants.all { variant ->
@@ -55,20 +57,20 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "androidx.dynamicanimation:dynamicanimation:1.0.0"
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.annotation:annotation:1.1.0'
-    implementation 'androidx.interpolator:interpolator:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${project.org_jetbrains_kotlin__kotlin_stdlib}"
+    implementation "androidx.dynamicanimation:dynamicanimation:${project.androidx_dynamicanimation__dynamicanimation}"
+    implementation "androidx.appcompat:appcompat:${project.androidx_appcompat__appcompat}"
+    implementation "androidx.annotation:annotation:${project.androidx_annotation__annotation}"
+    implementation "androidx.interpolator:interpolator:${project.androidx_interpolator__interpolator}"
+    implementation "androidx.constraintlayout:constraintlayout:${project.androidx_constraintlayout__constraintlayout}"
 
-    //implementation 'com.google.android:flexbox:2.0.1'
+    //implementation "com.google.android:flexbox:${project.com_google_android__flexbox}"
     compileOnly files('../common_libs/flexbox-release.aar')
-    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation "androidx.core:core-ktx:${project.androidx_core__core_ktx}"
 
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    testImplementation "junit:junit:${project.junit__junit}"
+    androidTestImplementation "androidx.test:runner:${project.androidx_test__runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${project.androidx_test_espresso__espresso_core}"
 }
 
 if (file('binary-config.gradle').exists() && file('../binary-common.gradle').exists()) {

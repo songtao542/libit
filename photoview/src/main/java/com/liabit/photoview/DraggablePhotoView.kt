@@ -349,7 +349,7 @@ class DraggablePhotoView : PhotoView {
                 }
             }
 
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 /*
                  * 如果是进入的话，当然是希望最后停留在center_crop的区域。
                  * 但是如果是out的话，就不应该是center_crop的位置了 ，

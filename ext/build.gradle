@@ -4,14 +4,16 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs"
 
+apply from: "../config.gradle"
+
 android {
-    compileSdkVersion 30
+    compileSdk project.ext.compile_sdk
+
+    namespace 'com.liabit.extension'
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        minSdk 21
+        targetSdk project.ext.target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -23,11 +25,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "17"
     }
 
     libraryVariants.all { variant ->
@@ -56,39 +58,38 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
-    implementation 'androidx.fragment:fragment-ktx:1.3.5'
-    implementation 'com.google.android.material:material:1.3.0-alpha04'
+    implementation "androidx.localbroadcastmanager:localbroadcastmanager:${project.androidx_localbroadcastmanager__localbroadcastmanager}"
+    implementation "androidx.fragment:fragment-ktx:${project.androidx_fragment__fragment_ktx}"
+    implementation "com.google.android.material:material:${project.com_google_android_material__material}"
 
     // Typed DataStore (Typed API surface, such as Proto)
-    implementation "androidx.datastore:datastore:1.0.0-alpha06"
+    implementation "androidx.datastore:datastore:${project.androidx_datastore__datastore}"
     // Alternatively - use the following artifact without an Android dependency.
-    implementation "androidx.datastore:datastore-core:1.0.0-alpha06"
-    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha06"
+    implementation "androidx.datastore:datastore-core:${project.androidx_datastore__datastore_core}"
+    implementation "androidx.datastore:datastore-preferences:${project.androidx_datastore__datastore_preferences}"
     // Alternatively - use the following artifact without an Android dependency.
-    implementation "androidx.datastore:datastore-preferences-core:1.0.0-alpha06"
+    implementation "androidx.datastore:datastore-preferences-core:${project.androidx_datastore__datastore_preferences_core}"
 
     // optional - RxJava2 support
-    //implementation "androidx.datastore:datastore-rxjava2:1.0.0-alpha06"
+    //implementation "androidx.datastore:datastore-rxjava2:${project.androidx_datastore__datastore_rxjava2}"
     // optional - RxJava3 support
-    //implementation "androidx.datastore:datastore-rxjava3:1.0.0-alpha06"
+    //implementation "androidx.datastore:datastore-rxjava3:${project.androidx_datastore__datastore_rxjava3}"
     // optional - RxJava2 support
-    //implementation "androidx.datastore:datastore-preferences-rxjava2:1.0.0-alpha06"
+    //implementation "androidx.datastore:datastore-preferences-rxjava2:${project.androidx_datastore__datastore_preferences_rxjava2}"
     // optional - RxJava3 support
-    //implementation "androidx.datastore:datastore-preferences-rxjava3:1.0.0-alpha06"
+    //implementation "androidx.datastore:datastore-preferences-rxjava3:${project.androidx_datastore__datastore_preferences_rxjava3}"
 
-    implementation "com.google.protobuf:protobuf-javalite:3.10.0"
-    //implementation  "com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-7"
+    implementation "com.google.protobuf:protobuf-javalite:${project.com_google_protobuf__protobuf_javalite}"
+    //implementation  "com.google.protobuf.nano:protobuf-javanano:${project.com_google_protobuf_nano__protobuf_javanano}"
 
-    def nav_version = "2.3.5"
-    implementation "androidx.navigation:navigation-fragment:$nav_version"
-    implementation "androidx.navigation:navigation-ui:$nav_version"
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-fragment:${project.androidx_navigation__navigation_fragment}"
+    implementation "androidx.navigation:navigation-ui:${project.androidx_navigation__navigation_ui}"
+    implementation "androidx.navigation:navigation-fragment-ktx:${project.androidx_navigation__navigation_fragment_ktx}"
+    implementation "androidx.navigation:navigation-ui-ktx:${project.androidx_navigation__navigation_ui_ktx}"
 
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    testImplementation "junit:junit:${project.junit__junit}"
+    androidTestImplementation "androidx.test:runner:${project.androidx_test__runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${project.androidx_test_espresso__espresso_core}"
 }
 
 //apply from: 'jcenter.gradle'

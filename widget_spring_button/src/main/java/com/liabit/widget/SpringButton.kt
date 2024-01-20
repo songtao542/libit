@@ -182,7 +182,7 @@ class SpringButton : FrameLayout {
                 alpha = value
             }
             addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator?) {
+                override fun onAnimationEnd(animation: Animator) {
                     visibility = View.GONE
                 }
             })
@@ -200,7 +200,7 @@ class SpringButton : FrameLayout {
                 alpha = value
             }
             addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationStart(animation: Animator?) {
+                override fun onAnimationStart(animation: Animator) {
                     visibility = View.VISIBLE
                 }
             })
@@ -282,13 +282,13 @@ class SpringButton : FrameLayout {
             invalidate()
         }
         addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationStart(animation: Animator?) {
+            override fun onAnimationStart(animation: Animator) {
                 if (mState == STATE_LONG_PRESSING) {
                     mOnPressListener?.onClick(this@SpringButton, true)
                 }
             }
 
-            override fun onAnimationEnd(animation: Animator?, isReverse: Boolean) {
+            override fun onAnimationEnd(animation: Animator, isReverse: Boolean) {
                 val isLongPressEnd = mState == STATE_LONG_PRESSING
                 // 长按动画结束或者长按中止动画结束后,恢复按钮大小
                 close(if (mState == STATE_LONG_PRESSING) CLOSE_REASON_LONG_PRESSING_END else CLOSE_REASON_LONG_PRESS_ABORT_END)
@@ -314,7 +314,7 @@ class SpringButton : FrameLayout {
             scaleY = value
         }
         addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?, isReverse: Boolean) {
+            override fun onAnimationEnd(animation: Animator, isReverse: Boolean) {
                 if (mOnLongPressListener != null && isPressed) {
                     startLongPress()
                 } else if (mState == STATE_EXPANDING) {
@@ -341,13 +341,13 @@ class SpringButton : FrameLayout {
             }
         }
         addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationStart(animation: Animator?) {
+            override fun onAnimationStart(animation: Animator) {
                 if (mCloseReason == CLOSE_REASON_EXPANDING_END || mCloseReason == CLOSE_REASON_TOUCH_UP) {
                     mOnPressListener?.onClick(this@SpringButton, false)
                 }
             }
 
-            override fun onAnimationEnd(animation: Animator?, isReverse: Boolean) {
+            override fun onAnimationEnd(animation: Animator, isReverse: Boolean) {
                 if (mState == STATE_CLOSING) {
                     mCloseAfterExpandEnd = false
                     mState = STATE_CLOSED

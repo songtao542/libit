@@ -247,6 +247,10 @@ class MainActivity : AppCompatActivity() {
             R.id.otherTest -> {
                 startActivity(Intent(this, TestFragmentVisibleActivity::class.java))
             }
+
+            R.id.guiTest -> {
+                startActivity(Intent(this, TestGuiActivity::class.java))
+            }
         }
 
     }

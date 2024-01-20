@@ -1,7 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.4.32'
+    apply from: "./config.gradle"
+    //ext.kotlin_version = '1.9.0'
 
     repositories {
         google()
@@ -11,9 +12,10 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+        classpath 'com.android.tools.build:gradle:8.2.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${project.kotlin_version}"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:${project.kotlin_version}"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:${project.kotlin_version}"
 
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         //classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
@@ -21,18 +23,18 @@ buildscript {
 
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.4.10.2")
 
-        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:${project.hilt_version}"
 
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.28-alpha'
-
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.5"
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.9'
+        classpath 'androidx.navigation:navigation-safe-args-gradle-plugin:2.7.6'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.0'
         //classpath 'com.liabit.repackage:repackage:1.0.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
+
+apply from: "./config.gradle"
 
 allprojects {
     repositories {
@@ -43,90 +45,91 @@ allprojects {
     }
 
     configurations.all {
-        resolutionStrategy.force "androidx.activity:activity:1.2.0"
-        resolutionStrategy.force "androidx.fragment:fragment:1.3.5"
-        resolutionStrategy.force "androidx.fragment:fragment-ktx:1.3.5"
-        resolutionStrategy.force "androidx.core:core:1.5.0"
-        resolutionStrategy.force "androidx.core:core-ktx:1.5.0"
 
-        resolutionStrategy.force "androidx.appcompat:appcompat:1.3.0"
-        resolutionStrategy.force "com.google.android.material:material:1.3.0"
+        resolutionStrategy.force "androidx.activity:activity:${project.androidx_activity__activity}"
+        resolutionStrategy.force "androidx.fragment:fragment:${project.androidx_fragment__fragment}"
+        resolutionStrategy.force "androidx.fragment:fragment-ktx:${project.androidx_fragment__fragment_ktx}"
+        resolutionStrategy.force "androidx.core:core:${project.androidx_core__core}"
+        resolutionStrategy.force "androidx.core:core-ktx:${project.androidx_core__core_ktx}"
 
-        resolutionStrategy.force "androidx.dynamicanimation:dynamicanimation:1.0.0"
-        resolutionStrategy.force "androidx.annotation:annotation:1.2.0"
-        resolutionStrategy.force "androidx.interpolator:interpolator:1.0.0"
-        resolutionStrategy.force "androidx.constraintlayout:constraintlayout:2.0.4"
+        resolutionStrategy.force "androidx.appcompat:appcompat:${project.androidx_appcompat__appcompat}"
+        resolutionStrategy.force "com.google.android.material:material:${project.com_google_android_material__material}"
 
-        resolutionStrategy.force "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
-        resolutionStrategy.force "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
-        resolutionStrategy.force "org.jetbrains.kotlinx:kotlinx-serialization-core:1.2.1"
+        resolutionStrategy.force "androidx.dynamicanimation:dynamicanimation:${project.androidx_dynamicanimation__dynamicanimation}"
+        resolutionStrategy.force "androidx.annotation:annotation:${project.androidx_annotation__annotation}"
+        resolutionStrategy.force "androidx.interpolator:interpolator:${project.androidx_interpolator__interpolator}"
+        resolutionStrategy.force "androidx.constraintlayout:constraintlayout:${project.androidx_constraintlayout__constraintlayout}"
 
-        resolutionStrategy.force "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.1"
-        resolutionStrategy.force "androidx.lifecycle:lifecycle-common-java8:2.3.1"
-        resolutionStrategy.force "androidx.lifecycle:lifecycle-service:2.3.1"
-        resolutionStrategy.force "androidx.lifecycle:lifecycle-process:2.3.1"
+        resolutionStrategy.force "org.jetbrains.kotlinx:kotlinx-coroutines-core:${project.org_jetbrains_kotlinx__kotlinx_coroutines_core}"
+        resolutionStrategy.force "org.jetbrains.kotlinx:kotlinx-coroutines-android:${project.org_jetbrains_kotlinx__kotlinx_coroutines_android}"
+        resolutionStrategy.force "org.jetbrains.kotlinx:kotlinx-serialization-core:${project.org_jetbrains_kotlinx__kotlinx_serialization_core}"
 
-        resolutionStrategy.force "androidx.collection:collection-ktx:1.1.0"
-        resolutionStrategy.force "androidx.lifecycle:lifecycle-livedata-core-ktx:2.3.1"
-        resolutionStrategy.force "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
-        resolutionStrategy.force "androidx.lifecycle:lifecycle-reactivestreams-ktx:2.2.0"
-        resolutionStrategy.force "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
-        resolutionStrategy.force "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+        resolutionStrategy.force "androidx.lifecycle:lifecycle-viewmodel-savedstate:${project.androidx_lifecycle__lifecycle_viewmodel_savedstate}"
+        resolutionStrategy.force "androidx.lifecycle:lifecycle-common-java8:${project.androidx_lifecycle__lifecycle_common_java8}"
+        resolutionStrategy.force "androidx.lifecycle:lifecycle-service:${project.androidx_lifecycle__lifecycle_service}"
+        resolutionStrategy.force "androidx.lifecycle:lifecycle-process:${project.androidx_lifecycle__lifecycle_process}"
 
-        resolutionStrategy.force "androidx.navigation:navigation-runtime-ktx:2.3.5"
-        resolutionStrategy.force "androidx.navigation:navigation-fragment-ktx:2.3.5"
-        resolutionStrategy.force "androidx.navigation:navigation-ui-ktx:2.3.5"
+        resolutionStrategy.force "androidx.collection:collection-ktx:${project.androidx_collection__collection_ktx}"
+        resolutionStrategy.force "androidx.lifecycle:lifecycle-livedata-core-ktx:${project.androidx_lifecycle__lifecycle_livedata_core_ktx}"
+        resolutionStrategy.force "androidx.lifecycle:lifecycle-livedata-ktx:${project.androidx_lifecycle__lifecycle_livedata_ktx}"
+        resolutionStrategy.force "androidx.lifecycle:lifecycle-reactivestreams-ktx:${project.androidx_lifecycle__lifecycle_reactivestreams_ktx}"
+        resolutionStrategy.force "androidx.lifecycle:lifecycle-runtime-ktx:${project.androidx_lifecycle__lifecycle_runtime_ktx}"
+        resolutionStrategy.force "androidx.lifecycle:lifecycle-viewmodel-ktx:${project.androidx_lifecycle__lifecycle_viewmodel_ktx}"
 
-        resolutionStrategy.force "androidx.paging:paging-common-ktx:2.1.2"
-        resolutionStrategy.force "androidx.paging:paging-runtime-ktx:2.1.2"
-        resolutionStrategy.force "androidx.paging:paging-rxjava2-ktx:2.1.2"
+        resolutionStrategy.force "androidx.navigation:navigation-runtime-ktx:${project.androidx_navigation__navigation_runtime_ktx}"
+        resolutionStrategy.force "androidx.navigation:navigation-fragment-ktx:${project.androidx_navigation__navigation_fragment_ktx}"
+        resolutionStrategy.force "androidx.navigation:navigation-ui-ktx:${project.androidx_navigation__navigation_ui_ktx}"
 
-        resolutionStrategy.force "androidx.palette:palette-ktx:1.0.0"
-        resolutionStrategy.force "androidx.preference:preference-ktx:1.1.1"
+        resolutionStrategy.force "androidx.paging:paging-common-ktx:${project.androidx_paging__paging_common_ktx}"
+        resolutionStrategy.force "androidx.paging:paging-runtime-ktx:${project.androidx_paging__paging_runtime_ktx}"
+        resolutionStrategy.force "androidx.paging:paging-rxjava2-ktx:${project.androidx_paging__paging_rxjava2_ktx}"
 
-        resolutionStrategy.force "androidx.room:room-ktx:2.2.5"
-        resolutionStrategy.force "androidx.sqlite:sqlite-ktx:2.1.0"
+        resolutionStrategy.force "androidx.palette:palette-ktx:${project.androidx_palette__palette_ktx}"
+        resolutionStrategy.force "androidx.preference:preference-ktx:${project.androidx_preference__preference_ktx}"
 
-        resolutionStrategy.force "com.google.dagger:hilt-android:2.33-beta"
-        resolutionStrategy.force "com.google.dagger:hilt-android-compiler:2.33-beta"
-        resolutionStrategy.force "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
-        resolutionStrategy.force "androidx.hilt:hilt-compiler:1.0.0-alpha03"
+        resolutionStrategy.force "androidx.room:room-ktx:${project.androidx_room__room_ktx}"
+        resolutionStrategy.force "androidx.sqlite:sqlite-ktx:${project.androidx_sqlite__sqlite_ktx}"
 
-        resolutionStrategy.force "com.google.dagger:hilt-android:2.33-beta"
-        resolutionStrategy.force "com.google.dagger:hilt-android-compiler:2.33-beta"
-        resolutionStrategy.force "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
-        resolutionStrategy.force "androidx.hilt:hilt-compiler:1.0.0-alpha03"
+        resolutionStrategy.force "com.google.dagger:hilt-android:${project.com_google_dagger__hilt_android}"
+        resolutionStrategy.force "com.google.dagger:hilt-compiler:${project.com_google_dagger__hilt_compiler}"
+        resolutionStrategy.force "androidx.hilt:hilt-lifecycle-viewmodel:${project.androidx_hilt__hilt_lifecycle_viewmodel}"
+        resolutionStrategy.force "androidx.hilt:hilt-compiler:${project.androidx_hilt__hilt_compiler}"
 
-        resolutionStrategy.force "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
-        resolutionStrategy.force "androidx.annotation:annotation:1.2.0"
+        resolutionStrategy.force "com.google.dagger:hilt-android:${project.com_google_dagger__hilt_android}"
+        resolutionStrategy.force "com.google.dagger:hilt-compiler:${project.com_google_dagger__hilt_compiler}"
+        resolutionStrategy.force "androidx.hilt:hilt-lifecycle-viewmodel:${project.androidx_hilt__hilt_lifecycle_viewmodel}"
+        resolutionStrategy.force "androidx.hilt:hilt-compiler:${project.androidx_hilt__hilt_compiler}"
 
-        resolutionStrategy.force "com.squareup.retrofit2:retrofit:2.9.0"
-        resolutionStrategy.force "com.squareup.retrofit2:converter-gson:2.9.0"
-        resolutionStrategy.force "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
-        resolutionStrategy.force "com.squareup.okhttp3:logging-interceptor:4.9.0"
-        resolutionStrategy.force "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"
-        resolutionStrategy.force "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
-        resolutionStrategy.force "com.squareup.okhttp3:logging-interceptor:4.9.0"
-        resolutionStrategy.force "com.google.code.gson:gson:2.8.7"
+        resolutionStrategy.force "androidx.lifecycle:lifecycle-livedata-ktx:${project.androidx_lifecycle__lifecycle_livedata_ktx}"
+        resolutionStrategy.force "androidx.annotation:annotation:${project.androidx_annotation__annotation}"
 
-        resolutionStrategy.force "it.sephiroth.android.library.imagezoom:library:1.0.4"
-        resolutionStrategy.force "com.github.bumptech.glide:glide:4.12.0"
-        resolutionStrategy.force "com.squareup.picasso:picasso:2.71828"
+        resolutionStrategy.force "com.squareup.retrofit2:retrofit:${project.com_squareup_retrofit2__retrofit}"
+        resolutionStrategy.force "com.squareup.retrofit2:converter-gson:${project.com_squareup_retrofit2__converter_gson}"
+        resolutionStrategy.force "com.squareup.retrofit2:adapter-rxjava2:${project.com_squareup_retrofit2__adapter_rxjava2}"
+        resolutionStrategy.force "com.squareup.okhttp3:logging-interceptor:${project.com_squareup_okhttp3__logging_interceptor}"
+        resolutionStrategy.force "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${project.com_jakewharton_retrofit__retrofit2_kotlin_coroutines_adapter}"
+        resolutionStrategy.force "com.squareup.retrofit2:adapter-rxjava2:${project.com_squareup_retrofit2__adapter_rxjava2}"
+        resolutionStrategy.force "com.squareup.okhttp3:logging-interceptor:${project.com_squareup_okhttp3__logging_interceptor}"
+        resolutionStrategy.force "com.google.code.gson:gson:${project.com_google_code_gson__gson}"
 
-        resolutionStrategy.force "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.7.0"
+        resolutionStrategy.force "it.sephiroth.android.library.imagezoom:library:${project.it_sephiroth_android_library_imagezoom__library}"
+        resolutionStrategy.force "com.github.bumptech.glide:glide:${project.com_github_bumptech_glide__glide}"
+        resolutionStrategy.force "com.squareup.picasso:picasso:${project.com_squareup_picasso__picasso}"
 
-        resolutionStrategy.force "com.github.bumptech.glide:glide:4.12.0"
+        resolutionStrategy.force "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:${project.com_tencent_mm_opensdk__wechat_sdk_android_without_mta}"
+
+        resolutionStrategy.force "com.github.bumptech.glide:glide:${project.com_github_bumptech_glide__glide}"
 
         //高德地图
-        resolutionStrategy.force "com.amap.api:location:4.9.0"
-        resolutionStrategy.force "com.amap.api:map2d:6.0.0"
-        resolutionStrategy.force "com.amap.api:search:7.3.0"
-        resolutionStrategy.force "io.nlopez.smartlocation:library:3.3.3"
-        resolutionStrategy.force "io.nlopez.smartlocation:rx:3.3.3"
+        resolutionStrategy.force "com.amap.api:location:${project.com_amap_api__location}"
+        resolutionStrategy.force "com.amap.api:map2d:${project.com_amap_api__map2d}"
+        resolutionStrategy.force "com.amap.api:search:${project.com_amap_api__search}"
+        resolutionStrategy.force "io.nlopez.smartlocation:library:${project.io_nlopez_smartlocation__library}"
+        resolutionStrategy.force "io.nlopez.smartlocation:rx:${project.io_nlopez_smartlocation__rx}"
 
-        resolutionStrategy.force "junit:junit:4.13.2"
-        resolutionStrategy.force "androidx.test.ext:junit:1.1.2"
-        resolutionStrategy.force "androidx.test.espresso:espresso-core:3.3.0"
+        resolutionStrategy.force "junit:junit:${project.junit__junit}"
+        resolutionStrategy.force "androidx.test.ext:junit:${project.androidx_test_ext__junit}"
+        resolutionStrategy.force "androidx.test.espresso:espresso-core:${project.androidx_test_espresso__espresso_core}"
     }
 }
 

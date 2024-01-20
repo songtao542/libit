@@ -475,7 +475,7 @@ class FilterLayout : RelativeLayout {
             fun setData(item: Filter) {
                 val filterItem = if (item is WrapperFilterItem) item.wrapped else item
                 if (itemView is Checkable && filterItem is CheckableFilterItem) {
-                    itemView.isChecked = filterItem.isChecked()
+                    (itemView as Checkable).isChecked = filterItem.isChecked()
                 }
                 when (item.getType()) {
                     Filter.TYPE_GROUP -> {

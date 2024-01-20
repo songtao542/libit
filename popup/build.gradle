@@ -3,14 +3,16 @@ plugins {
     id 'kotlin-android'
 }
 
+apply from: "../config.gradle"
+
 android {
-    compileSdkVersion 30
+    compileSdk project.ext.compile_sdk
+
+    namespace 'com.liabit.widget.popup'
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        minSdk 21
+        targetSdk project.ext.target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -23,11 +25,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "17"
     }
 
     libraryVariants.all { variant ->
@@ -55,12 +57,12 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'androidx.test:runner:1.3.0'
-    testImplementation 'androidx.test:monitor:1.3.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${project.org_jetbrains_kotlin__kotlin_stdlib}"
+    implementation "androidx.appcompat:appcompat:${project.androidx_appcompat__appcompat}"
+    implementation "androidx.constraintlayout:constraintlayout:${project.androidx_constraintlayout__constraintlayout}"
+    testImplementation "junit:junit:${project.junit__junit}"
+    androidTestImplementation "androidx.test:runner:${project.androidx_test__runner}"
+    testImplementation "androidx.test:monitor:${project.androidx_test__monitor}"
 }
 
 if (file('binary-config.gradle').exists() && file('../binary-common.gradle').exists()) {

@@ -24,7 +24,7 @@ fun View.alpha(from: Float, to: Float, duration: Long = 250, update: ((alpha: Fl
     val animator = ObjectAnimator.ofFloat(this, ALPHA, from, to)
     animator.duration = duration
     animator.addListener(object : AnimatorListenerAdapter() {
-        override fun onAnimationEnd(animation: Animator?) {
+        override fun onAnimationEnd(animation: Animator) {
             end?.invoke(view)
         }
     })

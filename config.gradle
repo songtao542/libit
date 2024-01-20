@@ -1,0 +1,161 @@
+ext {
+
+    compile_sdk = 33
+    min_sdk = 33
+    target_sdk = 33
+
+    kotlin_version = '1.9.0'
+
+    nav_version = "2.3.5"
+    layer_version = "1.3.0"
+    lifecycle_version = "2.6.1"
+    work_version = "2.5.0"
+    room_version = "2.3.0"
+    hilt_version = "2.50"
+
+    org_jetbrains_kotlin__kotlin_stdlib_jdk7 = "$kotlin_version"
+    org_jetbrains_kotlin__kotlin_stdlib = "$kotlin_version"
+
+    com_appmattus__layercache_android_encryption = "$layer_version"
+    com_appmattus__layercache_android_livedata = "$layer_version"
+    com_appmattus__layercache_serializer = "$layer_version"
+    com_appmattus__layercache_cache2k = "$layer_version"
+    com_appmattus__layercache_android = "$layer_version"
+    com_appmattus__layercache_ehcache = "$layer_version"
+    com_appmattus__layercache = "$layer_version"
+
+    androidx_lifecycle__lifecycle_viewmodel_savedstate = "$lifecycle_version"
+    androidx_lifecycle__lifecycle_livedata_core_ktx = "$lifecycle_version"
+    androidx_lifecycle__lifecycle_viewmodel_ktx = "$lifecycle_version"
+    androidx_lifecycle__lifecycle_livedata_ktx = "$lifecycle_version"
+    androidx_lifecycle__lifecycle_common_java8 = "$lifecycle_version"
+    androidx_lifecycle__lifecycle_runtime_ktx = "$lifecycle_version"
+    androidx_lifecycle__lifecycle_service = "$lifecycle_version"
+    androidx_lifecycle__lifecycle_process = "$lifecycle_version"
+    androidx_lifecycle__lifecycle_reactivestreams_ktx = "2.2.0"
+    androidx_lifecycle__lifecycle_extensions = "2.2.0"
+
+    androidx_work__work_runtime_ktx = "$work_version"
+    androidx_work__work_runtime = "$work_version"
+    androidx_work__work_gcm = "$work_version"
+
+    androidx_datastore__datastore_preferences_rxjava3 = "1.0.0-alpha06"
+    androidx_datastore__datastore_preferences_rxjava2 = "1.0.0-alpha06"
+    androidx_datastore__datastore_preferences_core = "1.0.0-alpha06"
+    androidx_datastore__datastore_preferences = "1.0.0-alpha06"
+    androidx_datastore__datastore_rxjava2 = "1.0.0-alpha06"
+    androidx_datastore__datastore_rxjava3 = "1.0.0-alpha06"
+    androidx_datastore__datastore_core = "1.0.0-alpha06"
+    androidx_datastore__datastore = "1.0.0-alpha06"
+
+    androidx_navigation__navigation_dynamic_features_fragment = "$nav_version"
+    androidx_navigation__navigation_fragment_ktx = "$nav_version"
+    androidx_navigation__navigation_fragment = "$nav_version"
+    androidx_navigation__navigation_ui_ktx = "$nav_version"
+    androidx_navigation__navigation_ui = "$nav_version"
+    androidx_navigation__navigation_runtime_ktx = "2.3.5"
+
+    androidx_hilt__hilt_navigation_compose = "1.1.0"
+    androidx_hilt__hilt_lifecycle_viewmodel = "1.1.0"
+    androidx_hilt__hilt_compiler = "1.1.0"
+
+    com_google_dagger__hilt_android = "$hilt_version"
+    com_google_dagger__hilt_compiler = "$hilt_version"
+    com_google_dagger__dagger = "2.17"
+    com_google_dagger__dagger_android_processor = "2.17"
+    com_google_dagger__dagger_android_support = "2.17"
+    com_google_dagger__dagger_android = "2.17"
+    com_google_dagger__dagger_compiler = "2.17"
+    com_google_code_gson__gson = "2.8.7"
+    com_google_protobuf_nano__protobuf_javanano = "3.0.0-alpha-7"
+    com_google_protobuf__protobuf_javalite = "3.10.0"
+    com_google_android_material__material = "1.5.0"
+    com_google_android_flexbox__flexbox = "3.0.0"
+    com_google_android__flexbox = "2.0.1"
+
+    io_reactivex_rxjava2__rxkotlin = "2.2.0"
+    io_reactivex_rxjava2__rxjava = "2.2.9"
+    io_reactivex_rxjava2__rxandroid = "2.1.0"
+
+    org_jetbrains_kotlinx__kotlinx_serialization_runtime = "1.0.0"
+    org_jetbrains_kotlinx__kotlinx_serialization_core = "1.2.1"
+    org_jetbrains_kotlinx__kotlinx_coroutines_android = "1.5.0"
+    org_jetbrains_kotlinx__kotlinx_coroutines_core = "1.5.0"
+
+    androidx_room__room_compiler = "2.2.5"
+    androidx_room__room_runtime = "$room_version"
+    androidx_room__room_ktx = "$room_version"
+
+    androidx_paging__paging_runtime_ktx = "2.1.2"
+    androidx_paging__paging_rxjava2_ktx = "2.1.2"
+    androidx_paging__paging_common_ktx = "2.1.2"
+
+    androidx_activity__activity = "1.7.1"
+    androidx_activity__activity_ktx = "1.7.1"
+    androidx_core__core = "1.9.0"
+    androidx_core__core_ktx = "1.9.0"
+    androidx_fragment__fragment = "1.6.2"
+    androidx_fragment__fragment_ktx = "1.6.2"
+    androidx_appcompat__appcompat = "1.6.1"
+    androidx_appcompat__appcompat_resources = "1.6.1"
+    androidx_preference__preference = "1.2.1"
+    androidx_preference__preference_ktx = "1.2.1"
+    androidx_collection__collection = "1.3.0"
+    androidx_collection__collection_ktx = "1.3.0"
+    androidx_recyclerview__recyclerview = "1.3.2"
+    androidx_recyclerview__recyclerview_selection = "1.1.0"
+    androidx_transition__transition = "1.3.1"
+    androidx_sqlite__sqlite_ktx = "2.1.0"
+    androidx_viewpager2__viewpager2 = "1.1.0-alpha01"
+    androidx_annotation__annotation = "1.7.1"
+    androidx_transition__transition_ktx = "1.4.0-rc01"
+    androidx_exifinterface__exifinterface = "1.3.2"
+    androidx_palette__palette_ktx = "1.0.0"
+    androidx_dynamicanimation__dynamicanimation = "1.0.0"
+    androidx_constraintlayout__constraintlayout = "2.1.4"
+    androidx_swiperefreshlayout__swiperefreshlayout = "1.1.0"
+    androidx_legacy__legacy_support_v4 = "1.0.0"
+    androidx_multidex__multidex = "2.0.1"
+    androidx_localbroadcastmanager__localbroadcastmanager = "1.0.0"
+    androidx_interpolator__interpolator = "1.0.0"
+
+    androidx_arch_core__core_testing = "2.1.0"
+    androidx_test__runner = "1.3.0"
+    androidx_test_espresso__espresso_core = "3.3.0"
+    androidx_test__monitor = "1.3.0"
+    androidx_test_ext__junit = "1.1.2"
+    junit__junit = "4.13.2"
+
+    com_squareup_leakcanary__leakcanary_android = "3.0-alpha-1"
+    com_squareup_retrofit2__converter_scalars = "2.0.0-beta4"
+    com_squareup_retrofit2__retrofit = "2.9.0"
+    com_squareup_retrofit2__converter_gson = "2.9.0"
+    com_squareup_retrofit2__adapter_rxjava2 = "2.9.0"
+    com_squareup_okhttp3__logging_interceptor = "4.9.0"
+    com_squareup_picasso__picasso = "2.71828"
+    com_squareup_okhttp3__okhttp = "4.9.0"
+    com_squareup_okio__okio = "2.9.0"
+    com_jakewharton_retrofit__retrofit2_kotlin_coroutines_adapter = "0.9.2"
+
+    io_nlopez_smartlocation__library = "3.3.3"
+    io_nlopez_smartlocation__rx = "3.3.3"
+
+    com_amap_api__location = "5.2.0"
+    com_amap_api__3dmap = "7.7.0"
+    com_amap_api__search = "7.7.0"
+    com_amap_api__map2d = "6.0.0"
+
+    com_github_bumptech_glide__glide = "4.12.0"
+
+    it_sephiroth_android_library_imagezoom__library = "1.0.4"
+
+    com_tencent_mm_opensdk__wechat_sdk_android_without_mta = "6.7.0"
+
+    com_github_promeg__tinypinyin = "2.0.3"
+    com_github_bumptech_glide__compiler = "4.12.0"
+
+    io_github_youth5201314__banner = "2.2.2"
+
+    commons_codec__commons_codec = "1.15"
+
+}

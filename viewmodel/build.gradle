@@ -3,14 +3,16 @@ plugins {
     id 'kotlin-android'
 }
 
+apply from: "../config.gradle"
+
 android {
-    compileSdkVersion 30
+    compileSdk project.ext.compile_sdk
+
+    namespace 'com.liabit.viewmodel'
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        minSdk 14
+        targetSdk project.ext.target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -23,11 +25,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "17"
     }
 
     libraryVariants.all { variant ->
@@ -55,19 +57,19 @@ android {
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${project.org_jetbrains_kotlin__kotlin_stdlib}"
+    implementation "androidx.core:core-ktx:${project.androidx_core__core_ktx}"
+    implementation "androidx.appcompat:appcompat:${project.androidx_appcompat__appcompat}"
+    implementation "androidx.lifecycle:lifecycle-common-java8:${project.androidx_lifecycle__lifecycle_common_java8}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${project.androidx_lifecycle__lifecycle_viewmodel_ktx}"
+    implementation "androidx.recyclerview:recyclerview:${project.androidx_recyclerview__recyclerview}"
 
-    implementation "androidx.fragment:fragment-ktx:1.2.5"
-    implementation "androidx.core:core-ktx:1.3.2"
+    implementation "androidx.fragment:fragment-ktx:${project.androidx_fragment__fragment_ktx}"
+    implementation "androidx.core:core-ktx:${project.androidx_core__core_ktx}"
 
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    testImplementation "junit:junit:${project.junit__junit}"
+    androidTestImplementation "androidx.test.ext:junit:${project.androidx_test_ext__junit}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${project.androidx_test_espresso__espresso_core}"
 }
 
 if (file('binary-config.gradle').exists() && file('../binary-common.gradle').exists()) {

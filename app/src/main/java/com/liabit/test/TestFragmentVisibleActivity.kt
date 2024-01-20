@@ -64,11 +64,11 @@ class TestFragmentVisibleActivity : AppCompatActivity() {
             Log.d("TTTT", "$position onDetach isVisible: $isVisible")
         }
 
-        override fun onViewAttachedToWindow(v: View?) {
+        override fun onViewAttachedToWindow(v: View) {
             Log.d("TTTT", "$position attached to window")
         }
 
-        override fun onViewDetachedFromWindow(v: View?) {
+        override fun onViewDetachedFromWindow(v: View) {
             Log.d("TTTT", "$position detached to window")
         }
     }

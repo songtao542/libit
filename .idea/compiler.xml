@@ -1,65 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.8">
-      <module name="libit.addsub" target="11" />
-      <module name="libit.app" target="11" />
-      <module name="libit.app_api14" target="11" />
-      <module name="libit.autoclear" target="11" />
-      <module name="libit.base" target="11" />
+    <bytecodeTargetLevel target="17">
       <module name="libit.base_binding" target="11" />
       <module name="libit.base_no_binding" target="11" />
-      <module name="libit.base_with_vb_vm" target="11" />
-      <module name="libit.base_with_viewbinding" target="11" />
-      <module name="libit.base_with_viewmodel" target="11" />
-      <module name="libit.citypicker" target="11" />
-      <module name="libit.color_util" target="11" />
-      <module name="libit.compressor" target="11" />
-      <module name="libit.dialog" target="11" />
-      <module name="libit.ext" target="11" />
-      <module name="libit.filterlayout" target="11" />
-      <module name="libit.flag" target="11" />
-      <module name="libit.flag-square" target="11" />
-      <module name="libit.gesture" target="11" />
-      <module name="libit.imageloader" target="11" />
       <module name="libit.injectable-viewmodel" target="11" />
-      <module name="libit.libit" target="11" />
-      <module name="libit.livedata-ktx" target="11" />
-      <module name="libit.location_picker" target="11" />
-      <module name="libit.matisse" target="11" />
-      <module name="libit.numberpicker" target="11" />
-      <module name="libit.photopicker" target="11" />
-      <module name="libit.photoview" target="11" />
-      <module name="libit.picker" target="11" />
-      <module name="libit.picker_integrate" target="11" />
-      <module name="libit.popup" target="11" />
-      <module name="libit.recyclerview" target="11" />
-      <module name="libit.retrofit-ext" target="11" />
-      <module name="libit.runker" target="11" />
-      <module name="libit.scaffold" target="11" />
-      <module name="libit.scaffold_network" target="11" />
-      <module name="libit.screencapture" target="11" />
-      <module name="libit.screenrecord" target="11" />
-      <module name="libit.settings" target="11" />
-      <module name="libit.shimmer" target="11" />
-      <module name="libit.swipeback" target="11" />
-      <module name="libit.tablayout" target="11" />
-      <module name="libit.tagview" target="11" />
-      <module name="libit.third-auth" target="11" />
-      <module name="libit.timerview" target="11" />
-      <module name="libit.util" target="11" />
-      <module name="libit.utils" target="11" />
-      <module name="libit.viewbinding" target="11" />
-      <module name="libit.viewmodel" target="11" />
-      <module name="libit.viewmodel_inject" target="11" />
-      <module name="libit.wallpaper_cropper" target="11" />
-      <module name="libit.wallpaper_cropper_lite" target="11" />
-      <module name="libit.widget" target="11" />
-      <module name="libit.widget_empty_view" target="11" />
-      <module name="libit.widget_label_view" target="11" />
-      <module name="libit.widget_progress_button" target="11" />
-      <module name="libit.widget_spring_button" target="11" />
-      <module name="libit.widget_state_button" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

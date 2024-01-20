@@ -87,25 +87,25 @@ class Timer {
             }
         }
         animator.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator?) {
+            override fun onAnimationStart(animation: Animator) {
                 callback?.onStart()
             }
 
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 if (mTextViewGoneWhenFinished) {
                     mTextView?.visibility = View.GONE
                 }
                 callback?.onEnd()
             }
 
-            override fun onAnimationCancel(animation: Animator?) {
+            override fun onAnimationCancel(animation: Animator) {
                 if (mTextViewGoneWhenFinished) {
                     mTextView?.visibility = View.GONE
                 }
                 callback?.onEnd()
             }
 
-            override fun onAnimationRepeat(animation: Animator?) {
+            override fun onAnimationRepeat(animation: Animator) {
                 if (mMode == REVERSE) {
                     seconds--
                 } else {

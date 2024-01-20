@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -20,7 +19,8 @@ class LifeCycleFragment : Fragment(), LifecycleOwner {
 
         fun getLifecycleOwner(activity: Activity): LifecycleOwner {
             val fm = activity.fragmentManager
-            var current = mTempMap[activity] ?: (fm.findFragmentByTag(FRAGMENT_TAG) as? LifeCycleFragment)
+            var current = mTempMap[activity]
+                    ?: (fm.findFragmentByTag(FRAGMENT_TAG) as? LifeCycleFragment)
             if (current == null) {
                 current = LifeCycleFragment().also { mTempMap[activity] = it }
                 fm.beginTransaction().add(current, FRAGMENT_TAG).commitAllowingStateLoss()
@@ -30,6 +30,9 @@ class LifeCycleFragment : Fragment(), LifecycleOwner {
     }
 
     private val mLifecycleRegistry = LifecycleRegistry(this)
+
+    override val lifecycle: Lifecycle
+        get() = mLifecycleRegistry
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,10 +63,6 @@ class LifeCycleFragment : Fragment(), LifecycleOwner {
     override fun onDestroy() {
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         super.onDestroy()
-    }
-
-    override fun getLifecycle(): Lifecycle {
-        return mLifecycleRegistry
     }
 
 }

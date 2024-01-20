@@ -251,6 +251,15 @@
             android:text="Other Test"
             android:textAllCaps="false" />
 
+        <Button
+            android:id="@+id/guiTest"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:onClick="onClick"
+            android:text="Gui Test"
+            android:textAllCaps="false" />
+
     </LinearLayout>
 
 </ScrollView>

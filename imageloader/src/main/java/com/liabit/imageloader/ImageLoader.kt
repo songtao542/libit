@@ -41,7 +41,7 @@ object ImageLoader : CoroutineScope {
 
     private const val TAG = "ImageLoader"
 
-    var DEBUG = true
+    private const val DEBUG = true
 
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + Job()
 
@@ -88,7 +88,7 @@ object ImageLoader : CoroutineScope {
         fun getContext(): Context?
     }
 
-    class RequestBuilder constructor() {
+    class RequestBuilder() {
 
         private var mFragment: Fragment? = null
         private var mActivity: Activity? = null
@@ -165,11 +165,13 @@ object ImageLoader : CoroutineScope {
                 displayTarget.setTag(R.id.image_loader_error_tag, error)
                 context ?: displayTarget.context
             }
+
             is DisplayTarget -> {
                 displayTarget.setTag(R.id.image_loader_url_tag, url)
                 displayTarget.setTag(R.id.image_loader_error_tag, error)
                 context ?: displayTarget.getContext()
             }
+
             else -> null
         } ?: return
         if (fragment != null) {
@@ -181,15 +183,26 @@ object ImageLoader : CoroutineScope {
             if (targetActivity != null) {
                 when (targetActivity) {
                     is FragmentActivity -> {
-                        val targetFragment = findFragment(displayTarget as? ImageView, targetActivity)
+                        val targetFragment =
+                            findFragment(displayTarget as? ImageView, targetActivity)
                         log("target fragment: $targetFragment")
-                        loadImage(targetActivity, targetFragment?.viewLifecycleOwner ?: targetActivity, target)
+                        loadImage(
+                            targetActivity,
+                            targetFragment?.viewLifecycleOwner ?: targetActivity,
+                            target
+                        )
                     }
+
                     is ComponentActivity -> {
                         loadImage(targetActivity, targetActivity, target)
                     }
+
                     else -> {
-                        loadImage(targetActivity, LifeCycleFragment.getLifecycleOwner(targetActivity), target)
+                        loadImage(
+                            targetActivity,
+                            LifeCycleFragment.getLifecycleOwner(targetActivity),
+                            target
+                        )
                     }
                 }
             } else {
@@ -228,7 +241,9 @@ object ImageLoader : CoroutineScope {
         return result
     }
 
-    private fun findAllFragmentsWithViews(topLevelFragments: Collection<Fragment>?, result: MutableMap<View?, Fragment>) {
+    private fun findAllFragmentsWithViews(
+        topLevelFragments: Collection<Fragment>?, result: MutableMap<View?, Fragment>
+    ) {
         if (topLevelFragments == null) {
             return
         }
@@ -303,7 +318,11 @@ object ImageLoader : CoroutineScope {
                 val tag = displayTarget.getTag(R.id.image_loader_url_tag)
                 val errorResourceId = displayTarget.getTag(R.id.image_loader_error_tag)
                 if (tag == url && errorResourceId != null) {
-                    displayTarget.display(BitmapFactory.decodeResource(context.resources, errorResourceId as Int))
+                    displayTarget.display(
+                        BitmapFactory.decodeResource(
+                            context.resources, errorResourceId as Int
+                        )
+                    )
                     displayTarget.setTag(R.id.image_loader_url_tag, null)
                     displayTarget.setTag(R.id.image_loader_error_tag, null)
                 }
@@ -332,7 +351,9 @@ object ImageLoader : CoroutineScope {
         }
     }
 
-    private fun loadBitmap(context: Context, target: Target, onComplete: (bitmap: Bitmap?) -> Unit) {
+    private fun loadBitmap(
+        context: Context, target: Target, onComplete: (bitmap: Bitmap?) -> Unit
+    ) {
         launch {
             val ctx = context.applicationContext
             val url = target.url
@@ -355,14 +376,18 @@ object ImageLoader : CoroutineScope {
                         existJob.join()
                     }
                 }
-                val bitmap = mBitmapCache[key] ?: download(ctx, url, key, appendSizeKey, size)?.also { mBitmapCache.put(key, it) }
+                val bitmap = mBitmapCache[key] ?: download(
+                    ctx, url, key, appendSizeKey, size
+                )?.also { mBitmapCache.put(key, it) }
                 onComplete.invoke(bitmap)
                 mUrlJobMap.remove(appendSizeKey)
             }
         }
     }
 
-    private suspend fun download(context: Context, url: String, key: String, appendSizeKey: String, size: Point?): Bitmap? {
+    private suspend fun download(
+        context: Context, url: String, key: String, appendSizeKey: String, size: Point?
+    ): Bitmap? {
         mSemaphore.acquire()
         try {
             log("target size: $size")
@@ -469,13 +494,16 @@ object ImageLoader : CoroutineScope {
         return null
     }
 
-    private fun saveDecodedBitmap(context: Context, bitmap: Bitmap, appendSizeKey: String, mimeType: String?) {
+    private fun saveDecodedBitmap(
+        context: Context, bitmap: Bitmap, appendSizeKey: String, mimeType: String?
+    ) {
         try {
             val cacheDir = context.externalCacheDir ?: return
             val cacheFile = File(cacheDir, appendSizeKey)
             FileOutputStream(cacheFile).use { fileOutputStream ->
                 BufferedOutputStream(fileOutputStream).use { bufferedOutputStream ->
-                    val format = if ("image/png" == mimeType) Bitmap.CompressFormat.PNG else Bitmap.CompressFormat.JPEG
+                    val format =
+                        if ("image/png" == mimeType) Bitmap.CompressFormat.PNG else Bitmap.CompressFormat.JPEG
                     bitmap.compress(format, 100, bufferedOutputStream)
                 }
             }
@@ -484,7 +512,9 @@ object ImageLoader : CoroutineScope {
         }
     }
 
-    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+    private fun calculateInSampleSize(
+        options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int
+    ): Int {
         // Raw height and width of image
         val (height: Int, width: Int) = options.run { outHeight to outWidth }
         var inSampleSize = 1

@@ -6,7 +6,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:clipChildren="false"
         android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Disable" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="UI.SeekBar" />
 
         <SeekBar
             android:id="@+id/seekbar"
@@ -14,12 +32,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="30dp"
             android:max="25"
             android:min="1"
             android:progress="14" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="8dp"
+            android:text="UI.SeekBar" />
 
         <SeekBar
             android:id="@+id/seekbar1"
@@ -27,22 +49,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="30dp"
             android:progress="100" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="8dp"
+            android:text="UI.SeekBar.Discrete" />
 
         <SeekBar
             android:id="@+id/seekbar2"
-            style="@style/UI.SeekBar.Mark"
+            style="@style/UI.SeekBar.Discrete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="30dp"
             android:max="4"
             android:progress="1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Widget.Material.SeekBar.Discrete" />
+
+        <SeekBar
+            android:id="@+id/discrete_seekbar"
+            style="@android:style/Widget.Material.SeekBar.Discrete"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:max="6" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="8dp"
+            android:text="UI.SeekBar.Balance" />
 
         <SeekBar
             android:id="@+id/seekbar3"
@@ -50,37 +94,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="30dp"
             android:max="100"
             android:progress="20" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="8dp"
+            android:text="UI.Switch" />
 
         <Switch
             android:id="@+id/switch1"
             style="@style/UI.Switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="30dp" />
+            android:layout_gravity="center_vertical" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+            android:layout_height="200dp"
+            android:layout_marginBottom="50dp">
 
             <com.liabit.gui.UiSeekBar
                 android:id="@+id/volume_row_slider"
                 style="@style/UI.SeekBar.Wide"
                 android:layout_width="@dimen/ui_wide_seekbar_width"
                 android:layout_height="@dimen/ui_wide_seekbar_height"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:progress="40" />
 
             <Space
                 android:layout_width="0dp"
@@ -93,12 +135,9 @@
                 android:layout_width="@dimen/ui_wide_seekbar_height"
                 android:layout_height="@dimen/ui_wide_seekbar_width"
                 android:layout_gravity="center"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:progress="30" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
         </LinearLayout>
 
     </LinearLayout>

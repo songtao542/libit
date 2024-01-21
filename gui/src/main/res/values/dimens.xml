@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- 离散 SeekBar 背景圆点大小 -->
     <dimen name="ui_seekbar_marker_size">16dp</dimen>
+    <!-- SeekBar 高度 -->
     <dimen name="ui_seekbar_track_height">24dp</dimen>
+    <!-- SeekBar 高度的一半 -->
     <dimen name="ui_seekbar_track_half_height">12dp</dimen>
+    <!-- SeekBar 左边 offset, 大小等于 ui_seekbar_track_height / 2 -->
     <dimen name="ui_seekbar_track_background_left_offset">-12dp</dimen>
+    <!-- SeekBar 右边 offset, 大小等于 ui_seekbar_track_height / 2 -->
     <dimen name="ui_seekbar_track_background_right_offset">-12dp</dimen>
 
+    <!-- wide样式 SeekBar 宽度 -->
     <dimen name="ui_wide_seekbar_track_width">46dp</dimen>
+    <!-- wide样式 SeekBar 圆角 -->
     <dimen name="ui_wide_seekbar_track_radius">12dp</dimen>
+    <!-- wide样式 SeekBar icon 大小 -->
     <dimen name="ui_wide_track_icon_size">30dp</dimen>
-
-    <dimen name="ui_switch_height">24dp</dimen>
 
     <dimen name="ui_wide_seekbar_width">180dp</dimen>
     <dimen name="ui_wide_seekbar_height">46dp</dimen>
+
+    <!-- Switch 高度 -->
+    <dimen name="ui_switch_height">24dp</dimen>
 
 </resources>

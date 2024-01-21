@@ -8,5 +8,5 @@
         android:height="@dimen/ui_seekbar_track_height" />
     <stroke
         android:width="4dp"
-        android:color="@color/ui_seekbar_track_color" />
+        android:color="@color/ui_seekbar_thumb_stroke_color" />
 </shape>

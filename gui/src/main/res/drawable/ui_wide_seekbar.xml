@@ -31,7 +31,7 @@
         <clip>
             <shape
                 android:shape="rectangle"
-                android:tint="?android:attr/colorAccent">
+                android:tint="@color/ui_wide_seekbar_track_color">
                 <size android:height="@dimen/ui_wide_seekbar_track_width" />
                 <solid android:color="@android:color/white" />
                 <corners android:radius="@dimen/ui_wide_seekbar_track_radius" />

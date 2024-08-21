@@ -198,6 +198,13 @@ class ViewBindingProperty<VB : ViewBinding>(private val viewProvider: (() -> Vie
             }
         }
         if (vb == null) {
+            vb = MethodHandles.lookup().findStatic(
+                viewBindingClass,
+                "inflate",
+                MethodType.methodType(viewBindingClass, LayoutInflater::class.java)
+            ).invokeWithArguments(inflater) as? VB
+        }
+        if (vb == null) {
             vb = inflateMethod(null, inflater) as VB
         }
         return vb
